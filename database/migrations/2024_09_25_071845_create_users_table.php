@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->timestamp('last_seen')->nullable();
             $table->boolean('status')->default(true);
-            $table->string('code')->unique();
+            $table->string('code')->unique()->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->rememberToken();
@@ -31,8 +31,7 @@ return new class extends Migration
             $table->foreign('currency_id')
                 ->references('id')
                 ->on('currencies')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->onDelete('cascade');
 
             // Added an index to the 'status' column
             $table->index(['email', 'status']);

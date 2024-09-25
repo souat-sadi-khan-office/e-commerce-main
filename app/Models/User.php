@@ -73,4 +73,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserWallet::class);
     }
+
+    // Relation with question
+    public function question()
+    {
+        return $this->hasMany(ProductQuestion::class);  
+    }
+
+    // Relation with cart
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    // Relation with review
+    public function review() 
+    {
+        return $this->hasMany(Review::class);
+    }
 }
