@@ -13,12 +13,29 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('currency_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('avatar')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->timestamp('last_seen')->nullable();
+            $table->boolean('status')->default(true);
+            $table->string('code')->unique();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
+            // Foreign key constraint
+            $table->foreign('currency_id')
+                ->references('id')
+                ->on('currencies')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            // Added an index to the 'status' column
+            $table->index(['email', 'status']);
         });
     }
 
