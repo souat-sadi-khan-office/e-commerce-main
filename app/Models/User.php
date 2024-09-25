@@ -55,4 +55,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Currency::class);
     }
+
+    // Relation with user_phones
+    public function phone()
+    {
+        return $this->hasMany(UserPhone::class);
+    }
+
+    // Relation with user_address
+    public function address()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    // Relation with Wallet
+    public function wallet()
+    {
+        return $this->belongsTo(UserWallet::class);
+    }
 }
