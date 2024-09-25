@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'currency_id',
+        'avatar',
+        'last_seen',
+        'status',
+        'code',
+        'latitude',
+        'longitude'
     ];
 
     /**
@@ -42,4 +49,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relation with currency
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    // Relation with user_phones
+    public function phone()
+    {
+        return $this->hasMany(UserPhone::class);
+    }
+
+    // Relation with user_address
+    public function address()
+    {
+        return $this->hasMany(UserAddress::class);
+    }
+
+    // Relation with Wallet
+    public function wallet()
+    {
+        return $this->belongsTo(UserWallet::class);
+    }
 }
