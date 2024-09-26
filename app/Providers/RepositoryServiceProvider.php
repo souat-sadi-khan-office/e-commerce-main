@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\AuthRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\OrderRepository;
@@ -15,6 +16,7 @@ use App\Repositories\DashboardRepository;
 use App\Repositories\PcBuilderRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
+use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\CartRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
@@ -25,6 +27,7 @@ use App\Repositories\Interface\CurrencyRepositoryInterface;
 use App\Repositories\Interface\LocationRepositoryInterface;
 use App\Repositories\Interface\DashBoardRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
+use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 
@@ -35,6 +38,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(CartRepositoryInterface::class, CartRepository::class);
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
