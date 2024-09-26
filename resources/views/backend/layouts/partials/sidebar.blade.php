@@ -35,9 +35,8 @@
                             </a> </li>
                     </ul>
                 </li>
-                <li class="nav-item"> <a href="./generate/theme.html" class="nav-link"> <i
-                            class="nav-icon bi bi-palette"></i>
-                        <p>Theme Generate</p>
+                <li class="nav-item"> <a href="./generate/theme.html" class="nav-link"> <i class="bi bi-person-fill-gear"></i>
+                        <p>Admins</p>
                     </a> </li>
                 <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                         <p>

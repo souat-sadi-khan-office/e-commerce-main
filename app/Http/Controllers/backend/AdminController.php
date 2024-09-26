@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers\backend;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Repositories\Interface\AuthRepositoryInterface;
 
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
+    // private $auth;
+
+    // public function __construct(AuthRepositoryInterface $auth)
+    // {
+    //     $this->auth = $auth;
+    // }
+
+    public function dashboard(Request $request) {
         $user = Auth::guard('admins')->user();
         dd($user);
     }

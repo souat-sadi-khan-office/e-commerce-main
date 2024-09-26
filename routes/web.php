@@ -1,22 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Backend\AdminController;
 
 Route::get('/', function () {
-    return view('backend.dashboard');
+    return view('welcome');
 })->name('home');
 
-Route::get('/hello', function() {
-    return "another World";
+Route::middleware(['admins'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('dashboard');
 });
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
