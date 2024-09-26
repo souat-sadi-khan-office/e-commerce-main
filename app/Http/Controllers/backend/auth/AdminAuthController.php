@@ -5,9 +5,21 @@ namespace App\Http\Controllers\backend\auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
 
 class AdminAuthController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest:admins')->except('logout');
+    }
+
     public function form()
     {
         return view('backend.auth.login');

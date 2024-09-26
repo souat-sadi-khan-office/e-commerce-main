@@ -12,6 +12,6 @@ Route::get('/', function() {
 Route::get('/login', [AdminAuthController::class, 'form'])->name('login');
 Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
 
-Route::middleware('admin.auth')->group(function () {
+Route::middleware('auth:admins')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 });
