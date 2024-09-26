@@ -14501,6 +14501,15 @@ html.maximized-card {
   --lte-card-variant-color-rgb: 255, 255, 255;
 }
 
+.card-danger,
+.bg-danger,
+.text-bg-app-color {
+  --lte-card-variant-bg: green;
+  --lte-card-variant-bg-rgb: green;
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: green;
+}
+
 .card-light,
 .bg-light,
 .text-bg-light {

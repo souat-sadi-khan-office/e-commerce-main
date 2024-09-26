@@ -1,23 +1,17 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\backend\AdminController;
-use App\Http\Controllers\Backend\Auth\AdminAuthController;
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\AdminController;
 
 Route::get('/', function() {
-    return redirect('admin/dashboard');
+    return redirect()->route('admin.login');
 });
 
-Route::get('/login', [AdminAuthController::class, 'form'])->name('login');
-Route::post('/login-check', [AdminAuthController::class, 'login'])->name('login.post');
+Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['admins', 'verified'])->name('dashboard');
-
-
-
-// Route::middleware(['auth:admins'])->group(function () {
-//     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-// });
+Route::middleware(['isAdmin', 'web'])->group(function () {
+    Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+});

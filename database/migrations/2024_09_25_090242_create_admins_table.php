@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('password');
             $table->string('avatar')->nullable();
+            $table->string('designation')->nullable();
             $table->boolean('allow_changes')->default(false);
             $table->timestamp('last_seen')->nullable();
             $table->timestamp('last_login')->nullable();

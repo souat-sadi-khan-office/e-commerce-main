@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Auth\Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 class Admin extends Model implements AuthenticatableContract
 {
-    use HasFactory, Authenticatable;
+    use HasFactory, Authenticatable, HasRoles;
 
-    protected $guard = 'admins';
+    protected $guard = 'admin';
 
     protected $fillable = [
         'name',
