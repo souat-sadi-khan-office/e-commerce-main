@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('backend.dashboard');
-});
+})->name('home');
 
 Route::get('/hello', function() {
     return "another World";

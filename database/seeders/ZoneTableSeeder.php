@@ -18,12 +18,6 @@ class ZoneTableSeeder extends Seeder
             [
                 'name' => 'Africa',
                 'status' => true,
-                'created_at' => Carbon::now(),  // এখানে created_at যুক্ত করা
-                'updated_at' => Carbon::now()   // এখানে updated_at যুক্ত করা
-            ],
-            [
-                'name' => 'Antarctica',
-                'status' => true,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
@@ -56,7 +50,7 @@ class ZoneTableSeeder extends Seeder
                 'status' => true,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
-            ],
+            ]
         ];
 
         DB::table('zones')->insert($continents);
