@@ -5,7 +5,8 @@ namespace App\Http\Controllers\backend\auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Validator;
+use App\Repositories\Interface\AuthRepositoryInterface;
 
 
 class AdminAuthController extends Controller
@@ -15,14 +16,17 @@ class AdminAuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $auth;
+
+    public function __construct(AuthRepositoryInterface $auth)
     {
+        $this->auth = $auth;
         $this->middleware('guest:admins')->except('logout');
     }
 
     public function form()
     {
-        return view('backend.auth.login');
+        return $this->auth->form();
     }
 
     public function login(Request $request)
@@ -30,9 +34,9 @@ class AdminAuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admins')->attempt($credentials)) {
-            return redirect()->route('dashboard');
+            return redirect()->intended(route('dashboard'));
         }
 
-        return redirect()->back()->withErrors(['error' => 'Invalid credentials']);
+        return back()->withErrors(['email' => 'Credentials do not match our records.']);
     }
 }

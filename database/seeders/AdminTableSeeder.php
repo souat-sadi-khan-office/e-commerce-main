@@ -20,7 +20,7 @@ class AdminTableSeeder extends Seeder
                 'name' => 'Test Admin',
                 'email' => 'admin1@example.com',
                 'phone' => '1234567890',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('12345678'),
                 'avatar' => 'default.png',
                 'allow_changes' => true,
                 'last_seen' => null,
