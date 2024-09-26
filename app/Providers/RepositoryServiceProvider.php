@@ -29,7 +29,6 @@ use App\Repositories\Interface\DashBoardRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
-use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
