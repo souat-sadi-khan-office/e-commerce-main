@@ -8,15 +8,15 @@ use App\Repositories\Interface\AuthRepositoryInterface;
 
 class AdminController extends Controller
 {
-    private $auth;
+    // private $auth;
 
-    public function __construct(AuthRepositoryInterface $auth)
-    {
-        $this->auth = $auth;
-    }
+    // public function __construct(AuthRepositoryInterface $auth)
+    // {
+    //     $this->auth = $auth;
+    // }
 
-    public function index(Request $request){
-        $auth= $this->auth->index($request);
-        return $auth;
-    }
+    // public function index(Request $request){
+    //     $auth= $this->auth->index($request);
+    //     return $auth;
+    // }
 }

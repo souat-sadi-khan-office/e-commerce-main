@@ -4,8 +4,7 @@ namespace App\Http\Controllers\backend\auth;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Repositories\Interface\AuthRepositoryInterface;
 
 
 class AdminAuthController extends Controller
@@ -15,24 +14,35 @@ class AdminAuthController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    private $auth;
+   
+   
+
+    public function __construct(AuthRepositoryInterface $auth)
     {
-        $this->middleware('guest:admins')->except('logout');
+        $this->auth = $auth;
+        // $this->middleware('guest:admins')->except('logout');
     }
 
     public function form()
     {
-        return view('backend.auth.login');
+       return $this->auth->form();
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+       
+        $guard=$this->auth->login($request,'admins');
 
-        if (Auth::guard('admins')->attempt($credentials)) {
+        if($guard == 'admins'){
             return redirect()->route('dashboard');
-        }
+         }elseif(!$guard == 'admins'){
+             return redirect()->url('/');
+         }else{
 
-        return redirect()->back()->withErrors(['error' => 'Invalid credentials']);
+             return redirect()->back()->withErrors(['error' => 'Invalid credentials']);
+         }
+       
     }
+
 }

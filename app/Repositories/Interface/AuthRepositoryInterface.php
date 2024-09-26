@@ -4,5 +4,6 @@ namespace App\Repositories\Interface;
 
 interface AuthRepositoryInterface
 {
- public function index($request);
+ public function login( $request, $guard);
+ public function form();
 }
