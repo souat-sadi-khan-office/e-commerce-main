@@ -6,9 +6,17 @@ use App\CPU\Helpers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\Interface\AuthRepositoryInterface;
 
 class LoginController extends Controller
 {
+
+    protected $authRepository;
+
+    public function __construct(AuthRepositoryInterface $authRepository)
+    {
+        $this->authRepository = $authRepository;
+    }
 
     public function index()
     {
@@ -16,14 +24,22 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return view('backend.auth.login');
+        // return view('backend.auth.login');
+        return $this->authRepository->form();
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        // $credentials = $request->only('email', 'password');
 
-        if (Auth::guard('admin')->attempt($credentials)) {
+        // if (Auth::guard('admin')->attempt($credentials)) {
+        //     $request->session()->regenerate();
+        //     return redirect()->route('admin.dashboard');
+        // }
+
+        $guard = $this->authRepository->login($request, 'admin');
+
+        if ($guard) {
             $request->session()->regenerate();
             return redirect()->route('admin.dashboard');
         }
@@ -35,8 +51,9 @@ class LoginController extends Controller
 
     public function logout()
     {
-        Helpers::logout('admin');
-
+        // Helpers::logout('admin');
+        $this->authRepository->logout('admin');  
+        
         return redirect()->route('admin.login');
     }
 

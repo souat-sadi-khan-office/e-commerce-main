@@ -11,8 +11,6 @@ use App\Repositories\Interface\AuthRepositoryInterface;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-
-    
     public function login( $request, $guard)
     {
         $cred = $request->only('email','password');
@@ -20,12 +18,16 @@ class AuthRepository implements AuthRepositoryInterface
         if (Auth::guard($guard)->attempt($cred)) {
             return $guard;
         }
-    
+
         return 0;
     }
     
     public function form(){
         return view('backend.auth.login');
     }
-    
+
+    public function logout($guard)
+    {
+        Auth::guard($guard)->logout();
+    }
 }
