@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('area')->nullable();
             $table->string('city')->nullable();
             $table->string('country')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

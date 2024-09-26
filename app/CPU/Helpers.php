@@ -2,12 +2,33 @@
 
 namespace App\CPU;
 
+use Exception;
+use Illuminate\Support\Facades\Auth;
+
 
 class Helpers
 {
     public static function percentage($total, $value)
     {
         return ($total > 0) ? round(($value / $total) * 100) : 0;
+    }
+
+    public function logout($guard)
+    {
+        try {
+
+            Auth::guard($guard)->logout();
+            return 'Logged Out';
+
+        } catch (Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+
+    public function profile($guard)
+    {
+        return Auth::guard($guard)->user();
     }
 
     // public static function make_online()
@@ -30,7 +51,7 @@ class Helpers
     //         return null; // or a default value
     //     }
     // }
-    
+
     // public static function getAppLogoSetting()
     // {
     //     if (session()->has('app_logo')) {
@@ -45,7 +66,7 @@ class Helpers
     //     }
     // }
 
-    
+
     // public static function getEnvCredentials()
     // {
     //     $envCredentials = Session::get('env_credentials');
