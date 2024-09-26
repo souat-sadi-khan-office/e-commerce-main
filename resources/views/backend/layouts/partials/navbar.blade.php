@@ -78,11 +78,13 @@
                         See All Notifications
                     </a>
                 </div>
-            </li> <!--end::Notifications Dropdown Menu--> <!--begin::Fullscreen Toggle-->
+            </li> <!--end::Notifications Dropdown Menu--> 
+            <!--begin::Fullscreen Toggle-->
             <li class="nav-item"> <a class="nav-link" href="#" data-lte-toggle="fullscreen"> <i
                         data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i> <i data-lte-icon="minimize"
                         class="bi bi-fullscreen-exit" style="display: none;"></i> </a> </li>
-            <!--end::Fullscreen Toggle--><!--begin::Mode Toggle-->
+            <!--end::Fullscreen Toggle-->
+            <!--begin::Mode Toggle-->
             <li class="nav-item dropdown">
                 <button class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center"
                     id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
