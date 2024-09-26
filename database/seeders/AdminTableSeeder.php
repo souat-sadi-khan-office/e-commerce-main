@@ -23,12 +23,14 @@ class AdminTableSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'avatar' => 'default.png',
                 'allow_changes' => true,
-                'last_seen' => Carbon::now(),
-                'last_login' => Carbon::now(),
+                'last_seen' => null,
+                'last_login' => null,
                 'address' => '123 Street',
                 'area' => 'Area 1',
                 'city' => 'City 1',
                 'country' => 'Country 1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ]
         ]);
     }
