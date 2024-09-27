@@ -13,7 +13,7 @@
             <div class="card-body login-card-body">
                 
                 <div class="text-center">
-                    <h2>Welcome to E-commerce Project</h2>
+                    <h4>Welcome to E-commerce Project</h4>
                     <p class="login-box-msg">Sign in to start your session</p>
                 </div>
 
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-12">
                             <div class="d-grid gap-2"> 
                                 <button type="submit" class="btn btn-primary">

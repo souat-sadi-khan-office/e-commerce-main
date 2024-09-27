@@ -14,4 +14,7 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // System
+    Route::view('/server-status', 'backend.system.server_status')->name('system_server');
 });

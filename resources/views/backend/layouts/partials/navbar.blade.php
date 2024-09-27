@@ -7,13 +7,18 @@
                 </a>
             </li>
             <li class="nav-item d-none d-md-block"> 
-                <a href="javascript:;" class="nav-link">Top Link 1</a> 
+                <a href="{{ route('home') }}" target="_blank" class="nav-link btn btn-icon btn-circle btn-light" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Website">
+                    <i class="bi bi-globe-americas"></i>
+                </a> 
             </li>
             <li class="nav-item d-none d-md-block"> 
                 <a href="javascript:;" class="nav-link">Top Link 2</a> 
             </li>
             <li class="nav-item d-none d-md-block"> 
-                <a href="javascript:;" class="nav-link">Top Link 2</a> 
+                <a href="javascript:;" class="btn btn-soft-danger">
+                    <i class="bi bi-hdd"></i>
+                    Clear Cache    
+                </a> 
             </li>
         </ul>
 

@@ -18,6 +18,16 @@
                         </p>
                     </a>
                 </li>
+
+                <!-- System -->
+                <li class="nav-item"> 
+                    <a href="{{ route('admin.system_server') }}" class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}"> 
+                        <i class="nav-icon bi bi-hdd"></i>
+                        <p>
+                            System
+                        </p>
+                    </a>
+                </li>
                 
             </ul>
         </nav>

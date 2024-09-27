@@ -3149,6 +3149,21 @@ textarea.form-control-lg {
   --bs-btn-disabled-border-color: #ffc107;
 }
 
+.btn-soft-danger {
+  background-color: rgba(239, 72, 106, 0.15);
+  color: #ef486a;
+}
+
+.btn-soft-danger:hover {
+  background-color: #ef486a;
+  color: #fff;
+}
+
+.btn-light, .btn-outline-light:hover {
+  background-color: #f2f3f8;
+  border-color: #f2f3f8;
+}
+
 .btn-danger {
   --bs-btn-color: #fff;
   --bs-btn-bg: #dc3545;
