@@ -9,7 +9,6 @@ use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\LocationRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\LocationRepository;
