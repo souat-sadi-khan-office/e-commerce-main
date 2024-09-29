@@ -20,14 +20,16 @@
                 </li>
 
                 <!-- System -->
-                <li class="nav-item"> 
-                    <a href="{{ route('admin.system_server') }}" class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}"> 
-                        <i class="nav-icon bi bi-hdd"></i>
-                        <p>
-                            System
-                        </p>
-                    </a>
-                </li>
+                @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view'))
+                    <li class="nav-item"> 
+                        <a href="{{ route('admin.system_server') }}" class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}"> 
+                            <i class="nav-icon bi bi-hdd"></i>
+                            <p>
+                                System
+                            </p>
+                        </a>
+                    </li>
+                @endif
                 
             </ul>
         </nav>
