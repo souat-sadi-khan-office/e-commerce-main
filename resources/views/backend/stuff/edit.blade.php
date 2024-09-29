@@ -19,7 +19,10 @@
 
                 @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
                     <div class="col-sm-6 text-end">
-                        <a href="{{ route('admin.stuff.index') }}" class="btn btn-danger">Back</a>
+                        <a href="{{ route('admin.stuff.index') }}" class="btn btn-soft-danger">
+                            <i class="bi bi-backspace"></i>
+                            Back
+                        </a>
                     </div>
                 @endif
             </div>
@@ -71,12 +74,16 @@
 
                             <div class="col-md-12 form-group">
                                 @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.update'))
-                                    <button type="submit" class="btn btn-primary"  id="submit">
+                                    <button type="submit" class="btn btn-soft-success"  id="submit">
+                                        <i class="bi bi-send"></i>
                                         Update 
                                     </button>
                                 @endif
                                 @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
-                                    <a href="{{ route('admin.stuff.index') }}" class="btn btn-danger">Back</a>
+                                    <a href="{{ route('admin.stuff.index') }}" class="btn btn-soft-danger">
+                                        <i class="bi bi-backspace"></i>
+                                        Back
+                                    </a>
                                 @endif
                             </div>
                     

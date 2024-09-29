@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DataTables;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\AdminRepositoryInterface;
 use Spatie\Permission\Models\Role;
@@ -15,10 +16,25 @@ class StuffController extends Controller
         $this->adminRepository = $adminRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $models = $this->adminRepository->getAllAdmins();
-        return view('backend.stuff.index', compact('models'));
+
+        if ($request->ajax()) {
+
+            $models = $this->adminRepository->getAllAdmins();
+            return Datatables::of($models)
+                ->addIndexColumn()
+                ->editColumn('role', function($model) {
+                    return implode(', ', $model->getRoleNames()->toArray());
+                })
+                ->addColumn('action', function ($model) {
+                    return view('backend.stuff.action', compact('model'));
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('backend.stuff.index');
     }
 
     public function show($id)

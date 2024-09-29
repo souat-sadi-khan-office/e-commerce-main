@@ -1,8 +1,16 @@
 @extends('backend.layouts.app')
 @section('title', 'Dashboard')
-@section('page_name', 'Dashboard')
-@section('breadcrumb', 'Dashboard')
-
+@section('page_name')
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h1 class="h3 mb-0">Dashboard</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 @section('content')
     <div class="row">
         <div class="col-lg-3 col-6">

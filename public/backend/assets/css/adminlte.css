@@ -3164,6 +3164,37 @@ textarea.form-control-lg {
   border-color: #f2f3f8;
 }
 
+.btn-soft-warning {
+  color: #f77b0b;
+  background-color: rgba(247, 123, 11, 0.15);
+  border-radius: 10px;
+  border: 1px solid #f77b0b;
+}
+
+.btn-soft-danger {
+  color: #ef486a;
+  background-color: rgba(239, 72, 106, 0.15);
+  border-radius: 10px;
+  border: 1px solid #ef486a;
+}
+
+.btn-soft-warning:hover {
+  color: #fff;
+  background-color: #f77b0b;
+}
+
+.btn-soft-success {
+  color: #0abb75;
+  background-color: rgba(10, 187, 117, 0.15);
+  border-radius: 10px;
+  border: 1px solid #0abb75;
+}
+
+.btn-soft-success:hover {
+  color: #fff;
+  background-color: #0abb75;
+}
+
 .btn-danger {
   --bs-btn-color: #fff;
   --bs-btn-bg: #dc3545;

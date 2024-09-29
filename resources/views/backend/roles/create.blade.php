@@ -19,7 +19,10 @@
 
                 @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
                     <div class="col-sm-6 text-end">
-                        <a href="{{ route('admin.roles.index') }}" class="btn btn-danger">Back</a>
+                        <a href="{{ route('admin.roles.index') }}" class="btn btn-soft-danger">
+                            <i class="bi bi-backspace"></i>
+                            Back
+                        </a>
                     </div>
                 @endif
             </div>
@@ -68,7 +71,8 @@
         </div>
         @if (Auth::guard('admin')->user()->hasPermissionTo('roles.create'))
             <div class="text-right">
-                <button type="submit" class="btn btn-primary"  id="submit">
+                <button type="submit" class="btn btn-soft-success"  id="submit">
+                    <i class="bi bi-send"></i>
                     Set Permission 
                 </button>
             </div>

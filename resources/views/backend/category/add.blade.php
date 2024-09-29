@@ -11,7 +11,7 @@
                     <h4>Create Category</h4>
                 </div>
                 <div class="card-body">
-                    <livewire:category-form />
+                    <livewire:livewire.category-form />
 
                 </div>
             </div>

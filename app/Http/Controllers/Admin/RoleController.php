@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use DataTables;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Permission;
 use App\Repositories\Interface\RoleRepositoryInterface;
@@ -18,10 +18,22 @@ class RoleController extends Controller
     }
 
     // List all roles
-    public function index()
+    public function index(Request $request)
     {
-        $roles = $this->roleRepository->getAllRoles();
-        return view('backend.roles.index', compact('roles'));
+
+        if ($request->ajax()) {
+
+            $roles = $this->roleRepository->getAllRoles();
+            return Datatables::of($roles)
+                ->addIndexColumn()
+                ->addColumn('action', function ($model) {
+                    return view('backend.roles.action', compact('model'));
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('backend.roles.index');
     }
 
     // Show create form
