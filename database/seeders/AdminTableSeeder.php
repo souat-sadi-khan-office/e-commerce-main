@@ -17,11 +17,11 @@ class AdminTableSeeder extends Seeder
     {
         DB::table('admins')->insert([
             [
-                'name' => 'Test Admin',
-                'email' => 'admin1@example.com',
+                'name' => 'Rahas Istiyak',
+                'email' => 'admin@example.com',
                 'phone' => '1234567890',
                 'designation' => 'Super Admin',
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make('123456789'),
                 'avatar' => 'default.png',
                 'allow_changes' => true,
                 'last_seen' => null,
