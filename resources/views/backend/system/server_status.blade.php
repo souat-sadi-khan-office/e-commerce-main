@@ -1,6 +1,33 @@
 @extends('backend.layouts.app')
 @section('title', 'Server Status')
+@section('page_name')
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h1 class="h3 mb-0">System Status</h1>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('admin.dashboard') }}">
+                                <i class="bi bi-house-add-fill"></i>
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Staff Management</li>
+                    </ol>
+                </div>
 
+                @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.create'))
+                    <div class="col-sm-6 text-end">
+                        <a href="{{ route('admin.stuff.create') }}" class="btn btn-soft-success">
+                            <i class="bi bi-plus"></i>
+                            Create New
+                        </a>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endsection
 @section('content')
 <div class="row">
     <div class="col-lg-10 col-xxl-8 mx-auto">

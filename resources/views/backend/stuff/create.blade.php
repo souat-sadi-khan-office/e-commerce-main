@@ -8,7 +8,9 @@
                     <h1 class="h3 mb-0">Create new Staff</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.dashboard') }}">Home</a>
+                            <a href="{{ route('admin.dashboard') }}">
+                                <i class="bi bi-house-add-fill"></i>
+                            </a>
                         </li>
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.stuff.index') }}">Staff Management</a>

@@ -49,7 +49,7 @@
                 </li>
 
                 <!-- OTP Setup -->
-                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
                         <i class="nav-icon bi bi-telephone"></i>
                         <p>
@@ -75,7 +75,7 @@
                 </li>
 
                 <!-- Website Setup -->
-                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
@@ -117,7 +117,7 @@
                 </li>
 
                 <!-- Setup & Configuration -->
-                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
@@ -157,7 +157,7 @@
                 </li>
 
                 <!-- Shipping Configuration -->
-                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
                         <i class="nav-icon bi bi-truck"></i>
                         <p>
