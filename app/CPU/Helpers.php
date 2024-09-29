@@ -2,6 +2,7 @@
 
 namespace App\CPU;
 
+use App\Models\Category;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +30,7 @@ class Helpers
     {
         return Auth::guard($guard)->user();
     }
+
 
     // public static function make_online()
     // {
