@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Repositories\AuthRepository;
 use App\Repositories\CartRepository;
+use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\AdminRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProductRepository;
@@ -18,7 +20,9 @@ use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
 use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\CartRepositoryInterface;
+use App\Repositories\Interface\RoleRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
+use App\Repositories\Interface\AdminRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
 use App\Repositories\Interface\PaymentRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
@@ -50,6 +54,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductSpecificationRepositoryInterface::class, ProductSpecificationRepository::class);
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
+        $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
     }
 
     /**

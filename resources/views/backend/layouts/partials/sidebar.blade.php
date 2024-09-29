@@ -48,6 +48,30 @@
                     </ul>
                 </li>
 
+                <!-- Role Permission -->
+                @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
+                    <li class="nav-item"> 
+                        <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                            <i class="nav-icon bi bi-hdd"></i>
+                            <p>
+                                Role Permission
+                            </p>
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Stuff -->
+                @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
+                    <li class="nav-item"> 
+                        <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}"> 
+                            <i class="nav-icon bi bi-hdd"></i>
+                            <p>
+                                Stuff
+                            </p>
+                        </a>
+                    </li>
+                @endif
+
                 <!-- System -->
                 @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view'))
                     <li class="nav-item"> 

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href={{ asset('backend/assets/css/fontawesome.min.css') }}>
     <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
     <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- @livewireStyles --}}
 
     @livewireStyles

@@ -22,6 +22,18 @@ class PermissionTableSeeder extends Seeder
 			['name' => 'test-model.update'],
 			['name' => 'test-model.delete'],
 
+			// Stuff
+			['name' => 'stuff.view'],
+			['name' => 'stuff.create'],
+			['name' => 'stuff.update'],
+			['name' => 'stuff.delete'],
+
+			// Roles & Permission
+			['name' => 'roles.view'],
+			['name' => 'roles.create'],
+			['name' => 'roles.update'],
+			['name' => 'roles.delete'],
+
             // System Status
 			['name' => 'system-status.view'],
 		];
