@@ -1,6 +1,7 @@
 @extends('backend.layouts.app')
 @section('title', 'Dashboard')
 @section('page_name', 'Dashboard')
+@section('breadcrumb', 'Dashboard')
 
 @section('content')
     <div class="row">
