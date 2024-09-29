@@ -1,9 +1,9 @@
 @include('backend.layouts.partials.head')
-
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
     <div class="app-wrapper">
         @include('backend.layouts.partials.navbar')
         @include('backend.layouts.partials.sidebar')
+
 
         <main class="app-main">
             <div class="app-content-header">
@@ -42,7 +42,8 @@
 
     </div>
 
-    @stack('script')
     @include('backend.components.scripts')
+    @stack('script')
+    @livewireScripts
 </body>
 </html>
