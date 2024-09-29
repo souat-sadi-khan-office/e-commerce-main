@@ -3149,6 +3149,21 @@ textarea.form-control-lg {
   --bs-btn-disabled-border-color: #ffc107;
 }
 
+.btn-soft-danger {
+  background-color: rgba(239, 72, 106, 0.15);
+  color: #ef486a;
+}
+
+.btn-soft-danger:hover {
+  background-color: #ef486a;
+  color: #fff;
+}
+
+.btn-light, .btn-outline-light:hover {
+  background-color: #f2f3f8;
+  border-color: #f2f3f8;
+}
+
 .btn-danger {
   --bs-btn-color: #fff;
   --bs-btn-bg: #dc3545;
@@ -14499,6 +14514,15 @@ html.maximized-card {
   --lte-card-variant-bg-rgb: 220, 53, 69;
   --lte-card-variant-color: #fff;
   --lte-card-variant-color-rgb: 255, 255, 255;
+}
+
+.card-danger,
+.bg-danger,
+.text-bg-app-color {
+  --lte-card-variant-bg: green;
+  --lte-card-variant-bg-rgb: green;
+  --lte-card-variant-color: #fff;
+  --lte-card-variant-color-rgb: green;
 }
 
 .card-light,

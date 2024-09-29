@@ -2,7 +2,10 @@
 
 namespace App\Repositories;
 
+use Exception;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Repositories\Interface\AuthRepositoryInterface;
 
 
@@ -10,25 +13,21 @@ class AuthRepository implements AuthRepositoryInterface
 {
     public function login( $request, $guard)
     {
-      
-        if (!isset($request->email) || !isset($request['password'])) {
-            dd($request,$request->email);
-            return redirect()->back()->withErrors(['error' => 'Email and password are required.']);
-        }
-        $credintials=$request->only('email','password');
-        // Attempt to authenticate the user
-        if (Auth::guard($guard)->attempt($credintials)) {
- 
+        $cred = $request->only('email','password');
+
+        if (Auth::guard($guard)->attempt($cred)) {
             return $guard;
-           
         }
-    
-        // If authentication fails
+
         return 0;
     }
     
     public function form(){
         return view('backend.auth.login');
     }
-    
+
+    public function logout($guard)
+    {
+        Auth::guard($guard)->logout();
+    }
 }

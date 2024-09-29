@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fontend;
+namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Interface\UserRepositoryInterface;
@@ -16,7 +16,7 @@ class UserController extends Controller
     }
 
     public function index(Request $request){
-        $users= $this->user->index($request);
+        $users = $this->user->index($request);
         return $users;
     }
 }

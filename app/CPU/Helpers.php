@@ -5,7 +5,6 @@ namespace App\CPU;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
-
 class Helpers
 {
     public static function percentage($total, $value)
@@ -13,7 +12,7 @@ class Helpers
         return ($total > 0) ? round(($value / $total) * 100) : 0;
     }
 
-    public function logout($guard)
+    public static function logout($guard)
     {
         try {
 

@@ -1,21 +1,20 @@
-<?php 
+<?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\AdminController;
 
-use App\Http\Controllers\backend\AdminController;
-use App\Http\Controllers\backend\auth\AdminAuthController;
-
-
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AdminAuthController::class, 'form'])->name('login');
-    Route::post('/loginn', [AdminAuthController::class, 'login'])->name('login.post');
-    
-    });
-
-Route::middleware('auth:admins')->group(function () {
-    
 Route::get('/', function() {
-    return view('backend.dashboard');
-})->name('dashboard');
-// Route::get('/dashboard', [AdminController::class, 'dashboard']);
+    return redirect()->route('admin.login');
+});
+
+Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['isAdmin', 'web'])->group(function () {
+    Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // System
+    Route::view('/server-status', 'backend.system.server_status')->name('system_server');
 });

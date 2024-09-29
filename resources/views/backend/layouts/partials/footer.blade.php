@@ -1,10 +1,8 @@
-<!--begin::Footer-->
-<footer class="app-footer"> <!--begin::To the end-->
-    <div class="float-end d-none d-sm-inline">Anything you want</div> <!--end::To the end--> <!--begin::Copyright-->
+<footer class="app-footer">
+    <div class="float-end d-none d-sm-inline">
+        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+    </div> 
     <strong>
-        Copyright &copy; 2014-2024&nbsp;
-        <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+        Copyright &copy; {{ date("Y") }}&nbsp;
     </strong>
-    All rights reserved.
-    <!--end::Copyright-->
-</footer> <!--end::Footer-->
+</footer>
