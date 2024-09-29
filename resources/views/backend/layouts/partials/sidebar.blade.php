@@ -48,29 +48,35 @@
                     </ul>
                 </li>
 
-                <!-- Role Permission -->
-                @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
-                    <li class="nav-item"> 
-                        <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
-                            <i class="nav-icon bi bi-hdd"></i>
-                            <p>
-                                Role Permission
-                            </p>
-                        </a>
-                    </li>
-                @endif
-
-                <!-- Stuff -->
-                @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
-                    <li class="nav-item"> 
-                        <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}"> 
-                            <i class="nav-icon bi bi-hdd"></i>
-                            <p>
-                                Stuff
-                            </p>
-                        </a>
-                    </li>
-                @endif
+                <!-- Staff & Permission -->
+                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>
+                            Staffs
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}"> 
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>All Staffs</p>
+                                </a> 
+                            </li>
+                        @endif
+                        
+                        @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Staff Permission</p>
+                                </a> 
+                            </li>
+                        @endif
+                    </ul>
+                </li>
 
                 <!-- System -->
                 @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view'))

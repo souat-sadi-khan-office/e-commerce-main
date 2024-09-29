@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Interface\AdminRepositoryInterface;
+use Spatie\Permission\Models\Role;
 
 class StuffController extends Controller
 {
@@ -16,8 +17,8 @@ class StuffController extends Controller
 
     public function index()
     {
-        $admins = $this->adminRepository->getAllAdmins();
-        return view('backend.stuff.index', compact('admins'));
+        $models = $this->adminRepository->getAllAdmins();
+        return view('backend.stuff.index', compact('models'));
     }
 
     public function show($id)
@@ -28,7 +29,8 @@ class StuffController extends Controller
 
     public function create()
     {
-        return view('backend.stuff.create');
+        $roles = Role::all();
+        return view('backend.stuff.create', compact('roles'));
     }
 
     public function store(Request $request)
@@ -47,6 +49,7 @@ class StuffController extends Controller
             'city' => 'nullable|string',
             'country' => 'nullable|string',
             'remember_token' => 'nullable|string',
+            'roles' => 'string',
         ]);
 
         $this->adminRepository->createAdmin($data);
@@ -55,8 +58,9 @@ class StuffController extends Controller
 
     public function edit($id)
     {
-        $admin = $this->adminRepository->getAdminById($id);
-        return view('backend.stuff.edit', compact('admin'));
+        $model = $this->adminRepository->getAdminById($id);
+        $roles = Role::all();
+        return view('backend.stuff.edit', compact('model', 'roles'));
     }
 
     public function update(Request $request, $id)
@@ -74,7 +78,7 @@ class StuffController extends Controller
             'area' => 'nullable|string',
             'city' => 'nullable|string',
             'country' => 'nullable|string',
-            'remember_token' => 'nullable|string',
+            'roles' => 'string',
         ]);
 
         $this->adminRepository->updateAdmin($id, $data);
@@ -84,6 +88,11 @@ class StuffController extends Controller
     public function destroy($id)
     {
         $this->adminRepository->deleteAdmin($id);
-        return redirect()->route('admin.stuff.index')->with('success', 'Admin deleted successfully!');
+
+        return response()->json([
+            'status' => true, 
+            'load' => true,
+            'message' => "Admin deleted successfully"
+        ]);
     }
 }
