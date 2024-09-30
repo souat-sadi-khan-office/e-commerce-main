@@ -1,9 +1,13 @@
 <script src="{{ asset('backend/assets/js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('backend/assets/js/color_mode.js') }}"></script>
 <script src="{{ asset('backend/assets/js/overlayscrollbars.browser.es6.min.js') }}" ></script>
+<script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
+<script src="{{ asset('backend/assets/js/parsley.min.js') }}" ></script>
+<script src="{{ asset('backend/assets/js/select2.min.js') }}" ></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" ></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" ></script>
 <script src={{ asset('backend/assets/js/adminlte.js') }}></script>
+<script src={{ asset('backend/assets/js/main.js') }}></script>
 
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";

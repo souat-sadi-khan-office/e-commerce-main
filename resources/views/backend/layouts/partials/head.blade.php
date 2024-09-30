@@ -13,7 +13,8 @@
     @stack('styleforIconPicker')
     <link rel="stylesheet" href={{ asset('backend/assets/css/fontawesome.min.css') }}>
     <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
-    <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     @stack('style')

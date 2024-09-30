@@ -6,6 +6,7 @@ use App\Repositories\AuthRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\ZoneRepository;
 use App\Repositories\AdminRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\PaymentRepository;
@@ -22,6 +23,7 @@ use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\CartRepositoryInterface;
 use App\Repositories\Interface\RoleRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
+use App\Repositories\Interface\ZoneRepositoryInterface;
 use App\Repositories\Interface\AdminRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
 use App\Repositories\Interface\PaymentRepositoryInterface;
@@ -56,6 +58,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductSpecificationRepositoryInterface::class, ProductSpecificationRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
+        $this->app->bind(ZoneRepositoryInterface::class, ZoneRepository::class);
     }
 
     /**

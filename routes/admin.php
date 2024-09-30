@@ -6,7 +6,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HelperController;
 use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\StuffController;
+use App\Http\Controllers\Admin\ZoneController;
+use App\Http\Controllers\Admin\StuffController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -24,6 +25,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+
+    // Zone
+    Route::resource('zone', ZoneController::class);
 
     // Stuff
     Route::resource('stuff', StuffController::class);
