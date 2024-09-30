@@ -6,6 +6,11 @@ var _componentSelect2Normal = function () {
         dropdownParent: $('#modal_remote')
     });
 }
+var _componentSelect = function () {
+    $('.select').select2({
+        width: '100%',
+    });
+}
 
 // For Opening Modal
 var _componentRemoteModalLoadAfterAjax = function () {
@@ -44,94 +49,6 @@ var _slugify = function(text) {
         .replace(/^-+/, '') 
         .replace(/-+$/, '');
 }
-
-// For form validation
-var _formValidation = function () {
-    if ($('.content_form').length > 0) {
-        $('.content_form').parsley().on('field:validated', function () {
-            var ok = $('.parsley-error').length === 0;
-            $('.bs-callout-info').toggleClass('hidden', !ok);
-            $('.bs-callout-warning').toggleClass('hidden', ok);
-        });
-    }
-
-    $('.content_form').on('submit', function (e) {
-        e.preventDefault();
-
-        $('#submit').hide();
-        $('#submitting').show();
-
-        $(".ajax_error").remove();
-        var submit_url = $('.content_form').attr('action');
-        var formData = new FormData($(".content_form")[0]);
-
-        //Start Ajax
-        $.ajax({
-            url: submit_url,
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
-            dataType: 'JSON',
-            success: function (data) {
-                if (data.status) {
-
-                    toastr.success(data.message);
-
-                    $('.content_form')[0].reset();
-                    if (data.goto) {
-                        setTimeout(function () {
-
-                            window.location.href = data.goto;
-                        }, 500);
-                    }
-
-                    if (data.load) {
-                        setTimeout(function () {
-
-                            window.location.href = "";
-                        }, 1000);
-                    }
-
-                } else {
-                    toastr.error(data.message);
-                }
-
-                $('#submit').show();
-                $('#submitting').hide();
-            },
-            error: function (data) {
-                var jsonValue = $.parseJSON(data.responseText);
-                const errors = jsonValue.errors;
-                if (errors) {
-                    var i = 0;
-                    $.each(errors, function (key, value) {
-                        const first_item = Object.keys(errors)[i]
-                        const message = errors[first_item][0];
-                        if ($('#' + first_item).length > 0) {
-                            $('#' + first_item).parsley().removeError('required', {
-                                updateClass: true
-                            });
-                            $('#' + first_item).parsley().addError('required', {
-                                message: value,
-                                updateClass: true
-                            });
-                        }
-                        toastr.error(value);
-                        i++;
-
-                    });
-                } else {
-                    toastr.warning(jsonValue.message);
-                }
-
-                $('#submit').show();
-                $('#submitting').hide();
-            }
-        });
-    });
-};
 
 // For Submitting Modal Form
 var _modalClassFormValidation = function () {
@@ -227,14 +144,16 @@ var _formValidation = function () {
 
     $('.content_form').on('submit', function (e) {
         e.preventDefault();
+
         $('#submit').hide();
         $('#submitting').show();
+
         $(".ajax_error").remove();
+
         var submit_url = $('.content_form').attr('action');
-        var editor = $(this).data('editor');
         var formData = new FormData($(".content_form")[0]);
 
-        if (CKEDITOR.instances.editor) { // Use 'editor' here
+        if (CKEDITOR.instances.editor) {
             const descriptionData = CKEDITOR.instances.editor.getData();
             formData.append('description', descriptionData);
         }
@@ -251,27 +170,33 @@ var _formValidation = function () {
                 console.log(data)
                 if (!data.status) {
                     if (data.validator) {
-                        // If there are validation errors, display each error message
                         for (const [key, messages] of Object.entries(data.message)) {
                             messages.forEach(message => {
                                 toastr.error(message);
                             });
                         }
                     } else {
-                        // If there's a general error message
                         toastr.error(data.message);
                     }
                 } else {
                     toastr.success(data.message);
-                    CKEDITOR.instances.editor.setData('');
-                    var preview = document.getElementById("preview");
-                    preview.innerHTML = "";
+                    
+                    // CKEDITOR.instances.editor.setData('');
+                    // var preview = document.getElementById("preview");
+                    // preview.innerHTML = "";
 
                     $('.content_form')[0].reset();
                     if (data.goto) {
                         setTimeout(function () {
 
                             window.location.href = data.goto;
+                        }, 500);
+                    }
+
+                    if (data.load) {
+                        setTimeout(function () {
+
+                            window.location.href = "";
                         }, 500);
                     }
 
@@ -288,12 +213,6 @@ var _formValidation = function () {
 
                             window.location.href = "";
                         }, 1000);
-                    }
-
-                    if (typeof(emran) != "undefined" && emran !== null) {
-                        if (typeof(emran.ajax) != "undefined" && emran.ajax !== null) {
-                            emran.ajax.reload(null, false);
-                        }
                     }
                 }
 
@@ -326,7 +245,7 @@ var _formValidation = function () {
                     toastr.warning(jsonValue.message);
 
                 }
-                // _componentSelect2Normal();
+
                 $('#submit').show();
                 $('#submitting').hide();
             }

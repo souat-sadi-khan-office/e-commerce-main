@@ -6,7 +6,7 @@ interface BrandRepositoryInterface
 {
     public function getAllBrands();
     public function findBrandById($id);
-    public function createBrand(array $data);
-    public function updateBrand($id, array $data);
+    public function createBrand($data);
+    public function updateBrand($id, $data);
     public function deleteBrand($id);
 }

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use DataTables;
+use App\CPU\Images;
 use App\Models\Brand;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\BrandRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BrandRepositoryInterface;
 
 class BrandController extends Controller
@@ -26,7 +29,7 @@ class BrandController extends Controller
             return Datatables::of($models)
                 ->addIndexColumn()
                 ->editColumn('logo', function ($model) {
-                    return $model->logo;
+                    return Images::show($model->logo);
                 })
                 ->editColumn('created_by', function ($model) {
                     return $model->creator->name;
@@ -38,7 +41,7 @@ class BrandController extends Controller
                     return $model->is_featured == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                 })
                 ->addColumn('action', function ($model) {
-                    return view('backend.cities.action', compact('model'));
+                    return view('backend.brands.action', compact('model'));
                 })
                 ->rawColumns(['action', 'status', 'created_by', 'featured', 'logo'])
                 ->make(true);
@@ -52,30 +55,9 @@ class BrandController extends Controller
         return view('backend.brands.create');
     }
 
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        $data = $request->validate([
-            'name'              => 'required',
-            'logo'              => 'required',
-            'is_featured'       => 'required',
-            'status'            => 'required',
-            'slug'              => 'required|string',
-            'description'       => 'required',
-            'meta_title'        => 'required|string',
-            'meta_keyword'      => 'nullable',
-            'meta_description'  => 'required',
-            'meta_article_tag'  => 'nullable',
-            'meta_script_tag'   => 'nullable',
-            'created_by'        => 'required',
-        ]);
-
-        $this->brandRepository->createBrand($data);
-
-        return response()->json([
-            'status' => true, 
-            'load' => true,
-            'message' => "Brand created successfully"
-        ]);
+        return $this->brandRepository->createBrand($request);
     }
 
     public function edit($id)
@@ -84,30 +66,9 @@ class BrandController extends Controller
         return view('backend.brands.edit', compact('model'));
     }
 
-    public function update(Request $request, $id)
+    public function update(BrandRequest $request, $id)
     {
-        $data = $request->validate([
-            'name'              => 'required',
-            'logo'              => 'required',
-            'is_featured'       => 'required',
-            'status'            => 'required',
-            'slug'              => 'required|string',
-            'description'       => 'required',
-            'meta_title'        => 'required|string',
-            'meta_keyword'      => 'nullable',
-            'meta_description'  => 'required',
-            'meta_article_tag'  => 'nullable',
-            'meta_script_tag'   => 'nullable',
-            'created_by'        => 'required',
-        ]);
-
-        $this->brandRepository->updateBrand($id, $data);
-
-        return response()->json([
-            'status' => true, 
-            'load' => true,
-            'message' => "Brand updated successfully"
-        ]);
+        return $this->brandRepository->updateBrand($id, $request);
     }
 
     public function destroy($id)

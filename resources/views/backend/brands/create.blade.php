@@ -57,10 +57,23 @@
                                 <span class="text-danger">Logo size is <b>185 X 55</b> pixrl. Please use <b>.WEBP</b> format picture for better performance.</span>
                             </div>
 
-                            <div class="col-md-12 mb-3 form-group">
-                                <label for="description">Description <span class="text-danger">*</span></label>
-                                <textarea name="description" id="description" cols="30" rows="4" class="form-control"></textarea>
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="status">Status <span class="text-danger">*</span></label>
+                                <select name="status" id="status" class="form-control select" required>
+                                    <option selected value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
                             </div>
+
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="is_featured">Featured <span class="text-danger">*</span></label>
+                                <select name="is_featured" id="is_featured" class="form-control select" required>
+                                    <option value="1">Yes</option>
+                                    <option selected value="0">No</option>
+                                </select>
+                            </div>
+
+                            @include('backend.components.descriptionInput')
 
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="meta_tile">Meta Title <span class="text-danger">*</span></label>
@@ -73,8 +86,8 @@
                             </div>
 
                             <div class="col-md-6 mb-3 form-group">
-                                <label for="meta_keyword">Meta Description <span class="text-danger">*</span></label>
-                                <textarea name="meta_keyword" id="meta_keyword" cols="30" rows="4" class="form-control" placeholder="Enter your SEO Meta Description" required></textarea>
+                                <label for="meta_description">Meta Description <span class="text-danger">*</span></label>
+                                <textarea name="meta_description" id="meta_description" cols="30" rows="4" class="form-control" placeholder="Enter your SEO Meta Description" required></textarea>
                             </div>
 
                             <div class="col-md-6 mb-3 form-group">
@@ -89,9 +102,13 @@
                     
                             <div class="col-md-12 form-group">
                                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.create')) --}}
-                                    <button type="submit" class="btn btn-soft-success"  id="submit">
+                                    <button type="submit" name="listing" value="listing" class="btn btn-soft-success"  id="submit">
                                         <i class="bi bi-send"></i>
                                         Create & Back to Listing
+                                    </button>
+                                    <button type="submit" name="stay" value="stay" class="btn btn-soft-warning"  id="submit">
+                                        <i class="bi bi-send"></i>
+                                        Create & Stay
                                     </button>
                                 {{-- @endif --}}
                                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view')) --}}
@@ -113,6 +130,8 @@
     <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
     <script>
         _formValidation();
+        _initCkEditor("editor");
+        _componentSelect();
 
         $('.dropify').dropify();
         

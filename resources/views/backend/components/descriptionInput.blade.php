@@ -1,6 +1,6 @@
 <div class="mb-3">
     <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-    <textarea name="description" id="editor" class="form-control" rows="5" required></textarea>
+    <textarea name="description" id="editor" class="form-control" rows="5" required>{{ $description ?? '' }}</textarea>
 </div>
 @push('script')
     <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
