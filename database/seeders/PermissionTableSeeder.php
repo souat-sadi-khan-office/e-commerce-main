@@ -22,6 +22,24 @@ class PermissionTableSeeder extends Seeder
 			['name' => 'test-model.update'],
 			['name' => 'test-model.delete'],
 
+			// Zone
+			['name' => 'zone.view'],
+			['name' => 'zone.create'],
+			['name' => 'zone.update'],
+			['name' => 'zone.delete'],
+
+			// Country
+			['name' => 'country.view'],
+			['name' => 'country.create'],
+			['name' => 'country.update'],
+			['name' => 'country.delete'],
+
+			// City
+			['name' => 'city.view'],
+			['name' => 'city.create'],
+			['name' => 'city.update'],
+			['name' => 'city.delete'],
+
 			// Stuff
 			['name' => 'stuff.view'],
 			['name' => 'stuff.create'],

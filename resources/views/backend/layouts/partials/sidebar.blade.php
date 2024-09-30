@@ -158,7 +158,7 @@
 
                 <!-- Shipping Configuration -->
                 <li class="nav-item ">
-                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('admin/zone') ? 'menu-open' : '' }}">
                         <i class="nav-icon bi bi-truck"></i>
                         <p>
                             Shipping
@@ -173,28 +173,32 @@
                             </a> 
                         </li>
 
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Zones</p>
-                            </a> 
-                        </li>
+                        {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.view')) --}}
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.zone.index') }}" class="nav-link {{ Request::is('admin/zone') ? ' active' : '' }}"> 
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Zones</p>
+                                </a> 
+                            </li>
+                        {{-- @endif --}}
                         
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Countries</p>
-                            </a> 
-                        </li>
+                        {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('country.view')) --}}
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Countries</p>
+                                </a> 
+                            </li>
+                        {{-- @endif --}}
 
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Cities</p>
-                            </a> 
-                        </li>
-
-                        
+                        {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('city.view')) --}}
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Cities</p>
+                                </a> 
+                            </li>
+                        {{-- @endif --}}
                     </ul>
                 </li>
 

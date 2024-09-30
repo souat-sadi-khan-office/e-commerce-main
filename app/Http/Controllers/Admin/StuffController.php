@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use DataTables;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\AdminRepositoryInterface;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class StuffController extends Controller
 {
