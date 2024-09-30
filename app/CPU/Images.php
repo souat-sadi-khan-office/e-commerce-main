@@ -7,7 +7,9 @@ class Images
 {
     public static function upload($folder, $image)
     {
-        $fileName = time() . rand(100, 999) . '.' . $image->getClientOriginalExtension();
+        $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+
+        $fileName = $originalName . rand(1000, 99999) . '.' . $image->getClientOriginalExtension();
         $image->storeAs('public/images/' . $folder, $fileName);
         $productImage = 'storage/images/' . $folder . '/' . $fileName;
         return $productImage;

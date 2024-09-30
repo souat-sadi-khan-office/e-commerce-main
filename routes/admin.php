@@ -24,7 +24,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
-    Route::get('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+    Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
     // Zone
     Route::resource('zone', ZoneController::class);

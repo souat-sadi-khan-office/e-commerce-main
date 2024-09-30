@@ -58,6 +58,10 @@ class Helpers
         return $word;
     }
 
+    public static function icon($class){
+        return '<i class="'.$class.'"></i>';
+    }
+
     // public static function make_online()
     // {
     //     $active = Auth::guard('api_users')->user();

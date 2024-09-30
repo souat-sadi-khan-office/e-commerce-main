@@ -33,106 +33,114 @@
                             </div>
                         @endif
 
-                        <form id="categoryForm" enctype="multipart/form-data">
+                        <form id="categoryForm" class="content_form" action="{{ route('admin.category.store') }}"
+                            enctype="multipart/form-data" data-editor="editor">
                             @csrf
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control" required>
+                                    <label for="name" class="form-label">Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="name" id="name" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" name="slug" class="form-control" readonly>
+                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                    <input type="text" name="slug" id="slug" class="form-control" readonly>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="icon" class="form-label">Icon</label>
+                                    <label for="icon" class="form-label">Icon <span class="text-danger">*</span></label>
                                     <input type="text" name="icon" class="form-control iconpicker" required>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="header" class="form-label">Header</label>
+                                    <label for="header" class="form-label">Header <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="header" class="form-control" required>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="short_description" class="form-label">Short Description</label>
+                                    <label for="short_description" class="form-label">Short Description <span
+                                            class="text-danger">*</span></label>
                                     <textarea name="short_description" class="form-control" rows="3" required></textarea>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="site_title" class="form-label">Site Title</label>
+                                    <label for="site_title" class="form-label">Site Title <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="site_title" class="form-control" required>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea name="description" class="form-control" rows="5" required></textarea>
-                            </div>
+                            @include('backend.components.descriptionInput')
 
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="meta_title" class="form-label">Meta Title</label>
+                                    <label for="meta_title" class="form-label">Meta Title <span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="meta_title" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label for="meta_keyword" class="form-label">Meta Keyword <span class="text-danger"> Use
-                                            Comma ","</span></label>
+                                            Comma " , "  *</span></label>
                                     <input type="text" name="meta_keyword" class="form-control" required>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="meta_description" class="form-label">Meta Description</label>
+                                <label for="meta_description" class="form-label">Meta Description <span
+                                        class="text-danger">*</span></label>
                                 <textarea name="meta_description" class="form-control" rows="3" required></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="mb-3 col-6">
                                     <label for="meta_article_tag" class="form-label">Meta Article Tag <span
-                                            class="text-danger"> Use Comma ","</span></label>
+                                            class="text-danger"> Use Comma " , "</span></label>
                                     <input type="text" name="meta_article_tag" class="form-control">
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label for="meta_script_tag" class="form-label">Meta Script Tag <span
-                                            class="text-danger"> Use Comma ","</span></label>
+                                            class="text-danger"> Use Comma " , "</span></label>
                                     <input type="text" name="meta_script_tag" class="form-control">
                                 </div>
                             </div>
-
+                            {{-- <input type="file" name="image" class="form-control"> --}}
                             <div class="row">
-                                <div class="mb-3 col-6">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select name="status" class="form-select" required>
-                                        <option value="active" selected>Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
+                                <div class="col-4 mt-4 p-5">
+                                    <div class="row">
+                                        <div class=" mb-3 col-6 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                name="status" id="flexSwitchCheckChecked" checked>
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Status <span
+                                                    class="text-danger">*</span></label>
+                                        </div>
+
+
+                                        <div class=" mb-3 col-6 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch"
+                                                name="is_featured" id="flexSwitchCheckChecked">
+                                            <label class="form-check-label" for="flexSwitchCheckChecked">Feature?
+                                                <span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="mb-3 col-6">
-                                    <label for="is_featured" class="form-label">Is Featured?</label>
-                                    <select name="is_featured" class="form-select" required>
-                                        <option value="0">No</option>
-                                        <option value="1">Yes</option>
-                                    </select>
+                                <div class="col-8">
+                                    @include('backend.components.imageInput')
+
                                 </div>
+
+
                             </div>
 
-                            <div class="uploadOuter mb-3">
-                                <label for="uploadFile" class="btn btn-primary form-label">Upload Image</label>
-                                <strong>OR</strong>
-                                <span class="dragBox">
-                                    Drag and Drop image here
-                                    <input type="file" name="photo" id="uploadFile" />
-                                </span>
-                            </div>
                             <div id="preview">
                                 <img id="imagePreview" alt="Image Preview" style="max-width: 50%; display: none;">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" id="submitting" class="btn btn-warning d-none"
+                                disabled>Submitting..</button>
                         </form>
                     </div>
 
@@ -147,63 +155,19 @@
     <link href="{{ asset('backend/assets/css/bootstrapicons-iconpicker.css') }}" rel="stylesheet">
 @endpush
 
-@push('style')
-    <style>
-        .uploadOuter {
-            text-align: center;
-            padding: 20px;
-
-            strong {
-                padding: 0 10px
-            }
-        }
-
-        .dragBox {
-            width: 250px;
-            height: 100px;
-            margin: 0 auto;
-            position: relative;
-            text-align: center;
-            font-weight: bold;
-            line-height: 95px;
-            color: #999;
-            border: 2px dashed #ccc;
-            display: inline-block;
-            transition: transform 0.3s;
-
-            input[type="file"] {
-                position: absolute;
-                height: 100%;
-                width: 100%;
-                opacity: 0;
-                top: 0;
-                left: 0;
-            }
-        }
-
-        .draging {
-            transform: scale(1.1);
-        }
-
-        #preview {
-            text-align: center;
-
-            img {
-                max-width: 100%
-            }
-        }
-    </style>
-@endpush
 
 @push('script')
     <script src="{{ asset('backend/assets/js/bootstrapicon-iconpicker.js') }}"></script>
     <script>
         $(function() {
             $('.iconpicker').iconpicker();
+            _initCkEditor("editor");
         });
     </script>
     <script>
         $(document).ready(function() {
+            // Handle form submission
+            _formValidation();
             // Handle file upload preview
             $('#uploadFile').on('change', function() {
                 const file = this.files[0];
@@ -216,53 +180,45 @@
                 }
             });
 
-            // Handle form submission
-            $('#categoryForm').on('submit', function(event) {
-                event.preventDefault();
-                const formData = new FormData(this);
 
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Function to convert name to slug
+            function generateSlug(name) {
+                return name
+                    .toString()
+                    .toLowerCase()
+                    .trim()
+                    .replace(/&/g, '-and-') // Replace & with 'and'
+                    .replace(/[^a-z0-9 -]/g, '') // Remove invalid characters
+                    .replace(/\s+/g, '-') // Replace spaces with -
+                    .replace(/-+/g, '-'); // Replace multiple - with single -
+            }
+
+            $('#name').on('input', function() {
+                const name = $(this).val();
+                const slug = generateSlug(name);
+                $('#slug').val(slug);
+
+                // Check if the slug exists
                 $.ajax({
-                    url: '{{ route('admin.category.store') }}',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        // Handle success response
-                        alert(response.message);
-                        $('#categoryForm')[0].reset();
-                        $('#imagePreview').hide();
+                    url: '{{ route('admin.slug.check') }}',
+                    type: 'GET',
+                    data: {
+                        slug: slug,
+                        _token: '{{ csrf_token() }}'
                     },
-                    error: function(xhr) {
-                        // Handle error response
-                        const errors = xhr.responseJSON.errors;
-                        for (const key in errors) {
-                            alert(errors[key].join(', '));
+                    success: function(response) {
+                        if (response.exists) {
+                            const timestamp = Date.now(); // Get current timestamp
+                            $('#slug').val(slug + '-' + timestamp); // Append timestamp to slug
                         }
                     }
                 });
             });
         });
-    </script>
-
-    <script>
-        "use strict";
-
-        function dragNdrop(event) {
-            var fileName = URL.createObjectURL(event.target.files[0]);
-            var preview = document.getElementById("preview");
-            var previewImg = document.createElement("img");
-            previewImg.setAttribute("src", fileName);
-            preview.innerHTML = "";
-            preview.appendChild(previewImg);
-        }
-
-        function drag() {
-            document.getElementById('uploadFile').parentNode.className = 'draging dragBox';
-        }
-
-        function drop() {
-            document.getElementById('uploadFile').parentNode.className = 'dragBox';
-        }
     </script>
 @endpush
