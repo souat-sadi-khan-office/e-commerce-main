@@ -6,6 +6,67 @@ var _componentSelect2Normal = function () {
         dropdownParent: $('#modal_remote')
     });
 }
+var _componentSelect = function () {
+    $('.select').select2({
+        width: '100%',
+    });
+}
+
+// Is featured Update
+var _isfeaturedUpdate = function(){
+    $(document).on('change', 'input[name="is_featured"]', function() {
+        var id = $(this).data('id'); // Get the ID from data-id attribute
+        var status = this.checked ? 1 : 0; // Determine the status (1 or 0)
+        var url = $(this).data('url');
+
+        $.ajax({
+            url: url, // Generate the URL
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // Include CSRF token
+                is_featured: status
+            },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                } else {
+                    toastr.error(response.message); // Show error message
+                }
+            },
+            error: function(xhr) {
+                toastr.error('An error occurred while updating the status.');
+            }
+        });
+    });
+};
+
+// Status Update
+var _statusUpdate = function(){
+    $(document).on('change', 'input[name="status"]', function() {
+        var id = $(this).data('id'); // Get the ID from data-id attribute
+        var status = this.checked ? 1 : 0; // Determine the status (1 or 0)
+        var url = $(this).data('url');
+
+        $.ajax({
+            url: url, // Generate the URL
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'), // Include CSRF token
+                status: status
+            },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message);
+                } else {
+                    toastr.error(response.message); // Show error message
+                }
+            },
+            error: function(xhr) {
+                toastr.error('An error occurred while updating the status.');
+            }
+        });
+    });
+};
 
 // For Opening Modal
 var _componentRemoteModalLoadAfterAjax = function () {

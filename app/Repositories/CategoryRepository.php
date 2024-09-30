@@ -14,7 +14,13 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function index($request)
     {
-        return 1;
+        if($request->has('sub')){
+
+        }else{
+
+            return Category::where('parent_id',null)->select('id','name','photo','icon','admin_id','status','is_featured')->get();
+        }
+        
     }
 
     public function store($data)
@@ -44,6 +50,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $category = Category::create([
                 'name' => $data->name,
                 'admin_id' => Auth::guard('admin')->id(),
+                'parent_id' => $data->parent_id,
                 'slug' => $data->slug,
                 'icon' => Helpers::icon($data->icon),
                 'header' => $data->header,
@@ -60,7 +67,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'photo' => $data->photo ? Images::upload('categories', $data->photo) : null,
             ]);
 
-            return response()->json(['message' => 'Category created successfully!', 'status' => true,'load'=>true]);
+            return response()->json(['message' => 'Created successfully!', 'status' => true,'load'=>true]);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'status' => false]);
         }
@@ -69,5 +76,44 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function checkSlugExists(string $slug): bool
     {
         return Category::where('slug', $slug)->exists();
+    }
+    public function categoriesDropDown()
+    {
+        return Category::select('id','name')->get();
+    }
+
+    public function updateisFeatured($request, $id)
+    {
+         $request->validate([
+            'is_featured' => 'required|boolean', // Ensure it's a boolean value
+        ]);
+
+        $category = Category::find($id);
+        
+        if (!$category) {
+            return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
+        }
+
+        $category->is_featured = $request->input('is_featured');
+        $category->save();
+
+        return response()->json(['success' => true, 'message' => 'Category status updated successfully.']);
+    }
+    public function updatestatus($request, $id)
+    {
+         $request->validate([
+            'status' => 'required|boolean', // Ensure it's a boolean value
+        ]);
+
+        $category = Category::find($id);
+        
+        if (!$category) {
+            return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
+        }
+
+        $category->is_featured = $request->input('status');
+        $category->save();
+
+        return response()->json(['success' => true, 'message' => 'Category status updated successfully.']);
     }
 }

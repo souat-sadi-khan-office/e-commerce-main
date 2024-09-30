@@ -23,7 +23,11 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
 
     Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
+    Route::get('categories/sub/add', [CategoryController::class, 'addformsub'])->name('sub.category.add');
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
+    Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');
+    Route::post('category/status/{id}', [CategoryController::class, 'updatestatus'])->name('category.status');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
     // Zone

@@ -2,8 +2,9 @@
 
 namespace App\CPU;
 
-use App\Models\Category;
 use Exception;
+use App\Models\Admin;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class Helpers
@@ -60,6 +61,9 @@ class Helpers
 
     public static function icon($class){
         return '<i class="'.$class.'"></i>';
+    }
+    public static function adminName($id){
+        return Admin::find($id)->name;
     }
 
     // public static function make_online()
