@@ -14,6 +14,7 @@ use App\Repositories\PaymentRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\CategoryRepository;
+use App\Repositories\CityRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\LocationRepository;
 use App\Repositories\DashboardRepository;
@@ -31,6 +32,7 @@ use App\Repositories\Interface\CountryRepositoryInterface;
 use App\Repositories\Interface\PaymentRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Interface\CityRepositoryInterface;
 use App\Repositories\Interface\CurrencyRepositoryInterface;
 use App\Repositories\Interface\LocationRepositoryInterface;
 use App\Repositories\Interface\DashBoardRepositoryInterface;
@@ -62,6 +64,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdminRepositoryInterface::class, AdminRepository::class);
         $this->app->bind(ZoneRepositoryInterface::class, ZoneRepository::class);
         $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
+        $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
     }
 
     /**

@@ -157,8 +157,8 @@
                 </li>
 
                 <!-- Shipping Configuration -->
-                <li class="nav-item {{ Request::is('admin/zone') || Request::is('admin/country') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/country') || Request::is('admin/zone') ? 'active' : '' }}">
+                <li class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link ">
                         <i class="nav-icon bi bi-truck"></i>
                         <p>
                             Shipping
@@ -187,13 +187,13 @@
                                 <a href="{{ route('admin.country.index') }}" class="nav-link {{ Request::is('admin/country') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Countries</p>
-                                </a> 
+                                </a>
                             </li>
                         {{-- @endif --}}
 
                         {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('city.view')) --}}
                             <li class="nav-item"> 
-                                <a href="{{ route('admin.city.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                <a href="{{ route('admin.city.index') }}" class="nav-link {{ Request::is('admin/city') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Cities</p>
                                 </a> 
