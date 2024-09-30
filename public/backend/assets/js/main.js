@@ -32,6 +32,107 @@ var _componentRemoteModalLoadAfterAjax = function () {
     });
 };
 
+// For Generating Slug
+var _slugify = function(text) {
+    return text
+        .toString()  
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '') 
+        .replace(/\-\-+/g, '-') 
+        .replace(/^-+/, '') 
+        .replace(/-+$/, '');
+}
+
+// For form validation
+var _formValidation = function () {
+    if ($('.content_form').length > 0) {
+        $('.content_form').parsley().on('field:validated', function () {
+            var ok = $('.parsley-error').length === 0;
+            $('.bs-callout-info').toggleClass('hidden', !ok);
+            $('.bs-callout-warning').toggleClass('hidden', ok);
+        });
+    }
+
+    $('.content_form').on('submit', function (e) {
+        e.preventDefault();
+
+        $('#submit').hide();
+        $('#submitting').show();
+
+        $(".ajax_error").remove();
+        var submit_url = $('.content_form').attr('action');
+        var formData = new FormData($(".content_form")[0]);
+
+        //Start Ajax
+        $.ajax({
+            url: submit_url,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function (data) {
+                if (data.status) {
+
+                    toastr.success(data.message);
+
+                    $('.content_form')[0].reset();
+                    if (data.goto) {
+                        setTimeout(function () {
+
+                            window.location.href = data.goto;
+                        }, 500);
+                    }
+
+                    if (data.load) {
+                        setTimeout(function () {
+
+                            window.location.href = "";
+                        }, 1000);
+                    }
+
+                } else {
+                    toastr.error(data.message);
+                }
+
+                $('#submit').show();
+                $('#submitting').hide();
+            },
+            error: function (data) {
+                var jsonValue = $.parseJSON(data.responseText);
+                const errors = jsonValue.errors;
+                if (errors) {
+                    var i = 0;
+                    $.each(errors, function (key, value) {
+                        const first_item = Object.keys(errors)[i]
+                        const message = errors[first_item][0];
+                        if ($('#' + first_item).length > 0) {
+                            $('#' + first_item).parsley().removeError('required', {
+                                updateClass: true
+                            });
+                            $('#' + first_item).parsley().addError('required', {
+                                message: value,
+                                updateClass: true
+                            });
+                        }
+                        toastr.error(value);
+                        i++;
+
+                    });
+                } else {
+                    toastr.warning(jsonValue.message);
+                }
+
+                $('#submit').show();
+                $('#submitting').hide();
+            }
+        });
+    });
+};
+
 // For Submitting Modal Form
 var _modalClassFormValidation = function () {
     if ($('.ajax-form').length > 0) {

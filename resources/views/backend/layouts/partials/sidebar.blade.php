@@ -48,6 +48,32 @@
                     </ul>
                 </li>
 
+                <!-- Brands -->
+                <li class="nav-item {{ Request::is('admin/brand*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('admin/brand*') ? ' active' : '' }}">
+                        <i class="nav-icon bi bi-ubuntu"></i>
+                        <p>
+                            Brands
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Request::is('admin/brand*') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand</p>
+                            </a> 
+                        </li>
+
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand Types</p>
+                            </a> 
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- OTP Setup -->
                 <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">

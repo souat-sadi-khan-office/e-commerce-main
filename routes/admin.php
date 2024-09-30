@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ZoneController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StuffController;
+use App\Http\Controllers\Admin\BrandController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -27,6 +28,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+
+    // Brand
+    Route::resource('brand', BrandController::class);
 
     // Country
     Route::resource('city', CityController::class);
