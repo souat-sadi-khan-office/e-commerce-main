@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HelperController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ZoneController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\StuffController;
 
 Route::get('/', function() {
@@ -25,6 +26,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+
+    // Country
+    Route::resource('country', CountryController::class);
 
     // Zone
     Route::resource('zone', ZoneController::class);

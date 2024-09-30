@@ -1,5 +1,5 @@
 @extends('backend.layouts.app', ['modal' => 'md'])
-@section('title', 'Zone Management')
+@section('title', 'Country Management')
 @push('style')
     <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 @endpush
@@ -8,20 +8,20 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">All Zone List</h1>
+                    <h1 class="h3 mb-0">All Country List</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
                                 <i class="bi bi-house-add-fill"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Zone Management</li>
+                        <li class="breadcrumb-item active" aria-current="page">Country Management</li>
                     </ol>
                 </div>
 
-                {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.create')) --}}
+                {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('country.create')) --}}
                     <div class="col-sm-6 text-end">
-                        <a href="javascript:;" data-url="{{ route('admin.zone.create') }}" id="content_management" class="btn btn-soft-success">
+                        <a href="javascript:;" data-url="{{ route('admin.country.create') }}" id="content_management" class="btn btn-soft-success">
                             <i class="bi bi-plus"></i>
                             Create New
                         </a>
@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-12 my-3">
                     <div class="alert alert-warning" role="alert">
-                        <b>Warning</b>: If you delete any zone from here, then within this zone - all country and others data will automatically delete. 
+                        <b>Warning</b>: If you delete any country from here, then within this country - all city data will automatically delete. 
                     </div>
                 </div>
                 <div class="col-md-12 table-responsive">
@@ -46,6 +46,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Zone</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -68,9 +69,10 @@
             var table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.zone.index') }}",
+                ajax: "{{ route('admin.country.index') }}",
                 columns: [
                     {data: 'name', name: 'name'},
+                    {data: 'zone', name: 'zone'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
