@@ -10,6 +10,7 @@ class AdminController extends Controller
 {
     public function index()
     {
+        // $permissions = Auth::guard('admin')->user()->getAllPermissions();
         return view('backend.dashboard');
     }
 }

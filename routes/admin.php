@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HelperController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\StuffController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -23,6 +25,11 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
     Route::get('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
+    // Stuff
+    Route::resource('stuff', StuffController::class);
+
+    // Roles Route
+    Route::resource('roles', RoleController::class);
 
     // System
     Route::view('/server-status', 'backend.system.server_status')->name('system_server');

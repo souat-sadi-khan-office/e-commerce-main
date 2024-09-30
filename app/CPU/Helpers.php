@@ -31,6 +31,32 @@ class Helpers
         return Auth::guard($guard)->user();
     }
 
+    public static function tounderscore($text) {
+        $text = str_replace(' ', '_', $text);
+        $text = str_replace(' ', '_', $text);
+        return $text;
+    }
+
+    public static function toSpan($data) {
+        $per = explode('.', $data);
+        return Helpers::toWord($per[1]);
+    }
+
+    public static function split_name($name) {
+        $data = [];
+        foreach ($name as $value) {
+            $per = explode('.', $value->name);
+            $data[Helpers::toWord($per[0])][] = $value->name;
+        }
+        return $data;
+    }
+
+    public static function toWord($word) {
+        $word = str_replace('_', ' ', $word);
+        $word = str_replace('-', ' ', $word);
+        $word = ucwords($word);
+        return $word;
+    }
 
     // public static function make_online()
     // {

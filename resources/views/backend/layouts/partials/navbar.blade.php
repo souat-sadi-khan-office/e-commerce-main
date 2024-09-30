@@ -16,7 +16,7 @@
             </li>
             <li class="nav-item d-none d-md-block"> 
                 <a href="javascript:;" class="btn btn-soft-danger">
-                    <i class="bi bi-hdd"></i>
+                    <i class="bi bi-hdd fa-fw   "></i>
                     Clear Cache    
                 </a> 
             </li>
