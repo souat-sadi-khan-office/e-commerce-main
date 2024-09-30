@@ -229,7 +229,7 @@
                 </li>
 
                 <!-- Staff & Permission -->
-                <li class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
+                <li class="nav-item {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
                         <i class="nav-icon bi bi-people"></i>
                         <p>
@@ -240,7 +240,7 @@
                     <ul class="nav nav-treeview">
                         @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
                             <li class="nav-item"> 
-                                <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}"> 
+                                <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff*') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>All Staffs</p>
                                 </a> 
@@ -249,7 +249,7 @@
                         
                         @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
                             <li class="nav-item"> 
-                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles*') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Staff Permission</p>
                                 </a> 
