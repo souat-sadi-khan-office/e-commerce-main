@@ -34,6 +34,5 @@
 
     @include('backend.components.scripts')
     @stack('script')
-    @livewireScripts
 </body>
 </html>

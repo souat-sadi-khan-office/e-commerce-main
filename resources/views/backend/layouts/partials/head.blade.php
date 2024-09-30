@@ -16,9 +16,6 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    {{-- @livewireStyles --}}
-
-    @livewireStyles
-    @livewireScripts
+    
     @stack('style')
 </head>

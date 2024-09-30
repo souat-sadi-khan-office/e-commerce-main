@@ -16,8 +16,12 @@ class CategoryController extends Controller
     }
 
      public function store(Request $request){
-        return response()->json(['message' => 'Category created successfully!']);
-        $massage=$this->categoryRepository->store($request);
+      // dd($request->all());
+      //   return response()->json(['message' => $request->all()]);
+      //   return response()->json(['message' => 'Category created successfully!']);
+      return $this->categoryRepository->store($request);
+        
+
      }
      public function addform(){
         return view('backend.category.add');
