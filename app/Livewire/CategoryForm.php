@@ -59,7 +59,7 @@ class CategoryForm extends Component
             return;
         }
 
-        $category = $this->categoryRepository->create([
+        $category = $this->categoryRepository->store([
             'name' => $this->name,
             'slug' => $this->slug,
             'icon' => $this->icon,
