@@ -217,8 +217,8 @@
 
                         {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('country.view')) --}}
                         <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                            <a href="{{ route('admin.country.index') }}"
+                                class="nav-link {{ Request::is('admin/country') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Countries</p>
                             </a>
@@ -227,8 +227,8 @@
 
                         {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('city.view')) --}}
                         <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                            <a href="{{ route('admin.city.index') }}"
+                                class="nav-link {{ Request::is('admin/city') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Cities</p>
                             </a>

@@ -9,4 +9,5 @@ interface ZoneRepositoryInterface
     public function createZone(array $data);
     public function updateZone($id, array $data);
     public function deleteZone($id);
+    public function updateStatus($request, $id);
 }

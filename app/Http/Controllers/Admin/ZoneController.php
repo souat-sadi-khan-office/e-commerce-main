@@ -25,7 +25,8 @@ class ZoneController extends Controller
             return Datatables::of($models)
                 ->addIndexColumn()
                 ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
+                    $checked = $model->status == 1 ? 'checked' : '';
+                    return '<div class="form-check form-switch"><input data-url="' . route('admin.zone.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
                 })
                 ->addColumn('action', function ($model) {
                     return view('backend.zone.action', compact('model'));
@@ -89,5 +90,10 @@ class ZoneController extends Controller
             'load' => true,
             'message' => "Admin deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->zoneRepository->updateStatus($request, $id);
     }
 }

@@ -37,4 +37,22 @@ class ZoneRepository implements ZoneRepositoryInterface
         $role = Zone::findOrFail($id);
         return $role->delete();
     }
+
+    public function updateStatus($request, $id)
+    {
+        $request->validate([
+            'status' => 'required|boolean',
+        ]);
+
+        $zone = Zone::find($id);
+
+        if (!$zone) {
+            return response()->json(['success' => false, 'message' => 'Zone not found.'], 404);
+        }
+
+        $zone->status = $request->input('status');
+        $zone->save();
+
+        return response()->json(['success' => true, 'message' => 'Zone status updated successfully.']);
+    }
 }

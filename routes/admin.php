@@ -60,6 +60,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('country', CountryController::class);
 
     // Zone
+    Route::post('zone/status/{id}', [ZoneController::class, 'updateStatus'])->name('zone.status');
     Route::resource('zone', ZoneController::class);
 
     // Stuff

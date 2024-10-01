@@ -75,6 +75,7 @@
             });
 
             _componentRemoteModalLoadAfterAjax();
+            _statusUpdate();
             
         });
 
