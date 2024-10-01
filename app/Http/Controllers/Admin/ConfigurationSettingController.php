@@ -18,6 +18,11 @@ class ConfigurationSettingController extends Controller
         $currencies = Currency::where('status', 1)->get();
         return view ('backend.settings.general', compact('currencies'));
     }
+    
+    public function otp()
+    {
+        return view ('backend.settings.otp');
+    }
 
     public function update(Request $request)
     {

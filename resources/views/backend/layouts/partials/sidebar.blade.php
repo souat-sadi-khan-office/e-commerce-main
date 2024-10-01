@@ -73,34 +73,6 @@
                     </ul>
                 </li>
 
-                <!-- OTP Setup -->
-                <li class="nav-item ">
-                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
-                        <i class="nav-icon bi bi-telephone"></i>
-                        <p>
-                            OTP Setup
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.stuff.index') }}"
-                                class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>OTP Configuration</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>OTP Templates</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
                 <!-- Website Setup -->
                 <li class="nav-item ">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
@@ -184,6 +156,15 @@
                                 <p>VAT & Tax</p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.settings.otp') }}"
+                                class="nav-link {{ Request::is('admin/settings/otp') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>OTP Templates</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </li>
 

@@ -82,6 +82,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     // Settings
     Route::controller(ConfigurationSettingController::class)->group(function () {
         Route::get('settings/general','general')->name('settings.general');
+        Route::get('settings/otp','otp')->name('settings.otp');
         Route::get('settings/vat','vat')->name('settings.vat');
 
         Route::post('settings/update', 'update')->name('settings.update');
