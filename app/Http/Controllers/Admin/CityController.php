@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
 use App\Models\Country;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -21,21 +20,7 @@ class CityController extends Controller
     {
 
         if ($request->ajax()) {
-
-            $models = $this->cityRepository->getAllCities();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('country', function ($model) {
-                    return $model->country->name;
-                })
-                ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.cities.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status', 'zone'])
-                ->make(true);
+            return $this->cityRepository->dataTable();
         }
 
         return view('backend.cities.index');
@@ -97,5 +82,10 @@ class CityController extends Controller
             'load' => true,
             'message' => "City deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->cityRepository->updateStatus($request, $id);
     }
 }

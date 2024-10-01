@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
+use DataTables;
 use App\CPU\Images;
-use App\CPU\Helpers;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\BrandRepositoryInterface;
@@ -13,6 +13,32 @@ class BrandRepository implements BrandRepositoryInterface
     public function getAllBrands()
     {
         return Brand::all();
+    }
+
+    public function dataTable()
+    {
+        $models = $this->getAllBrands();
+        return Datatables::of($models)
+            ->addIndexColumn()
+            ->editColumn('logo', function ($model) {
+                return Images::show($model->logo);
+            })
+            ->editColumn('created_by', function ($model) {
+                return $model->creator->name;
+            })
+            ->editColumn('status', function ($model) {
+                $checked = $model->status == 1 ? 'checked' : '';
+                return '<div class="form-check form-switch"><input data-url="' . route('admin.brand.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
+            })
+            ->editColumn('featured', function ($model) {
+                $is_featured = $model->is_featured == 1 ? 'checked' : '';
+                return '<div class="form-check form-switch"><input data-url="' . route('admin.brand.featured', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $is_featured . ' data-id="' . $model->id . '"></div>';
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.brands.action', compact('model'));
+            })
+            ->rawColumns(['action', 'status', 'created_by', 'featured', 'logo'])
+            ->make(true);
     }
 
     public function findBrandById($id)
@@ -73,5 +99,41 @@ class BrandRepository implements BrandRepositoryInterface
     {
         $brand = Brand::findOrFail($id);
         return $brand->delete();
+    }
+
+    public function updateStatus($request, $id) 
+    {
+        $request->validate([
+            'status' => 'required|boolean',
+        ]);
+
+        $brand = Brand::find($id);
+
+        if (!$brand) {
+            return response()->json(['success' => false, 'message' => 'Brand not found.'], 404);
+        }
+
+        $brand->status = $request->input('status');
+        $brand->save();
+
+        return response()->json(['success' => true, 'message' => 'Brand status updated successfully.']);
+    }
+
+    public function updateFeatured($request, $id) 
+    {
+        $request->validate([
+            'status' => 'required|boolean',
+        ]);
+
+        $brand = Brand::find($id);
+
+        if (!$brand) {
+            return response()->json(['success' => false, 'message' => 'Brand not found.'], 404);
+        }
+
+        $brand->is_featured = $request->input('status');
+        $brand->save();
+
+        return response()->json(['success' => true, 'message' => 'Brand featured status updated successfully.']);
     }
 }

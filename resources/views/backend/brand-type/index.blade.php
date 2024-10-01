@@ -74,6 +74,7 @@
             });
 
             _componentRemoteModalLoadAfterAjax();
+            _statusUpdate();
         });
     </script>
 @endpush

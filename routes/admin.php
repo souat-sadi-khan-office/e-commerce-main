@@ -48,15 +48,21 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
     // Brand Types
+    Route::post('brand-type/status/{id}', [BrandTypeController::class, 'updateStatus'])->name('brand_type.status');
+    Route::post('brand-type/feature/{id}', [BrandTypeController::class, 'updateFeatured'])->name('brand_type.featured');
     Route::resource('brand-type', BrandTypeController::class);
     
     // Brand
+    Route::post('brand/status/{id}', [BrandController::class, 'updateStatus'])->name('brand.status');
+    Route::post('brand/featured/{id}', [BrandController::class, 'updateFeatured'])->name('brand.featured');
     Route::resource('brand', BrandController::class);
 
-    // Country
+    // City
+    Route::post('city/status/{id}', [CityController::class, 'updateStatus'])->name('city.status');
     Route::resource('city', CityController::class);
     
     // Country
+    Route::post('country/status/{id}', [CountryController::class, 'updateStatus'])->name('country.status');
     Route::resource('country', CountryController::class);
 
     // Zone
@@ -70,6 +76,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('roles', RoleController::class);
 
     // Currency
+    Route::post('zone/currency/{id}', [CurrencyController::class, 'updateStatus'])->name('currency.status');
     Route::resource('currency', CurrencyController::class);
 
     // Settings

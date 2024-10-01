@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
-use App\CPU\Images;
-use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Requests\BrandRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BrandRepositoryInterface;
 
 class BrandController extends Controller
@@ -25,26 +21,7 @@ class BrandController extends Controller
 
         if ($request->ajax()) {
 
-            $models = $this->brandRepository->getAllBrands();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('logo', function ($model) {
-                    return Images::show($model->logo);
-                })
-                ->editColumn('created_by', function ($model) {
-                    return $model->creator->name;
-                })
-                ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->editColumn('featured', function ($model) {
-                    return $model->is_featured == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.brands.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status', 'created_by', 'featured', 'logo'])
-                ->make(true);
+            return $this->brandRepository->dataTable();
         }
 
         return view('backend.brands.index');
@@ -80,5 +57,15 @@ class BrandController extends Controller
             'load' => true,
             'message' => "Brand deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->brandRepository->updateStatus($request, $id);
+    }
+    
+    public function updateFeatured(Request $request, $id)
+    {
+        return $this->brandRepository->updateFeatured($request, $id);
     }
 }

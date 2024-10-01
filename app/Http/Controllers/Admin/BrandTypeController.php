@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use App\Http\Requests\BrandTypeRequest;
@@ -23,23 +22,7 @@ class BrandTypeController extends Controller
 
         if ($request->ajax()) {
 
-            $models = $this->brandTypeRepository->getAllBrandTypes();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('brand', function ($model) {
-                    return $model->brand->name;
-                })
-                ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->editColumn('featured', function ($model) {
-                    return $model->is_featured == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.brand-type.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status', 'featured', 'brand'])
-                ->make(true);
+            return $this->brandTypeRepository->dataTable();
         }
 
         return view('backend.brand-type.index');
@@ -77,5 +60,15 @@ class BrandTypeController extends Controller
             'load' => true,
             'message' => "Brand deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->brandTypeRepository->updateStatus($request, $id);
+    }
+
+    public function updateFeatured(Request $request, $id)
+    {
+        return $this->brandTypeRepository->updateFeatured($request, $id);
     }
 }

@@ -79,7 +79,7 @@
             });
 
             _componentRemoteModalLoadAfterAjax();
-            
+            _statusUpdate();
         });
 
         

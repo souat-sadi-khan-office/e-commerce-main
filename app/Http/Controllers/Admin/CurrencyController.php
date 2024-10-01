@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
@@ -21,21 +20,7 @@ class CurrencyController extends Controller
     {
 
         if ($request->ajax()) {
-
-            $models = $this->currencyRepository->getAllCurrencies();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('country', function($model) {
-                    return $model->country->name;   
-                })
-                ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.currency.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status', 'country'])
-                ->make(true);
+            return $this->currencyRepository->dataTable();
         }
 
         return view('backend.currency.index');
@@ -103,5 +88,10 @@ class CurrencyController extends Controller
             'load' => true,
             'message' => "Currency deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->currencyRepository->updateStatus($request, $id);
     }
 }

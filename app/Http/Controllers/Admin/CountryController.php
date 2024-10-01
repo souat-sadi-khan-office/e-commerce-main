@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,21 +20,7 @@ class CountryController extends Controller
     {
 
         if ($request->ajax()) {
-
-            $models = $this->countryRepository->getAllCountries();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('zone', function ($model) {
-                    return $model->zone->name;
-                })
-                ->editColumn('status', function ($model) {
-                    return $model->status == 1 ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.countries.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status', 'zone'])
-                ->make(true);
+            return $this->countryRepository->dataTable();
         }
 
         return view('backend.countries.index');
@@ -97,5 +82,10 @@ class CountryController extends Controller
             'load' => true,
             'message' => "Country deleted successfully"
         ]);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->countryRepository->updateStatus($request, $id);
     }
 }

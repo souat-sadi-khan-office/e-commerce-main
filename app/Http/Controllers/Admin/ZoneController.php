@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\ZoneRepositoryInterface;
@@ -20,19 +19,7 @@ class ZoneController extends Controller
     {
 
         if ($request->ajax()) {
-
-            $models = $this->zoneRepository->getAllZone();
-            return Datatables::of($models)
-                ->addIndexColumn()
-                ->editColumn('status', function ($model) {
-                    $checked = $model->status == 1 ? 'checked' : '';
-                    return '<div class="form-check form-switch"><input data-url="' . route('admin.zone.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
-                })
-                ->addColumn('action', function ($model) {
-                    return view('backend.zone.action', compact('model'));
-                })
-                ->rawColumns(['action', 'status'])
-                ->make(true);
+            return $this->zoneRepository->dataTable();
         }
 
         return view('backend.zone.index');

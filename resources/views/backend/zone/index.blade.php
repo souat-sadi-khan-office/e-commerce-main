@@ -45,9 +45,10 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
+                                <th width="5%">#</th>
                                 <th>Name</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th width="10%">Status</th>
+                                <th width="15%">Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -68,6 +69,7 @@
                 serverSide: true,
                 ajax: "{{ route('admin.zone.index') }}",
                 columns: [
+                    {data: 'id', name: 'serial'},
                     {data: 'name', name: 'name'},
                     {data: 'status', name: 'status'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},

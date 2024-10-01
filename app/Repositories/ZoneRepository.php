@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use DataTables;
 use App\Models\Zone;
 use App\Repositories\Interface\ZoneRepositoryInterface;
 
@@ -10,6 +11,25 @@ class ZoneRepository implements ZoneRepositoryInterface
     public function getAllZone()
     {
         return Zone::all();
+    }
+
+    public function dataTable()
+    {
+        $models = $this->getAllZone();
+        return Datatables::of($models)
+            ->addIndexColumn()
+            ->editColumn('serial', function($model) {
+                return $model->id;
+            })
+            ->editColumn('status', function ($model) {
+                $checked = $model->status == 1 ? 'checked' : '';
+                return '<div class="form-check form-switch"><input data-url="' . route('admin.zone.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.zone.action', compact('model'));
+            })
+            ->rawColumns(['action', 'status'])
+            ->make(true);
     }
 
     public function findZoneById($id)

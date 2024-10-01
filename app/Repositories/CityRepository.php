@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use DataTables;
 use App\Models\City;
 use App\Repositories\Interface\CityRepositoryInterface;
 
@@ -10,6 +11,25 @@ class CityRepository implements CityRepositoryInterface
     public function getAllCities()
     {
         return City::all();
+    }
+
+    public function dataTable()
+    {
+        $models = $this->getAllCities();
+            return Datatables::of($models)
+                ->addIndexColumn()
+                ->editColumn('country', function ($model) {
+                    return $model->country->name;
+                })
+                ->editColumn('status', function ($model) {
+                    $checked = $model->status == 1 ? 'checked' : '';
+                    return '<div class="form-check form-switch"><input data-url="' . route('admin.city.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
+                })
+                ->addColumn('action', function ($model) {
+                    return view('backend.cities.action', compact('model'));
+                })
+                ->rawColumns(['action', 'status', 'zone'])
+                ->make(true);
     }
 
     public function findCityById($id)
@@ -36,5 +56,23 @@ class CityRepository implements CityRepositoryInterface
     {
         $city = City::findOrFail($id);
         return $city->delete();
+    }
+
+    public function updateStatus($request, $id)
+    {
+        $request->validate([
+            'status' => 'required|boolean',
+        ]);
+
+        $city = City::find($id);
+
+        if (!$city) {
+            return response()->json(['success' => false, 'message' => 'City not found.'], 404);
+        }
+
+        $city->status = $request->input('status');
+        $city->save();
+
+        return response()->json(['success' => true, 'message' => 'City status updated successfully.']);
     }
 }
