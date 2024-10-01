@@ -8,20 +8,20 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">All Category List</h1>
+                    <h1 class="h3 mb-0">All Sub Category List</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
                                 <i class="bi bi-house-add-fill"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Category Management</li>
+                        <li class="breadcrumb-item active" aria-current="page">Sub Category Management</li>
                     </ol>
                 </div>
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="{{ route('admin.category.add') }}"  
+                    <a href="{{ route('admin.category.sub.add') }}"  
                         class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
                         Create New
@@ -44,6 +44,7 @@
                                 <th>Name</th>
                                 <th>Image</th>
                                 <th>Icon</th>
+                                <th>Parent</th>
                                 <th>Created_by</th>
                                 <th>Status</th>
                                 <th>Featured?</th>
@@ -73,7 +74,7 @@
             var table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.category.index') }}",
+                ajax: "{{ route('admin.category.index.sub') }}",
                 columns: [{
                         data: 'name',
                         name: 'name'
@@ -85,6 +86,10 @@
                     {
                         data: 'icon',
                         name: 'icon'
+                    },
+                    {
+                        data: 'parent_id',
+                        name: 'parent_id'
                     },
                     {
                         data: 'admin_id',

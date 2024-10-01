@@ -35,8 +35,8 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Primary Categories</p>
                             </a> </li>
-                        <li class="nav-item"> <a href="./index2.html"
-                                class="nav-link {{ Request::is('admin/sub-categories') ? ' active' : '' }}"> <i
+                        <li class="nav-item"> <a href="{{route('admin.category.index.sub')}}"
+                                class="nav-link {{ Request::is('admin/categories/sub') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Sub Categories</p>
                             </a> </li>
@@ -45,11 +45,18 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
-                        <li class="nav-item"> <a href="{{ route('admin.sub.category.add') }}"
+                        <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Sub Category</p>
-                            </a> </li>
+                            </a> 
+                        </li>
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.add') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/key/add') ? ' active' : '' }}"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Add Specification Keys</p>
+                            </a> 
+                        </li>
                     </ul>
                 </li>
 

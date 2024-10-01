@@ -42,6 +42,10 @@ class Helpers
         $per = explode('.', $data);
         return Helpers::toWord($per[1]);
     }
+    public static function extractIconClassName($icon) {
+        preg_match('/class="([^"]+)"/', $icon, $matches);
+        return isset($matches[1]) ? $matches[1] : null;
+    }
 
     public static function split_name($name) {
         $data = [];
@@ -64,6 +68,9 @@ class Helpers
     }
     public static function adminName($id){
         return Admin::find($id)->name;
+    }
+    public static function categoryParent($id){
+       return Category::find($id)->name;
     }
 
     // public static function make_online()

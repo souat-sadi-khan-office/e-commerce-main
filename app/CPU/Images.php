@@ -22,6 +22,7 @@ class Images
     {
         if (file_exists(public_path($image))) {
             unlink(public_path($image));
+            return true;
         }
     }
     public static function show($path){
