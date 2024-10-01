@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StuffController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BrandTypeController;
+use App\Http\Controllers\Admin\ConfigurationSettingController;
+use App\Http\Controllers\Admin\CurrencyController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -50,6 +52,17 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // Roles Route
     Route::resource('roles', RoleController::class);
+
+    // Currency
+    Route::resource('currency', CurrencyController::class);
+
+    // Settings
+    Route::controller(ConfigurationSettingController::class)->group(function () {
+        Route::get('settings/general','general')->name('settings.general');
+        Route::get('settings/vat','vat')->name('settings.vat');
+
+        Route::post('settings/update', 'update')->name('settings.update');
+    });
 
     // System
     Route::view('/server-status', 'backend.system.server_status')->name('system_server');

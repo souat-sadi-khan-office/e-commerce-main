@@ -11,13 +11,18 @@
                     <i class="bi bi-globe-americas"></i>
                 </a> 
             </li>
-            <li class="nav-item d-none d-md-block"> 
-                <a href="javascript:;" class="nav-link">Top Link 2</a> 
-            </li>
+            
             <li class="nav-item d-none d-md-block"> 
                 <a href="javascript:;" class="btn btn-soft-danger">
                     <i class="bi bi-hdd fa-fw   "></i>
                     Clear Cache    
+                </a> 
+            </li>
+
+            <li class="nav-item d-none d-md-block"> 
+                <a href="javascript:;" class="nav-link">
+                    {{ get_system_date(date('Y-m-d H:i:s')) }}
+                    {{ get_system_time(date('Y-m-d H:i:s')) }}
                 </a> 
             </li>
         </ul>
