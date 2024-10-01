@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StuffController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\BrandTypeController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -29,6 +30,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
+    // Brand Types
+    Route::resource('brand-type', BrandTypeController::class);
+    
     // Brand
     Route::resource('brand', BrandController::class);
 

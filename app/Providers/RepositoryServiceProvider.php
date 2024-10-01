@@ -9,6 +9,7 @@ use App\Repositories\UserRepository;
 use App\Repositories\ZoneRepository;
 use App\Repositories\AdminRepository;
 use App\Repositories\BrandRepository;
+use App\Repositories\BrandTypeRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\CountryRepository;
 use App\Repositories\PaymentRepository;
@@ -29,6 +30,7 @@ use App\Repositories\Interface\UserRepositoryInterface;
 use App\Repositories\Interface\ZoneRepositoryInterface;
 use App\Repositories\Interface\AdminRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
+use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
 use App\Repositories\Interface\CountryRepositoryInterface;
 use App\Repositories\Interface\PaymentRepositoryInterface;
@@ -68,6 +70,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
         $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
         $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
+        $this->app->bind(BrandTypeRepositoryInterface::class, BrandTypeRepository::class);
     }
 
     /**
