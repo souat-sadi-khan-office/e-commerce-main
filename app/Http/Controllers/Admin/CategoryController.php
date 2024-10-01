@@ -2,30 +2,97 @@
 
 namespace App\Http\Controllers\Admin;
 
+use DataTables;
+use App\CPU\Helpers;
+use App\Models\Category;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interface\CategoryRepositoryInterface;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    protected $categoryRepository;
+   protected $categoryRepository;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
-    {
-        $this->categoryRepository = $categoryRepository;
-    }
+   public function __construct(CategoryRepositoryInterface $categoryRepository)
+   {
+      $this->categoryRepository = $categoryRepository;
+   }
 
-     public function store(Request $request){
-      // dd($request->all());
-      //   return response()->json(['message' => $request->all()]);
-      //   return response()->json(['message' => 'Category created successfully!']);
+   public function store(Request $request)
+   {
+
       return $this->categoryRepository->store($request);
-        
+   }
+   public function addform()
+   {
+      return view('backend.category.add');
+   }
+   public function addformsub()
+   {
+      $categories = $this->categoryRepository->categoriesDropDown();
+      return view('backend.category.sub.add', compact('categories'));
+   }
 
-     }
-     public function addform(){
-        return view('backend.category.add');
-     }
+   public function updateisFeatured(Request $request, $id)
+   {
+
+      return $this->categoryRepository->updateisFeatured($request, $id);
+   }
+
+   public function updatestatus(Request $request, $id)
+   {
+
+      return $this->categoryRepository->updatestatus($request, $id);
+   }
+   public function update(Request $request, $id)
+   {
+
+      // dd($request->all());
+      return $this->categoryRepository->update($request, $id);
+   }
+
+   public function edit(Request $request, $id)
+   {
+
+      $category = $this->categoryRepository->edit($id);
+      if ($request->has('sub')) {
+         $parents = $this->categoryRepository->categoriesDropDown();
+         return view('backend.category.sub.edit', compact('category', 'parents'));
+      }
+      return view('backend.category.edit', compact('category'));
+   }
 
 
+   public function index(Request $request)
+
+   {
+      $models = $this->categoryRepository->index();
+      $view = $this->categoryRepository->view($models);
+
+      if ($request->ajax()) {
+         return $view;
+      }
+      return view('backend.category.index');
+   }
+
+   public function indexsub(Request $request){
+      $models = $this->categoryRepository->index2();
+      // dd( $models);
+      $view = $this->categoryRepository->view($models);
+
+      if ($request->ajax()) {
+         return $view;
+      }
+      return view('backend.category.sub.index');
+   }
+   public function delete($id)
+    {
+        $this->categoryRepository->delete($id);
+
+        return response()->json([
+            'status' => true, 
+            'load' => true,
+            'message' => "Deleted successfully"
+        ]);
+    }
 }

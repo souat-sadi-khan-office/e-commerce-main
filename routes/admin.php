@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\HelperController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SpecificationsController;
 use App\Http\Controllers\Admin\ZoneController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CityController;
@@ -25,8 +26,22 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
 
 
-    Route::get('categories/add', [CategoryController::class, 'addform'])->name('category.add');
-    Route::any('categories/store', [CategoryController::class, 'store'])->name('category.store');
+    Route::group(['prefix' => 'categories', 'as' => 'category.'], function () {
+        Route::get('add', [CategoryController::class, 'addform'])->name('add');
+        Route::get('sub/add', [CategoryController::class, 'addformsub'])->name('sub.add');
+        Route::any('store', [CategoryController::class, 'store'])->name('store');
+        Route::get('edit/{id}', [CategoryController::class, 'edit'])->name('edit');
+        Route::any('delete/{id}', [CategoryController::class, 'delete'])->name('delete');
+        Route::any('update/{id}', [CategoryController::class, 'update'])->name('update');
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('sub', [CategoryController::class, 'indexsub'])->name('index.sub');
+    
+        Route::group(['prefix' => 'specification', 'as' => 'specification.'], function () {
+            Route::get('key/add', [SpecificationsController::class, 'keyadd'])->name('key.add'); // Corrected syntax here
+        });
+    });
+    Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');
+    Route::post('category/status/{id}', [CategoryController::class, 'updatestatus'])->name('category.status');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
     // Brand
