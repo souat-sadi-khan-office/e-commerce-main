@@ -139,7 +139,9 @@ var _modalClassFormValidation = function () {
                     $('#submit').show();
                     $('#submitting').hide();
 
-                    $('#modal_remote').modal('toggle');
+                    if(!data.stay) {
+                        $('#modal_remote').modal('toggle');
+                    }
 
                     if (data.goto) {
                         setTimeout(function () {

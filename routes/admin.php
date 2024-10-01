@@ -37,7 +37,11 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
         Route::get('sub', [CategoryController::class, 'indexsub'])->name('index.sub');
     
         Route::group(['prefix' => 'specification', 'as' => 'specification.'], function () {
-            Route::get('key/add', [SpecificationsController::class, 'keyadd'])->name('key.add'); // Corrected syntax here
+            Route::get('keys', [SpecificationsController::class, 'index'])->name('key.index'); // Corrected syntax here
+            Route::get('key/show/{id}', [SpecificationsController::class, 'show'])->name('key.show'); // Corrected syntax h
+            Route::post('status/{id}', [SpecificationsController::class, 'updatestatus'])->name('key.status');
+            Route::post('updateposition/{id}', [SpecificationsController::class, 'updateposition'])->name('key.position');
+            Route::any('delete/{id}', [SpecificationsController::class, 'delete'])->name('key.delete');
         });
     });
     Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');

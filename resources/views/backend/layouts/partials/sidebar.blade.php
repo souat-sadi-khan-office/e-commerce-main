@@ -51,8 +51,8 @@
                                 <p>Add Sub Category</p>
                             </a> 
                         </li>
-                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.add') }}"
-                                class="nav-link {{ Request::is('admin/categories/specification/key/add') ? ' active' : '' }}"> <i
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Specification Keys</p>
                             </a> 
