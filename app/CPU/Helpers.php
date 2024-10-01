@@ -2,8 +2,9 @@
 
 namespace App\CPU;
 
-use App\Models\Category;
 use Exception;
+use App\Models\Admin;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
 class Helpers
@@ -41,6 +42,10 @@ class Helpers
         $per = explode('.', $data);
         return Helpers::toWord($per[1]);
     }
+    public static function extractIconClassName($icon) {
+        preg_match('/class="([^"]+)"/', $icon, $matches);
+        return isset($matches[1]) ? $matches[1] : null;
+    }
 
     public static function split_name($name) {
         $data = [];
@@ -60,6 +65,12 @@ class Helpers
 
     public static function icon($class){
         return '<i class="'.$class.'"></i>';
+    }
+    public static function adminName($id){
+        return Admin::find($id)->name;
+    }
+    public static function categoryParent($id){
+       return Category::find($id)->name;
     }
 
     // public static function make_online()

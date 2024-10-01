@@ -1,7 +1,7 @@
 @extends('backend.layouts.app')
-@section('title', 'Category Add')
+@section('title', 'Sub Category Add')
 {{-- @section('page_name', 'Category Add') --}}
-@section('breadcrumb', 'Category Add')
+@section('breadcrumb', 'Sub Category Add')
 
 @section('content')
     <div class="row">
@@ -9,14 +9,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h1 class="h3 mb-0">Add Category</h1>
+                        <h1 class="h3 mb-0">Add Sub Category</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">
                                     <i class="bi bi-house-add-fill"></i>
                                 </a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Category Add</li>
+                            <li class="breadcrumb-item active" aria-current="page"> Sub Category Add</li>
                         </ol>
                     </div>
 
@@ -49,11 +49,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-4">
                                     <label for="icon" class="form-label">Icon <span class="text-danger">*</span></label>
                                     <input type="text" name="icon" class="form-control iconpicker" required>
                                 </div>
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-4">
+                                    <label for="header" class="form-label">Parent Category <span
+                                            class="text-danger">*</span></label>
+                                    <select name="parent_id" id="subCategory" class="form-control select" required>
+                                        <option value="" disabled>-- Select Parent Category --</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-4">
                                     <label for="header" class="form-label">Header <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="header" class="form-control" required>
@@ -168,6 +178,10 @@
         $(document).ready(function() {
             // Handle form submission
             _formValidation();
+
+            // Select2
+            _componentSelect();
+
             // Handle file upload preview
             $('#uploadFile').on('change', function() {
                 const file = this.files[0];
