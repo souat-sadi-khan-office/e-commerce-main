@@ -71,7 +71,7 @@
                                     <option {{ get_settings('system_notification_format') == 'toast-top-right' ? 'selected' : '' }} value="toast-top-right">Top Right</option>
                                     <option {{ get_settings('system_notification_format') == 'toast-top-left' ? 'selected' : '' }} value="toast-top-left">Top Left</option>
                                     <option {{ get_settings('system_notification_format') == 'toast-top-full-width' ? 'selected' : '' }} value="toast-top-full-width">Top Full Width</option>
-                                    <option {{ get_settings('system_notification_format') == 'toast-top-center' ? 'selected' : '' }} value="toast-top-cente">Top Center</option>
+                                    <option {{ get_settings('system_notification_format') == 'toast-top-center' ? 'selected' : '' }} value="toast-top-center">Top Center</option>
                                     <option {{ get_settings('system_notification_format') == 'toast-bottom-right' ? 'selected' : '' }} value="toast-bottom-right">Bottom Right</option>
                                     <option {{ get_settings('system_notification_format') == 'toast-bottom-left' ? 'selected' : '' }} value="toast-bottom-left">Bottom Left</option>
                                     <option {{ get_settings('system_notification_format') == 'toast-bottom-full-width' ? 'selected' : '' }} value="toast-bottom-full-width">Bottom Full Width</option>

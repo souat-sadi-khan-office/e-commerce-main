@@ -38,7 +38,12 @@
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
-    toastr.options = {"positionClass": "{{ get_settings('system_notification_format') }} ",   "preventDuplicates": true,};
+    toastr.options = {
+        "positionClass": "{{ get_settings('system_notification_format') }} ",   
+        "preventDuplicates": true
+    };
+    console.log("{{ get_settings('system_notification_format') }}" );
+    toastr.success("Hello, World");
 
     $.ajaxSetup({
         headers: {
