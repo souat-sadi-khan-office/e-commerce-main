@@ -42,9 +42,7 @@
         "positionClass": "{{ get_settings('system_notification_format') }} ",   
         "preventDuplicates": true
     };
-    console.log("{{ get_settings('system_notification_format') }}" );
-    toastr.success("Hello, World");
-
+        
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
