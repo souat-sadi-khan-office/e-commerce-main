@@ -29,12 +29,12 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"> <a href="{{route('admin.category.index')}}"
+                        <li class="nav-item"> <a href="{{ route('admin.category.index') }}"
                                 class="nav-link {{ Request::is('admin/categories') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Primary Categories</p>
                             </a> </li>
-                        <li class="nav-item"> <a href="{{route('admin.category.index.sub')}}"
+                        <li class="nav-item"> <a href="{{ route('admin.category.index.sub') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Sub Categories</p>
@@ -44,31 +44,19 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
-                    </ul>
-                </li>
-
-                <!-- Brands -->
-                <li class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
-                        <i class="nav-icon bi bi-ubuntu"></i>
-                        <p>
-                            Brands
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Brand</p>
+                        <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
+                                class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Add Sub Category</p>
                             </a> 
                         </li>
-
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.brand-type.index') }}" class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Brand Types</p>
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.add') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/key/add') ? ' active' : '' }}"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Add Specification Keys</p>
                             </a> 
+                        </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
@@ -188,7 +176,8 @@
                 </li>
 
                 <!-- Shipping Configuration -->
-                <li class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
+                <li
+                    class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link ">
                         <i class="nav-icon bi bi-truck"></i>
                         <p>
