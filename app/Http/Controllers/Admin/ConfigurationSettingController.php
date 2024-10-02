@@ -166,6 +166,36 @@ class ConfigurationSettingController extends Controller
             Session::put('settings.system_payment_method_photo', $fileName);
         }
 
+        if($request->hasFile('system_icon')) {
+            $fileName = Images::upload('system', $request->system_icon);
+            $logo['type']='system_icon';
+            $logo['value'] = $fileName;
+
+            if(ConfigurationSetting::where('type', "system_icon")->exists()){
+                ConfigurationSetting::where('type','=',"system_icon")->update($logo);
+            } else {
+                $logo['created_at'] = Carbon::now();
+                ConfigurationSetting::insert($logo);
+            }
+
+            Session::put('settings.system_icon', $fileName);
+        }
+
+        if($request->hasFile('system_global_meta_image')) {
+            $fileName = Images::upload('system', $request->system_global_meta_image);
+            $logo['type']='system_global_meta_image';
+            $logo['value'] = $fileName;
+
+            if(ConfigurationSetting::where('type', "system_global_meta_image")->exists()){
+                ConfigurationSetting::where('type','=',"system_global_meta_image")->update($logo);
+            } else {
+                $logo['created_at'] = Carbon::now();
+                ConfigurationSetting::insert($logo);
+            }
+
+            Session::put('settings.system_global_meta_image', $fileName);
+        }
+
         return response()->json([
             'status' => true, 
             'message' => 'Configuration updated', 

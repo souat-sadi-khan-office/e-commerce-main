@@ -109,8 +109,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="javascript:;"
-                            {{-- <a href="{{ route('admin.website.appearance') }}" --}}
+                            <a href="{{ route('admin.website.appearance') }}"
                                 class="nav-link {{ Request::is('admin/website/appearance') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Appearance</p>
