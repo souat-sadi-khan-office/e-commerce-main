@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\SpecificationsTypes;
 use App\Http\Controllers\Admin\BrandTypeController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\SpecificationAttributes;
+use App\Http\Controllers\Admin\SpecificationsTypes;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');

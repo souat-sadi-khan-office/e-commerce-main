@@ -44,6 +44,63 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
+                    </ul>
+                </li>
+
+                <!-- Brands -->
+                <li class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-ubuntu"></i>
+                        <p>
+                            Brands
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand</p>
+                            </a> 
+                        <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
+                                class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
+                                    class="nav-icon bi bi-circle"></i>
+                                <p>Add Sub Category</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.brand-type.index') }}" class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand Types</p>
+                            </a> 
+                        <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
+                            <a href="#"
+                                class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>
+                                    Specification Keys
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
+                                        class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Add Keys</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
+                                    class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Add Key Types</p>
+                                </a>
+                            </li>
+                            <li class="nav-item"> <a href="{{ route('admin.category.specification.type.attribute.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Add Type attributes</p>
+                            </a>
                         <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
