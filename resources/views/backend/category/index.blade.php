@@ -41,13 +41,13 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
+                                <th width="7%">Image</th>
                                 <th>Name</th>
-                                <th>Image</th>
                                 <th>Icon</th>
                                 <th>Created_by</th>
-                                <th>Status</th>
-                                <th>Featured?</th>
-                                <th>Actions</th>
+                                <th width="7%">Status</th>
+                                <th width="7%">Featured?</th>
+                                <th width="20%">Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -74,17 +74,22 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.category.index') }}",
-                columns: [{
+                columns: [
+                    {
+                        data: 'photo',
+                        name: 'photo',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
                         data: 'name',
                         name: 'name'
                     },
                     {
-                        data: 'photo',
-                        name: 'photo'
-                    },
-                    {
                         data: 'icon',
-                        name: 'icon'
+                        name: 'icon',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'admin_id',
@@ -92,11 +97,15 @@
                     },
                     {
                         data: 'status',
-                        name: 'status'
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'is_featured',
-                        name: 'is_featured'
+                        name: 'is_featured',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'action',

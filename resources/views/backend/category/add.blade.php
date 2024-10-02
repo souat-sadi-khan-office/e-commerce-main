@@ -130,8 +130,6 @@
                                     @include('backend.components.imageInput')
 
                                 </div>
-
-
                             </div>
 
                             <div id="preview">
@@ -213,8 +211,8 @@
                     },
                     success: function(response) {
                         if (response.exists) {
-                            const timestamp = Date.now(); // Get current timestamp
-                            $('#slug').val(slug + '-' + timestamp); // Append timestamp to slug
+                            const timestamp = Date.now();
+                            $('#slug').val(slug + '-' + timestamp);
                         }
                     }
                 });

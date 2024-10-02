@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('icon');
             $table->string('header');
-            $table->tinyText('short_description');
+            $table->text('short_description');
             $table->longText('description');
             $table->string('site_title');
             $table->string('meta_title');

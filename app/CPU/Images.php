@@ -26,7 +26,7 @@ class Images
         }
     }
     public static function show($path){
-        return '<img src="'.asset($path).'" alt="" height="100px">';
+        return '<img src="'.asset($path).'" alt="Image '. $path .'" style="width:50px;">';
     }
 
     public static function update($folder, $oldImagePath, $newImage)
