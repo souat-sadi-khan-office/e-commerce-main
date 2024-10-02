@@ -4,7 +4,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>@yield('title') - My Application</title>
+    <title>@yield('title') | {{ get_settings('system_name') ? get_settings('system_name') : 'Project Alpha' }} </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="{{asset('backend/assets/css/font_source_sans3.css')}}">

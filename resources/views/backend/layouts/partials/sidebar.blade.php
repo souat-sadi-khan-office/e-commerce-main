@@ -2,8 +2,7 @@
     <div class="sidebar-brand">
 
         <a href="{{ route('admin.dashboard') }}" class="brand-link">
-            <img src="https://bestwebcreator.com/shopwise/demo/assets/images/logo_dark.png" alt="App Logo"
-                class="brand-image">
+            <img src="{{ get_settings('system_logo_white') ? asset(get_settings('system_logo_white')) : asset('pictures/default-logo-white.png') }}" alt="App Logo" class="brand-image">
         </a>
     </div>
     <div class="sidebar-wrapper">
@@ -45,12 +44,36 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
+                    </ul>
+                </li>
+
+                <!-- Brands -->
+                <li class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-ubuntu"></i>
+                        <p>
+                            Brands
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand</p>
+                            </a> 
                         <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Sub Category</p>
                             </a>
                         </li>
+
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.brand-type.index') }}" class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}"> 
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand Types</p>
+                            </a> 
                         <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
@@ -159,8 +182,8 @@
                 </li>
 
                 <!-- Setup & Configuration -->
-                <li class="nav-item ">
-                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
+                <li class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link {{ Request::is('admin/settings/*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
                             Settings
@@ -168,33 +191,29 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('admin.stuff.index') }}"
-                                class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.settings.general') }}" class="nav-link {{ Request::is('admin/settings/general') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>General Settings</p>
                             </a>
                         </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                        
+                        {{-- <li class="nav-item"> 
+                            <a href="{{ route('admin.settings') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Language</p>
-                            </a>
-                        </li>
+                            </a> 
+                        </li> --}}
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.currency.index') }}" class="nav-link {{ Request::is('admin/currency') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Currency</p>
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                        <li class="nav-item"> 
+                            <a href="{{ route('admin.settings.vat') }}" class="nav-link {{ Request::is('admin/settings/vat') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>VAT & Tax</p>
                             </a>
@@ -264,25 +283,23 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
-                            <li class="nav-item">
-                                <a href="{{ route('admin.stuff.index') }}"
-                                    class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
+                        {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view')) --}}
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff*') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>All Staffs</p>
                                 </a>
                             </li>
-                        @endif
-
-                        @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view'))
-                            <li class="nav-item">
-                                <a href="{{ route('admin.roles.index') }}"
-                                    class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                        {{-- @endif --}}
+                        
+                        {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view')) --}}
+                            <li class="nav-item"> 
+                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles*') ? ' active' : '' }}"> 
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Staff Permission</p>
                                 </a>
                             </li>
-                        @endif
+                        {{-- @endif --}}
                     </ul>
                 </li>
 

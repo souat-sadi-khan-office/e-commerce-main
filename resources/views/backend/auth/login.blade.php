@@ -7,13 +7,13 @@
         <div class="card card-outline">
             <div class="text-center card-header"> 
                 <a href="{{ route('home') }}">
-                    <img src="https://bestwebcreator.com/shopwise/demo/assets/images/logo_dark.png" alt="Logo" style="width:150px;">
+                    <img src="{{ get_settings('system_logo_dark') ? asset(get_settings('system_logo_dark')) : asset('pictures/default-logo-dark.png') }}" alt="Logo" style="width:150px;">
                 </a> 
             </div>
             <div class="card-body login-card-body">
                 
                 <div class="text-center">
-                    <h4>Welcome to E-commerce Project</h4>
+                    <h4>Welcome to {{ get_settings('system_name') ? get_settings('system_name') : 'Project Alpha' }}</h4>
                     <p class="login-box-msg">Sign in to start your session</p>
                 </div>
 

@@ -280,7 +280,7 @@ var _formValidation = function () {
         var submit_url = $('.content_form').attr('action');
         var formData = new FormData($(".content_form")[0]);
 
-        if (CKEDITOR.instances.editor) {
+        if (typeof CKEDITOR !== 'undefined' && CKEDITOR.instances.editor) {
             const descriptionData = CKEDITOR.instances.editor.getData();
             formData.append('description', descriptionData);
         }

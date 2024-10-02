@@ -12,6 +12,9 @@ use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StuffController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\BrandTypeController;
+use App\Http\Controllers\Admin\ConfigurationSettingController;
+use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\SpecificationAttributes;
 use App\Http\Controllers\Admin\SpecificationsTypes;
 
@@ -74,6 +77,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('category/status/{id}', [CategoryController::class, 'updatestatus'])->name('category.status');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
+    // Brand Types
+    Route::resource('brand-type', BrandTypeController::class);
+    
     // Brand
     Route::resource('brand', BrandController::class);
 
@@ -91,6 +97,17 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // Roles Route
     Route::resource('roles', RoleController::class);
+
+    // Currency
+    Route::resource('currency', CurrencyController::class);
+
+    // Settings
+    Route::controller(ConfigurationSettingController::class)->group(function () {
+        Route::get('settings/general','general')->name('settings.general');
+        Route::get('settings/vat','vat')->name('settings.vat');
+
+        Route::post('settings/update', 'update')->name('settings.update');
+    });
 
     // System
     Route::view('/server-status', 'backend.system.server_status')->name('system_server');
