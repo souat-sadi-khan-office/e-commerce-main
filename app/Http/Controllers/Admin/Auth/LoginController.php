@@ -52,7 +52,12 @@ class LoginController extends Controller
         // Helpers::logout('admin');
         $this->authRepository->logout('admin');  
         
-        return redirect()->route('admin.login');
+        return response()->json([
+            'status' => true, 
+            'goto' => route('admin.login'),
+            'message' => "Logout successful"
+        ]);
+        // return redirect()->route('admin.login');
     }
 
 }

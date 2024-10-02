@@ -100,7 +100,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.page.index') }}"
+                            {{-- {{ route('admin.page.index') }} --}}
+                            <a href="javascript:;"
                                 class="nav-link {{ Request::is('admin/page') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Pages</p>
@@ -108,7 +109,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.website.appearance') }}"
+                            <a href="javascript:;"
+                            {{-- <a href="{{ route('admin.website.appearance') }}" --}}
                                 class="nav-link {{ Request::is('admin/website/appearance') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Appearance</p>

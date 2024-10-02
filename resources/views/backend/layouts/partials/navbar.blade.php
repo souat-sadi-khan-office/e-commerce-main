@@ -75,22 +75,22 @@
             <li class="nav-item dropdown user-menu"> 
                 <a href="javascript:;" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> 
                     <img
-                        src="{{ asset('backend/assets/img/user2-128x128.jpg') }}"
+                        src="{{ asset('pictures/face.jpg') }}"
                         class="user-image rounded-circle shadow" 
                         alt="User Image"> 
                     <span class="d-none d-md-inline">{{ Auth::guard('admin')->user()->name }}</span> 
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <li class="user-header text-bg-app-color"> 
-                        <img src="{{ asset('backend/assets/img/user2-128x128.jpg') }}" class="rounded-circle shadow" alt="User Image">
+                        <img src="{{ asset('pictures/face.jpg') }}" class="rounded-circle shadow" alt="User Image">
                         <p>
                             {{ Auth::guard('admin')->user()->name }} - {{ Auth::guard('admin')->user()->designation }}
                             <small>Member since Nov. 2023</small>
                         </p>
                     </li>
                     <li class="user-footer"> 
-                        <a href="#" class="btn btn-default btn-flat">Profile</a> 
-                        <a href="{{ route('admin.logout') }}" class="btn btn-default btn-flat float-end">Sign out</a> 
+                        <a href="javascript:;" class="btn btn-soft-warning btn-flat">Profile</a> 
+                        <a href="javascript:;" data-url="{{ route('admin.logout') }}" id="logout" class="btn btn-soft-danger btn-flat float-end">Sign out</a> 
                     </li>
                 </ul>
             </li>

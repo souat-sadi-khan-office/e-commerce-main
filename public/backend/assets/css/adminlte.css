@@ -15431,4 +15431,6 @@ html.maximized-card {
   width: 32px;
 }
 
-/*# sourceMappingURL=adminlte.css.map */
+.dropify-wrapper .dropify-message span.file-icon {
+  font-size: 30px !important;
+}

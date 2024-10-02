@@ -23,7 +23,7 @@ Route::get('/', function() {
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');

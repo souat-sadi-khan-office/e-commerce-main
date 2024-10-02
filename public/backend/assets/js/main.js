@@ -363,3 +363,48 @@ $(document).on('click', '#delete_item', function(e) {
     });
 
 });
+
+$(document).on('click', '#logout', function(e) {
+    e.preventDefault();
+    var url = $(this).data('url');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You will be logged out for this session!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Logout',
+        cancelButtonText: 'Cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function(data) {
+                    toastr.success(data.message);
+        
+                    setTimeout(function() {
+                        window.location.href = data.goto;
+                    }, 2000);
+                },
+                error: function(data) {
+                    var jsonValue = $.parseJSON(data.responseText);
+                    const errors = jsonValue.errors
+                    var i = 0;
+                    $.each(errors, function(key, value) {
+                        toastr.success(value);
+                        i++;
+                    });
+                }
+            });
+        }
+    });
+
+    
+});
