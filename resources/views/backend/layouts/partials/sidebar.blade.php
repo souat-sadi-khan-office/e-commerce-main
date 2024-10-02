@@ -30,12 +30,12 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"> <a href="{{route('admin.category.index')}}"
+                        <li class="nav-item"> <a href="{{ route('admin.category.index') }}"
                                 class="nav-link {{ Request::is('admin/categories') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Primary Categories</p>
                             </a> </li>
-                        <li class="nav-item"> <a href="{{route('admin.category.index.sub')}}"
+                        <li class="nav-item"> <a href="{{ route('admin.category.index.sub') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Sub Categories</p>
@@ -49,13 +49,37 @@
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Sub Category</p>
-                            </a> 
+                            </a>
                         </li>
-                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
-                                class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
-                                <p>Add Specification Keys</p>
-                            </a> 
+                        <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
+                            <a href="#"
+                                class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-speedometer"></i>
+                                <p>
+                                    Specification Keys
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
+                                        class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Add Keys</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
+                                    class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Add Key Types</p>
+                                </a>
+                            </li>
+                            <li class="nav-item"> <a href="{{ route('admin.category.specification.type.attribute.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Add Type attributes</p>
+                            </a>
+                        </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
@@ -179,7 +203,8 @@
                 </li>
 
                 <!-- Shipping Configuration -->
-                <li class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
+                <li
+                    class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link ">
                         <i class="nav-icon bi bi-truck"></i>
                         <p>
