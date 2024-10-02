@@ -1,7 +1,10 @@
 @extends('backend.layouts.auth')
 
 @section('title', 'Login')
-
+@push('style')
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
+@endpush
 @section('content')
     <div class="login-box">
         <div class="card card-outline">
@@ -17,17 +20,7 @@
                     <p class="login-box-msg">Sign in to start your session</p>
                 </div>
 
-                @if (isset($errors) && $errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form action="{{ route('admin.login.post') }}" method="post">
+                <form action="{{ route('admin.login.post') }}" method="post" class="login_form">
                     @csrf
 
                     <div class="input-group mb-1">
@@ -53,9 +46,14 @@
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="d-grid gap-2"> 
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" id="submit" class="btn btn-primary">
+                                    <i class="bi bi-send"></i>
                                     Sign In
                                 </button> 
+                                <button class="btn btn-primary" style="display: none;" id="submitting" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                    Loading...
+                                </button>
                             </div>
                         </div>
                     </div>

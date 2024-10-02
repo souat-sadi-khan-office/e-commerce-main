@@ -30,22 +30,20 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        // $credentials = $request->only('email', 'password');
-
-        // if (Auth::guard('admin')->attempt($credentials)) {
-        //     $request->session()->regenerate();
-        //     return redirect()->route('admin.dashboard');
-        // }
-
         $guard = $this->authRepository->login($request, 'admin');
 
         if ($guard) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+            return response()->json([
+                'status' => true, 
+                'goto' => route('admin.dashboard'),
+                'message' => "Login successfully"
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+        return response()->json([
+            'status' => false, 
+            'message' => "The provided credentials do not match our records"
         ]);
     }
 
