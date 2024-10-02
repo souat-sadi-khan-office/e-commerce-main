@@ -1,55 +1,81 @@
+<h3 class="m-4">Specification Keys</h3>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12 table-responsive">
-                    <table class="table table-bordered table-striped table-hover" id="data-table">
-                        <thead>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12 table-responsive">
+                <table class="table table-bordered table-striped table-hover" id="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center;">Name & Position</th>
+                            <th style="width: 21%;">Created By</th>
+                            <th style="width: 7%;">Status</th>
+                            <th style="width: 7%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($models as $data)
                             <tr>
-                                <th>Name</th>
-                                <th>Created_by</th>
-                                <th>Status</th>
-                                <th>Position</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        @foreach ($models as $data )
-                            
-                       
-                        <tbody>
-                            <td> {{$data->name}}</td>
-                            <td>{{$data->admin->name}}</td>
-                            <td>
-                                <div class="form-check form-switch">
-                                    <input data-url="{{route('admin.category.specification.key.status',$data->id)}}" class="form-check-input" type="checkbox" role="switch" name="status" id="status1" {{$data->status ==1 ? 'Cheaked':""}} data-id="{{$data->id}}"></div>
-                            </td>
-                            <td>
-                                <form action="{{ route("admin.category.specification.key.position", $data->id) }}" method="POST" class="ajax-form" data-id="{{$data->id}}">
-                                    @method('POST')
-                                    <div class="row">
-                                        <div class="col-md-6 form-group">
-                                            <input type="number" name="position" id="position" class="form-control" required value="{{ $data->position}}">
+                                <td>
+                                    <form action="{{ route('admin.category.specification.key.position', $data->id) }}"
+                                        method="POST" class="nested-form" data-id="{{ $data->id }}">
+                                        @csrf
+                                        @method('POST')
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <input type="text" name="name" id="name{{ $data->id }}"
+                                                    class="form-control name-input" value="{{ $data->name }}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <div class="col-md-6 form-group">
+                                                        <input type="number" name="position"
+                                                            id="position{{ $data->id }}"
+                                                            class="form-control position-input" required
+                                                            value="{{ $data->position }}">
+                                                    </div>
+                                                    <div class="col-md-6 mt-1 form-group">
+                                                        <button class="btn btn-sm btn-soft-success submit-btn"
+                                                            type="submit">
+                                                            Update
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                            
-                                        <div class="col-md-6 mt-1 form-group">
-                                            <button class="btn btn-sm btn-soft-success" type="submit" >
-                                                Update
-                                            </button>
-                                        </div>
+                                    </form>
+                                </td>
+                                <td>{{ $data->admin->name }}</td>
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input
+                                            data-url="{{ route('admin.category.specification.key.status', $data->id) }}"
+                                            class="form-check-input" type="checkbox" role="switch" name="status"
+                                            id="status{{ $data->id }}" {{ $data->status == 1 ? 'checked' : '' }}
+                                            data-id="{{ $data->id }}">
                                     </div>
-                                </form>
-                            </td>
-                            <td> <a href="javascript:;" id="delete_item" data-id ="{{ $data->id }}"
-                                data-url="{{ route('admin.category.specification.key.delete', $data->id) }}" class="btn btn-soft-danger" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Delete">
-                                <i class="bi bi-trash"></i>
-                            </a></td>
-                        </tbody>
+                                </td>
+
+                                <td>
+                                    <a href="javascript:;" id="delete_item" data-id="{{ $data->id }}"
+                                        data-url="{{ route('admin.category.specification.key.delete', $data->id) }}"
+                                        class="btn btn-soft-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         @endforeach
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-
+<script>
+    // Call the function to initialize the validation and submission
+    $(document).ready(function() {
+        _initializeMultipleFormsValidation();
+    });
+</script>

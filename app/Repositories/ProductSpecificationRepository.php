@@ -2,12 +2,18 @@
 
 namespace App\Repositories;
 
+use Exception;
 use DataTables;
 use App\CPU\Images;
 use App\CPU\Helpers;
+use App\Http\Controllers\Admin\SpecificationsTypes;
 use App\Models\Category;
-use App\Models\ProductSpecification;
 use App\Models\SpecificationKey;
+use App\Models\ProductSpecification;
+use App\Models\SpecificationKeyType;
+use App\Models\SpecificationKeyTypeAttribute;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 
 
@@ -22,12 +28,40 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         ->get();
     }
 
+    public function store($data)
+    {
+
+        $validator = Validator::make($data->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer',
+            'position' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
+        }
+        try {
+
+            SpecificationKey::create([
+                'name' => $data->name,
+                'admin_id' => Auth::guard('admin')->id(),
+                'category_id' => $data->category_id,
+                'position' => $data->position,
+                'status' => isset($data->is_active),
+            ]);
+
+            return response()->json(['message' => 'Specification Key Created successfully!', 'status' => true, 'load' => true]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'status' => false]);
+        }
+    }
+
     public function indexview($models)
     {
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('photo', function ($model) {
-                return Images::show($model->photo);
+                return '<img src="'.asset($model->photo).'" alt="" height="50px">';
             })
             ->editColumn('specification_keys_count', function ($model) {
                 return "<div class='w-100 text-center'>
@@ -79,6 +113,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     {
         $request->validate([
             'position' => 'required|integer', // Ensure it's a boolean value
+            'name' => 'required', // Ensure it's a boolean value
         ]);
 
         $key = SpecificationKey::find($id);
@@ -88,6 +123,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         }
 
         $key->position = $request->input('position');
+        $key->name = $request->input('name');
         $key->save();
 
         return response()->json(['status' => true, 'stay'=>true, 'message' => 'Key Position updated successfully.']);
@@ -99,5 +135,282 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         return $SpecificationKey->delete();
     }
 
+
+
+
+
+    // Specification Key Types Functions
+
+
+    public function typesindex()
+    {
+        $data= SpecificationKey::withCount('types') 
+        ->with('category:id,name') 
+        ->with('admin:id,name') 
+        ->where('status', 1)
+        ->orderBy('position', 'desc')
+        ->orderBy('types_count', 'desc') 
+        ->get();
+
+        return $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'position' => $item->position,
+                'types_count' => $item->types_count,
+                'category_name' => $item->category ? $item->category->name : null, 
+                'created_by' => $item->admin ? $item->admin->name : null, 
+            ];
+        });
+    }
+
+    public function typesstore($data)
+    {
+        $validator = Validator::make($data->all(), [
+            'name' => 'required|string|max:255',
+            'specification_key_id' => 'required|integer',
+            'position' => 'required|integer',
+        ]);
+        
+        // Conditionally add the 'filter_name' rule
+        $validator->sometimes('filter_name', 'required|string|max:255', function ($input) {
+            return isset($input->is_show_on_filter);
+        });
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
+        }
+        try {
+
+            SpecificationKeyType::create([
+                'name' => $data->name,
+                'admin_id' => Auth::guard('admin')->id(),
+                'specification_key_id' => $data->specification_key_id,
+                'position' => $data->position,
+                'is_show_on_filter' => isset($data->is_show_on_filter),
+                'filter_name' => isset($data->is_show_on_filter)?$data->filter_name:null,
+                'status' => isset($data->is_active),
+            ]);
+
+            return response()->json(['message' => 'Specification Type Created successfully!', 'status' => true, 'load' => true]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'status' => false]);
+        }
+    }
+
+    public function typesindexview($models)
+    {
+        return Datatables::of($models)
+            ->addIndexColumn()
+            
+            ->editColumn('types_count', function ($model) {
+                return "<div class='w-100 text-center'>
+                            <span class='badge bg-dark rounded-pill' style='padding: 10px 20px;'>
+                                " . $model['types_count'] . "
+                            </span>
+                        </div>";
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.category.specificationKeys.types.action', compact('model'));
+            })->rawColumns(['action','types_count'])
+            ->make(true);
+    }
+
+    public function typesshow($models)
+    { 
+        return Datatables::of($models)
+            ->addIndexColumn()
+            ->editColumn('admin_id', function ($model) {
+                return $model->admin->name;
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.category.specificationKeys.types.action', compact('model'));
+            })->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function typesupdatestatus($id)
+    {
+
+        $key = SpecificationKeyType::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Type not found.'], 404);
+        }
+
+        $key->status = !$key->status;
+        $key->save();
+
+        return response()->json(['success' => true, 'message' => 'Type status updated successfully.']);
+    }
+
+    public function typesfilterstatus($id)
+    {
+
+        $key = SpecificationKeyType::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Type not found.'], 404);
+        }
+
+        $key->show_on_filter = !$key->show_on_filter;
+        $key->save();
+
+        return response()->json(['success' => true, 'message' => 'Type Show on Filter status updated successfully.']);
+    }
+
+    public function typesupdateposition($request, $id)
+    {
+        $request->validate([
+            'position' => 'required|integer', // Ensure it's a boolean value
+            'name' => 'required', // Ensure it's a boolean value
+            'filter_name' => 'nullable', // Ensure it's a boolean value
+        ]);
+
+        $key = SpecificationKeyType::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Type not found.'], 404);
+        }
+
+        $key->position = $request->input('position');
+        $key->name = $request->input('name');
+        $key->filter_name = $request->input('filter_name');
+        $key->save();
+
+        return response()->json(['status' => true, 'stay'=>true, 'message' => 'Type Position & Filter Name updated successfully.']);
+    }
+
+    public function typesdelete($id)
+    {
+        $SpecificationKey = SpecificationKeyType::findOrFail($id);
+        return $SpecificationKey->delete();
+    }
+
+
+
+
+     // Specification Key Type Attributes Functions
+
+
+     public function attributeindex()
+     {
+         $data= SpecificationKeyType::withCount('attributes') 
+         ->with('admin:id,name') 
+         ->where('status', 1)
+         ->orderBy('attributes_count', 'desc') 
+         ->get();
+ 
+         return $data->map(function ($item) {
+             return [
+                 'id' => $item->id,
+                 'name' => $item->name,
+                 'filter_name' => $item->filter_name,
+                 'attributes_count' => $item->attributes_count,
+                 'created_by' => $item->admin ? $item->admin->name : null, 
+             ];
+         });
+     }
+ 
+     public function attributesstore($data)
+     {
+         $validator = Validator::make($data->all(), [
+             'key_type_id' => 'required|integer',
+             'name' => 'required|string|max:255',
+             'extra' => 'nullable',
+         ]);
+ 
+         if ($validator->fails()) {
+             return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
+         }
+         try {
+ 
+            SpecificationKeyTypeAttribute::create([
+                 'name' => $data->name,
+                 'admin_id' => Auth::guard('admin')->id(),
+                 'key_type_id' => intval($data->key_type_id),
+                 'extra' => $data->extra,
+                 'status' => isset($data->is_active),
+             ]);
+ 
+             return response()->json(['message' => 'Specification Type Attribute Created successfully!', 'status' => true, 'load' => true]);
+         } catch (Exception $e) {
+             return response()->json(['error' => $e->getMessage(), 'status' => false]);
+         }
+     }
+ 
+     public function attributeindexview($models)
+     {
+         return Datatables::of($models)
+             ->addIndexColumn()
+             
+             ->editColumn('attributes_count', function ($model) {
+                 return "<div class='w-100 text-center'>
+                             <span class='badge bg-dark rounded-pill' style='padding: 10px 20px;'>
+                                 " . $model['attributes_count'] . "
+                             </span>
+                         </div>";
+             })
+             ->addColumn('action', function ($model) {
+                 return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
+             })->rawColumns(['action','attributes_count'])
+             ->make(true);
+     }
+ 
+     public function attributeshow($models)
+     { 
+         return Datatables::of($models)
+             ->addIndexColumn()
+             ->editColumn('admin_id', function ($model) {
+                 return $model->admin->name;
+             })
+             ->addColumn('action', function ($model) {
+                 return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
+             })->rawColumns(['action'])
+             ->make(true);
+     }
+ 
+     public function attributeupdatestatus($id)
+     {
+ 
+         $key = SpecificationKeyTypeAttribute::find($id);
+ 
+         if (!$key) {
+             return response()->json(['success' => false, 'message' => 'Attribute not found.'], 404);
+         }
+ 
+         $key->status = !$key->status;
+         $key->save();
+ 
+         return response()->json(['success' => true, 'message' => 'Attribute status updated successfully.']);
+     }
+
+     public function attributeupdate($request, $id)
+    {
+        $request->validate([
+            'name' => 'required', 
+            'extra' => 'nullable', 
+        ]);
+
+        $key = SpecificationKeyTypeAttribute::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Attribute not found.'], 404);
+        }
+
+        $key->name = $request->input('name');
+        $key->extra = $request->input('extra');
+        $key->save();
+
+        return response()->json(['status' => true, 'stay'=>true, 'message' => 'Attribute updated successfully.']);
+    }
+
+ 
+     public function attributedelete($id)
+     {
+         $SpecificationKey = SpecificationKeyTypeAttribute::findOrFail($id);
+         return $SpecificationKey->delete();
+     }
+ 
     
 }

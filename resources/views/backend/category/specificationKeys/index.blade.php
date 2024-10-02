@@ -1,4 +1,4 @@
-@extends('backend.layouts.app', ['modal' => 'md'])
+@extends('backend.layouts.app', ['modal' => 'xl'])
 @section('title', 'Specification Keys')
 @push('style')
     <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -21,8 +21,7 @@
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="{{ route('admin.category.add') }}"  
-                        class="btn btn-soft-success">
+                    <a href="javascript:;" data-url="{{ route('admin.category.specification.key.create') }}" id="content_management" class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
                         Create New
                     </a>
@@ -42,7 +41,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Image</th>
+                                <th style="width: 70px">Image</th>
                                 <th>Parent</th>
                                 <th>Keys Count</th>
                                 <th>Actions</th>

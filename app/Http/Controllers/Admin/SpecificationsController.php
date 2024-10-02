@@ -18,7 +18,7 @@ class SpecificationsController extends Controller
     }
     public function index(Request $request)
     {
-        $categories = $this->productSpecificationRepository->index($request);
+        $categories = $this->productSpecificationRepository->index();
         // dd($categories);
         $view = $this->productSpecificationRepository->indexview($categories);
         // dd($view);
@@ -27,11 +27,22 @@ class SpecificationsController extends Controller
         }
         return view('backend.category.specificationKeys.index');
     }
+
+    public function create()
+    {
+        $categories = $this->productSpecificationRepository->index();
+        return view('backend.category.specificationKeys.create',compact('categories'));
+    }
+
+    public function store(Request $request){
+        return $this->productSpecificationRepository->store($request);
+    }
     public function show(Request $request,$id){
-        $models=SpecificationKey::where('category_id',$id)->with('admin')->get();
+        $models=SpecificationKey::where('category_id',$id)->with('admin')->orderBy('position')->get();
 
         return view('backend.category.specificationKeys.keysModal',compact('models'));
     }
+
     public function updatestatus($id)
    {
 
