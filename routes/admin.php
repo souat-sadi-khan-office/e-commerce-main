@@ -12,8 +12,10 @@ use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StuffController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\SpecificationAttributes;
+use App\Http\Controllers\Admin\SpecificationsTypes;
 
-Route::get('/', function() {
+Route::get('/', function () {
     return redirect()->route('admin.login');
 });
 
@@ -35,13 +37,37 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
         Route::any('update/{id}', [CategoryController::class, 'update'])->name('update');
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::get('sub', [CategoryController::class, 'indexsub'])->name('index.sub');
-    
+
         Route::group(['prefix' => 'specification', 'as' => 'specification.'], function () {
-            Route::get('keys', [SpecificationsController::class, 'index'])->name('key.index'); // Corrected syntax here
-            Route::get('key/show/{id}', [SpecificationsController::class, 'show'])->name('key.show'); // Corrected syntax h
+            Route::get('keys', [SpecificationsController::class, 'index'])->name('key.index');
+            Route::get('key/create', [SpecificationsController::class, 'create'])->name('key.create');
+            Route::post('key/store', [SpecificationsController::class, 'store'])->name('key.store');
+            Route::get('key/show/{id}', [SpecificationsController::class, 'show'])->name('key.show');
             Route::post('status/{id}', [SpecificationsController::class, 'updatestatus'])->name('key.status');
             Route::post('updateposition/{id}', [SpecificationsController::class, 'updateposition'])->name('key.position');
             Route::any('delete/{id}', [SpecificationsController::class, 'delete'])->name('key.delete');
+
+            Route::group(['prefix' => 'types', 'as' => 'type.'], function () {
+                Route::get('/', [SpecificationsTypes::class, 'index'])->name('index');
+                Route::get('create', [SpecificationsTypes::class, 'create'])->name('create');
+                Route::post('store', [SpecificationsTypes::class, 'store'])->name('store');
+                Route::get('show/{id}', [SpecificationsTypes::class, 'show'])->name('show');
+                Route::post('status/{id}', [SpecificationsTypes::class, 'updatestatus'])->name('status');
+                Route::post('show_on_filter/{id}', [SpecificationsTypes::class, 'filterstatus'])->name('filter');
+                Route::post('updateposition/{id}', [SpecificationsTypes::class, 'updateposition'])->name('position&filter');
+                Route::any('delete/{id}', [SpecificationsTypes::class, 'delete'])->name('delete');
+
+
+                Route::group(['prefix' => 'attributes', 'as' => 'attribute.'], function () {
+                    Route::get('/', [SpecificationAttributes::class, 'index'])->name('index');
+                    Route::get('create', [SpecificationAttributes::class, 'create'])->name('create');
+                    Route::post('store', [SpecificationAttributes::class, 'store'])->name('store');
+                    Route::get('show/{id}', [SpecificationAttributes::class, 'show'])->name('show');
+                    Route::post('update/{id}', [SpecificationAttributes::class, 'update'])->name('update');
+                    Route::post('status/{id}', [SpecificationAttributes::class, 'updatestatus'])->name('status');
+                    Route::any('delete/{id}', [SpecificationAttributes::class, 'delete'])->name('delete');
+                });
+            });
         });
     });
     Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');
@@ -53,7 +79,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // Country
     Route::resource('city', CityController::class);
-    
+
     // Country
     Route::resource('country', CountryController::class);
 
