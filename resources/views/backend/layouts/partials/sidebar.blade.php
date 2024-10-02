@@ -74,8 +74,8 @@
                 </li>
 
                 <!-- Website Setup -->
-                <li class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page/*') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/website') || Request::is('admin/page/*') ? ' active' : '' }}">
+                <li class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link {{ Request::is('admin/website') || Request::is('admin/page*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup
@@ -100,9 +100,8 @@
                         </li>
 
                         <li class="nav-item">
-                            {{-- {{ route('admin.page.index') }} --}}
-                            <a href="javascript:;"
-                                class="nav-link {{ Request::is('admin/page') ? ' active' : '' }}">
+                            <a href="{{ route('admin.page.index') }}"
+                                class="nav-link {{ Request::is('admin/page*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Pages</p>
                             </a>
@@ -115,8 +114,6 @@
                                 <p>Appearance</p>
                             </a>
                         </li>
-
-
                     </ul>
                 </li>
 
@@ -220,9 +217,8 @@
                 </li>
 
                 <!-- Staff & Permission -->
-                <li
-                    class="nav-item {{ Request::is('admin/stuff') || Request::is('admin/roles') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
+                <li class="nav-item {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-people"></i>
                         <p>
                             Staffs

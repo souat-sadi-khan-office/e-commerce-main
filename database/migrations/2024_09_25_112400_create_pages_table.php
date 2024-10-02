@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('meta_article_tag')->nullable();
             $table->string('meta_script_tag')->nullable();
             $table->string('meta_image')->nullable(); 
+            $table->boolean('status')->default(1);
             $table->timestamps(); 
         });
 

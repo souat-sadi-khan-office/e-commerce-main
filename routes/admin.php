@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\BrandTypeController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\TaxController;
+use App\Http\Controllers\Admin\PageController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -84,8 +85,8 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('tax/status/{id}', [TaxController::class, 'updateStatus'])->name('tax.status');
     Route::resource('tax', TaxController::class);
 
-    Route::post('page/status/{id}', [TaxController::class, 'updateStatus'])->name('page.status');
-    Route::resource('page', TaxController::class);
+    Route::post('page/status/{id}', [PageController::class, 'updateStatus'])->name('page.status');
+    Route::resource('page', PageController::class);
 
     // Settings
     Route::controller(ConfigurationSettingController::class)->group(function () {
