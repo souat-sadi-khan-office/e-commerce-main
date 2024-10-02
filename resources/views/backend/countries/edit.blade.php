@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title">Update Zone Information</h5>
+    <h5 class="modal-title">Update Country Information</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         &times;
     </button>
@@ -38,9 +38,9 @@
                     <i class="bi bi-send"></i>
                     Update
                 </button>
-                <button class="btn btn-soft-warning" type="button" id="submitting" style="display: none;">
-                    <i class="bi bi-spinner bi-spin"></i>
-                    Processing  
+                <button class="btn btn-soft-warning" style="display: none;" id="submitting" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
                 </button>
             </div>
         </div>

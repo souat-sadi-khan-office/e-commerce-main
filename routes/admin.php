@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\BrandTypeController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\TaxController;
 
 Route::get('/', function() {
     return redirect()->route('admin.login');
@@ -79,11 +80,22 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('zone/currency/{id}', [CurrencyController::class, 'updateStatus'])->name('currency.status');
     Route::resource('currency', CurrencyController::class);
 
+    // Tax
+    Route::post('tax/status/{id}', [TaxController::class, 'updateStatus'])->name('tax.status');
+    Route::resource('tax', TaxController::class);
+
+    Route::post('page/status/{id}', [TaxController::class, 'updateStatus'])->name('page.status');
+    Route::resource('page', TaxController::class);
+
     // Settings
     Route::controller(ConfigurationSettingController::class)->group(function () {
         Route::get('settings/general','general')->name('settings.general');
         Route::get('settings/otp','otp')->name('settings.otp');
         Route::get('settings/vat','vat')->name('settings.vat');
+
+        Route::get('website/header', 'websiteHeader')->name('website.header');
+        Route::get('website/footer', 'websiteFooter')->name('website.footer');
+        Route::get('website/appearance', 'websiteAppearance')->name('website.appearance');
 
         Route::post('settings/update', 'update')->name('settings.update');
     });

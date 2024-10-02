@@ -74,8 +74,8 @@
                 </li>
 
                 <!-- Website Setup -->
-                <li class="nav-item ">
-                    <a href="#" class="nav-link {{ Request::segment(2) == 'admin/roles' ? ' active' : '' }}">
+                <li class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page/*') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link {{ Request::is('admin/website') || Request::is('admin/page/*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup
@@ -84,32 +84,32 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.stuff.index') }}"
-                                class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
+                            <a href="{{ route('admin.website.header') }}"
+                                class="nav-link {{ Request::is('admin/website/header') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Header</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                            <a href="{{ route('admin.website.footer') }}"
+                                class="nav-link {{ Request::is('admin/website/footer') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Footer</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                            <a href="{{ route('admin.page.index') }}"
+                                class="nav-link {{ Request::is('admin/page') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Pages</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.roles.index') }}"
-                                class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}">
+                            <a href="{{ route('admin.website.appearance') }}"
+                                class="nav-link {{ Request::is('admin/website/appearance') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Appearance</p>
                             </a>
@@ -120,7 +120,7 @@
                 </li>
 
                 <!-- Setup & Configuration -->
-                <li class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') ? 'menu-open' : '' }}">
+                <li class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/tax') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link {{ Request::is('admin/settings/*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
@@ -151,7 +151,7 @@
                         </li>
 
                         <li class="nav-item"> 
-                            <a href="{{ route('admin.settings.vat') }}" class="nav-link {{ Request::is('admin/settings/vat') ? ' active' : '' }}"> 
+                            <a href="{{ route('admin.tax.index') }}" class="nav-link {{ Request::is('admin/tax') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>VAT & Tax</p>
                             </a>
@@ -179,7 +179,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.stuff.index') }}"
+                            <a href="javascript:;"
                                 class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Shipping Configuration</p>
@@ -250,7 +250,7 @@
                 </li>
 
                 <!-- System -->
-                @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view'))
+                {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view')) --}}
                     <li class="nav-item">
                         <a href="{{ route('admin.system_server') }}"
                             class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}">
@@ -260,7 +260,7 @@
                             </p>
                         </a>
                     </li>
-                @endif
+                {{-- @endif --}}
 
             </ul>
         </nav>

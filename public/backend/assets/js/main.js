@@ -213,6 +213,7 @@ var _formValidation = function () {
             const descriptionData = CKEDITOR.instances.editor.getData();
             formData.append('description', descriptionData);
         }
+        
         //Start Ajax
         $.ajax({
             url: submit_url,

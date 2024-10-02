@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">Create new Staff</h1>
+                    <h1 class="h3 mb-0">Update Brand Information</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
@@ -106,6 +106,10 @@
                                     <button type="submit" class="btn btn-soft-success"  id="submit">
                                         <i class="bi bi-send"></i>
                                         Update
+                                    </button>
+                                    <button class="btn btn-soft-warning" style="display: none;" id="submitting" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Loading...
                                     </button>
                                 {{-- @endif --}}
                                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view')) --}}

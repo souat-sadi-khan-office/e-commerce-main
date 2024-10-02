@@ -19,6 +19,21 @@ class ConfigurationSettingController extends Controller
         return view ('backend.settings.general', compact('currencies'));
     }
     
+    public function websiteHeader()
+    {
+        return view ('backend.settings.website.header');
+    }
+
+    public function websiteFooter()
+    {
+        return view ('backend.settings.website.footer');
+    }
+
+    public function websiteAppearance()
+    {
+        return view ('backend.settings.website.appearance');
+    }
+    
     public function otp()
     {
         return view ('backend.settings.otp');
@@ -41,8 +56,6 @@ class ConfigurationSettingController extends Controller
 
         $input = $request->all();
         $config_type = $request->config_type;
-        $old_configs = ConfigurationSetting::all();
-
         $boolean_system_setting = config('system.boolean.'.$config_type);
 
         if($boolean_system_setting){
@@ -52,14 +65,18 @@ class ConfigurationSettingController extends Controller
                 $config->save();
             }
         }
-
+        
         foreach($_POST as $key => $value){
             if($key == "_token"){
                 continue;
             }
 
             $data = array();
-            $data['value'] = $value;
+            if($key == 'header_menu_labels' || $key == 'header_menu_links' || $key == 'footer_menu_one_labels' || $key == 'footer_menu_one_links' || $key == 'footer_menu_two_labels' || $key == 'footer_menu_two_links' ) {
+                $data['value'] = json_encode($value);
+            } else {
+                $data['value'] = $value;
+            }
 
             $data['updated_at'] = Carbon::now();
             if(ConfigurationSetting::where('type', $key)->exists()){
@@ -117,6 +134,36 @@ class ConfigurationSettingController extends Controller
             }
 
             Session::put('settings.system_favicon', $fileName);
+        }
+        
+        if($request->hasFile('system_topbar_banner')) {
+            $fileName = Images::upload('system', $request->system_topbar_banner);
+            $logo['type']='system_topbar_banner';
+            $logo['value'] = $fileName;
+
+            if(ConfigurationSetting::where('type', "system_topbar_banner")->exists()){
+                ConfigurationSetting::where('type','=',"system_topbar_banner")->update($logo);
+            } else {
+                $logo['created_at'] = Carbon::now();
+                ConfigurationSetting::insert($logo);
+            }
+
+            Session::put('settings.system_topbar_banner', $fileName);
+        }
+
+        if($request->hasFile('system_payment_method_photo')) {
+            $fileName = Images::upload('system', $request->system_payment_method_photo);
+            $logo['type']='system_payment_method_photo';
+            $logo['value'] = $fileName;
+
+            if(ConfigurationSetting::where('type', "system_payment_method_photo")->exists()){
+                ConfigurationSetting::where('type','=',"system_payment_method_photo")->update($logo);
+            } else {
+                $logo['created_at'] = Carbon::now();
+                ConfigurationSetting::insert($logo);
+            }
+
+            Session::put('settings.system_payment_method_photo', $fileName);
         }
 
         return response()->json([

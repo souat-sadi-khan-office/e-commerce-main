@@ -79,6 +79,10 @@
                                         <i class="bi bi-send"></i>
                                         Create 
                                     </button>
+                                    <button class="btn btn-soft-warning" style="display: none;" id="submitting" type="button" disabled>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        Loading...
+                                    </button>
                                 @endif
                                 @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view'))
                                     <a href="{{ route('admin.stuff.index') }}" class="btn btn-soft-danger">

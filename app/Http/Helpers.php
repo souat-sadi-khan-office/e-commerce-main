@@ -114,13 +114,19 @@ if (!function_exists('currency_symbol')) {
             return Session::get('system_default_currency');
         }
 
-        return get_system_default_currency()->symbol;
+        return get_system_default_currency();
     }
 }
 
 if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
-        return Currency::findOrFail(get_settings('system_default_currency'));
+        $currency = Currency::find(get_settings('system_default_currency'));
+        if($currency) {
+            $currency_symbol = $currency->symbol;
+        } else {
+            $currency_symbol = '£';
+        }
+        return $currency_symbol;
     }
 }

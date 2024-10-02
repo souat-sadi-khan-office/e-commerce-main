@@ -43,6 +43,8 @@ use App\Repositories\Interface\DashBoardRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
+use App\Repositories\Interface\TaxRepositoryInterface;
+use App\Repositories\TaxRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -71,6 +73,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
         $this->app->bind(BrandRepositoryInterface::class, BrandRepository::class);
         $this->app->bind(BrandTypeRepositoryInterface::class, BrandTypeRepository::class);
+        $this->app->bind(TaxRepositoryInterface::class, TaxRepository::class);
     }
 
     /**

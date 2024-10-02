@@ -77,6 +77,10 @@
                     <i class="bi bi-send"></i>
                     Set Permission 
                 </button>
+                <button class="btn btn-soft-warning" style="display: none;" id="submitting" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
             </div>
         @endif
     </form>

@@ -37,6 +37,8 @@
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
+    toastr.options = {"positionClass": "{{ get_settings('system_notification_format') }} ",   "preventDuplicates": true,};
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
