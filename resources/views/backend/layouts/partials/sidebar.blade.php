@@ -92,6 +92,36 @@
                     
                 </li>
 
+                <!-- Product -->
+                <li
+                    class="nav-item {{ Request::is('admin/product*') ? 'menu-open' : '' }}">
+                    <a href="javascript:;"
+                        class="nav-link">
+                        <i class="nav-icon bi bi-cart2"></i>
+                        <p>
+                            Products
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.create') }}"
+                                class="nav-link {{ Request::is('admin/product/create') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Add New Product</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.index') }}"
+                                class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/edit*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Products</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- Brands -->
                 <li
                     class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">

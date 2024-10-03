@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -7,6 +8,4 @@ Route::get('/', function () {
 })->name('home');
 
 
-Route::middleware('auth')->group(function () {
-    // user routes
-});
+Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');

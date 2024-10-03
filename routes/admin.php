@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\ProductController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -75,6 +76,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');
     Route::post('category/status/{id}', [CategoryController::class, 'updatestatus'])->name('category.status');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+
+    // Product
+    Route::resource('product', ProductController::class);
 
     // Brand Types
     Route::post('brand-type/status/{id}', [BrandTypeController::class, 'updateStatus'])->name('brand_type.status');
