@@ -23,7 +23,7 @@
 
                 <li class="nav-item {{ Request::segment(2) == 'categories' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ Request::segment(2) == 'categories' ? ' active' : '' }}">
-                        <i class="nav-icon bi bi-speedometer"></i>
+                        <i class="nav-icon bi bi-columns-gap"></i>
                         <p>
                             Categories
                             <i class="nav-arrow bi bi-chevron-right"></i>
@@ -54,7 +54,7 @@
                         <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                                <i class="nav-icon bi bi-gear-wide-connected"></i>
                                 <p>
                                     Specification Keys
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -89,7 +89,7 @@
                             </ul>
                         </li>
                     </ul>
-                    
+
                 </li>
 
                 <!-- Brands -->
