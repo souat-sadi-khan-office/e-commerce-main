@@ -88,7 +88,7 @@
 
                 <!-- Product -->
                 <li
-                    class="nav-item {{ Request::is('admin/product*') ? 'menu-open' : '' }}">
+                    class="nav-item {{ Request::is('admin/product*') || Request::is('admin/flash-deal*') ? 'menu-open' : '' }}">
                     <a href="javascript:;"
                         class="nav-link">
                         <i class="nav-icon bi bi-cart2"></i>
@@ -111,6 +111,14 @@
                                 class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/edit*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Products</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.flash-deal.index') }}"
+                                class="nav-link {{ Request::is('admin/flash-deal*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Flash Deals</p>
                             </a>
                         </li>
                     </ul>

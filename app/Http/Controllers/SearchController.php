@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
 
@@ -62,6 +63,38 @@ class SearchController extends Controller
                     'id' => $brand->id, 
                     'text' => $brand->name,
                     'image_url' => asset($brand->logo)
+                ];
+            }
+    
+        }
+        
+        return response()->json($json);
+    }
+    // for searching product
+    public function searchByProduct(Request $request) 
+    {
+        $json = [];
+        if(!isset($request->searchTerm)){ 
+            $products = Product::select('id', 'name', 'thumb_image')->where('status', 1)->take(10)->get();
+
+            foreach($products as $product) {
+                $json[] = [
+                    'id' => $product->id,
+                    'text' => $product->name ,
+                    'image_url' => asset($product->thumb_image)
+                ];
+            }
+        } else {
+            $search = $request->searchTerm;
+
+            $products = Product::select('id', 'name', 'thumb_image')->where('name', $search)->where('status', 1)->get();
+
+            $json = [];
+            foreach($products as $brand) {
+                $json[] = [
+                    'id' => $brand->id, 
+                    'text' => $brand->name,
+                    'image_url' => asset($brand->thumb_image)
                 ];
             }
     

@@ -6,6 +6,7 @@ use App\Repositories\TaxRepository;
 use App\Repositories\AuthRepository;
 use App\Repositories\CartRepository;
 use App\Repositories\CityRepository;
+use App\Repositories\PageRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\ZoneRepository;
@@ -21,6 +22,7 @@ use App\Repositories\CurrencyRepository;
 use App\Repositories\LocationRepository;
 use App\Repositories\BrandTypeRepository;
 use App\Repositories\DashboardRepository;
+use App\Repositories\FlashDealRepository;
 use App\Repositories\PcBuilderRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
@@ -43,10 +45,10 @@ use App\Repositories\Interface\CurrencyRepositoryInterface;
 use App\Repositories\Interface\LocationRepositoryInterface;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\DashBoardRepositoryInterface;
+use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
-use App\Repositories\PageRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -77,6 +79,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BrandTypeRepositoryInterface::class, BrandTypeRepository::class);
         $this->app->bind(TaxRepositoryInterface::class, TaxRepository::class);
         $this->app->bind(PageRepositoryInterface::class, PageRepository::class);
+        $this->app->bind(FlashDealRepositoryInterface::class, FlashDealRepository::class);
     }
 
     /**

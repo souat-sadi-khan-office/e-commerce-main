@@ -1,25 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Auth\LoginController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\HelperController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SpecificationsController;
-use App\Http\Controllers\Admin\ZoneController;
-use App\Http\Controllers\Admin\CountryController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\StuffController;
-use App\Http\Controllers\Admin\BrandController;
-use App\Http\Controllers\Admin\SpecificationAttributes;
-use App\Http\Controllers\Admin\SpecificationsTypes;
-use App\Http\Controllers\Admin\BrandTypeController;
-use App\Http\Controllers\Admin\ConfigurationSettingController;
-use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\TaxController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\ZoneController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\StuffController;
+use App\Http\Controllers\Admin\HelperController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\BrandTypeController;
+use App\Http\Controllers\Admin\FlashDealController;
+use App\Http\Controllers\Admin\SpecificationsTypes;
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\SpecificationAttributes;
+use App\Http\Controllers\Admin\SpecificationsController;
+use App\Http\Controllers\Admin\ConfigurationSettingController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -76,6 +77,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('category/is/featured/{id}', [CategoryController::class, 'updateisFeatured'])->name('category.is_featured');
     Route::post('category/status/{id}', [CategoryController::class, 'updatestatus'])->name('category.status');
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
+
+    // flash-deal
+    Route::resource('flash-deal', FlashDealController::class);
 
     // Product
     Route::post('product/status/{id}', [ProductController::class, 'updateStatus'])->name('product.status');
