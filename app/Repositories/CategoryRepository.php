@@ -110,8 +110,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'photo' => $photoPath,
             ]);
 
-
-            return response()->json(['message' => 'Updated successfully!', 'status' => true, 'goto' => $data->has('sub') ? route('admin.sub.category.index') : route('admin.category.index')]);
+            return response()->json(['message' => 'Updated successfully!', 'status' => true, 'goto' => isset($data->sub) ? route('admin.category.index.sub') : route('admin.category.index')]);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'status' => false]);
         }

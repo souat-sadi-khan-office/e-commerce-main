@@ -41,7 +41,7 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
-                                <th width="7%">Image</th>
+                                <th width="8%">Image</th>
                                 <th>Name</th>
                                 <th>Icon</th>
                                 <th>Created_by</th>
