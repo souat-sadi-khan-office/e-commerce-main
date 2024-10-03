@@ -78,6 +78,8 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::any('/slug-check', [HelperController::class, 'checkSlug'])->name('slug.check');
 
     // Product
+    Route::post('product/status/{id}', [ProductController::class, 'updateStatus'])->name('product.status');
+    Route::post('product/featured/{id}', [ProductController::class, 'updateFeatured'])->name('product.featured');
     Route::resource('product', ProductController::class);
 
     // Brand Types

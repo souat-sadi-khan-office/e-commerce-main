@@ -18,7 +18,12 @@
                     ['Bold', 'Italic', 'Underline', 'Table', '-', 'NumberedList', 'BulletedList', '-'],
                     ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
                     ['Link', 'Blockquote', 'Maximize', 'Image', 'TextColor', '-', 'Source']
-                ]
+                ],
+                contentsCss: [
+                    'https://cdn.ckeditor.com/4.16.0/standard-all/contents.css',
+                    '/backend/assets/css/ck-editor-custom.css'
+                ],
+                bodyClass: 'ckeditor-dark-mode', 
             });
         }
     </script>

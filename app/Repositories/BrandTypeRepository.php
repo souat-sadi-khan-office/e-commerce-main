@@ -13,6 +13,11 @@ class BrandTypeRepository implements BrandTypeRepositoryInterface
         return BrandType::all();
     }
 
+    public function getAllBrandTypesByBrandId($brandId)
+    {
+        return BrandType::select('id', 'name')->where('brand_id', $brandId)->where('status', 1)->orderBy('name', 'ASC')->get();
+    }
+
     public function dataTable()
     {
         $models = $this->getAllBrandTypes();
@@ -38,7 +43,7 @@ class BrandTypeRepository implements BrandTypeRepositoryInterface
 
     public function findBrandTypeById($id)
     {
-        return BrandType::findOrFail($id);
+        return BrandType::find($id);
     }
 
     public function createBrandType($data)

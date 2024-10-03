@@ -9,3 +9,5 @@ Route::get('/', function () {
 
 
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
+Route::post('search/brands', [SearchController::class, 'searchByBrands'])->name('search.brands');
+Route::post('search/brand-types', [SearchController::class, 'searchForBrandTypes'])->name('search.brand-types');

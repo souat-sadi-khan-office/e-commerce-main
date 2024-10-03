@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('admin_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
-            $table->unsignedBigInteger('brand_type_id');
+            $table->unsignedBigInteger('brand_type_id')->nullable();
 
             $table->string('name');
             $table->string('slug');

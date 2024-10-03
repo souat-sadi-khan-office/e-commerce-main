@@ -13,6 +13,11 @@ class TaxRepository implements TaxRepositoryInterface
     {
         return Tax::all();
     }
+    
+    public function getAllActiveTaxes()
+    {
+        return Tax::select('id', 'name')->where('status', 1)->orderBy('name', 'ASC')->get();
+    }
 
     public function dataTable()
     {
