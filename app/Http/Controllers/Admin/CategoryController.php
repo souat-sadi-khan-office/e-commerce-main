@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
       $category = $this->categoryRepository->edit($id);
       if ($request->has('sub')) {
-         $parents = $this->categoryRepository->categoriesDropDown();
+         $parents = $this->categoryRepository->categoriesDropDown(null);
          return view('backend.category.sub.edit', compact('category', 'parents'));
       }
       return view('backend.category.edit', compact('category'));
@@ -95,4 +95,6 @@ class CategoryController extends Controller
             'message' => "Deleted successfully"
         ]);
     }
+
+    
 }
