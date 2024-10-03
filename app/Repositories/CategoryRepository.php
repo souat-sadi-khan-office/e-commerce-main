@@ -120,9 +120,9 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::where('slug', $slug)->exists();
     }
-    public function categoriesDropDown()
+    public function categoriesDropDown($request)
     {
-        return Category::select('id', 'name')->get();
+        return isset($request->parent_id)?Category::where('parent_id',$request->parent_id)->select('id', 'name','photo')->get() :Category::select('id', 'name','photo')->get();
     }
 
     public function updateisFeatured($request, $id)

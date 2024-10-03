@@ -411,6 +411,19 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
          $SpecificationKey = SpecificationKeyTypeAttribute::findOrFail($id);
          return $SpecificationKey->delete();
      }
+
+
+
+     // Get Datas
+     public function keys($id){
+        return SpecificationKey::where('category_id',$id)->select('id','name')->get();
+     }
+     public function types($id){
+        return SpecificationKeyType::where('specification_key_id',$id)->select('id','name')->get();
+     }
+     public function attributes($id){
+        return SpecificationKeyTypeAttribute::where('key_type_id',$id)->select('id','name')->get();
+     }
  
     
 }

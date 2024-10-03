@@ -79,6 +79,10 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // Product
     Route::resource('product', ProductController::class);
+    Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
+        Route::get('create', [ProductController::class, 'create'])->name('create');
+        Route::get('specifications', [ProductController::class, 'specification'])->name('specification');
+    });
 
     // Brand Types
     Route::post('brand-type/status/{id}', [BrandTypeController::class, 'updateStatus'])->name('brand_type.status');
