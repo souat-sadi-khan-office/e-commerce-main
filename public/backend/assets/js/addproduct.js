@@ -1,6 +1,6 @@
 $(document).ready(function() {
     // Initialize Select2 on category select
-    $('#category_id').select2();
+    // $('#category_id').select2();
 
     $('#category_id').change(function() {
         const categoryId = $(this).val();
@@ -278,8 +278,11 @@ $(document).ready(function() {
 
         attrSelect.append('<option value="" disabled selected>--Select Attribute--</option>');
         $.each(attributes, function(index, attr) {
-            attrSelect.append(`<option value="${attr.id}">${attr.name}</option>`);
+            const extraText = attr.extra.length > 50 ? attr.extra.substring(0, 50) + '...' : attr.extra;
+            
+            attrSelect.append(`<option value="${attr.id}">${attr.name}  ${extraText} </option>`);
         });
+        
 
         attributesDiv.append(attrSelect);
         parentDiv.append(attributesDiv);

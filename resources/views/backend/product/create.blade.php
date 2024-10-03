@@ -61,11 +61,8 @@
             
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="category_id">Category <span class="text-danger">*</span></label>
-                                        <select name="category_id[]" id="category_id" class="form-control select">
-                                            <option value="" disabled selected>--Select Category--</option>
-                                            @foreach ($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
+                                        <select name="category_id[]" id="category_id" class="form-control category_id007 select">
+                                          
                                         </select>
                                     </div>
             
@@ -95,22 +92,7 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- Product Specification -->
-                    <div class="col-mb-12 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="h5 mb-0">Product Specification</h2>
-                            </div>
-                            <div class="card-body">
-                                <div class="col-md-12">
-                                    <div class="specification_key row"></div>
-                                    <button id="add-another" type="button" class="btn btn-primary mt-2" style="display:none;">Add Another
-                                        Specification</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
     
                     <!-- Product Images -->
                     <div class="col-md-12 mb-4">
@@ -229,7 +211,21 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <!-- Product Specification -->
+                    <div class="col-mb-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Product Specification</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <div class="specification_key row"></div>
+                                    <button id="add-another" type="button" class="btn btn-primary mt-2" style="display:none;">Add Another
+                                        Specification</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Discount -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -383,7 +379,7 @@
                                 <div class="row">
                                     <label for="est_shipping_time">Estimate Shipping Time</label>
                                     <div class="col-md-12 input-group mb-3">
-                                        <input type="text" class="form-control" name="est_shipping_time" id="est_shipping_time">
+                                        <input type="number" class="form-control" name="est_shipping_time" id="est_shipping_time">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
@@ -558,6 +554,29 @@
             var brandImage = '<img src="' + brand.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
             return $('<span>' + brandImage + brand.text + '</span>');
         }
+
+        $('.category_id007').select2({
+            width: '100%',
+            placeholder: 'Select category',
+            ajax: {
+                url: '/search/category',
+                method: 'POST',
+                dataType: 'JSON',
+                delay: 250,
+                cache: true,
+                data: function (data) {
+                    return {
+                        searchTerm: data.term
+                    };
+                },
+
+                processResults: function (response) {
+                    return {
+                        results:response
+                    };
+                }
+            }
+        });
     </script>
     <script src="{{ asset('backend/assets/js/addproduct.js') }}"></script>
 @endpush

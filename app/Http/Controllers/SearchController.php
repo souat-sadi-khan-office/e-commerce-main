@@ -78,7 +78,7 @@ class SearchController extends Controller
         } else {
             $search = $request->searchTerm;
 
-            $categories = Category::where('name', $search)->get();
+            $categories = Category::where('name','like', "%$search%")->get();
 
             $json = [];
             foreach($categories as $category) {

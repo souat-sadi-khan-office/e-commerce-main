@@ -44,10 +44,9 @@ class ProductController extends Controller
 
             return response()->json(['subs'=>$this->categoryRepository->categoriesDropDown($request)]);
         }
-        $categories=$this->categoryRepository->categoriesDropDown(null);
         $taxes = $this->taxRepository->getAllActiveTaxes();
 
-        return view('backend.product.create', compact('categories','taxes'));
+        return view('backend.product.create', compact('taxes'));
     }
 
     public function destroy($id)

@@ -415,14 +415,26 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
 
 
      // Get Datas
-     public function keys($id){
-        return SpecificationKey::where('category_id',$id)->select('id','name')->get();
-     }
+     public function keys($id) {
+        $keys = SpecificationKey::where('category_id', $id)->select('id', 'name')->get();
+        if ($keys->isEmpty()) {
+            $category = Category::find($id);
+    
+            // Check if a parent category exists
+            if ($category && $category->parent) {
+                return $this->keys($category->parent_id);
+            }
+        }
+    
+        return $keys;
+    
+    }
+    
      public function types($id){
         return SpecificationKeyType::where('specification_key_id',$id)->select('id','name')->get();
      }
      public function attributes($id){
-        return SpecificationKeyTypeAttribute::where('key_type_id',$id)->select('id','name')->get();
+        return SpecificationKeyTypeAttribute::where('key_type_id',$id)->select('id','name','extra')->get();
      }
  
     
