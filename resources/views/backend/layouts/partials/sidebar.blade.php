@@ -96,7 +96,7 @@
                 <li
                     class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
                     <a href="javascript:;"
-                        class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
+                        class="nav-link">
                         <i class="nav-icon bi bi-ubuntu"></i>
                         <p>
                             Brands
@@ -126,7 +126,7 @@
                 <li
                     class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
                     <a href="javascript:;"
-                        class="nav-link {{ Request::is('admin/website') || Request::is('admin/page*') ? ' active' : '' }}">
+                        class="nav-link">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup
@@ -171,7 +171,7 @@
                 <!-- Setup & Configuration -->
                 <li
                     class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/tax') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/settings/*') ? ' active' : '' }}">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
                             Settings
@@ -275,8 +275,7 @@
                 <!-- Staff & Permission -->
                 <li
                     class="nav-item {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? 'menu-open' : '' }}">
-                    <a href="#"
-                        class="nav-link {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? ' active' : '' }}">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-people"></i>
                         <p>
                             Staffs

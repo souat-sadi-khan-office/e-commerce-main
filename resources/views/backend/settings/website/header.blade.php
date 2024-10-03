@@ -66,7 +66,7 @@
                                                 @php
                                                     $rand = rand(10000, 1000000);
                                                 @endphp
-                                                @foreach ( get_settings('header_menu_labels') as $key => $value)
+                                                @foreach ( json_decode(get_settings('header_menu_labels')) as $key => $value)
                                                     <div class="row mt-3" id="data-{{ $rand}}">
                                                         <div class="col-4">
                                                             <div class="form-group">
