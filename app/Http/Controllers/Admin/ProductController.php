@@ -3,40 +3,31 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CategoryRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 use App\Repositories\Interface\TaxRepositoryInterface;
-use App\Repositories\Interface\ProductRepositoryInterface;
 
 class ProductController extends Controller
 {
     protected $categoryRepository;
     protected $productRepository;
     protected $specificationRepository;
+    private $taxRepository;
+
 
     public function __construct(CategoryRepositoryInterface $categoryRepository,
      ProductRepositoryInterface $productRepository,
+     TaxRepositoryInterface $taxRepository,
      ProductSpecificationRepositoryInterface $specificationRepository)
     {
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->specificationRepository = $specificationRepository;
-    }
-
-    public function index()
-    private $taxRepository;
-    private $productRepository;
-
-    public function __construct(
-        TaxRepositoryInterface $taxRepository,
-        ProductRepositoryInterface $productRepository
-    ) {
         $this->taxRepository = $taxRepository;
-        $this->productRepository = $productRepository;
     }
+
 
     public function index(Request $request)
     {
@@ -54,10 +45,9 @@ class ProductController extends Controller
             return response()->json(['subs'=>$this->categoryRepository->categoriesDropDown($request)]);
         }
         $categories=$this->categoryRepository->categoriesDropDown(null);
-        return view('backend.product.create',compact('categories'));
         $taxes = $this->taxRepository->getAllActiveTaxes();
 
-        return view('backend.product.create', compact('taxes'));
+        return view('backend.product.create', compact('categories','taxes'));
     }
 
     public function destroy($id)

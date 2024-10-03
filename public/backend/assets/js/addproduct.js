@@ -36,6 +36,7 @@ $(document).ready(function() {
         const select = $('<select>', {
             name: 'category_id[]',
             class: 'form-control select mb-2',
+            required:true,
             'data-level': level
         });
 
@@ -119,6 +120,7 @@ $(document).ready(function() {
         const addTypeButton = $('<button>', {
             class: 'btn btn-secondary btn-sm mt-2 add-type',
             text: 'Add Type',
+            type:'button',
             style: 'display:none;'
         });
         specDiv.append(addTypeButton);
@@ -159,6 +161,7 @@ $(document).ready(function() {
             // Add Remove Type Button
             const removeTypeButton = $('<button>', {
                 class: 'btn btn-danger btn-sm mt-2 col-4 remove-type',
+                type:'button',
                 text: 'Remove Type'
             });
             newTypeDiv.append(removeTypeButton);
@@ -220,6 +223,7 @@ $(document).ready(function() {
         const typeSelect = $('<select>', {
             name: 'specification_key[][type_id]',
             class: 'form-control mb-2 col-8',
+            required:true,
             'data-type-id': 'type_' + Date.now()
         });
 
@@ -268,7 +272,8 @@ $(document).ready(function() {
 
         const attrSelect = $('<select>', {
             name: 'specification_key[][attribute_id]',
-            class: 'form-control mb-2 col-8'
+            class: 'form-control mb-2 col-8',
+            required:true,
         });
 
         attrSelect.append('<option value="" disabled selected>--Select Attribute--</option>');
@@ -298,7 +303,8 @@ $(document).ready(function() {
         // Create label for specifications
         const label = $('<label>', {
             text: 'Select Specifications',
-            for: 'specification_key'
+            for: 'specification_key',
+            required:true,
         });
         newSpecDiv.append(label);
 
@@ -342,6 +348,7 @@ $(document).ready(function() {
         const addTypeButton = $('<button>', {
             class: 'btn btn-secondary btn-sm mt-2 add-type',
             text: 'Add Type',
+            type:'button',
             style: 'display:none;' // Initially hidden
         });
         newSpecDiv.append(addTypeButton);
@@ -349,6 +356,7 @@ $(document).ready(function() {
         // Create Remove Specification Button
         const removeSpecButton = $('<button>', {
             class: 'btn btn-danger btn-sm mt-2 remove-specification',
+            type:'button',
             text: 'Remove Specification'
         });
         newSpecDiv.append(removeSpecButton);
@@ -378,7 +386,8 @@ $(document).ready(function() {
             const typeSelect = $('<select>', {
                 name: 'specification_key[][type_id]',
                 class: 'form-control mb-2 col-8 select',
-                'data-type-id': 'type_' + Date.now()
+                'data-type-id': 'type_' + Date.now(),
+                required:true,
             });
 
             typeSelect.append(
@@ -393,6 +402,7 @@ $(document).ready(function() {
             // Add Remove Type Button
             const removeTypeButton = $('<button>', {
                 class: 'btn btn-danger btn-sm mt-2 col-4 mx-auto remove-type',
+                type:'button',
                 text: 'Remove Type'
             });
             newTypeDiv.append(removeTypeButton);
