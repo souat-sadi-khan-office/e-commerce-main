@@ -11,7 +11,7 @@ class SpecificationKeyTypeAttribute extends Model
 
     protected $fillable = [
         'admin_id',
-        'specification_key_type_id',
+        'key_type_id',
         'name',
         'extra',
         'status',

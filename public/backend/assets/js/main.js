@@ -139,7 +139,9 @@ var _modalClassFormValidation = function () {
                     $('#submit').show();
                     $('#submitting').hide();
 
-                    $('#modal_remote').modal('toggle');
+                    if(!data.stay) {
+                        $('#modal_remote').modal('toggle');
+                    }
 
                     if (data.goto) {
                         setTimeout(function () {
@@ -188,6 +190,75 @@ var _modalClassFormValidation = function () {
     });
 };
 
+
+ // For Submitting Multiple Modal Forms
+ var _initializeMultipleFormsValidation = function () {
+    // Initialize validation for each form
+    $('.nested-form').each(function () {
+        var form = $(this);
+        form.parsley().on('field:validated', function () {
+            var ok = form.find('.parsley-error').length === 0;
+            form.find('.bs-callout-info').toggleClass('hidden', !ok);
+            form.find('.bs-callout-warning').toggleClass('hidden', ok);
+        });
+
+        // Bind the submit event for each form
+        form.on('submit', function (e) {
+            e.preventDefault();
+            console.log("Form submitted"); // Debugging log
+
+            // Handle showing/hiding submit buttons
+            const submitButton = form.find('.submit-btn');
+            submitButton.prop('disabled', true).text('Submitting...');
+
+            // Clear previous errors
+            $(".ajax_error").remove();
+
+            // Prepare AJAX submission
+            var submit_url = form.attr('action');
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: submit_url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    if (data.status) {
+                        toastr.success(data.message);
+                        submitButton.prop('disabled', false).text('Update');
+                    } else {
+                        toastr.error(data.message);
+                    }
+                },
+                error: function (data) {
+                    var jsonValue = data.responseJSON;
+                    const errors = jsonValue.errors;
+                    if (errors) {
+                        $.each(errors, function (key, value) {
+                            const message = value[0];
+                            const inputField = form.find('#' + key);
+                            if (inputField.length > 0) {
+                                inputField.parsley().removeError('required', { updateClass: true });
+                                inputField.parsley().addError('required', {
+                                    message: message,
+                                    updateClass: true
+                                });
+                            }
+                            toastr.error(message);
+                        });
+                    } else {
+                        toastr.error(jsonValue.message);
+                    }
+                    submitButton.prop('disabled', false).text('Update');
+                }
+            });
+        });
+    });
+};
 // form submit
 var _formValidation = function () {
     if ($('.content_form').length > 0) {

@@ -34,6 +34,6 @@ class SpecificationKeyType extends Model
     // Relationship with attributes
     public function attributes()
     {
-        return $this->belongsTo(SpecificationKeyTypeAttribute::class);
+        return $this->hasMany(SpecificationKeyTypeAttribute::class,'key_type_id');
     }
 }

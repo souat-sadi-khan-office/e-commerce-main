@@ -64,4 +64,8 @@ class Category extends Model
     {
         return $this->hasMany(Banner::class);
     }
+    public function specificationKeys()
+    {
+        return $this->hasMany(SpecificationKey::class);
+    }
 }
