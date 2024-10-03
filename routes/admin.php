@@ -30,9 +30,6 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
-
-
-
     Route::group(['prefix' => 'categories', 'as' => 'category.'], function () {
         Route::get('add', [CategoryController::class, 'addform'])->name('add');
         Route::get('sub/add', [CategoryController::class, 'addformsub'])->name('sub.add');

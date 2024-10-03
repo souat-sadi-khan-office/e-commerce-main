@@ -2,7 +2,8 @@
     <div class="sidebar-brand">
 
         <a href="{{ route('admin.dashboard') }}" class="brand-link">
-            <img src="{{ get_settings('system_logo_white') ? asset(get_settings('system_logo_white')) : asset('pictures/default-logo-white.png') }}" alt="App Logo" class="brand-image">
+            <img src="{{ get_settings('system_logo_white') ? asset(get_settings('system_logo_white')) : asset('pictures/default-logo-white.png') }}"
+                alt="App Logo" class="brand-image">
         </a>
     </div>
     <div class="sidebar-wrapper">
@@ -44,36 +45,12 @@
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
-                    </ul>
-                </li>
-
-                <!-- Brands -->
-                <li class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
-                        <i class="nav-icon bi bi-ubuntu"></i>
-                        <p>
-                            Brands
-                            <i class="nav-arrow bi bi-chevron-right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Brand</p>
-                            </a> 
                         <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
                                     class="nav-icon bi bi-circle"></i>
                                 <p>Add Sub Category</p>
                             </a>
                         </li>
-
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.brand-type.index') }}" class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}"> 
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Brand Types</p>
-                            </a> 
                         <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
                             <a href="#"
                                 class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
@@ -91,36 +68,65 @@
                                     </a>
                                 </li>
                                 <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
-                                    class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Add Key Types</p>
-                                </a>
-                            </li>
-                            <li class="nav-item"> <a href="{{ route('admin.category.specification.type.attribute.index') }}"
-                                class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
-                                <p>Add Type attributes</p>
-                            </a>
-                        <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
-                                class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
-                                <p>Add Sub Category</p>
-                            </a> 
-                        </li>
-                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.add') }}"
-                                class="nav-link {{ Request::is('admin/categories/specification/key/add') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
-                                <p>Add Specification Keys</p>
-                            </a> 
-                        </li>
+                                        class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Add Key Types</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item"> <a
+                                        href="{{ route('admin.category.specification.type.attribute.index') }}"
+                                        class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Add Type attributes</p>
+                                    </a>
+
+                                <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
+                                        class="nav-link {{ Request::is('admin/categories/specification/key/add') ? ' active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Add Specification Keys</p>
+                                    </a>
+                                </li>
                             </ul>
+                        </li>
+                    </ul>
+                    
+                </li>
+
+                <!-- Brands -->
+                <li
+                    class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
+                    <a href="javascript:;"
+                        class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/create') || Request::is('admin/brand-type') ? 'active' : '' }}">
+                        <i class="nav-icon bi bi-ubuntu"></i>
+                        <p>
+                            Brands
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.brand.index') }}"
+                                class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.brand-type.index') }}"
+                                class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Brand Types</p>
+                            </a>
                         </li>
                     </ul>
                 </li>
 
                 <!-- Website Setup -->
-                <li class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
-                    <a href="javascript:;" class="nav-link {{ Request::is('admin/website') || Request::is('admin/page*') ? ' active' : '' }}">
+                <li
+                    class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
+                    <a href="javascript:;"
+                        class="nav-link {{ Request::is('admin/website') || Request::is('admin/page*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup
@@ -163,7 +169,8 @@
                 </li>
 
                 <!-- Setup & Configuration -->
-                <li class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/tax') ? 'menu-open' : '' }}">
+                <li
+                    class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/tax') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link {{ Request::is('admin/settings/*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
@@ -172,13 +179,14 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.settings.general') }}" class="nav-link {{ Request::is('admin/settings/general') ? ' active' : '' }}"> 
+                        <li class="nav-item">
+                            <a href="{{ route('admin.settings.general') }}"
+                                class="nav-link {{ Request::is('admin/settings/general') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>General Settings</p>
                             </a>
                         </li>
-                        
+
                         {{-- <li class="nav-item"> 
                             <a href="{{ route('admin.settings') }}" class="nav-link {{ Request::is('admin/roles') ? ' active' : '' }}"> 
                                 <i class="nav-icon bi bi-circle"></i>
@@ -186,15 +194,17 @@
                             </a> 
                         </li> --}}
 
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.currency.index') }}" class="nav-link {{ Request::is('admin/currency') ? ' active' : '' }}"> 
+                        <li class="nav-item">
+                            <a href="{{ route('admin.currency.index') }}"
+                                class="nav-link {{ Request::is('admin/currency') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Currency</p>
                             </a>
                         </li>
 
-                        <li class="nav-item"> 
-                            <a href="{{ route('admin.tax.index') }}" class="nav-link {{ Request::is('admin/tax') ? ' active' : '' }}"> 
+                        <li class="nav-item">
+                            <a href="{{ route('admin.tax.index') }}"
+                                class="nav-link {{ Request::is('admin/tax') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>VAT & Tax</p>
                             </a>
@@ -263,8 +273,10 @@
                 </li>
 
                 <!-- Staff & Permission -->
-                <li class="nav-item {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? ' active' : '' }}">
+                <li
+                    class="nav-item {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ Request::is('admin/stuff*') || Request::is('admin/roles*') ? ' active' : '' }}">
                         <i class="nav-icon bi bi-people"></i>
                         <p>
                             Staffs
@@ -273,36 +285,38 @@
                     </a>
                     <ul class="nav nav-treeview">
                         {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view')) --}}
-                            <li class="nav-item"> 
-                                <a href="{{ route('admin.stuff.index') }}" class="nav-link {{ Request::is('admin/stuff*') ? ' active' : '' }}"> 
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>All Staffs</p>
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.stuff.index') }}"
+                                class="nav-link {{ Request::is('admin/stuff*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>All Staffs</p>
+                            </a>
+                        </li>
                         {{-- @endif --}}
-                        
+
                         {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('roles.view')) --}}
-                            <li class="nav-item"> 
-                                <a href="{{ route('admin.roles.index') }}" class="nav-link {{ Request::is('admin/roles*') ? ' active' : '' }}"> 
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Staff Permission</p>
-                                </a>
-                            </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.roles.index') }}"
+                                class="nav-link {{ Request::is('admin/roles*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-circle"></i>
+                                <p>Staff Permission</p>
+                            </a>
+                        </li>
                         {{-- @endif --}}
                     </ul>
                 </li>
 
                 <!-- System -->
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('test-model.view')) --}}
-                    <li class="nav-item">
-                        <a href="{{ route('admin.system_server') }}"
-                            class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}">
-                            <i class="nav-icon bi bi-hdd"></i>
-                            <p>
-                                System
-                            </p>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.system_server') }}"
+                        class="nav-link {{ Request::is('admin/server-status') ? ' active' : '' }}">
+                        <i class="nav-icon bi bi-hdd"></i>
+                        <p>
+                            System
+                        </p>
+                    </a>
+                </li>
                 {{-- @endif --}}
 
             </ul>
