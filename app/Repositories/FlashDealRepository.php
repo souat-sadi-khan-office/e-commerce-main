@@ -4,7 +4,9 @@ namespace App\Repositories;
 
 use DataTables;
 use App\CPU\Images;
+use App\Models\Product;
 use App\Models\FlashDeal;
+use App\Models\FlashDealType;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 
@@ -21,16 +23,19 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('banner', function ($model) {
-                return Images::show($model->banner);
+                return Images::show($model->image);
             })
             ->editColumn('created_by', function ($model) {
-                return $model->creator->name;
+                return $model->admin->name;
             })
             ->editColumn('start_date', function ($model) {
-                return format_date($model->starting_time);
+                return get_system_date($model->starting_time);
             })
             ->editColumn('end_date', function ($model) {
-                return "End date";
+                $starting_time = strtotime($model->starting_time);
+                $end_date = strtotime('+ ' . $model->deadline_time . ' ' . $model->deadline_type, $starting_time);
+                
+                return get_system_date(date('Y-m-d', $end_date));
             })
             ->editColumn('status', function ($model) {
                 $checked = $model->status == 1 ? 'checked' : '';
@@ -51,12 +56,12 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
     public function createDeal($data)
     {
-        $brand = FlashDeal::create([
+        $deal = FlashDeal::create([
             'title' => $data->title,
             'admin_id' => Auth::guard('admin')->id(),
             'slug' => $data->slug,
-            'status' => $data->status,
-            'starting_time' => $data->starting_time,
+            'status' => 1,
+            'starting_time' => date('Y-m-d', strtotime($data->starting_time)),
             'deadline_time' => $data->deadline_time,
             'deadline_type' => $data->deadline_type,
             'description' => $data->description,
@@ -69,8 +74,74 @@ class FlashDealRepository implements FlashDealRepositoryInterface
             'image' => $data->image ? Images::upload('deals', $data->image) : null,
         ]);
 
+        $dealId = $deal->id;
+
+        if(is_array($data['product_id']) && count($data['product_id']) > 0) {
+
+            $productIdArray = $data->product_id;
+            $discountArray = $data->discount;
+            $discountTypeArray = $data->discount_type;
+
+            $starting_time = strtotime($data->starting_time);
+            $end_date = strtotime('+ ' . $data->deadline_time . ' ' . $data->deadline_type, $starting_time);
+            
+            for($i = 0; $i < count($productIdArray); $i++) {
+                $dealTypes = FlashDealType::create([
+                    'flash_deal_id' => $dealId,
+                    'product_id' => $productIdArray[$i],
+                    'discount_amount' => $discountArray[$i],
+                    'discount_type' => $discountTypeArray[$i]
+                ]);
+
+                if($dealTypes) {
+                    $discountData = [
+                        'discount_type' => $discountTypeArray[$i],
+                        'discount' => $discountArray[$i],
+                        'starting_date' => date('Y-m-d', strtotime($data->starting_time)),
+                        'end_date' => date('Y-m-d', strtotime($end_date))
+                    ];
+                    $this->addDiscountToProduct($productIdArray[$i], $discountData);
+                }
+            }
+        }
+
         $json = ['status' => true, 'goto' => route('admin.flash-deal.index'), 'message' => 'Deal created successfully'];
         return response()->json($json);
+    }
+
+    private function addDiscountToProduct($productId, $discountData) 
+    {
+        $product = Product::find($productId);
+        $product->is_discounted = 1;
+        $product->discount_type = $discountData['discount_type'];
+        $product->discount = $discountData['discount'];
+        $product->discount_start_date = $discountData['starting_date'];
+        $product->discount_end_date = $discountData['end_date'];
+        return $product->save();
+    }
+
+    private function removeDiscountProducts($productIds)
+    {
+        if(count($productIds) > 0) {
+            foreach($productIds as $product) {
+
+                $product = Product::find($product);
+                $product->is_discounted = 0;
+                $product->discount_type = null;
+                $product->discount = null;
+                $product->discount_start_date = null;
+                $product->discount_end_date = null;
+                $product->save();
+            }
+        }
+    }
+
+    public function removeFlashDealItems($id)
+    {
+        $deals = FlashDealType::where('flash_deal_id', $id)->get();
+        foreach($deals as $deal) {
+            $deal->delete();
+        }
     }
 
     public function updateDeal($id, $data)
@@ -79,8 +150,8 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         $deal->admin_id  = Auth::guard('admin')->id();
         $deal->title = $data->title;
         $deal->slug = $data->slug;
-        $deal->status = $data->status;
-        $deal->starting_time = $data->starting_time;
+        $deal->status = 1;
+        $deal->starting_time = date('Y-m-d', strtotime($data->starting_time));
         $deal->deadline_time = $data->deadline_time;
         $deal->deadline_type = $data->deadline_type;
         $deal->description = $data->description;
@@ -96,6 +167,45 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         }
 
         $deal->update();
+
+        $this->removeFlashDealItems($id);
+
+        if(is_array($data['product_id']) && count($data['product_id']) > 0) {
+
+            $this->removeDiscountProducts($data->product_id);
+
+            $productIdArray = $data->product_id;
+            $discountArray = $data->discount;
+            $discountTypeArray = $data->discount_type;
+
+            $starting_time = strtotime(date('Y-m-d', strtotime($data->starting_time)));
+            if($data->deadline_type == 'day') {
+                $data->deadline_type = 'days';
+            }
+
+            $end_date = strtotime('+ ' . $data->deadline_time . ' ' . $data->deadline_type, $starting_time);
+
+            $end_date = date('Y-m-d', $end_date);
+
+            for($i = 0; $i < count($productIdArray); $i++) {
+                $dealTypes = FlashDealType::create([
+                    'flash_deal_id' => $id,
+                    'product_id' => $productIdArray[$i],
+                    'discount_amount' => $discountArray[$i],
+                    'discount_type' => $discountTypeArray[$i]
+                ]);
+
+                if($dealTypes) {
+                    $discountData = [
+                        'discount_type' => $discountTypeArray[$i],
+                        'discount' => $discountArray[$i],
+                        'starting_date' => date('Y-m-d', strtotime($data->starting_time)),
+                        'end_date' => $end_date
+                    ];
+                    $this->addDiscountToProduct($productIdArray[$i], $discountData);
+                }
+            }
+        }
 
         return response()->json(['status' => true, 'goto' => route('admin.flash-deal.index'), 'message' => 'Deal updated successfully.']);
     }

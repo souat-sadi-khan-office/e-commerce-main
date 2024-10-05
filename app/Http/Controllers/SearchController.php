@@ -125,4 +125,27 @@ class SearchController extends Controller
         
         return response()->json($json);
     }
+
+    // for product data
+    public function searchForProductDetails(Request $request) 
+    {
+        $productIds = $request->data;
+    
+        if($productIds != null) {
+            $products = Product::select('id', 'name', 'thumb_image', 'unit_price')->whereIn('id', $productIds)->get();
+
+            if($products) {
+                return $products->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'thumb_image' => url($product->thumb_image),
+                        'unit_price' => $product->unit_price
+                    ];
+                });
+            }
+        } else {
+            return response()->json();
+        }
+    }
 }

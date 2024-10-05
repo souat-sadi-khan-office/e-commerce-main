@@ -33,6 +33,7 @@
 @endsection
 @push('style')
     <link rel="stylesheet" href="{{ asset('backend/assets/css/dropify.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/tempus-dominus.min.css') }}">
 @endpush
 @section('content')
     <form action="{{ route('admin.flash-deal.store') }}" enctype="multipart/form-data" class="content_form" method="post">
@@ -55,9 +56,9 @@
                                 <input type="text" name="slug" id="slug" class="form-control" required>
                             </div>
 
-                            <div class="col-md-12 form-group mb-3">
-                                <label for="starting_time">Starting Time <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control date" name="starting_time" id="starting_time" value="{{ get_system_date(date('Y-m-d')) }}">
+                            <div class="col-sm-12 form-group mb-3" id="htmlTarget">
+                                <label for="starting_time" class="form-label">Starting date</label>
+                                <input id="starting_time" type="text"  class="form-control" name="starting_time">
                             </div>
 
                             <div class="col-md-6 mb-3 form-group">
@@ -86,7 +87,7 @@
 
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="product_id">Products </label>
-                                <select multiple name="product_id" id="product_id" class="form-control"></select>
+                                <select multiple name="product_id[]" id="product_id" class="form-control"></select>
                                 <small class="text-muted">For selecting multiple product at a time, use your keyboard <b>Control</b> key and click on the products that you want to add. </small>
                             </div>
 
@@ -160,6 +161,8 @@
                             <div class="col-md-12 form-group mb-3">
                                 <div class="alert alert-danger">If any product has discount or exists in another flash deal, the discount will be replaced by this discount & time limit.</div>
                             </div>
+
+                            <div class="col-md-12 product_area mb-3 table-responsive"></div>
                         </div>
                     </div>
                 </div>
@@ -188,6 +191,8 @@
 @endsection
 @push('script')
     <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/tempus-dominus.min.js') }}"></script>
+
     <script>
         _formValidation();
         _initCkEditor("editor");
@@ -195,11 +200,81 @@
 
         $('.dropify').dropify();
 
+        const element = document.getElementById('starting_time');
+        const input = document.getElementById('starting_time');
+        const picker = new tempusDominus.TempusDominus(element, {
+            defaultDate: new Date(), // Set today's date as default
+            display: {
+                components: {
+                    calendar: true,
+                    date: true,
+                    month: true,
+                    year: true,
+                    decades: true,
+                    clock: false // Disable the time selection
+                }
+            }
+        });
+
+        // Event listener to update the input value when the date changes
+        element.addEventListener('change.td', (e) => {
+            const selectedDate = picker.dates.formatInput(e.detail.date); // Get the selected date
+            console.log(selectedDate);
+            input.value = selectedDate; // Set it to the input field
+        });
+
         $(document).on('keyup', '#name', function() {
             let value = $(this).val();
             let slug = _slugify(value);
             $('#slug').val(slug);
         });
+
+        $(document).on('change', '#product_id', function() {
+            let value = $(this).val();
+            $('.product-area').html("");
+            $('.product_area').html(`
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            `);
+            $.ajax({
+                url: '/search/product-data',
+                method: 'POST',
+                data: {
+                    data: value
+                },
+                dataType: 'JSON',
+                cache: true,
+                success: function(data) {
+                    let content = `
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <th>Product</th>
+                                <th>Base Price</th>
+                                <th>Discount</th>
+                                <th>Discount Type</th>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    $.each(data, function(index, product) {
+                        var row = '<tr><td><div class="row"><div class="col-auto"><img src="' + product.thumb_image + '" alt="' + product.name + ' ' + index + '" width="50"></div><div class="col">' + product.name + '</div></div></td><td>' + product.unit_price + '</td><td><input type="number" name="discount[]" value="0" id="discount_`+ index +`" class="form-control"></td><td><select name="discount_type[]" id="discount_type_'+ index +'" class="form-control"><option value="amount">Flat</option><option value="percentage">Percent</option></select></td></tr>';
+                        content = content.concat(row);
+                    });
+                                
+                    footer = `
+                            </tbody>
+                        </table>
+                    `;
+                    content = content.concat(footer);
+
+                    $('.product_area').html("");
+                    $('.product_area').html(content);
+                }
+            })
+        })
 
         // for categories
         $('#product_id').select2({
