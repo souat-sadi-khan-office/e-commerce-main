@@ -240,106 +240,112 @@ $(document).ready(function() {
         }
     }
 
+    let specificationIndex = 0; // Global index for specifications
+
     function appendSpecifications(specifications) {
         $('.specification_key').empty();
         const specificationKeyDiv = $('.specification_key');
-
-        const specDiv = createSpecificationDiv(specifications);
+    
+        const specDiv = createSpecificationDiv(specifications, specificationIndex++);
         specificationKeyDiv.append(specDiv);
         $('#add-another').show();
     }
-
-    function createSpecificationDiv(specifications) {
+    
+    function createSpecificationDiv(specifications, index) {
         const specDiv = $('<div>', {
-            class: 'form-group mb-3 specification-group'
+            class: 'form-group mb-3 specification-group border border border-2 py-2'
         });
         const label = $('<label>', {
             text: 'Select Specifications',
-            for: 'specification_key'
+            style:'font-weight:600;',
+            for: `specification_key[${index}][key_id]`
         });
-        specDiv.append(label);
 
+        const req=$('<span class="text-danger">*</span>')
+        specDiv.append(label);
+        specDiv.append(req);
+    
         const specSelect = $('<select>', {
-            name: 'specification_key[key_' + Date.now() + ']',
+            name: `specification_key[${index}][key_id]`,
             class: 'form-control mb-2',
-            'data-key-id': 'key_' + Date.now(),
+            'data-key-id': `key_${Date.now()}`,
             required: true
         });
-
+    
         specSelect.append('<option value="" disabled selected>--Select Specification--</option>');
         $.each(specifications, function(index, spec) {
             specSelect.append(`<option value="${spec.id}">${spec.name}</option>`);
         });
-
+    
         specDiv.append(specSelect);
-
+    
         // Initialize Select2 on the specification select
         specSelect.select2({
             width: '100%',
         });
-
+    
         const addTypeButton = $('<button>', {
             class: 'btn btn-secondary btn-sm mt-2 add-type',
             text: 'Add Type',
-            type:'button',
+            type: 'button',
             style: 'display:none;'
         });
         specDiv.append(addTypeButton);
-
+    
         // Remove Specification Button (hidden initially)
         const removeSpecButton = $('<button>', {
             class: 'btn btn-danger btn-sm mt-2 remove-specification',
             text: 'Remove Specification',
-            style: 'display:none;' // Initially hidden
+            style: 'display:none;'
         });
         specDiv.append(removeSpecButton);
-
+    
         // Change event for the specification select
         specSelect.change(function() {
             const selectedSpecId = $(this).val();
             specDiv.find('.types-group').remove();
-
+    
             if (selectedSpecId) {
-                fetchTypes(selectedSpecId, specDiv);
+                fetchTypes(selectedSpecId, specDiv, index);
                 addTypeButton.show();
             } else {
                 addTypeButton.hide();
             }
         });
-
+    
         // Button click event for adding a new type
         addTypeButton.click(function() {
             const newTypeDiv = $('<div>', {
                 class: 'form-group mb-3 types-group row'
             });
-
-            newTypeDiv.append('<div class="col-4"></div>'); // Empty div for button alignment
-
+    
+            newTypeDiv.append('<hr><div class="col-4"></div>'); // Empty div for alignment
+    
             // Fetch types based on the current specification
             const currentSpecId = specSelect.val();
-            fetchTypes(currentSpecId, newTypeDiv);
-
+            fetchTypes(currentSpecId, newTypeDiv, index);
+    
             // Add Remove Type Button
             const removeTypeButton = $('<button>', {
                 class: 'btn btn-danger btn-sm mt-2 col-4 remove-type',
-                type:'button',
+                type: 'button',
                 text: 'Remove Type'
             });
             newTypeDiv.append(removeTypeButton);
             specDiv.append(newTypeDiv);
-
+    
             // Initialize Select2 on new type select
             const typeSelect = newTypeDiv.find('select');
             typeSelect.select2();
-
+    
             typeSelect.change(function() {
                 const selectedTypeId = $(this).val();
                 newTypeDiv.find('.attributes-group').remove();
                 if (selectedTypeId) {
-                    fetchAttributes(selectedTypeId, newTypeDiv);
+                    fetchAttributes(selectedTypeId, newTypeDiv, index);
                 }
             });
-
+    
             // Remove Type Button Click Event
             removeTypeButton.click(function() {
                 newTypeDiv.remove();
@@ -348,17 +354,17 @@ $(document).ready(function() {
                     removeSpecButton.hide();
                 }
             });
-
+    
             // Show Remove Specification button if there's at least one type
             if (specDiv.find('.types-group').length > 0) {
                 removeSpecButton.show();
             }
         });
-
+    
         return specDiv;
     }
-
-    function fetchTypes(specId, parentDiv) {
+    
+    function fetchTypes(specId, parentDiv, index) {
         $.ajax({
             url: `/admin/products/specifications`,
             type: 'GET',
@@ -367,48 +373,98 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                appendTypes(data.types, parentDiv);
+                appendTypes(data.types, parentDiv, index);
             }
         });
     }
-
-    function appendTypes(types, parentDiv) {
+    
+    function appendTypes(types, parentDiv, index) {
         const typesDiv = $('<div>', {
             class: 'form-group mb-3 types-group'
         });
+        
+        // Label for Types
         const label = $('<label>', {
             text: 'Select Types'
         });
         typesDiv.append(label);
-
+        
+        // Type Select Dropdown
         const typeSelect = $('<select>', {
-            name: 'specification_key[][type_id]',
+            name: `specification_key[${index}][type_id][]`,
             class: 'form-control mb-2 col-8',
-            required:true,
-            'data-type-id': 'type_' + Date.now()
+            required: true
         });
-
+        
+        // Placeholder option
         typeSelect.append('<option value="" disabled selected>--Select Type--</option>');
-        $.each(types, function(index, type) {
+        
+        // Append each type option
+        $.each(types, function(i, type) {
             typeSelect.append(`<option value="${type.id}">${type.name}</option>`);
         });
-
+        
+        // Status Toggle
+        const keyf = $('<div class="col-md-2 mt-3 form-group">');
+        const statusLabel = $('<label>', {
+            text: 'Is Feature',
+            for: 'status'
+        });
+        keyf.append(statusLabel);
+        
+        const statusSwitch = $('<div class="form-check form-switch">');
+        const statusInput = $('<input>', {
+            class: 'form-check-input',
+            type: 'checkbox',
+            role: 'switch',
+            name: '', // Initially empty, will set later
+            checked: false,
+            disabled:true
+        });
+        
+        // Update name based on checked status
+        statusInput.change(function() {
+            const selectedTypeId = typeSelect.val(); 
+            console.log(selectedTypeId,)// Get the selected type ID
+            if ($(this).is(':checked')  && selectedTypeId) {
+                $(this).attr('name', `specification_key[${index}][type_id][features][${selectedTypeId}]`);
+            } else {
+                $(this).attr('name', ''); // Clear the name if unchecked
+            }
+        });
+        statusSwitch.append(statusInput);
+        keyf.append(statusSwitch);
+        
+        // Append type select and status toggle to typesDiv
         typesDiv.append(typeSelect);
+        typesDiv.append(keyf);
+        
+        // Finally, append typesDiv to the parentDiv
         parentDiv.append(typesDiv);
-
+        
+    
         // Initialize Select2 on the type select
         typeSelect.select2();
-
+    
         typeSelect.change(function() {
             const selectedTypeId = $(this).val();
             typesDiv.find('.attributes-group').remove();
             if (selectedTypeId) {
-                fetchAttributes(selectedTypeId, typesDiv);
+              
+                 statusInput.prop('disabled', false); // Enable the checkbox
+                 
+                fetchAttributes(selectedTypeId, typesDiv, index);
+            }
+            else {
+                statusInput.prop('disabled', true); // Disable the checkbox if no type is selected
+                statusInput.prop('checked', false); // Uncheck the checkbox
+                statusInput.attr('name', ''); // Clear the name
             }
         });
     }
-
-    function fetchAttributes(typeId, parentDiv) {
+    
+    function fetchAttributes(typeId, parentDiv, index) {
+        console.log(typeId)
         $.ajax({
             url: `/admin/products/specifications`,
             type: 'GET',
@@ -417,12 +473,12 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                appendAttributes(data.attributes, parentDiv);
+                appendAttributes(data.attributes, parentDiv, index,typeId);
             }
         });
     }
-
-    function appendAttributes(attributes, parentDiv) {
+    
+    function appendAttributes(attributes, parentDiv, index,typeId) {
         const attributesDiv = $('<div>', {
             class: 'form-group mb-3 attributes-group'
         });
@@ -430,59 +486,41 @@ $(document).ready(function() {
             text: 'Select Attributes'
         });
         attributesDiv.append(label);
-
+    
         const attrSelect = $('<select>', {
-            name: 'specification_key[][attribute_id]',
+            name: `specification_key[${index}][type_id][attribute_id][${typeId}][]`,
             class: 'form-control mb-2 col-8',
-            required:true,
+            required: true,
         });
-
+    
         attrSelect.append('<option value="" disabled selected>--Select Attribute--</option>');
         $.each(attributes, function(index, attr) {
-            const extraText = attr.extra.length > 50 ? attr.extra.substring(0, 50) + '...' : attr.extra;
-            
-            attrSelect.append(`<option value="${attr.id}">${attr.name}  ${extraText} </option>`);
+            let extraText = ''; // Declare extraText outside the if statement
+            if (attr.extra) {
+                extraText = attr.extra.length > 50 ? attr.extra.substring(0, 50) + '...' : attr.extra;
+            }
+            attrSelect.append(`<option value="${attr.id}">${attr.name} ${extraText}</option>`);
         });
-        
-
+    
         attributesDiv.append(attrSelect);
         parentDiv.append(attributesDiv);
-
+    
         // Initialize Select2 on the attribute select
         attrSelect.select2();
     }
-
+    
     $('#add-another').click(function() {
         // Get the last selected category_id from category_id[]
         const categoryIds = $('select[name="category_id[]"]').map(function() {
             return $(this).val();
         }).get(); // Get all selected values
-
+    
         const categoryId = categoryIds[categoryIds.length - 1]; // Get the last value
-
-        const newSpecDiv = $('<div>', {
-            class: 'form-group mb-3 specification-group'
-        });
-
-        // Create label for specifications
-        const label = $('<label>', {
-            text: 'Select Specifications',
-            for: 'specification_key',
-            required:true,
-        });
-        newSpecDiv.append(label);
-
-        // Create new specification select
-        const specSelect = $('<select>', {
-            name: 'specification_key[][key_id]',
-            class: 'form-control mb-2 select',
-            'data-key-id': 'key_' + Date.now(),
-            required: true
-        });
-
-        specSelect.append('<option value="" disabled selected>--Select Specification--</option>');
-
-        // Fetch specifications from the server based on the last category ID
+        const newspecificationIndex = specificationIndex++; // Increment and get the index
+        const newSpecDiv = createSpecificationDiv([], newspecificationIndex);    
+        $('.specification_key').append(`<hr>`);
+        $('.specification_key').append(newSpecDiv);
+        
         if (categoryId) {
             $.ajax({
                 url: '/admin/products/specifications',
@@ -492,13 +530,10 @@ $(document).ready(function() {
                 },
                 dataType: 'json',
                 success: function(data) {
+                    const specSelect = newSpecDiv.find('select[name^="specification_key"]');
                     $.each(data.keys, function(index, spec) {
-                        specSelect.append(
-                            `<option value="${spec.id}">${spec.name}</option>`
-                        );
+                        specSelect.append(`<option value="${spec.id}">${spec.name}</option>`);
                     });
-
-                    // Initialize Select2 on the new specification select
                     specSelect.select2({
                         width: '100%'
                     });
@@ -531,7 +566,7 @@ $(document).ready(function() {
             newSpecDiv.find('.types-group').remove(); // Clear existing types
 
             if (selectedSpecId) {
-                fetchTypes(selectedSpecId, newSpecDiv);
+                fetchTypes(selectedSpecId, newSpecDiv,newspecificationIndex);
                 addTypeButton.show();
             } else {
                 addTypeButton.hide();
@@ -548,7 +583,7 @@ $(document).ready(function() {
 
             // Create type select
             const typeSelect = $('<select>', {
-                name: 'specification_key[][type_id]',
+                name: 'specification_key[${newspecificationIndex}][type_id][]',
                 class: 'form-control mb-2 col-8 select',
                 'data-type-id': 'type_' + Date.now(),
                 required:true,
@@ -575,7 +610,41 @@ $(document).ready(function() {
                 });
            
 
-            newTypeDiv.append(typeSelect);
+                 // Status Toggle
+                const keyff = $('<div class="col-md-2 mt-3 form-group">');
+                const statusLabel = $('<label>', {
+                    text: 'Is Feature',
+                    for: 'status'
+                });
+                keyff.append(statusLabel);
+                
+                const statusSwitch = $('<div class="form-check form-switch">');
+                const statusInput = $('<input>', {
+                    class: 'form-check-input',
+                    type: 'checkbox',
+                    role: 'switch',
+                    name: '', // Initially empty, will set later
+                    checked: false,
+                    disabled:true
+                });
+
+                // Update name based on checked status
+                statusInput.change(function() {
+                    const selectedTypeId = typeSelect.val(); // Get the selected type ID
+                    if ($(this).is(':checked') && selectedTypeId) {
+                        $(this).attr('name', `specification_key[${newspecificationIndex}][type_id][features][${selectedTypeId}]`);
+                    } else {
+                        $(this).attr('name', ''); // Clear the name if unchecked
+                    }
+                });
+                statusSwitch.append(statusInput);
+                keyff.append(statusSwitch);
+                
+                // Append type select and status toggle to typesDiv
+                newTypeDiv.append(typeSelect);
+                newTypeDiv.append(keyff);
+                
+        
 
             // Add Remove Type Button
             const removeTypeButton = $('<button>', {
@@ -596,7 +665,12 @@ $(document).ready(function() {
                 const selectedTypeId = $(this).val();
                 newTypeDiv.find('.attributes-group').remove();
                 if (selectedTypeId) {
-                    fetchAttributes(selectedTypeId, newTypeDiv);
+                    statusInput.prop('disabled', false); // Enable the checkbox
+                    fetchAttributes(selectedTypeId, newTypeDiv,newspecificationIndex);
+                } else {
+                    statusInput.prop('disabled', true); // Disable the checkbox if no type is selected
+                    statusInput.prop('checked', false); // Uncheck the checkbox
+                    statusInput.attr('name', ''); // Clear the name
                 }
             });
 
