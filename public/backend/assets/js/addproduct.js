@@ -260,7 +260,7 @@ $(document).ready(function() {
         specDiv.append(label);
 
         const specSelect = $('<select>', {
-            name: 'specification_key[][key_id]',
+            name: 'specification_key[key_' + Date.now() + ']',
             class: 'form-control mb-2',
             'data-key-id': 'key_' + Date.now(),
             required: true
@@ -559,7 +559,21 @@ $(document).ready(function() {
 
             // Fetch types based on the selected specification
             const currentSpecId = specSelect.val();
-            fetchTypes(currentSpecId, typeSelect); // Fetch types and append directly
+        
+                $.ajax({
+                    url: `/admin/products/specifications`,
+                    type: 'GET',
+                    data: {
+                        key_id: currentSpecId
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $.each(data.types, function(index, type) {
+                            typeSelect.append(`<option value="${type.id}">${type.name}</option>`);
+                        });
+                    }
+                });
+           
 
             newTypeDiv.append(typeSelect);
 

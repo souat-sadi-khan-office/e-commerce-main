@@ -83,6 +83,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('product', ProductController::class);
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('create', [ProductController::class, 'create'])->name('create');
+        Route::any('store', [ProductController::class, 'store'])->name('store');
         Route::get('specifications', [ProductController::class, 'specification'])->name('specification');
     });
 
