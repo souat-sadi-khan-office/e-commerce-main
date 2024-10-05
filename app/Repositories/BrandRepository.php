@@ -63,12 +63,7 @@ class BrandRepository implements BrandRepositoryInterface
             'logo' => $data->logo ? Images::upload('brands', $data->logo) : null,
         ]);
 
-        if ($data->has('listing')) {
-            $json = ['status' => true, 'goto' => route('admin.brand.index'), 'message' => 'Brand created successfully'];
-        } else {
-            $json = ['status' => true, 'load' => true, 'message' => 'Brand created successfully'];
-        }
-
+        $json = ['status' => true, 'goto' => route('admin.brand.index'), 'message' => 'Brand created successfully'];
         return response()->json($json);
     }
 

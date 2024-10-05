@@ -41,12 +41,12 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12 mb-3 form-group">
+                            <div class="col-md-6 mb-3 form-group">
                                 <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" placeholder="Enter Brand Name" name="name" id="name" class="form-control" required>
                             </div>
 
-                            <div class="col-md-12 mb-3 form-group">
+                            <div class="col-md-6 mb-3 form-group">
                                 <label for="slug">Slug <span class="text-danger">*</span></label>
                                 <input type="text" name="slug" id="slug" class="form-control" required>
                             </div>
@@ -102,13 +102,9 @@
                     
                             <div class="col-md-12 form-group">
                                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.create')) --}}
-                                    <button type="submit" name="listing" value="listing" class="btn btn-soft-success"  id="submit">
+                                    <button type="submit" class="btn btn-soft-success"  id="submit">
                                         <i class="bi bi-send"></i>
-                                        Create & Back to Listing
-                                    </button>
-                                    <button type="submit" name="stay" value="stay" class="btn btn-soft-warning"  id="submit">
-                                        <i class="bi bi-send"></i>
-                                        Create & Stay
+                                        Create
                                     </button>
                                     <button class="btn btn-soft-warning" style="display: none;" id="submitting" type="button" disabled>
                                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -139,10 +135,37 @@
 
         $('.dropify').dropify();
         
-        $(document).on('keyup', '#name', function() {
-            let value = $(this).val();
-            let slug = _slugify(value);
+        function generateSlug(name) {
+            return name
+                .toString()
+                .toLowerCase()
+                .trim()
+                .replace(/&/g, '-and-')
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-') 
+                .replace(/-+/g, '-');
+        }
+
+        $('#name').on('input', function() {
+            const name = $(this).val();
+            const slug = generateSlug(name);
             $('#slug').val(slug);
-        })
+
+            // Check if the slug exists
+            $.ajax({
+                url: '{{ route('admin.slug.check') }}',
+                type: 'GET',
+                data: {
+                    slug: slug,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        const timestamp = Date.now();
+                        $('#slug').val(slug + '-' + timestamp);
+                    }
+                }
+            });
+        });
     </script>
 @endpush

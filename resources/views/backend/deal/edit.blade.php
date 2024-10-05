@@ -276,10 +276,38 @@
             input.value = selectedDate; // Set it to the input field
         });
 
-        $(document).on('keyup', '#name', function() {
-            let value = $(this).val();
-            let slug = _slugify(value);
+        function generateSlug(name) {
+            return name
+                .toString()
+                .toLowerCase()
+                .trim()
+                .replace(/&/g, '-and-')
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-') 
+                .replace(/-+/g, '-');
+        }
+
+        $('#name').on('input', function() {
+            const name = $(this).val();
+            const slug = generateSlug(name);
             $('#slug').val(slug);
+
+            // Check if the slug exists
+            $.ajax({
+                url: '{{ route('admin.slug.check') }}',
+                type: 'GET',
+                data: {
+                    slug: slug,
+                    id: '{{ $model->id }}',
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        const timestamp = Date.now();
+                        $('#slug').val(slug + '-' + timestamp);
+                    }
+                }
+            });
         });
 
         $(document).on('change', '#product_id', function() {

@@ -87,7 +87,7 @@
                             </div>
 
                             <div class="col-md-12 mb-3 form-group">
-                                <label for="meta_image">Logo <span class="text-danger">*</span></label>
+                                <label for="meta_image">Meta image <span class="text-danger">*</span></label>
                                 <input type="file" accept=".jpg, .png, .webp"  name="meta_image" id="meta_image" class="form-control dropify">
                             </div>
                     
@@ -126,10 +126,37 @@
 
         $('.dropify').dropify();
         
-        $(document).on('keyup', '#name', function() {
-            let value = $(this).val();
-            let slug = _slugify(value);
+        function generateSlug(name) {
+            return name
+                .toString()
+                .toLowerCase()
+                .trim()
+                .replace(/&/g, '-and-')
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-') 
+                .replace(/-+/g, '-');
+        }
+
+        $('#name').on('input', function() {
+            const name = $(this).val();
+            const slug = generateSlug(name);
             $('#slug').val(slug);
-        })
+
+            // Check if the slug exists
+            $.ajax({
+                url: '{{ route('admin.slug.check') }}',
+                type: 'GET',
+                data: {
+                    slug: slug,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        const timestamp = Date.now();
+                        $('#slug').val(slug + '-' + timestamp);
+                    }
+                }
+            });
+        });
     </script>
 @endpush

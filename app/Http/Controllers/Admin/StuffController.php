@@ -70,7 +70,11 @@ class StuffController extends Controller
         ]);
 
         $this->adminRepository->createAdmin($data);
-        return redirect()->route('admin.stuff.index')->with('success', 'Admin created successfully!');
+        return response()->json([
+            'status' => true, 
+            'goto' => route('admin.stuff.index'),
+            'message' => "User created successfully"
+        ]);
     }
 
     public function edit($id)
@@ -99,7 +103,11 @@ class StuffController extends Controller
         ]);
 
         $this->adminRepository->updateAdmin($id, $data);
-        return redirect()->route('admin.stuff.index')->with('success', 'Admin updated successfully!');
+        return response()->json([
+            'status' => true, 
+            'goto' => route('admin.stuff.index'),
+            'message' => "User update successfully"
+        ]);
     }
 
     public function destroy($id)

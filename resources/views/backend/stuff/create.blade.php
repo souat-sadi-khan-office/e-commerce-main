@@ -31,10 +31,13 @@
         </div>
     </div>
 @endsection
+@push('style')
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/dropify.min.css') }}">
+@endpush
 @section('content')
     <div class="row">
         <div class="col-md-7 mx-auto">
-            <form action="{{ route('admin.stuff.store') }}" id="content_form" method="post">
+            <form action="{{ route('admin.stuff.store') }}" class="content_form" method="post">
                 @csrf
                 <div class="card">
                     <div class="card-body">
@@ -61,12 +64,12 @@
                     
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="avatar">Avatar</label>
-                                <input type="file" name="avatar" class="form-control">
+                                <input type="file" name="avatar" class="form-control dropify">
                             </div>
                     
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="roles">Roles</label>
-                                <select name="roles" class="form-control" required>
+                                <select name="roles" class="form-control select" required>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
                                     @endforeach
@@ -100,7 +103,10 @@
     </div>
 @endsection
 @push('script')
+    <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
     <script>
+        _componentSelect();
+        _formValidation();
         $(document).on('click','.select_all',function(){
             var id =$(this).data('id');
             if (this.checked) {
@@ -109,5 +115,7 @@
                 $("."+id).prop('checked', false);
             }
         });
+
+        $('.dropify').dropify();
     </script>
 @endpush

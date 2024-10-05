@@ -1,5 +1,8 @@
 @extends('backend.layouts.app')
 @section('title', 'Update Staff Information')
+@push('style')
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/dropify.min.css') }}">
+@endpush
 @section('page_name')
     <div class="app-content-header">
         <div class="container-fluid">
@@ -62,12 +65,12 @@
                     
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="avatar">Avatar</label>
-                                <input type="file" name="avatar" class="form-control">
+                                <input type="file" name="avatar" class="form-control dropify" data-default-file="{{ $model->avater ? asset($model->avater) : '' }}">
                             </div>
                     
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="roles">Roles</label>
-                                <select name="roles" class="form-control" required>
+                                <select name="roles" class="form-control select" required>
                                     @foreach ($roles as $role)
                                         <option {{ $role->name == $model->getRoleNames()->toArray()[0] ? 'selected' : '' }} value="{{ $role->id }}">{{ $role->name }}</option>
                                     @endforeach
@@ -100,3 +103,11 @@
         </div>
     </div>
 @endsection
+@push('script')
+    <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
+    <script>
+        _componentSelect();
+        _formValidation();
+        $('.dropify').dropify();
+    </script>
+@endpush
