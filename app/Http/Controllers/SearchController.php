@@ -80,13 +80,14 @@ class SearchController extends Controller
 
             $categories = Category::where('name','like', "%$search%")->get();
 
-            $json = [];
-            foreach($categories as $category) {
-                $json[] = [
+            $json = $categories->map(function($category) {
+                return [
                     'id' => $category->id, 
-                    'text' => $category->name 
+                    'text' => $category->name,
+                    'image_url' => asset($category->photo)
+
                 ];
-            }
+            });        
     
         }
         
