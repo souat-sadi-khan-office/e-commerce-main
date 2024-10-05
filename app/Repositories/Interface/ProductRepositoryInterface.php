@@ -8,4 +8,5 @@ interface ProductRepositoryInterface
     public function dataTable();
     public function updateStatus($request, $id);
     public function updateFeatured($request, $id);
+    public function deleteProduct($id);
 }

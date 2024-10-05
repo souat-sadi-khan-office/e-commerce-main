@@ -100,7 +100,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.product.create') }}"
-                                class="nav-link {{ Request::is('admin/product/create') ? ' active' : '' }}">
+                                class="nav-link {{ Request::is('admin/products/create') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Add New Product</p>
                             </a>
@@ -108,7 +108,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('admin.product.index') }}"
-                                class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/edit*') ? ' active' : '' }}">
+                                class="nav-link {{ Request::is('admin/products') || Request::is('admin/products/edit*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Products</p>
                             </a>

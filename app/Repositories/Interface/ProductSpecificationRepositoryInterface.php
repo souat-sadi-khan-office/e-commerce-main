@@ -31,4 +31,11 @@ public function attributedelete($id);
 public function attributeupdatestatus($id);
 public function attributeupdate($request,$id);
 public function attributeindexview($data);
+
+
+//Get Datas
+public function keys($id);
+public function types($id);
+public function attributes($id);
+
 }

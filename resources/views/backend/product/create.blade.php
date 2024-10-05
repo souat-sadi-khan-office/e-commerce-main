@@ -3,6 +3,7 @@
 @push('style')
     <link rel="stylesheet" href="{{ asset('backend/assets/css/dropify.min.css') }}">
 @endpush
+
 @section('page_name')
     <div class="app-content-header">
         <div class="container-fluid">
@@ -17,27 +18,27 @@
                         </li>
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.product.index') }}">
-                                Product Managment
+                                Product Management
                             </a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Create new product</li>
                     </ol>
                 </div>
-
-                {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.create')) --}}
-                    <div class="col-sm-6 text-end">
-                        <a href="{{ route('admin.product.index') }}" class="btn btn-soft-danger">
-                            <i class="bi bi-backspace"></i>
-                            Back
-                        </a>
-                    </div>
-                {{-- @endif --}}
+                <div class="col-sm-6 text-end">
+                    <a href="{{ route('admin.product.index') }}" class="btn btn-soft-danger">
+                        <i class="bi bi-backspace"></i>
+                        Back
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 @endsection
+
 @section('content')
-    <form action="{{ route('admin.product.store')}}" method="POST" classp="content_form">
+   
+    <form action="{{ route('admin.product.store')}}" method="POST" class="content_form_temp" enctype="multipart/form-data">
+        @csrf
         <div class="row">
             <div class="col-lg-7 col-md-7">
                 <div class="row">
@@ -61,8 +62,13 @@
             
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="category_id">Category <span class="text-danger">*</span></label>
-                                        <select name="category_id" id="category_id" class="form-control"></select>
+                                        <select name="category_id[]" id="category_id" class="form-control category_id007 select">
+                                          
+                                        </select>
                                     </div>
+            
+                                    <div class="Sub_Categories row"></div>
+                                   
             
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="brand_id">Brand</label>
@@ -87,18 +93,7 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- Product Specification -->
-                    <div class="col-mb-12 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="h5 mb-0">Product Specification</h2>
-                            </div>
-                            <div class="card-body">
-                                
-                            </div>
-                        </div>
-                    </div>
+
     
                     <!-- Product Images -->
                     <div class="col-md-12 mb-4">
@@ -217,7 +212,22 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <!-- Product Specification -->
+                    <div class="col-mb-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Product Specification</h2>
+                                <span class="text-danger"> Duplicate Types Will be Not Counted for a Specification Key</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <div class="specification_key row"></div>
+                                    <button id="add-another" type="button" class="btn btn-primary mt-2" style="display:none;">Add Another
+                                        Specification</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Discount -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -246,12 +256,13 @@
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_start_date">Discount start date</label>
-                                        <input type="text" name="discount_start_date" id="discount_start_date" class="form-control date" disabled>
+                                        <input type="date" name="discount_start_date" id="discount_start_date" class="form-control date" disabled>
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_end_date">Discount end date</label>
-                                        <input type="text" name="discount_end_date" id="discount_end_date" class="form-control date" disabled>
+                                        <input type="date" name="discount_end_date" id="discount_end_date" class="form-control date" disabled>
                                     </div>
+                                    <div id="date_error" style="color: red; display: none;"></div>
                                 </div>
                             </div>
                         </div>
@@ -314,7 +325,7 @@
     
                                     <label for="return_deadline">Return Deadline</label>
                                     <div class="col-md-12 input-group mb-3">
-                                        <input type="text" class="form-control" name="return_deadline" id="return_deadline" disabled>
+                                        <input type="number" min="0" class="form-control" name="return_deadline" id="return_deadline" disabled>
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
@@ -334,7 +345,7 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="low_stock_quantity">Quantity</label>
-                                        <input type="number" name="low_stock_quantity" id="low_stock_quantity" class="form-control" value="1">
+                                        <input type="number" min="0" name="low_stock_quantity" id="low_stock_quantity" class="form-control" value="1">
                                     </div>
                                 </div>
                             </div>
@@ -371,7 +382,7 @@
                                 <div class="row">
                                     <label for="est_shipping_time">Estimate Shipping Time</label>
                                     <div class="col-md-12 input-group mb-3">
-                                        <input type="text" class="form-control" name="est_shipping_time" id="est_shipping_time">
+                                        <input type="number" min="0" class="form-control" name="est_shipping_time" id="est_shipping_time">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
@@ -392,7 +403,7 @@
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-3">
                                             <label for="taxes_{{ $tax->id }}">{{ $tax->name }}</label>
-                                            <input type="text" name="taxes[]" id="taxes_{{ $tax->id }}" class="form-control" value="0">
+                                            <input type="number" min="0" name="taxes[]" id="taxes_{{ $tax->id }}" class="form-control" value="0">
                                         </div>
                                         <div class="col-md-6 form-group mb-3">
                                             <label for="tax_type_{{ $tax->id }}">Type</label>
@@ -423,6 +434,7 @@
         </div>
     </form>
 @endsection
+
 @push('script')
     <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
     <script>
@@ -431,143 +443,35 @@
         _initCkEditor("editor");
 
         $('.dropify').dropify();
+        $(document).ready(function() {
+    $('#discount_start_date, #discount_end_date').on('change', function() {
+        const startDateValue = $('#discount_start_date').val();
+        const endDateValue = $('#discount_end_date').val();
+        const $errorDiv = $('#date_error');
 
-        // For return
-        $(document).on('change', '#is_returnable', function() {
-            let is_returnable = $(this).val();
-            if(is_returnable == 1) {
-                $('#return_deadline').removeAttr('disabled');
-            } else {
-                $('#return_deadline').attr('disabled', 'true');
-            }
-        });
+        // Clear any previous error message
+        $errorDiv.empty();
 
-        // For discount
-        $(document).on('change', '#is_discounted', function() {
-            let is_discounted = $(this).val();
-            if(is_discounted == 1) {
-                $('#discount_type').removeAttr('disabled');
-                $('#discount').removeAttr('disabled');
-                $('#discount_start_date').removeAttr('disabled');
-                $('#discount_end_date').removeAttr('disabled')
-            } else {
-                $('#discount_type').attr('disabled', true);
-                $('#discount').attr('disabled', 'true');
-                $('#discount_start_date').attr('disabled', 'true');
-                $('#discount_end_date').attr('disabled', 'true');
-            }
-        });
+        // Check if start date is valid and not older than today
+        const today = new Date();
+        const startDate = new Date(startDateValue);
 
-        // For getting brand type
-        $(document).on('change', '#brand_id', function() {
-
-            $('#brand_type_area').hide();
-            $('#brand_type_id').val(null).trigger('change');
-
-            let brand_id = $(this).val();
-            $.ajax({
-                url: '/search/brand-types',
-                method: 'POST',
-                dataType: 'JSON',
-                data: {
-                    brand_id: brand_id 
-                },
-                delay: 250,
-                cache: true,
-                success: function (data) {
-                    if(data.status && data.responses.length > 0) {
-
-                        var dataTypes = [{
-                            id: '', 
-                            text: 'Select brand type',
-                        }].concat(data.responses.map(function(type) {
-                            return {
-                                id: type.id,
-                                text: type.name
-                            };
-                        }));
-
-                        // select2 এ ডাটা ইনসার্ট করা
-                        $('#brand_type_id').select2({
-                            data: dataTypes,
-                            width: '100%',
-                            placeholder: 'Select brand type'
-                        });
-
-                        $('#brand_type_area').show();
-
-                    }
-                }
-            });
-        });
-
-        // for brands
-        $('#brand_id').select2({
-            width: '100%',
-            placeholder: 'Select Brand',
-            templateResult: formatBrandOption, 
-            templateSelection: formatBrandSelection,
-            ajax: {
-                url: '/search/brands',
-                method: 'POST',
-                dataType: 'JSON',
-                delay: 250,
-                cache: true,
-                data: function (data) {
-                    return {
-                        searchTerm: data.term
-                    };
-                },
-
-                processResults: function (response) {
-                    return {
-                        results:response
-                    };
-                }
-            }
-        });
-
-        // for categories
-        $('#category_id').select2({
-            width: '100%',
-            placeholder: 'Select category',
-            ajax: {
-                url: '/search/category',
-                method: 'POST',
-                dataType: 'JSON',
-                delay: 250,
-                cache: true,
-                data: function (data) {
-                    return {
-                        searchTerm: data.term
-                    };
-                },
-
-                processResults: function (response) {
-                    return {
-                        results:response
-                    };
-                }
-            }
-        });
-
-        function formatBrandOption(brand) {
-            if (!brand.id) {
-                return brand.text;
-            }
-
-            var brandImage = '<img src="' + brand.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
-            var brandOption = $('<span>' + brandImage + brand.text + '</span>');
-            return brandOption;
+        // Check if the end date is empty
+        if (!endDateValue) {
+            $errorDiv.text('End date cannot be null.').show();
+            return; // Exit the function if the end date is null
         }
 
-        function formatBrandSelection(brand) {
-            if (!brand.id) {
-                return brand.text;
-            }
-
-            var brandImage = '<img src="' + brand.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
-            return $('<span>' + brandImage + brand.text + '</span>');
+        // Validate if end date is earlier than start date
+        const endDate = new Date(endDateValue);
+        if (endDate < startDate) {
+            $errorDiv.text('End date must be greater than or equal to start date.').show();
+        } else {
+            $errorDiv.hide(); // Hide the error message if the dates are valid
         }
+    });
+});
+
     </script>
+    <script src="{{ asset('backend/assets/js/addproduct.js') }}"></script>
 @endpush
