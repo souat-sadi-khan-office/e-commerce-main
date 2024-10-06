@@ -32,22 +32,22 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item"> <a href="{{ route('admin.category.index') }}"
                                 class="nav-link {{ Request::is('admin/categories') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
+                                    class="nav-icon bi bi-bookmark-star-fill"></i>
                                 <p>Primary Categories</p>
                             </a> </li>
                         <li class="nav-item"> <a href="{{ route('admin.category.index.sub') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
+                                    class="nav-icon bi bi-bookmarks-fill"></i>
                                 <p>Sub Categories</p>
                             </a> </li>
                         <li class="nav-item"> <a href="{{ route('admin.category.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/add') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
+                                    class="nav-icon bi bi-plus-circle"></i>
                                 <p>Add Category</p>
                             </a> </li>
                         <li class="nav-item"> <a href="{{ route('admin.category.sub.add') }}"
                                 class="nav-link {{ Request::is('admin/categories/sub/add') ? ' active' : '' }}"> <i
-                                    class="nav-icon bi bi-circle"></i>
+                                    class="nav-icon bi bi-plus-circle"></i>
                                 <p>Add Sub Category</p>
                             </a>
                         </li>
@@ -63,20 +63,20 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
                                         class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                        <i class="nav-icon bi bi-plus-circle"></i>
                                         <p>Add Keys</p>
                                     </a>
                                 </li>
                                 <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
                                         class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                        <i class="nav-icon bi bi-plus-circle"></i>
                                         <p>Add Key Types</p>
                                     </a>
                                 </li>
                                 <li class="nav-item"> <a
                                         href="{{ route('admin.category.specification.type.attribute.index') }}"
                                         class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
+                                        <i class="nav-icon bi bi-plus-circle"></i>
                                         <p>Add Type attributes</p>
                                     </a>
                                 </li>
@@ -101,7 +101,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.product.create') }}"
                                 class="nav-link {{ Request::is('admin/products/create') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-bag-plus"></i>
                                 <p>Add New Product</p>
                             </a>
                         </li>
@@ -109,7 +109,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.product.index') }}"
                                 class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/edit*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-shop-window"></i>
                                 <p>Products</p>
                             </a>
                         </li>
@@ -117,7 +117,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.flash-deal.index') }}"
                                 class="nav-link {{ Request::is('admin/flash-deal*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-amd"></i>
                                 <p>Flash Deals</p>
                             </a>
                         </li>
@@ -139,7 +139,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.brand.index') }}"
                                 class="nav-link {{ Request::is('admin/brand') || Request::is('admin/brand/*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-unity"></i>
                                 <p>Brand</p>
                             </a>
                         </li>
@@ -147,7 +147,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.brand-type.index') }}"
                                 class="nav-link {{ Request::is('admin/brand-type') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-strava"></i>
                                 <p>Brand Types</p>
                             </a>
                         </li>
@@ -169,7 +169,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.website.header') }}"
                                 class="nav-link {{ Request::is('admin/website/header') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-window-fullscreen"></i>
                                 <p>Header</p>
                             </a>
                         </li>
@@ -177,7 +177,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.website.footer') }}"
                                 class="nav-link {{ Request::is('admin/website/footer') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-window-desktop"></i>
                                 <p>Footer</p>
                             </a>
                         </li>
@@ -185,7 +185,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.page.index') }}"
                                 class="nav-link {{ Request::is('admin/page*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-window-stack"></i>
                                 <p>Pages</p>
                             </a>
                         </li>
@@ -193,7 +193,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.website.appearance') }}"
                                 class="nav-link {{ Request::is('admin/website/appearance') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-window-split"></i>
                                 <p>Appearance</p>
                             </a>
                         </li>
@@ -214,7 +214,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.settings.general') }}"
                                 class="nav-link {{ Request::is('admin/settings/general') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-gear"></i>
                                 <p>General Settings</p>
                             </a>
                         </li>
@@ -229,7 +229,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.currency.index') }}"
                                 class="nav-link {{ Request::is('admin/currency') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-currency-exchange"></i>
                                 <p>Currency</p>
                             </a>
                         </li>
@@ -237,7 +237,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.tax.index') }}"
                                 class="nav-link {{ Request::is('admin/tax') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-piggy-bank-fill"></i>
                                 <p>VAT & Tax</p>
                             </a>
                         </li>
@@ -245,7 +245,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.settings.otp') }}"
                                 class="nav-link {{ Request::is('admin/settings/otp') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-envelope-paper-fill"></i>
                                 <p>OTP Templates</p>
                             </a>
                         </li>
@@ -267,7 +267,7 @@
                         <li class="nav-item">
                             <a href="javascript:;"
                                 class="nav-link {{ Request::is('admin/stuff') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-sliders"></i>
                                 <p>Shipping Configuration</p>
                             </a>
                         </li>
@@ -276,7 +276,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.zone.index') }}"
                                 class="nav-link {{ Request::is('admin/zone') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-radar"></i>
                                 <p>Zones</p>
                             </a>
                         </li>
@@ -286,7 +286,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.country.index') }}"
                                 class="nav-link {{ Request::is('admin/country') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-map"></i>
                                 <p>Countries</p>
                             </a>
                         </li>
@@ -296,7 +296,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.city.index') }}"
                                 class="nav-link {{ Request::is('admin/city') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-pin-map"></i>
                                 <p>Cities</p>
                             </a>
                         </li>
@@ -329,7 +329,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.roles.index') }}"
                                 class="nav-link {{ Request::is('admin/roles*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-circle"></i>
+                                <i class="nav-icon bi bi-person-gear"></i>
                                 <p>Staff Permission</p>
                             </a>
                         </li>
