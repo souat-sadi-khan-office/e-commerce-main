@@ -37,6 +37,12 @@ class Product extends Model
         return $this->belongsTo(Admin::class);
     }
 
+    // Relation with taxes
+    public function taxes()
+    {
+        return $this->hasMany(ProductTax::class);
+    }
+
     // Relation with category
     public function category()
     {

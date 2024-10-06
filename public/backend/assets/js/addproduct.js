@@ -153,11 +153,15 @@ $(document).ready(function() {
     }
 
     function formatCategorySelection(category) {
+
         if (!category.id) {
             return category.text;
         }
 
-        var categoryImage = '<img src="' + category.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
+        var defaultImageUrl = $('#defaultCategoryImage').val();
+        var image_url = category.image_url ? category.image_url : defaultImageUrl;
+
+        var categoryImage = '<img src="' + image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
         return $('<span>' + categoryImage + category.text + '</span>');
     }
 

@@ -24,6 +24,7 @@ use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CategoryRepositoryInterface;
 use App\Repositories\Interface\CurrencyRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -88,7 +89,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'load' => true,
-            'message' => "Brand deleted successfully"
+            'message' => "Product deleted successfully"
         ]);
     }
 
@@ -123,7 +124,6 @@ class ProductController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug', // Assuming 'products' is your table name
             'category_id' => 'required|array',
             'category_id.*' => 'exists:categories,id', // Assuming you have a categories table
-            'unit' => 'nullable|string|max:50',
             'min_purchase_quantity' => 'required|integer|min:1',
             'images' => 'required|array',
             'video_provider' => 'nullable|string|max:255',
@@ -387,5 +387,133 @@ class ProductController extends Controller
             DB::rollBack();
         }
         return $this->productRepository->store($request);
+    }
+
+    public function edit($id)
+    {
+        $model = $this->productRepository->getProductById($id);
+
+        $taxes = $this->taxRepository->getAllActiveTaxes();
+        $currencies = $this->currencyRepository->getAllActiveCurrencies();
+        $zones = $this->zoneRepository->getAllActiveZones();
+        $countries = $this->countryRepository->getAllActiveCountry();
+        $cities = $this->cityRepository->getAllActiveCity();
+        return view('backend.product.edit', compact('model', 'taxes', 'currencies', 'zones', 'countries', 'cities'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'slug')->ignore($id),
+            ],            
+            'category_id' => 'required|array',
+            'category_id.*' => 'exists:categories,id',
+            'images' => 'required|array',
+            'video_provider' => 'nullable|string|max:255',
+            'video_link' => 'nullable|url',
+            'description' => 'nullable|string',
+            'site_title' => 'nullable|string|max:255',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_keyword' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:255',
+            'meta_article_tags' => 'nullable|string|max:255',
+            'meta_script_tags' => 'nullable|string|max:255',
+            'is_discounted' => 'required|boolean',
+            'status' => 'required|boolean',
+            'is_featured' => 'required|boolean',
+            'is_returnable' => 'required|boolean',
+            'low_stock_quantity' => 'required|integer|min:0',
+            'cash_on_delivery' => 'required|boolean',
+            'est_shipping_time' => 'nullable|string|max:255',
+            'taxes' => 'required|array',
+            'tax_types' => 'required|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->slug = $request->slug;
+        $product->category_id = $request->category_id[count($request->category_id)-1];
+        $product->brand_id = $request->brand_id;
+        $product->brand_type_id = $request->brand_type_id;
+        $product->is_discounted = $request->is_discounted;
+        $product->discount_type = $request->discount_type;
+        $product->discount = $request->discount;
+        $product->discount_start_date = $request->discount_start_date == null ? null : date('Y-m-d', strtotime($request->discount_start_date));
+        $product->discount_end_date = $request->discount_end_date == null ? null : date('Y-m-d', strtotime($request->discount_end_date));
+        $product->status = $request->status;
+        $product->is_featured = $request->is_featured;
+        $product->is_returnable = $request->is_returnable;
+        $product->return_deadline = $request->return_deadline;
+
+        if($request->thumb_image) {
+            $product->thumb_image = Images::upload('products', $request->thumb_image);
+        }
+
+        $product->save();
+
+        // if the product is saved
+        if($product) {
+
+            // saved the product details
+            $details = ProductDetail::where('product_id', $product->id)->first();
+            if($details) {
+                $details->video_provider = $request->video_provider;
+                $details->video_link = $request->video_link;
+                $details->description = $request->description;
+                $details->site_title = $request->site_title;
+                $details->meta_title = $request->meta_title;
+                $details->meta_keyword = $request->meta_keyword;
+                $details->meta_description = $request->meta_description;
+                $details->meta_article_tags = $request->meta_article_tags;
+                $details->meta_script_tags = $request->meta_script_tags;
+                $details->low_stock_quantity = $request->low_stock_quantity;
+                $details->cash_on_delivery = $request->cash_on_delivery;
+                $details->est_shipping_days = $request->est_shipping_time;
+                $details->save();
+            }
+
+            // update the tax details
+            if(count($request->tax_id) > 0) {
+                $taxIdArray = $request->tax_id;
+                $taxAmountArray = $request->taxes;
+                $taxTypeArray = $request->tax_types;
+
+                for($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
+                    $taxModel = ProductTax::find($taxIdArray[$taxCounter]);
+                    $taxModel->tax = $taxAmountArray[$taxCounter];
+                    $taxModel->tax_type = $taxTypeArray[$taxCounter];
+                    $taxModel->save();
+                }
+            }
+
+            // images
+            if(isset($request->images)) {
+                $this->removeImage($product->id);
+
+                foreach($request->images as $image) {
+                    $product_image= new ProductImage();
+                    $product_image->product_id = $product->id;
+                    $product_image->image = Images::upload('products',$image);
+                    $product_image->status = 1;
+                    $product_image->save();
+                }  
+            }
+        }
+
+        return response()->json(['status' => true, 'message' => 'Product updated successfully.', 'goto' => route('admin.product.index')]);
+    }
+
+    private function removeImage($productId) 
+    {
+        return ProductImage::where('product_id', $productId)->delete();
     }
 }

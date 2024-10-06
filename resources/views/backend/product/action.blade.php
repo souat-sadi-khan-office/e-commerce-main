@@ -1,23 +1,33 @@
-{{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.update')) --}}
-<a href="{{ URL::to($model->slug) }}" class="btn btn-outline-success" data-bs-toggle="tooltip" data-bs-placement="Top" title="View">
-    <i class="bi bi-eye"></i>
-</a>
-{{-- @endif --}}
-
-{{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.update')) --}}
-<a href="{{ route('admin.product.edit', $model->id) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" data-bs-placement="Top" title="Edit">
-    <i class="bi bi-pen"></i>
-</a>
-{{-- @endif --}}
-
-{{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.update')) --}}
-<a href="javascript:;" class="btn btn-outline-warning" data-bs-toggle="tooltip" data-bs-placement="Top" title="Duplicate">
-    <i class="bi bi-copy"></i>
-</a>
-{{-- @endif --}}
-
-{{-- @if (Auth::guard('admin')->user()->hasPermissionTo('zone.delete')) --}}
-<a href="javascript:;" id="delete_item" data-id ="{{ $model->id }}" data-url="{{ route('admin.product.destroy',$model->id) }}" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-    <i class="bi bi-trash"></i>
-</a>
-{{-- @endif --}}
+<div class="dropdown">
+    <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="javascript:;" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+        Action
+    </a>
+  
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <li>
+            <a class="dropdown-item" href="{{ URL::to($model->slug) }}" target="_blank">
+                <i class="bi bi-eye"></i>
+                View
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{{ route('admin.product.edit', $model->id) }}">
+                <i class="bi bi-pen"></i>
+                Edit
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="#">
+                <i class="bi bi-copy"></i>
+                Duplicate
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="javascript:;" id="delete_item" data-id ="{{ $model->id }}" data-url="{{ route('admin.product.destroy',$model->id) }}">
+                <i class="bi bi-trash"></i>
+                Remove
+            </a>
+        </li>
+        {{-- <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+    </ul>
+</div>

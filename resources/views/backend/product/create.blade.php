@@ -590,7 +590,9 @@
         _formValidation();
         _initCkEditor("editor");
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
 
         // For image preview
         document.getElementById('images').addEventListener('change', function(event) {

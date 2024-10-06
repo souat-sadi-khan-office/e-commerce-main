@@ -251,7 +251,9 @@
             escapeMarkup: function(m) { return m; }  // allow HTML in the dropdown
         });
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
 
         const element = document.getElementById('starting_time');
         const input = document.getElementById('starting_time');

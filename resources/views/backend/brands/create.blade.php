@@ -133,7 +133,9 @@
         _initCkEditor("editor");
         _componentSelect();
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
         
         function generateSlug(name) {
             return name

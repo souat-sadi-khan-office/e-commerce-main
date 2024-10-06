@@ -7,14 +7,19 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
+use App\Repositories\Interface\BrandRepositoryInterface;
 
 class SearchController extends Controller
 {
     private $brandTypeRepository;
+    private $brandRepository;
 
-    public function __construct(BrandTypeRepositoryInterface $brandTypeRepository)
-    {
+    public function __construct(
+        BrandTypeRepositoryInterface $brandTypeRepository,
+        BrandRepositoryInterface $brandRepository
+    ) {
         $this->brandTypeRepository = $brandTypeRepository;
+        $this->brandRepository = $brandRepository;
     }
 
     // for searching by types using brand_id
@@ -22,7 +27,7 @@ class SearchController extends Controller
     {
         $brandId = $request->brand_id;
 
-        $brand = $this->brandTypeRepository->findBrandTypeById($brandId);
+        $brand = $this->brandRepository->findBrandById($brandId);
         if(!$brand) {
             return response()->json([
                 'status' => false,
@@ -107,7 +112,15 @@ class SearchController extends Controller
     public function searchByCategory(Request $request) 
     {
         if(!isset($request->searchTerm)){ 
-            $json = [];
+            $categories = Category::where('parent_id', null)->get();
+
+            $json = $categories->map(function($category) {
+                return [
+                    'id' => $category->id, 
+                    'text' => $category->name,
+                    'image_url' => asset($category->photo)
+                ];
+            });
         } else {
             $search = $request->searchTerm;
 
