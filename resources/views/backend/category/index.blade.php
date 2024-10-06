@@ -43,7 +43,7 @@
                             <tr>
                                 <th width="8%">Image</th>
                                 <th>Name</th>
-                                <th>Icon</th>
+                                <th class="text-center">Icon</th>
                                 <th>Created_by</th>
                                 <th width="7%">Status</th>
                                 <th width="7%">Featured?</th>
@@ -59,6 +59,15 @@
 @endsection
 @push('styleforIconPicker')
     <link href="{{ asset('backend/assets/css/bootstrapicons-iconpicker.css') }}" rel="stylesheet">
+    <style>
+        tr td:nth-child(3) {
+            text-align: center;
+        }
+
+        tr td:nth-child(3) i {
+            font-size: 25px;
+        }
+    </style>
     <!-- Option 1: Include in HTML -->
 @endpush
 

@@ -21,8 +21,7 @@
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="{{ route('admin.category.sub.add') }}"  
-                        class="btn btn-soft-success">
+                    <a href="{{ route('admin.category.sub.add') }}" class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
                         Create New
                     </a>
@@ -42,8 +41,8 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Image</th>
-                                <th>Icon</th>
+                                <th class="text-center">Image</th>
+                                <th class="text-center">Icon</th>
                                 <th>Parent</th>
                                 <th>Created_by</th>
                                 <th>Status</th>
@@ -60,6 +59,16 @@
 @endsection
 @push('styleforIconPicker')
     <link href="{{ asset('backend/assets/css/bootstrapicons-iconpicker.css') }}" rel="stylesheet">
+    <style>
+        tr td:nth-child(2),
+        tr td:nth-child(3) {
+            text-align: center;
+        }
+
+        tr td:nth-child(3) i {
+            font-size: 25px;
+        }
+    </style>
     <!-- Option 1: Include in HTML -->
 @endpush
 
@@ -81,11 +90,15 @@
                     },
                     {
                         data: 'photo',
-                        name: 'photo'
+                        name: 'photo',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'icon',
-                        name: 'icon'
+                        name: 'icon',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'parent_id',
@@ -97,11 +110,15 @@
                     },
                     {
                         data: 'status',
-                        name: 'status'
+                        name: 'status',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'is_featured',
-                        name: 'is_featured'
+                        name: 'is_featured',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'action',
@@ -117,7 +134,5 @@
             _statusUpdate();
 
         });
-
-
     </script>
 @endpush
