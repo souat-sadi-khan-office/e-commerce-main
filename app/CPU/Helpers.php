@@ -73,6 +73,11 @@ class Helpers
        return Category::find($id)->name;
     }
 
+    public static function productAverageRating($productId)
+    {
+        return 1;
+    }
+
     // public static function make_online()
     // {
     //     $active = Auth::guard('api_users')->user();
