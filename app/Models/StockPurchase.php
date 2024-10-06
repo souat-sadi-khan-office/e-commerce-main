@@ -9,6 +9,8 @@ class StockPurchase extends Model
 {
     use HasFactory;
 
+    protected $table = 'stock_purchases';
+
     protected $fillable = [
         'product_id',
         'admin_id',

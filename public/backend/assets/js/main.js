@@ -12,6 +12,15 @@ var _componentSelect = function () {
     });
 }
 
+$(document).on('keyup', '.number', function() {
+    let value = $(this).val();
+    $(this).val(allowOnlyNumbers(value));
+});
+
+function allowOnlyNumbers(input) {
+    return input.replace(/\D/g, '');
+}
+
 // Is featured Update
 var _isfeaturedUpdate = function(){
     $(document).on('change', 'input[name="is_featured"]', function() {

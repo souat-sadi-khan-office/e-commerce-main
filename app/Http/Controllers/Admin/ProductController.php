@@ -5,17 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\CPU\Images;
 use App\CPU\Helpers;
 use App\Models\Product;
+use App\Models\ProductTax;
+use App\Models\ProductImage;
+use App\Models\ProductStock;
 use Illuminate\Http\Request;
 use App\Models\ProductDetail;
+use App\Models\StockPurchase;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\ProductImage;
 use App\Models\ProductSpecification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\TaxRepositoryInterface;
+use App\Repositories\Interface\CityRepositoryInterface;
+use App\Repositories\Interface\ZoneRepositoryInterface;
+use App\Repositories\Interface\CountryRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Interface\CurrencyRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 
 class ProductController extends Controller
@@ -24,18 +31,29 @@ class ProductController extends Controller
     protected $productRepository;
     protected $specificationRepository;
     private $taxRepository;
-
+    private $currencyRepository;
+    private $zoneRepository;
+    private $countryRepository;
+    private $cityRepository;
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         ProductRepositoryInterface $productRepository,
         TaxRepositoryInterface $taxRepository,
-        ProductSpecificationRepositoryInterface $specificationRepository
+        ProductSpecificationRepositoryInterface $specificationRepository,
+        CurrencyRepositoryInterface $currencyRepository,
+        ZoneRepositoryInterface $zoneRepository,
+        CountryRepositoryInterface $countryRepository,
+        CityRepositoryInterface $cityRepository,
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
         $this->specificationRepository = $specificationRepository;
         $this->taxRepository = $taxRepository;
+        $this->currencyRepository = $currencyRepository;
+        $this->zoneRepository = $zoneRepository;
+        $this->countryRepository = $countryRepository;
+        $this->cityRepository = $cityRepository;
     }
 
 
@@ -54,9 +72,13 @@ class ProductController extends Controller
 
             return response()->json(['subs' => $this->categoryRepository->categoriesDropDown($request)]);
         }
-        $taxes = $this->taxRepository->getAllActiveTaxes();
 
-        return view('backend.product.create', compact('taxes'));
+        $taxes = $this->taxRepository->getAllActiveTaxes();
+        $currencies = $this->currencyRepository->getAllActiveCurrencies();
+        $zones = $this->zoneRepository->getAllActiveZones();
+        $countries = $this->countryRepository->getAllActiveCountry();
+        $cities = $this->cityRepository->getAllActiveCity();
+        return view('backend.product.create', compact('taxes', 'currencies', 'zones', 'countries', 'cities'));
     }
 
     public function destroy($id)
@@ -127,6 +149,7 @@ class ProductController extends Controller
             'taxes.*' => 'numeric|min:0',
             'tax_types' => 'required|array',
             'tax_types.*' => 'string',
+            'stock_types' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -153,6 +176,7 @@ class ProductController extends Controller
         $product->discount_end_date = $request->discount_end_date;
         $product->is_returnable = $request->is_returnable;
         $product->return_deadline = $request->return_deadline;
+        $product->stock_types = $request->stock_types;
         $product->save();
 
         if ($product) {
@@ -173,6 +197,113 @@ class ProductController extends Controller
             $details->meta_script_tags = $request->meta_script_tags;
             $details->save();
 
+            // If any taxes array exist
+            $taxArray = $request->taxes;
+            if(count($taxArray) > 0) {
+                $taxIdArray = $request->tax_id;
+                $taxTypeArray = $request->tax_types;
+
+                for($taxCounter = 0; $taxCounter < count($taxArray); $taxCounter++) {
+                    $tax = new ProductTax;
+                    $tax->product_id = $product->id;
+                    $tax->tax_id = $taxIdArray[$taxCounter];
+                    $tax->tax = $taxArray[$taxCounter];
+                    $tax->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
+                    $tax->save();
+                }
+            }
+
+            // Stock Purchase
+            $stockPurchase = new StockPurchase;
+            $stockPurchase->product_id = $product->id;
+            $stockPurchase->admin_id = $product->admin_id;
+            $stockPurchase->currency_id = $product->currency_id;
+            $stockPurchase->sku = $request->sku;
+            $stockPurchase->quantity = $request->quantity;
+            $stockPurchase->purchase_unit_price = ($request->quantity * $request->purchase_unit_price);
+            if(isset($request->file)) {
+                $stockPurchase->file = Images::upload('products.files',$request->file);
+            }
+            $stockPurchase->is_sellable = $request->is_sellable;
+            $stockPurchase->save();
+            if($stockPurchase) {
+
+                // update product in_stock column
+                $product->in_stock = 1;
+                $product->save();
+
+                // Add stock data into product_stock table by stock_types
+                switch($request->stock_types) {
+                    case 'globally':
+                        $stock = new ProductStock;
+                        $stock->product_id = $product->id;
+                        $stock->stock_purchase_id  = $stockPurchase->id;
+                        $stock->in_stock = 1;
+                        $stock->number_of_sale = 0;
+                        $stock->stock = $request->globally_stock_amount;
+                        $stock->save();
+                    break;
+                    case 'zone_wise':
+
+                        $zoneIdArray = $request->zone_id;
+                        $zoneWiseStockQuantityArray = $request->zone_wise_stock_quantity;
+
+                        if(count($zoneIdArray) > 0) {
+                            for($zoneCounter = 0; $zoneCounter < count($zoneIdArray); $zoneCounter++) {
+                                $stock = new ProductStock;
+                                $stock->product_id = $product->id;
+                                $stock->stock_purchase_id  = $stockPurchase->id;
+                                $stock->zone_id  = $zoneIdArray[$zoneCounter];
+                                $stock->in_stock = 1;
+                                $stock->number_of_sale = 0;
+                                $stock->stock = $zoneWiseStockQuantityArray[$zoneCounter];
+                                $stock->save();
+                            }
+                        }
+
+                    break;
+                    case 'country_wise':
+                        $countryIdArray = $request->country_id;
+                        $countryWiseStockQuantityArray = $request->country_wise_quantity;
+
+                        if(count($countryIdArray) > 0) {
+                            for($countryCounter = 0; $countryCounter < count($countryIdArray); $countryCounter++) {
+                                $stock = new ProductStock;
+                                $stock->product_id = $product->id;
+                                $stock->stock_purchase_id  = $stockPurchase->id;
+                                $stock->country_id  = $countryIdArray[$countryCounter];
+                                $stock->in_stock = 1;
+                                $stock->number_of_sale = 0;
+                                $stock->stock = $countryWiseStockQuantityArray[$countryCounter];
+                                $stock->save();
+                            }
+                        }
+                    break;
+                    case 'city_wise':
+
+                        $cityIdArray = $request->city_id;
+                        $cityWiseStockQuantityArray = $request->city_wise_quantity;
+
+                        if(count($cityIdArray) > 0) {
+                            for($cityCounter = 0; $cityCounter < count($cityIdArray); $cityCounter++) {
+                                $stock = new ProductStock;
+                                $stock->product_id = $product->id;
+                                $stock->stock_purchase_id  = $stockPurchase->id;
+                                $stock->city_id  = $cityIdArray[$cityCounter];
+                                $stock->in_stock = 1;
+                                $stock->number_of_sale = 0;
+                                $stock->stock = $cityWiseStockQuantityArray[$cityCounter];
+                                $stock->save();
+                            }
+                        }
+
+                    break;
+                }
+            }
+
+            // update current_stock data on product_details table
+            $details->current_stock = $request->quantity;
+            $details->save();
 
             if(isset($request->images)){
                 foreach($request->images as $image){

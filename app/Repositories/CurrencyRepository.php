@@ -14,6 +14,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         return Currency::all();
     }
 
+    public function getAllActiveCurrencies()
+    {
+        return Currency::where('status', 1)->get();
+    }
+
     public function dataTable()
     {
         $models = $this->getAllCurrencies();

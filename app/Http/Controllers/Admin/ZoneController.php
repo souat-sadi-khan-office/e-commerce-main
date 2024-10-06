@@ -46,6 +46,12 @@ class ZoneController extends Controller
         ]);
     }
 
+    public function getZoneInformationById(Request $request)
+    {
+        $zoneId = $request->zone_id;
+        return $this->zoneRepository->findZoneById($zoneId);
+    }
+
     public function edit($id)
     {
         $model = $this->zoneRepository->findZoneById($id);

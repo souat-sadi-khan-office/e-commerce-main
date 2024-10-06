@@ -12,6 +12,11 @@ class ZoneRepository implements ZoneRepositoryInterface
     {
         return Zone::all();
     }
+    
+    public function getAllActiveZones()
+    {
+        return Zone::where('status', 1)->get();
+    }
 
     public function dataTable()
     {

@@ -49,6 +49,12 @@ class CountryController extends Controller
         ]);
     }
 
+    public function getCountryInformationById(Request $request) 
+    {
+        $countryId = $request->country_id;
+        return $this->countryRepository->findCountryById(($countryId));
+    }
+
     public function edit($id)
     {
         $model = $this->countryRepository->findCountryById($id);

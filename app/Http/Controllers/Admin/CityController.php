@@ -49,6 +49,12 @@ class CityController extends Controller
         ]);
     }
 
+    public function getCityInformationById(Request $request)
+    {
+        $cityId = $request->city_id;
+        return $this->cityRepository->findCityById($cityId);
+    }
+
     public function edit($id)
     {
         $model = $this->cityRepository->findCityById($id);
