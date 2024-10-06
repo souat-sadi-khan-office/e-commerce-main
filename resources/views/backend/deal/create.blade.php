@@ -198,7 +198,9 @@
         _initCkEditor("editor");
         _componentSelect();
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
 
         const element = document.getElementById('starting_time');
         const input = document.getElementById('starting_time');

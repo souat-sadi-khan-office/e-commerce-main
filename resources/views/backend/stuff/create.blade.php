@@ -116,6 +116,8 @@
             }
         });
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
     </script>
 @endpush

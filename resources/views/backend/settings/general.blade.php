@@ -213,7 +213,9 @@
         _componentSelect();
         _formValidation();
 
-        $('.dropify').dropify();
+        $('.dropify').dropify({
+            imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
 
         var _formValidation1 = function () {
             if ($('.ajax_form').length > 0) {

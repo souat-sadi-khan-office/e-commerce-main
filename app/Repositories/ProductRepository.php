@@ -20,6 +20,11 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::orderBy('id', 'DESC')->get();
     }
 
+    public function getProductById($id)
+    {
+        return Product::findOrFail($id);
+    }
+
     public function dataTable()
     {
         $models = $this->getAllProducts();

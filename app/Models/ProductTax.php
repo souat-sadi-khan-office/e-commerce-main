@@ -22,8 +22,8 @@ class ProductTax extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function tax()
+    public function tax_model()
     {
-        return $this->hasMany(Tax::class);
+        return $this->belongsTo(Tax::class, 'tax_id', 'id');
     }
 }

@@ -108,7 +108,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('admin.product.index') }}"
-                                class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/edit*') ? ' active' : '' }}">
+                                class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-circle"></i>
                                 <p>Products</p>
                             </a>
