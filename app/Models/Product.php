@@ -58,7 +58,7 @@ class Product extends Model
     // Relation with product details
     public function details()
     {
-        return $this->belongsTo(ProductDetail::class);
+        return $this->belongsTo(ProductDetail::class, 'id', 'product_id');
     }
 
     // Relation with product image

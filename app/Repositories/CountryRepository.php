@@ -12,6 +12,11 @@ class CountryRepository implements CountryRepositoryInterface
     {
         return Country::all();
     }
+    
+    public function getAllActiveCountry()
+    {
+        return Country::where('status', 1)->get();
+    }
 
     public function dataTable()
     {

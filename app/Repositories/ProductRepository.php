@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use DataTables;
 use App\CPU\Images;
+use App\CPU\Helpers;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductDetail;
@@ -33,12 +34,14 @@ class ProductRepository implements ProductRepositoryInterface
             ->editColumn('product_name', function ($model) {
                 return '<div class="row"><div class="col-auto">' . Images::show($model->thumb_image) . '</div><div class="col">' . $model->name . '</div></div>';
             })
-            ->editColumn('info', function ($model) {
+            ->editColumn('info', function($model) {
+                $numberOfSale = $model->details ? $model->details->number_of_sale : 0;
+                $averageRating = $model->details ? ($model->details->average_rating == null ? Helpers::productAverageRating($model->id) : $model->details->average_rating) : 0;
+
                 return '
-                    <b>Number of Sale</b>: 0 <br> 
+                    <b>Number of Sale</b>: '. $numberOfSale .' <br> 
                     <b>Base Price</b>:' . format_price($model->unit_price) . '<br>
-                    <b>Rating</b>: 0
-                    ';
+                    <b>Rating</b>: '. $averageRating;
             })
             ->editColumn('created_by', function ($model) {
                 return $model->admin->name;
@@ -47,8 +50,8 @@ class ProductRepository implements ProductRepositoryInterface
                 $checked = $model->status == 1 ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
-            ->editColumn('stock', function ($model) {
-                return 0;
+            ->editColumn('stock', function($model) {
+                return $model->details ? $model->details->current_stock : 0;
             })
             ->editColumn('featured', function ($model) {
                 $is_featured = $model->is_featured == 1 ? 'checked' : '';

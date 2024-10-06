@@ -5,6 +5,7 @@ namespace App\Repositories\Interface;
 interface ZoneRepositoryInterface
 {
     public function getAllZone();
+    public function getAllActiveZones();
     public function dataTable();
     public function findZoneById($id);
     public function createZone(array $data);

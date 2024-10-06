@@ -102,14 +102,17 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('brand', BrandController::class);
 
     // City
+    Route::post('get-city-information-by-id', [CityController::class, 'getCityInformationById'])->name('get-city-information-by-id');
     Route::post('city/status/{id}', [CityController::class, 'updateStatus'])->name('city.status');
     Route::resource('city', CityController::class);
 
     // Country
+    Route::post('get-country-information-by-id', [CountryController::class, 'getCountryInformationById'])->name('get-country-information-by-id');
     Route::post('country/status/{id}', [CountryController::class, 'updateStatus'])->name('country.status');
     Route::resource('country', CountryController::class);
 
     // Zone
+    Route::post('get-zone-information-by-id', [ZoneController::class, 'getZoneInformationById'])->name('get-zone-information-by-id');
     Route::post('zone/status/{id}', [ZoneController::class, 'updateStatus'])->name('zone.status');
     Route::resource('zone', ZoneController::class);
 

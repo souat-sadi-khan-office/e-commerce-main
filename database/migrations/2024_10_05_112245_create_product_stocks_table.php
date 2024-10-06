@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_stocks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('stock_purchase_id');
             $table->unsignedBigInteger('zone_id')->nullable();
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
@@ -24,11 +25,12 @@ return new class extends Migration
 
             // Foreign keys
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('stock_purchase_id')->references('id')->on('stock_purchase')->onDelete('cascade');
             $table->foreign('zone_id')->references('id')->on('zones')->onDelete('set null');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
 
-            $table->index(['product_id', 'zone_id', 'country_id', 'city_id', 'in_stock'], 'product_stock_index');
+            $table->index(['product_id', 'zone_id', 'stock_purchase_id', 'country_id', 'city_id', 'in_stock'], 'product_stock_index');
 
         });
     }

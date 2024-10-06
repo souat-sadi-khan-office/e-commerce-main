@@ -12,6 +12,11 @@ class CityRepository implements CityRepositoryInterface
     {
         return City::all();
     }
+    
+    public function getAllActiveCity()
+    {
+        return City::where('status', 1)->get();
+    }
 
     public function dataTable()
     {
