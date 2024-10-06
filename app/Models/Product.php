@@ -85,9 +85,19 @@ class Product extends Model
         return $this->hasMany(Banner::class);
     }
 
-    // Relation with review
-    public function review()
+    public function specifications()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(ProductSpecification::class);
     }
+    public function specificationsWithDetails()
+    {
+        return $this->hasMany(ProductSpecification::class)
+            ->with(['specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute']);
+    }
+
+    // // Relation with review
+    // public function review()
+    // {
+    //     return $this->hasMany(Review::class);
+    // }
 }

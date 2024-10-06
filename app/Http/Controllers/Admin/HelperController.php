@@ -18,7 +18,7 @@ class HelperController extends Controller
         $slug = $request->get('slug');
         $id = $request->get('id');
 
-        if(isset($id)) {
+        if (isset($id)) {
             // Using a single query with unions
             $exists = Category::where('slug', $slug)->where('id', '!=', $id)
                 ->union(Product::where('slug', $slug)->where('id', '!=', $id))
@@ -37,9 +37,28 @@ class HelperController extends Controller
                 ->exists();
         }
 
-        
+
 
         return response()->json(['exists' => $exists]);
     }
-}
 
+    // Test Function
+    public function fatcher($slug, $index = 0)
+    {
+        $models = ['Category', 'Product'];
+
+        if ($index >= count($models)) {
+            return view('errors.404');
+        }
+
+        $model = $models[$index];
+
+        $data = $model::where('slug', $slug)->first();
+
+        if (!$data) {
+            return $this->fatcher($slug, $index + 1);
+        }
+
+        // return $data;  to a view Based on Model
+    }
+}
