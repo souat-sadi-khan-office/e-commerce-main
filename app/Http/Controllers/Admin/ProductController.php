@@ -386,5 +386,6 @@ class ProductController extends Controller
         }else{
             DB::rollBack();
         }
+        return $this->productRepository->store($request);
     }
 }

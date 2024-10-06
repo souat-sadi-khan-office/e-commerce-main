@@ -29,7 +29,7 @@ class CategoryController extends Controller
    }
    public function addformsub()
    {
-      $categories = $this->categoryRepository->categoriesDropDown();
+      $categories = $this->categoryRepository->categoriesDropDown(null);
       return view('backend.category.sub.add', compact('categories'));
    }
 
