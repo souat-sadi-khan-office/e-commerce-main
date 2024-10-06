@@ -37,7 +37,7 @@
 
 @section('content')
    
-    <form action="{{ route('admin.product.store')}}" method="POST" class="content_form_temp" enctype="multipart/form-data">
+    <form action="{{ route('admin.product.store')}}" method="POST" class="content_form" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-7 col-md-7">
