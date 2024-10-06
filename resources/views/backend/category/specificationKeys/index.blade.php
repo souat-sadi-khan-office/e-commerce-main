@@ -41,10 +41,10 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th style="width: 70px">Image</th>
+                                <th style="width: 100px" class="text-center">Image</th>
                                 <th>Parent</th>
-                                <th>Keys Count</th>
-                                <th>Actions</th>
+                                <th class="text-center">Keys Count</th>
+                                <th style="width: 100px" class="text-center">Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -56,6 +56,11 @@
 @endsection
 @push('styleforIconPicker')
     <link href="{{ asset('backend/assets/css/bootstrapicons-iconpicker.css') }}" rel="stylesheet">
+    <style>
+        tr td:nth-child(2) {
+            text-align: center;
+        }
+    </style>
     <!-- Option 1: Include in HTML -->
 @endpush
 

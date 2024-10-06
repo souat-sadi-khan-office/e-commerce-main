@@ -34,14 +34,14 @@ class FlashDealRepository implements FlashDealRepositoryInterface
             ->editColumn('end_date', function ($model) {
                 $starting_time = strtotime($model->starting_time);
                 $end_date = strtotime('+ ' . $model->deadline_time . ' ' . $model->deadline_type, $starting_time);
-                
+
                 return get_system_date(date('Y-m-d', $end_date));
             })
             ->editColumn('status', function ($model) {
                 $checked = $model->status == 1 ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.brand.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
-            
+
             ->addColumn('action', function ($model) {
                 return view('backend.deal.action', compact('model'));
             })
@@ -76,7 +76,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
         $dealId = $deal->id;
 
-        if(is_array($data['product_id']) && count($data['product_id']) > 0) {
+        if (is_array($data['product_id']) && count($data['product_id']) > 0) {
 
             $productIdArray = $data->product_id;
             $discountArray = $data->discount;
@@ -84,24 +84,27 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
             $starting_time = strtotime($data->starting_time);
             $end_date = strtotime('+ ' . $data->deadline_time . ' ' . $data->deadline_type, $starting_time);
-            
-            for($i = 0; $i < count($productIdArray); $i++) {
+
+            foreach ($productIdArray as $id) {
+                $i = 0;
+
                 $dealTypes = FlashDealType::create([
                     'flash_deal_id' => $dealId,
-                    'product_id' => $productIdArray[$i],
+                    'product_id' => $id,
                     'discount_amount' => $discountArray[$i],
                     'discount_type' => $discountTypeArray[$i]
                 ]);
 
-                if($dealTypes) {
+                if ($dealTypes) {
                     $discountData = [
                         'discount_type' => $discountTypeArray[$i],
                         'discount' => $discountArray[$i],
                         'starting_date' => date('Y-m-d', strtotime($data->starting_time)),
-                        'end_date' => date('Y-m-d', strtotime($end_date))
+                        'end_date' => date('Y-m-d', $end_date)
                     ];
-                    $this->addDiscountToProduct($productIdArray[$i], $discountData);
+                    $this->addDiscountToProduct($id, $discountData);
                 }
+                $i++;
             }
         }
 
@@ -109,7 +112,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         return response()->json($json);
     }
 
-    private function addDiscountToProduct($productId, $discountData) 
+    private function addDiscountToProduct($productId, $discountData)
     {
         $product = Product::find($productId);
         $product->is_discounted = 1;
@@ -122,8 +125,8 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
     private function removeDiscountProducts($productIds)
     {
-        if(count($productIds) > 0) {
-            foreach($productIds as $product) {
+        if (count($productIds) > 0) {
+            foreach ($productIds as $product) {
 
                 $product = Product::find($product);
                 $product->is_discounted = 0;
@@ -139,7 +142,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
     public function removeFlashDealItems($id)
     {
         $deals = FlashDealType::where('flash_deal_id', $id)->get();
-        foreach($deals as $deal) {
+        foreach ($deals as $deal) {
             $deal->delete();
         }
     }
@@ -162,7 +165,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         $deal->meta_article_tag = $data->meta_article_tag;
         $deal->meta_script_tag = $data->meta_script_tag;
 
-        if($data->image) {
+        if ($data->image) {
             $deal->image = Images::upload('deals', $data->image);
         }
 
@@ -170,7 +173,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
         $this->removeFlashDealItems($id);
 
-        if(is_array($data['product_id']) && count($data['product_id']) > 0) {
+        if (is_array($data['product_id']) && count($data['product_id']) > 0) {
 
             $this->removeDiscountProducts($data->product_id);
 
@@ -179,7 +182,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
             $discountTypeArray = $data->discount_type;
 
             $starting_time = strtotime(date('Y-m-d', strtotime($data->starting_time)));
-            if($data->deadline_type == 'day') {
+            if ($data->deadline_type == 'day') {
                 $data->deadline_type = 'days';
             }
 
@@ -187,7 +190,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
 
             $end_date = date('Y-m-d', $end_date);
 
-            for($i = 0; $i < count($productIdArray); $i++) {
+            for ($i = 0; $i < count($productIdArray); $i++) {
                 $dealTypes = FlashDealType::create([
                     'flash_deal_id' => $id,
                     'product_id' => $productIdArray[$i],
@@ -195,7 +198,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
                     'discount_type' => $discountTypeArray[$i]
                 ]);
 
-                if($dealTypes) {
+                if ($dealTypes) {
                     $discountData = [
                         'discount_type' => $discountTypeArray[$i],
                         'discount' => $discountArray[$i],
@@ -216,7 +219,7 @@ class FlashDealRepository implements FlashDealRepositoryInterface
         return $brand->delete();
     }
 
-    public function updateStatus($request, $id) 
+    public function updateStatus($request, $id)
     {
         $request->validate([
             'status' => 'required|boolean',
