@@ -13,7 +13,7 @@
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.stuff.index') }}">Brand Management</a>
+                            <a href="{{ route('admin.banner.index') }}">Brand Management</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Create new Brand</li>
                     </ol>

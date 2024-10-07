@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\SpecificationAttributes;
 use App\Http\Controllers\Admin\SpecificationsController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\ProductStockController;
+use App\Http\Controllers\Admin\BannerController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -107,6 +108,10 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::post('brand/status/{id}', [BrandController::class, 'updateStatus'])->name('brand.status');
     Route::post('brand/featured/{id}', [BrandController::class, 'updateFeatured'])->name('brand.featured');
     Route::resource('brand', BrandController::class);
+
+    // Banner
+    Route::post('banner/status/{id}', [BannerController::class, 'updateStatus'])->name('banner.status');
+    Route::resource('banner', BannerController::class);
 
     // City
     Route::post('get-city-information-by-id', [CityController::class, 'getCityInformationById'])->name('get-city-information-by-id');

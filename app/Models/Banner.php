@@ -23,7 +23,7 @@ class Banner extends Model
     ];
 
     // Define relationships
-    public function createdBy()
+    public function admin()
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }

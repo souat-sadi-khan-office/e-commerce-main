@@ -16,7 +16,7 @@
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.stuff.index') }}">Brand Management</a>
+                            <a href="{{ route('admin.banner.index') }}">Brand Management</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Update Staff Information</li>
                     </ol>
@@ -24,7 +24,7 @@
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('brand.view')) --}}
                     <div class="col-sm-6 text-end">
-                        <a href="{{ route('admin.stuff.index') }}" class="btn btn-soft-danger">
+                        <a href="{{ route('admin.brand.index') }}" class="btn btn-soft-danger">
                             <i class="bi bi-backspace"></i>
                             Back
                         </a>
@@ -113,7 +113,7 @@
                                     </button>
                                 {{-- @endif --}}
                                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('stuff.view')) --}}
-                                    <a href="{{ route('admin.stuff.index') }}" class="btn btn-soft-danger">
+                                    <a href="{{ route('admin.brand.index') }}" class="btn btn-soft-danger">
                                         <i class="bi bi-backspace"></i>
                                         Back
                                     </a>
