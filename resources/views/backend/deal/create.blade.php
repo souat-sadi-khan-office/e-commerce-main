@@ -47,8 +47,8 @@
                         <div class="row">
 
                             <div class="col-md-12 form-group mb-3">
-                                <label for="title">Title <span class="text-danger">*</span></label>
-                                <input type="text" name="title" id="title" class="form-control" required>
+                                <label for="name">Title <span class="text-danger">*</span></label>
+                                <input type="text" name="title" id="name" class="form-control" required>
                             </div>
 
                             <div class="col-md-12 form-group mb-3">
@@ -236,7 +236,7 @@
                 .replace(/-+/g, '-');
         }
 
-        $('#name').on('input', function() {
+        $('#name').on('keyup', function() {
             const name = $(this).val();
             const slug = generateSlug(name);
             $('#slug').val(slug);
@@ -305,7 +305,7 @@
             })
         })
 
-        // for categories
+        // for froducts
         $('#product_id').select2({
             width: '100%',
             placeholder: 'Select products',
@@ -330,7 +330,6 @@
                 }
             }
         });
-
 
         function formatProductOption(product) {
             if (!product.id) {

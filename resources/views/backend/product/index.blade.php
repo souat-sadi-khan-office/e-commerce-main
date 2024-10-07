@@ -81,6 +81,131 @@
             });
 
             _statusUpdate();
+
+            // For duplicate items
+            $(document).on('click', '#duplicate_item', function(e) {
+                e.preventDefault();
+                var row = $(this).data('id');
+                var url = $(this).data('url');
+                Swal.fire({
+                    title: 'Duplicate Product?',
+                    icon: 'warning',
+                    html: `
+                        <p>It will create the same product. Check items that will copy: </p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>
+                                    Modules
+                                </th>
+                                <th>
+                                    Selection
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Product Taxes
+                                </td>
+                                <td class="text-center">
+                                    <div class="text-center form-check form-switch">
+                                        <input checked class="form-check-input" type="checkbox" role="switch" id="product_taxes">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Product Stock Purchase
+                                </td>
+                                <td>
+                                    <div class="text-center form-check form-switch">
+                                        <input checked class="form-check-input" type="checkbox" role="switch" id="stock_purchase">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Product Images
+                                </td>
+                                <td>
+                                    <div class="text-center form-check form-switch">
+                                        <input checked class="form-check-input" type="checkbox" role="switch" id="product_images">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Product Specifications
+                                </td>
+                                <td>
+                                    <div class="text-center form-check form-switch">
+                                        <input checked class="form-check-input" type="checkbox" role="switch" id="product_specifications">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>' +
+                    `,
+
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, duplicate',
+                    cancelButtonText: 'No, cancel',
+                    preConfirm: () => {
+                        var product_taxes = Swal.getPopup().querySelector('#product_taxes').checked  
+                        var stock_purchase = Swal.getPopup().querySelector('#stock_purchase').checked  
+                        var product_images = Swal.getPopup().querySelector('#product_images').checked  
+                        var product_specifications = Swal.getPopup().querySelector('#product_specifications').checked  
+            
+                        return {
+                            product_taxes: product_taxes, 
+                            stock_purchase: stock_purchase,
+                            product_images: product_images,
+                            product_specifications: product_specifications,
+                        }
+                    }
+                }).then((result) => {
+                    let formData = new FormData();
+                    formData.append('stock_purchase', result.value.stock_purchase);
+                    formData.append('product_taxes', result.value.product_taxes);
+                    formData.append('product_images', result.value.product_images);
+                    formData.append('product_specifications', result.value.product_specifications);
+
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            method: 'POST',
+                            contentType: false,
+                            data: formData,
+                            cache: false,
+                            processData: false,
+                            dataType: 'JSON',
+                            success: function(data) {
+
+                                if (data.status) {
+
+                                    toastr.success(data.message);
+                                    if (data.load) {
+                                        setTimeout(function() {
+                                            window.location.href = "";
+                                        }, 1000);
+                                    }
+
+                                } else {
+                                    toastr.warning(data.message);
+                                }
+                            },
+                            error: function(data) {
+                                var jsonValue = $.parseJSON(data.responseText);
+                                const errors = jsonValue.errors
+                                var i = 0;
+                                $.each(errors, function(key, value) {
+                                    toastr.error(value);
+                                    i++;
+                                });
+                            }
+                        });
+                    }
+                });
+            });
             
         });
     </script>

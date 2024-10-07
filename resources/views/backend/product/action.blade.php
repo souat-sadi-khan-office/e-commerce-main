@@ -29,13 +29,13 @@
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="javascript:;" id="duplicate_item" data-id="{{ $model->id }}" data-url="{{ route('admin.product.duplicate', $model->id) }}">
                 <i class="bi bi-copy"></i>
                 Duplicate
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="javascript:;" id="delete_item" data-id ="{{ $model->id }}" data-url="{{ route('admin.product.destroy',$model->id) }}">
+            <a class="dropdown-item" href="javascript:;" id="delete_item" data-id="{{ $model->id }}" data-url="{{ route('admin.product.destroy',$model->id) }}">
                 <i class="bi bi-trash"></i>
                 Remove
             </a>

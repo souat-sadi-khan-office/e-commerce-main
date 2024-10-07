@@ -25,7 +25,7 @@ class ProductStock extends Model
     // Relationships
     public function purchase()
     {
-        return $this->belongsTo(StockPurchase::class);
+        return $this->belongsTo(StockPurchase::class , 'stock_purchase_id');
     }
 
     // Product relationship

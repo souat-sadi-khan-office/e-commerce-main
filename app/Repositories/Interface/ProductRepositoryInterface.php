@@ -13,4 +13,5 @@ interface ProductRepositoryInterface
     public function updateFeatured($request, $id);
     public function deleteProduct($id);
     public function getProductStockPurchaseDetails($id);
+    public function duplicateProduct($request, $id);
 }

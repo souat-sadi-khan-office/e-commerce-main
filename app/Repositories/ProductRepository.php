@@ -15,6 +15,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductSpecification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\ProductRepositoryInterface;
 
@@ -509,5 +511,168 @@ class ProductRepository implements ProductRepositoryInterface
     private function removeImage($productId) 
     {
         return ProductImage::where('product_id', $productId)->delete();
+    }
+
+    public function duplicateProduct($request, $id)
+    {
+
+        // Find the original product
+        $originalProduct = Product::with(['details', 'taxes', 'purchase', 'stock', 'image', 'specifications'])->find($id);
+
+        // Check if the product was found
+        if (!$originalProduct) {
+            return response()->json(['status' => false, 'message' => 'Product not found'], 404);
+        }
+
+        DB::beginTransaction();
+
+        // Duplicate the product
+        $newProduct = Product::create([
+            'admin_id' => Auth::guard('admin')->id(),
+            'category_id' => $originalProduct->category_id,
+            'brand_id' => $originalProduct->brand_id,
+            'brand_type_id' => $originalProduct->brand_type_id,
+            'name' => $originalProduct->name,
+            'slug' => $originalProduct->slug . '-'. rand(100, 1000),
+            'unit_price' => $originalProduct->unit_price,
+            'status' => $originalProduct->status,
+            'in_stock' => $originalProduct->in_stock,
+            'is_featured' => $originalProduct->is_featured,
+            'low_stock' => $originalProduct->low_stock,
+            'is_discounted' => $originalProduct->is_discounted,
+            'discount_type' => $originalProduct->discount_type,
+            'discount' => $originalProduct->discount,
+            'discount_start_date' => $originalProduct->discount_start_date,
+            'discount_end_date' => $originalProduct->discount_end_date,
+            'is_returnable' => $originalProduct->is_returnable,
+            'return_deadline' => $originalProduct->return_deadline,
+            'stock_types' => $originalProduct->stock_types,
+            'thumb_image' => $originalProduct->thumb_image
+        ]);
+        
+        if($newProduct) {
+            
+            // Duplicate ProductDetail
+            if($originalProduct->details) {
+                ProductDetail::create([
+                    'product_id' => $newProduct->id,
+                    'video_provider' => $originalProduct->details->video_provider,
+                    'video_link' => $originalProduct->details->video_link,
+                    'description' => $originalProduct->details->description,
+                    'current_stock' => 0,
+                    'low_stock_quantity' => 0,
+                    'cash_on_delivery' => $originalProduct->details->cash_on_delivery,
+                    'est_shipping_days' => $originalProduct->details->est_shipping_days,
+                    'number_of_sale' => 0,
+                    'average_rating' => 0,
+                    'number_of_rating' => 0,
+                    'average_purchase_price' => 0,
+                    'site_title' => $originalProduct->details->site_title,
+                    'meta_title' => $originalProduct->details->meta_title,
+                    'meta_keyword' => $originalProduct->details->meta_keyword,
+                    'meta_description' => $originalProduct->details->meta_description,
+                    'meta_article_tags' => $originalProduct->details->meta_article_tags,
+                    'meta_script_tags' => $originalProduct->details->meta_script_tags
+                ]);
+            }
+
+            if($originalProduct->image && $request->product_images) {
+                foreach ($originalProduct->image as $image) {
+                    $newImage = new ProductImage();
+                    $newImage->product_id = $newProduct->id;
+                    $newImage->image = $this->copyImage($image->image);
+                    $newImage->status = $image->status;
+                    $newImage->save();
+                }
+            }
+
+            // Duplicate ProductSpecification
+            if($originalProduct->specifications && $request->product_specifications) {
+                foreach ($originalProduct->specifications as $specification) {
+                    ProductSpecification::create([
+                        'product_id' => $newProduct->id,
+                        'key_id' => $specification->key_id,
+                        'type_id' => $specification->type_id,
+                        'attribute_id' => $specification->attribute_id,
+                        'key_feature' => $specification->key_feature
+                    ]);
+                }
+            }
+
+            // Duplicate ProductTax
+            if($originalProduct->taxes && $request->product_taxes) {
+                foreach ($originalProduct->taxes as $tax) {
+                    ProductTax::create([
+                        'product_id' => $newProduct->id,
+                        'tax_id' => $tax->id,
+                        'tax' => $tax->tax,
+                        'tax_type' => $tax->tax_type,
+                    ]);
+                }
+            }
+
+            // if($request->stock_purchase) {
+            //     // Duplicate StockPurchase
+            //     if($originalProduct->purchase) {
+            //         foreach ($originalProduct->purchase as $purchase) {
+
+            //             $newStockPurchase = StockPurchase::create([
+            //                 'product_id' => $newProduct->id,
+            //                 'admin_id' => Auth::guard('admin')->id(),
+            //                 'currency_id' => $purchase->currency_id,
+            //                 'sku' => $purchase->sku,
+            //                 'quantity' => $purchase->quantity,
+            //                 'unit_price' => $purchase->unit_price,
+            //                 'purchase_unit_price' => $purchase->purchase_unit_price,
+            //                 'purchase_total_price' => $purchase->purchase_total_price,
+            //                 'file' => $purchase->file,
+            //                 'is_sellable' => $purchase->is_sellable,
+            //             ]);
+
+            //             // Duplicate ProductStock
+            //             if($newStockPurchase && $purchase->stocks) {
+            //                 $new_stock_purchase_id = $newStockPurchase->id;
+            //                 foreach($purchase->stocks as $stock) {
+            //                     if($newStockPurchase->id) {
+            //                         ProductStock::create([
+            //                             'product_id' => $newProduct->id,
+            //                             'stock_purchase_id' => $new_stock_purchase_id,
+            //                             'zone_id' => $stock->zone_id,
+            //                             'country_id' => $stock->country_id,
+            //                             'city_id' => $stock->city_id,
+            //                             'in_stock' => $stock->in_stock,
+            //                             'number_of_sale' => $stock->number_of_sale,
+            //                             'stock' => $stock->stock,
+            //                         ]);
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+
+            DB::commit();
+        } else {
+            DB::rollback();
+        }
+
+        return response()->json(['status' => true, 'message' => 'Product duplication successfully.', 'load' => true]);
+    }
+
+    private function copyImage($imagePath)
+    {
+        $extension = File::extension($imagePath);
+    
+        $newFilename = Str::random(10) . "-copy." . $extension;
+    
+        $newFilePath = 'storage/images/products/' . $newFilename;
+    
+        if (File::exists($imagePath)) {
+            File::copy($imagePath, $newFilePath);
+        } else {
+            return null;
+        }
+    
+        return $newFilePath;
     }
 }

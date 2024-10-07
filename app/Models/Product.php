@@ -82,7 +82,7 @@ class Product extends Model
     // Relation with stock purchase
     public function purchase()
     {
-        return $this->hasMany(StockPurchase::class);
+        return $this->hasMany(StockPurchase::class, 'product_id');
     }
 
     // Relation with product stock

@@ -87,6 +87,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('stock', ProductStockController::class);
 
     // Product
+    Route::post('product/duplicate/{id}', [ProductController::class, 'duplicate'])->name('product.duplicate');
     Route::get('product/stock/{id}', [ProductController::class, 'stock'])->name('product.stock');
     Route::post('product/status/{id}', [ProductController::class, 'updateStatus'])->name('product.status');
     Route::post('product/featured/{id}', [ProductController::class, 'updateFeatured'])->name('product.featured');

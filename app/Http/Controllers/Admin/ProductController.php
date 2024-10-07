@@ -130,4 +130,9 @@ class ProductController extends Controller
 
         return view('backend.product.stock', compact('models'));
     }
+
+    public function duplicate(Request $request, $id) 
+    {
+        return $this->productRepository->duplicateProduct($request, $id);
+    }
 }
