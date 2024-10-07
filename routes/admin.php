@@ -96,7 +96,15 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('create', [ProductController::class, 'create'])->name('create');
         Route::any('store', [ProductController::class, 'store'])->name('store');
-        Route::get('specifications', [ProductController::class, 'specification'])->name('specification');
+    Route::group(['prefix' => 'specifications', 'as' => 'specification.'], function () {
+        Route::get('/', [ProductController::class, 'specification'])->name('index');
+        Route::post('add/{productId}', [ProductController::class, 'specificationsAdd'])->name('add');
+        Route::get('edit', [ProductController::class, 'specificationproducts'])->name('edit');
+        Route::get('edit/{id}', [ProductController::class, 'specificationproductModal'])->name('edit.modal');
+        Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
+        Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
+    });
+
     });
 
     // Brand Types

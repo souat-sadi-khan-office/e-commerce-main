@@ -14,4 +14,10 @@ interface ProductRepositoryInterface
     public function deleteProduct($id);
     public function getProductStockPurchaseDetails($id);
     public function duplicateProduct($request, $id);
+    public function specificationproducts();
+    public function specificationproductsDatatable();
+    public function specificationproductModal($id);
+    public function keyfeature($id);
+    public function specificationsAdd($request,$id);
+    public function delete($id);
 }

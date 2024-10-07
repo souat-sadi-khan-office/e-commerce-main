@@ -113,6 +113,13 @@
                                 <p>Products</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.specification.edit') }}"
+                                class="nav-link {{ Request::is('admin/products/specifications/*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-layers"></i>
+                                <p>Specification Controls</p>
+                            </a>
+                        </li>
 
                         <li class="nav-item">
                             <a href="{{ route('admin.stock.index') }}"

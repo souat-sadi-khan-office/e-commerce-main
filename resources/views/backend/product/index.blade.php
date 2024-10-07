@@ -46,7 +46,7 @@
                                 <th>Total Stock</th>
                                 <th>Publish</th>
                                 <th>Featured</th>
-                                <th>Actions</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -56,6 +56,14 @@
     </div>
     
 @endsection
+@push('style')
+<style>
+    tr td:nth-child(7) {
+        text-align: center;
+        padding-top: 20px!important;
+    }
+</style>
+@endpush
 @push('script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

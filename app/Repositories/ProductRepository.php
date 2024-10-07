@@ -50,14 +50,14 @@ class ProductRepository implements ProductRepositoryInterface
             ->editColumn('product_name', function ($model) {
                 return '<div class="row"><div class="col-auto">' . Images::show($model->thumb_image) . '</div><div class="col">' . $model->name . '</div></div>';
             })
-            ->editColumn('info', function($model) {
+            ->editColumn('info', function ($model) {
                 $numberOfSale = $model->details ? $model->details->number_of_sale : 0;
                 $averageRating = $model->details ? ($model->details->average_rating == null ? Helpers::productAverageRating($model->id) : $model->details->average_rating) : 0;
 
                 return '
-                    <b>Number of Sale</b>: '. $numberOfSale .' <br> 
+                    <b>Number of Sale</b>: ' . $numberOfSale . ' <br> 
                     <b>Base Price</b>:' . format_price($model->unit_price) . '<br>
-                    <b>Rating</b>: '. $averageRating;
+                    <b>Rating</b>: ' . $averageRating;
             })
             ->editColumn('created_by', function ($model) {
                 return $model->admin->name;
@@ -66,7 +66,7 @@ class ProductRepository implements ProductRepositoryInterface
                 $checked = $model->status == 1 ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
-            ->editColumn('stock', function($model) {
+            ->editColumn('stock', function ($model) {
                 return $model->details ? $model->details->current_stock : 0;
             })
             ->editColumn('featured', function ($model) {
@@ -390,7 +390,7 @@ class ProductRepository implements ProductRepositoryInterface
 
             DB::commit();
 
-        }else{
+        } else {
             DB::rollBack();
         }
 
@@ -674,5 +674,178 @@ class ProductRepository implements ProductRepositoryInterface
         }
     
         return $newFilePath;
+    }
+
+    public function specificationproducts()
+    {
+        $data = Product::withCount('specifications')
+        ->with('admin:id,name')
+        ->orderBy('specifications_count', 'desc')
+        ->get();
+        return $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'thumb_image' => $item->thumb_image,
+                'specifications_count' => $item->specifications_count,
+                'status' => $item->status,
+                'is_featured' => $item->is_featured,
+                'created_by' => $item->admin ? $item->admin->name : null,
+            ];
+        });
+    }
+
+    public function specificationproductsDatatable()
+    {
+        $models = $this->specificationproducts();
+        return Datatables::of($models)
+            ->addIndexColumn()
+            ->editColumn('name', function ($model) {
+                return '<div class="row"><div class="col-auto">' . Images::show($model['thumb_image']) . '</div><div class="col">' . $model['name'] . '</div></div>';
+            })
+            ->editColumn('created_by', function ($model) {
+                return $model['created_by'];
+            })
+            ->editColumn('status', function ($model) {
+                $checked = $model['status'] == 1 ? 'checked' : '';
+                return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model['id']) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model['id'] . '" ' . $checked . ' data-id="' . $model['id'] . '"></div>';
+            })
+            ->editColumn('is_featured', function ($model) {
+                $is_featured = $model['is_featured'] == 1 ? 'checked' : '';
+                return '<div class="form-check form-switch"><input data-url="' . route('admin.product.featured', $model['id']) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model['id'] . '" ' . $is_featured . ' data-id="' . $model['id'] . '"></div>';
+            })
+            ->editColumn('specifications_count', function ($model) {
+                return "<div class='w-100 text-center'>
+                            <span class='badge bg-dark rounded-pill' style='padding: 10px 20px;'>
+                                " . $model['specifications_count'] . "
+                            </span>
+                        </div>";
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.product.specification.action', compact('model'));
+            })
+            ->rawColumns(['action', 'status', 'created_by', 'is_featured', 'name', 'specifications_count'])
+            ->make(true);
+    }
+
+    public function specificationproductModal($id)
+    {
+        $data = ProductSpecification::where('product_id', $id)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
+        if ($data->isEmpty()) {
+            $product = Product::find($id);
+            $product_name = isset($product) ? $product->name : null;
+            $category_id = isset($product) ? $product->category_id : null;
+        } else {
+
+            $product_name = isset($data) ? $data[0]->product->name : null;
+            $category_id = isset($data) ? $data[0]->product->category_id : null;
+        }
+        $product_id = $id;
+
+
+        $mapped = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'key_id' => $item->key_id ?? null,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'specificationKey' => $item->specificationKey ? $item->specificationKey->name : null,
+                'specificationKeyType' => $item->specificationKeyType ? $item->specificationKeyType->name : null,
+                'specificationKeyTypeAttribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
+                'key_feature' => $item->key_feature,
+            ];
+        });
+        $models = $mapped->groupBy('key_id');
+
+        return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id','product_id'));
+    }
+
+
+    public function specificationsAdd($request,$id){
+
+        if (isset($request->specification_key)) {
+
+            foreach ($request->specification_key as $specification) {
+                $keyId = $specification['key_id'];
+                $processedTypeIds = []; // Track unique type_ids
+
+                // Loop through type_id
+                foreach ($specification['type_id'] as $typeId => $value) {
+
+                    if (is_numeric($typeId)) {
+                        $tkey = $value;
+                    }
+                    if (!is_numeric($typeId)) {
+                        continue; // Skip features and attributes keys
+                    }
+
+                    // Skip if this type_id has already been processed
+                    if (in_array($typeId, $processedTypeIds)) {
+                        continue;
+                    }
+
+                    // Initialize variables
+                    $firstAttributeId = null;
+                    $featuresExist = false;
+
+                    // Check for attributes
+                    if (
+                        isset($specification['type_id']['attribute_id'][$value])
+                        && is_array($specification['type_id']['attribute_id'][$value])
+                        && !empty($specification['type_id']['attribute_id'][$value])
+                    ) {
+
+                        // Get the first attribute ID
+                        $firstAttributeId = $specification['type_id']['attribute_id'][$value][0]; // First attribute
+                    }
+
+                    // Check for features
+                    if (isset($specification['type_id']['features'][$value])) {
+                        $featuresExist = true; // Set to true if features exist
+                    }
+
+                    // Create a ProductSpecification entry only if we have an attribute ID
+                    if ($firstAttributeId !== null) {
+                        $productSpecification = new ProductSpecification();
+                        $productSpecification->product_id = $id;
+                        $productSpecification->key_id = $keyId;
+                        $productSpecification->type_id = intval($tkey);
+                        $productSpecification->attribute_id = intval($firstAttributeId);
+
+                        $productSpecification->key_feature = $featuresExist ? 1 : 0;
+
+                        $productSpecification->save();
+                    }
+
+                    // Mark this type_id as processed
+                    $processedTypeIds[] = $typeId;
+                }
+            }
+            return response()->json(['status' => true, 'load' => true, 'message' => 'Product Specifications Created successfully.']);
+
+        }
+        return response()->json(['status' => false, 'message' => 'No Specificatiions Posted.']);
+    }
+
+    public function delete($id)
+    {
+        $specification = ProductSpecification::findOrFail($id);
+        $specification->delete();
+        return response()->json(['status' => true, 'message' => 'Product Specification Deleted successfully.']);
+    }
+
+    public function keyfeature($id)
+    {
+
+        $specification = ProductSpecification::find($id);
+
+        if (!$specification) {
+            return response()->json(['success' => false, 'message' => 'Product Specification not found.'], 404);
+        }
+
+        $specification->key_feature = !$specification->key_feature;
+        $specification->save();
+
+        return response()->json(['success' => true, 'message' => 'Product Specification featured status updated successfully.']);
     }
 }

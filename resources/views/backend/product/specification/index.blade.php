@@ -1,5 +1,5 @@
-@extends('backend.layouts.app', ['modal' => 'md'])
-@section('title', 'Category Management')
+@extends('backend.layouts.app', ['modal' => 'xl'])
+@section('title', 'Product Specification Control')
 @push('style')
     <link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 @endpush
@@ -8,23 +8,23 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">All Category List</h1>
+                    <h1 class="h3 mb-0">Specifications Update</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
                                 <i class="bi bi-house-add-fill"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Category Management</li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Specifications Update</li>
                     </ol>
                 </div>
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="{{ route('admin.category.add') }}"  
+                    <a href="{{ route('admin.product.create') }}"  
                         class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
-                        Create New
+                        Create Product
                     </a>
                 </div>
                 {{-- @endif --}}
@@ -41,13 +41,12 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
-                                <th width="8%">Image</th>
                                 <th>Name</th>
-                                <th class="text-center">Icon</th>
                                 <th>Created_by</th>
                                 <th width="7%">Status</th>
                                 <th width="7%">Featured?</th>
-                                <th width="20%">Actions</th>
+                                <th width="7%">Specs</th>
+                                <th width="20%" class="text-center">Actions</th>
                             </tr>
                         </thead>
                     </table>
@@ -82,27 +81,15 @@
             var table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.category.index') }}",
+                ajax: "{{ route('admin.product.specification.edit') }}",
                 columns: [
-                    {
-                        data: 'photo',
-                        name: 'photo',
-                        orderable: false,
-                        searchable: false
-                    },
                     {
                         data: 'name',
                         name: 'name'
                     },
                     {
-                        data: 'icon',
-                        name: 'icon',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'admin_id',
-                        name: 'admin_id'
+                        data: 'created_by',
+                        name: 'created_by',
                     },
                     {
                         data: 'status',
@@ -114,6 +101,10 @@
                         data: 'is_featured',
                         name: 'is_featured',
                         orderable: false,
+                        searchable: false
+                    },{
+                        data:'specifications_count',
+                        name: 'specifications_count',
                         searchable: false
                     },
                     {

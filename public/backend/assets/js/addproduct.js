@@ -429,7 +429,6 @@ $(document).ready(function() {
         // Update name based on checked status
         statusInput.change(function() {
             const selectedTypeId = typeSelect.val(); 
-            console.log(selectedTypeId,)// Get the selected type ID
             if ($(this).is(':checked')  && selectedTypeId) {
                 $(this).attr('name', `specification_key[${index}][type_id][features][${selectedTypeId}]`);
             } else {
