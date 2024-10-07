@@ -21,8 +21,7 @@
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="{{ route('admin.product.create') }}"  
-                        class="btn btn-soft-success">
+                    <a href="{{ route('admin.product.create') }}" class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
                         Create Product
                     </a>
@@ -82,8 +81,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: "{{ route('admin.product.specification.edit') }}",
-                columns: [
-                    {
+                columns: [{
                         data: 'name',
                         name: 'name'
                     },
@@ -102,8 +100,8 @@
                         name: 'is_featured',
                         orderable: false,
                         searchable: false
-                    },{
-                        data:'specifications_count',
+                    }, {
+                        data: 'specifications_count',
                         name: 'specifications_count',
                         searchable: false
                     },
@@ -121,7 +119,5 @@
             _statusUpdate();
 
         });
-
-
     </script>
 @endpush

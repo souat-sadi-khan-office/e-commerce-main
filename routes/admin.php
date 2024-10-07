@@ -88,22 +88,21 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::group(['prefix' => 'products', 'as' => 'product.'], function () {
         Route::get('create', [ProductController::class, 'create'])->name('create');
         Route::any('store', [ProductController::class, 'store'])->name('store');
-    Route::group(['prefix' => 'specifications', 'as' => 'specification.'], function () {
-        Route::get('/', [ProductController::class, 'specification'])->name('index');
-        Route::post('add/{productId}', [ProductController::class, 'specificationsAdd'])->name('add');
-        Route::get('edit', [ProductController::class, 'specificationproducts'])->name('edit');
-        Route::get('edit/{id}', [ProductController::class, 'specificationproductModal'])->name('edit.modal');
-        Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
-        Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
-    });
-
+        Route::group(['prefix' => 'specifications', 'as' => 'specification.'], function () {
+            Route::get('/', [ProductController::class, 'specification'])->name('index');
+            Route::post('add/{productId}', [ProductController::class, 'specificationsAdd'])->name('add');
+            Route::get('edit', [ProductController::class, 'specificationproducts'])->name('edit');
+            Route::get('edit/{id}', [ProductController::class, 'specificationproductModal'])->name('edit.modal');
+            Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
+            Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
+        });
     });
 
     // Brand Types
     Route::post('brand-type/status/{id}', [BrandTypeController::class, 'updateStatus'])->name('brand_type.status');
     Route::post('brand-type/feature/{id}', [BrandTypeController::class, 'updateFeatured'])->name('brand_type.featured');
     Route::resource('brand-type', BrandTypeController::class);
-    
+
     // Brand
     Route::post('brand/status/{id}', [BrandController::class, 'updateStatus'])->name('brand.status');
     Route::post('brand/featured/{id}', [BrandController::class, 'updateFeatured'])->name('brand.featured');
@@ -143,9 +142,9 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // Settings
     Route::controller(ConfigurationSettingController::class)->group(function () {
-        Route::get('settings/general','general')->name('settings.general');
-        Route::get('settings/otp','otp')->name('settings.otp');
-        Route::get('settings/vat','vat')->name('settings.vat');
+        Route::get('settings/general', 'general')->name('settings.general');
+        Route::get('settings/otp', 'otp')->name('settings.otp');
+        Route::get('settings/vat', 'vat')->name('settings.vat');
 
         Route::get('website/header', 'websiteHeader')->name('website.header');
         Route::get('website/footer', 'websiteFooter')->name('website.footer');

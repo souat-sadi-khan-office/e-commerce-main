@@ -89,8 +89,7 @@
                 <!-- Product -->
                 <li
                     class="nav-item {{ Request::is('admin/product*') || Request::is('admin/flash-deal*') ? 'menu-open' : '' }}">
-                    <a href="javascript:;"
-                        class="nav-link">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-cart2"></i>
                         <p>
                             Products
@@ -134,8 +133,7 @@
                 <!-- Brands -->
                 <li
                     class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
-                    <a href="javascript:;"
-                        class="nav-link">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-ubuntu"></i>
                         <p>
                             Brands
@@ -164,8 +162,7 @@
                 <!-- Website Setup -->
                 <li
                     class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
-                    <a href="javascript:;"
-                        class="nav-link">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup

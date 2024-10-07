@@ -22,10 +22,10 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     public function index()
     {
         return Category::select('id', 'name', 'photo', 'status', 'parent_id')
-        ->withCount('specificationKeys')
-        ->where('status', 1)
-        ->orderBy('specification_keys_count', 'desc') 
-        ->get();
+            ->withCount('specificationKeys')
+            ->where('status', 1)
+            ->orderBy('specification_keys_count', 'desc')
+            ->get();
     }
 
     public function store($data)
@@ -61,7 +61,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('photo', function ($model) {
-                return '<img src="'.asset($model->photo).'" alt="" height="50px">';
+                return '<img src="' . asset($model->photo) . '" alt="" height="50px">';
             })
             ->editColumn('specification_keys_count', function ($model) {
                 return "<div class='w-100 text-center'>
@@ -70,19 +70,19 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
                             </span>
                         </div>";
             })
-            
+
             ->editColumn('parent_id', function ($mode) {
                 // return $mode->parent_id;
                 return $mode->parent_id != null ? Helpers::categoryParent($mode->parent_id) : 'Primary Category';
             })
             ->addColumn('action', function ($model) {
                 return view('backend.category.specificationKeys.action', compact('model'));
-            })->rawColumns(['action', 'photo', 'parent_id','specification_keys_count'])
+            })->rawColumns(['action', 'photo', 'parent_id', 'specification_keys_count'])
             ->make(true);
     }
 
     public function show($models)
-    { 
+    {
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('admin_id', function ($model) {
@@ -126,7 +126,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         $key->name = $request->input('name');
         $key->save();
 
-        return response()->json(['status' => true, 'stay'=>true, 'message' => 'Key Position updated successfully.']);
+        return response()->json(['status' => true, 'stay' => true, 'message' => 'Key Position updated successfully.']);
     }
 
     public function delete($id)
@@ -144,13 +144,13 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
 
     public function typesindex()
     {
-        $data= SpecificationKey::withCount('types') 
-        ->with('category:id,name') 
-        ->with('admin:id,name') 
-        ->where('status', 1)
-        ->orderBy('position', 'desc')
-        ->orderBy('types_count', 'desc') 
-        ->get();
+        $data = SpecificationKey::withCount('types')
+            ->with('category:id,name')
+            ->with('admin:id,name')
+            ->where('status', 1)
+            ->orderBy('position', 'desc')
+            ->orderBy('types_count', 'desc')
+            ->get();
 
         return $data->map(function ($item) {
             return [
@@ -158,8 +158,8 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
                 'name' => $item->name,
                 'position' => $item->position,
                 'types_count' => $item->types_count,
-                'category_name' => $item->category ? $item->category->name : null, 
-                'created_by' => $item->admin ? $item->admin->name : null, 
+                'category_name' => $item->category ? $item->category->name : null,
+                'created_by' => $item->admin ? $item->admin->name : null,
             ];
         });
     }
@@ -171,7 +171,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
             'specification_key_id' => 'required|integer',
             'position' => 'required|integer',
         ]);
-        
+
         // Conditionally add the 'filter_name' rule
         $validator->sometimes('filter_name', 'required|string|max:255', function ($input) {
             return isset($input->is_show_on_filter);
@@ -188,7 +188,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
                 'specification_key_id' => $data->specification_key_id,
                 'position' => $data->position,
                 'is_show_on_filter' => isset($data->is_show_on_filter),
-                'filter_name' => isset($data->is_show_on_filter)?$data->filter_name:null,
+                'filter_name' => isset($data->is_show_on_filter) ? $data->filter_name : null,
                 'status' => isset($data->is_active),
             ]);
 
@@ -202,7 +202,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     {
         return Datatables::of($models)
             ->addIndexColumn()
-            
+
             ->editColumn('types_count', function ($model) {
                 return "<div class='w-100 text-center'>
                             <span class='badge bg-dark rounded-pill' style='padding: 10px 20px;'>
@@ -212,12 +212,12 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
             })
             ->addColumn('action', function ($model) {
                 return view('backend.category.specificationKeys.types.action', compact('model'));
-            })->rawColumns(['action','types_count'])
+            })->rawColumns(['action', 'types_count'])
             ->make(true);
     }
 
     public function typesshow($models)
-    { 
+    {
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('admin_id', function ($model) {
@@ -278,7 +278,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         $key->filter_name = $request->input('filter_name');
         $key->save();
 
-        return response()->json(['status' => true, 'stay'=>true, 'message' => 'Type Position & Filter Name updated successfully.']);
+        return response()->json(['status' => true, 'stay' => true, 'message' => 'Type Position & Filter Name updated successfully.']);
     }
 
     public function typesdelete($id)
@@ -290,106 +290,106 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
 
 
 
-     // Specification Key Type Attributes Functions
+    // Specification Key Type Attributes Functions
 
 
-     public function attributeindex()
-     {
-         $data= SpecificationKeyType::withCount('attributes') 
-         ->with('admin:id,name') 
-         ->where('status', 1)
-         ->orderBy('attributes_count', 'desc') 
-         ->get();
- 
-         return $data->map(function ($item) {
-             return [
-                 'id' => $item->id,
-                 'name' => $item->name,
-                 'filter_name' => $item->filter_name,
-                 'attributes_count' => $item->attributes_count,
-                 'created_by' => $item->admin ? $item->admin->name : null, 
-             ];
-         });
-     }
- 
-     public function attributesstore($data)
-     {
-         $validator = Validator::make($data->all(), [
-             'key_type_id' => 'required|integer',
-             'name' => 'required|string|max:255',
-             'extra' => 'nullable',
-         ]);
- 
-         if ($validator->fails()) {
-             return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
-         }
-         try {
- 
+    public function attributeindex()
+    {
+        $data = SpecificationKeyType::withCount('attributes')
+            ->with('admin:id,name')
+            ->where('status', 1)
+            ->orderBy('attributes_count', 'desc')
+            ->get();
+
+        return $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'filter_name' => $item->filter_name,
+                'attributes_count' => $item->attributes_count,
+                'created_by' => $item->admin ? $item->admin->name : null,
+            ];
+        });
+    }
+
+    public function attributesstore($data)
+    {
+        $validator = Validator::make($data->all(), [
+            'key_type_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'extra' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
+        }
+        try {
+
             SpecificationKeyTypeAttribute::create([
-                 'name' => $data->name,
-                 'admin_id' => Auth::guard('admin')->id(),
-                 'key_type_id' => intval($data->key_type_id),
-                 'extra' => $data->extra,
-                 'status' => isset($data->is_active),
-             ]);
- 
-             return response()->json(['message' => 'Specification Type Attribute Created successfully!', 'status' => true, 'load' => true]);
-         } catch (Exception $e) {
-             return response()->json(['error' => $e->getMessage(), 'status' => false]);
-         }
-     }
- 
-     public function attributeindexview($models)
-     {
-         return Datatables::of($models)
-             ->addIndexColumn()
-             
-             ->editColumn('attributes_count', function ($model) {
-                 return "<div class='w-100 text-center'>
+                'name' => $data->name,
+                'admin_id' => Auth::guard('admin')->id(),
+                'key_type_id' => intval($data->key_type_id),
+                'extra' => $data->extra,
+                'status' => isset($data->is_active),
+            ]);
+
+            return response()->json(['message' => 'Specification Type Attribute Created successfully!', 'status' => true, 'load' => true]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage(), 'status' => false]);
+        }
+    }
+
+    public function attributeindexview($models)
+    {
+        return Datatables::of($models)
+            ->addIndexColumn()
+
+            ->editColumn('attributes_count', function ($model) {
+                return "<div class='w-100 text-center'>
                              <span class='badge bg-dark rounded-pill' style='padding: 10px 20px;'>
                                  " . $model['attributes_count'] . "
                              </span>
                          </div>";
-             })
-             ->addColumn('action', function ($model) {
-                 return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
-             })->rawColumns(['action','attributes_count'])
-             ->make(true);
-     }
- 
-     public function attributeshow($models)
-     { 
-         return Datatables::of($models)
-             ->addIndexColumn()
-             ->editColumn('admin_id', function ($model) {
-                 return $model->admin->name;
-             })
-             ->addColumn('action', function ($model) {
-                 return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
-             })->rawColumns(['action'])
-             ->make(true);
-     }
- 
-     public function attributeupdatestatus($id)
-     {
- 
-         $key = SpecificationKeyTypeAttribute::find($id);
- 
-         if (!$key) {
-             return response()->json(['success' => false, 'message' => 'Attribute not found.'], 404);
-         }
- 
-         $key->status = !$key->status;
-         $key->save();
- 
-         return response()->json(['success' => true, 'message' => 'Attribute status updated successfully.']);
-     }
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
+            })->rawColumns(['action', 'attributes_count'])
+            ->make(true);
+    }
 
-     public function attributeupdate($request, $id)
+    public function attributeshow($models)
+    {
+        return Datatables::of($models)
+            ->addIndexColumn()
+            ->editColumn('admin_id', function ($model) {
+                return $model->admin->name;
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.category.specificationKeys.types.attributes.action', compact('model'));
+            })->rawColumns(['action'])
+            ->make(true);
+    }
+
+    public function attributeupdatestatus($id)
+    {
+
+        $key = SpecificationKeyTypeAttribute::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Attribute not found.'], 404);
+        }
+
+        $key->status = !$key->status;
+        $key->save();
+
+        return response()->json(['success' => true, 'message' => 'Attribute status updated successfully.']);
+    }
+
+    public function attributeupdate($request, $id)
     {
         $request->validate([
-            'name' => 'required', 
-            'extra' => 'nullable', 
+            'name' => 'required',
+            'extra' => 'nullable',
         ]);
 
         $key = SpecificationKeyTypeAttribute::find($id);
@@ -402,40 +402,40 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         $key->extra = $request->input('extra');
         $key->save();
 
-        return response()->json(['status' => true, 'stay'=>true, 'message' => 'Attribute updated successfully.']);
+        return response()->json(['status' => true, 'stay' => true, 'message' => 'Attribute updated successfully.']);
     }
 
- 
-     public function attributedelete($id)
-     {
-         $SpecificationKey = SpecificationKeyTypeAttribute::findOrFail($id);
-         return $SpecificationKey->delete();
-     }
+
+    public function attributedelete($id)
+    {
+        $SpecificationKey = SpecificationKeyTypeAttribute::findOrFail($id);
+        return $SpecificationKey->delete();
+    }
 
 
 
-     // Get Datas
-     public function keys($id) {
+    // Get Datas
+    public function keys($id)
+    {
         $keys = SpecificationKey::where('category_id', $id)->select('id', 'name')->get();
         if ($keys->isEmpty()) {
             $category = Category::find($id);
-    
+
             // Check if a parent category exists
             if ($category && $category->parent) {
                 return $this->keys($category->parent_id);
             }
         }
-    
+
         return $keys;
-    
     }
-    
-     public function types($id){
-        return SpecificationKeyType::where('specification_key_id',$id)->select('id','name')->get();
-     }
-     public function attributes($id){
-        return SpecificationKeyTypeAttribute::where('key_type_id',$id)->select('id','name','extra')->get();
-     }
- 
-    
+
+    public function types($id)
+    {
+        return SpecificationKeyType::where('specification_key_id', $id)->select('id', 'name')->get();
+    }
+    public function attributes($id)
+    {
+        return SpecificationKeyTypeAttribute::where('key_type_id', $id)->select('id', 'name', 'extra')->get();
+    }
 }
