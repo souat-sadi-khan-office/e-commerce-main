@@ -516,4 +516,28 @@ class ProductController extends Controller
     {
         return ProductImage::where('product_id', $productId)->delete();
     }
+
+    public function specificationproducts(Request $request){
+
+        if ($request->ajax()) {
+            return $this->productRepository->specificationproductsDatatable();
+        }
+
+        return view('backend.product.specification.index');
+    }
+
+    public function specificationproductModal($id){
+        return $this->productRepository->specificationproductModal($id);
+    }
+    public function keyfeature($id){
+        return $this->productRepository->keyfeature($id);
+    }
+    public function delete($id){
+        return $this->productRepository->delete($id);
+    }
+
+    
+    public function specificationsAdd(Request $request,$id){
+        return $this->productRepository->specificationsAdd($request,$id);
+    }
 }

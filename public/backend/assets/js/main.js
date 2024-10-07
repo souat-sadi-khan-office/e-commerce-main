@@ -444,6 +444,65 @@ $(document).on('click', '#delete_item', function(e) {
 
 });
 
+// Delete Specification
+
+$(document).on('click', '#delete_specification', function(e) {
+    e.preventDefault();
+    var id = $(this).data('id'); // This should get the ID correctly
+    var url = $(this).data('url');
+
+    // Find the row element using data-row-id
+    var rowElement = $('[data-row-id="' + id + '"]');
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function(data) {
+
+                    if (data.status) {
+
+                        toastr.success(data.message);
+                        rowElement.remove();
+                        if (data.load) {
+                            setTimeout(function() {
+
+                                window.location.href = "";
+                            }, 1000);
+                        }
+
+                    } else {
+                        toastr.warning(data.message);
+                    }
+                },
+                error: function(data) {
+                    var jsonValue = $.parseJSON(data.responseText);
+                    const errors = jsonValue.errors
+                    var i = 0;
+                    $.each(errors, function(key, value) {
+                        toastr.error(value);
+                        i++;
+                    });
+                }
+            });
+        }
+    });
+
+});
+
 $(document).on('click', '#logout', function(e) {
     e.preventDefault();
     var url = $(this).data('url');
