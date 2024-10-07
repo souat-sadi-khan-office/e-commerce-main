@@ -54,14 +54,19 @@ class ProductStockController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        $product_id = null;
+        if($request->get('product_id')) {
+            $product_id = $request->get('product_id');
+        }
+
         $currencies = $this->currencyRepository->getAllActiveCurrencies();
         $zones = $this->zoneRepository->getAllActiveZones();
         $countries = $this->countryRepository->getAllActiveCountry();
         $cities = $this->cityRepository->getAllActiveCity();
 
-        return view('backend.stock.create', compact('currencies','zones', 'countries', 'cities'));
+        return view('backend.stock.create', compact('currencies','zones', 'countries', 'cities', 'product_id'));
     }
 
     /**

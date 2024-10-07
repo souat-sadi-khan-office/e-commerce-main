@@ -50,6 +50,8 @@
                             <!-- product -->
                             <div class="col-md-12 form-group mb-3">
                                 <label for="product_id">Product <span class="text-danger">*</span></label>
+                                <input type="hidden" id="added_product_id" value="{{ $product_id }}">
+                                <input type="hidden" id="defaultProductImage" value="">
                                 <select name="product_id" required data-parsley-errors-container="#product_id_error" id="product_id" class="form-control"></select>
                                 <span id="product_id_error"></span>
                             </div>
@@ -252,6 +254,22 @@
         $(document).ready(function() {
             _componentSelect();
             _formValidation();
+
+            let added_product_id = $('#added_product_id').val();
+            if(added_product_id != '') {
+                product_id_array = [added_product_id];
+                $.ajax({
+                    url: '/search/product-data',
+                    method: 'POST',
+                    data: { data: product_id_array },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#defaultProductImage').val(data[0].thumb_image);
+                        let option = new Option(data[0].name, data[0].id, true, true);
+                        $('#product_id').append(option).trigger('change');
+                    }
+                });
+            }
 
             $(document).on('change', '#product_id', function() {
                 let product_id = $(this).val();
@@ -553,7 +571,10 @@
                     return product.text;
                 }
 
-                var productImage = '<img src="' + product.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
+                var defaultImageUrl = $('#defaultProductImage').val();
+                var image_url = product.image_url ? product.image_url : defaultImageUrl;
+
+                var productImage = '<img src="' + image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
                 return $('<span>' + productImage + product.text + '</span>');
             }
         });
