@@ -15,4 +15,10 @@ class Zone extends Model
         'name',
         'status',
     ];
+
+    // relation with product stock
+    public function stock()
+    {
+        return $this->belongsTo(ProductStock::class);
+    }
 }

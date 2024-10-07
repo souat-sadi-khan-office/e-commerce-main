@@ -512,6 +512,17 @@ class ProductController extends Controller
         return response()->json(['status' => true, 'message' => 'Product updated successfully.', 'goto' => route('admin.product.index')]);
     }
 
+    public function stock($id)
+    {
+        $model = $this->productRepository->getProductById($id);
+        $currencies = $this->currencyRepository->getAllActiveCurrencies();
+        $zones = $this->zoneRepository->getAllActiveZones();
+        $countries = $this->countryRepository->getAllActiveCountry();
+        $cities = $this->cityRepository->getAllActiveCity();
+
+        return view('backend.product.stock', compact('model', 'currencies', 'zones', 'countries', 'cities'));
+    }
+
     private function removeImage($productId) 
     {
         return ProductImage::where('product_id', $productId)->delete();

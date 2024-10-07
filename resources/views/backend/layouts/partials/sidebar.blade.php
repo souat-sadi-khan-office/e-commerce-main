@@ -88,7 +88,7 @@
 
                 <!-- Product -->
                 <li
-                    class="nav-item {{ Request::is('admin/product*') || Request::is('admin/flash-deal*') ? 'menu-open' : '' }}">
+                    class="nav-item {{ Request::is('admin/product*') || Request::is('admin/flash-deal*') || Request::is('admin/stock*') ? 'menu-open' : '' }}">
                     <a href="javascript:;"
                         class="nav-link">
                         <i class="nav-icon bi bi-cart2"></i>
@@ -111,6 +111,14 @@
                                 class="nav-link {{ Request::is('admin/product') || Request::is('admin/product/*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-shop-window"></i>
                                 <p>Products</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.stock.index') }}"
+                                class="nav-link {{ Request::is('admin/stock') || Request::is('admin/stock/*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-archive"></i>
+                                <p>Stock</p>
                             </a>
                         </li>
 

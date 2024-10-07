@@ -28,4 +28,10 @@ class Country extends Model
     {
         return $this->hasMany(City::class);
     }
+
+    // Relationship with product stock
+    public function stock()
+    {
+        return $this->belongsTo(ProductStock::class);
+    }
 }

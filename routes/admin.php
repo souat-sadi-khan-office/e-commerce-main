@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\SpecificationAttributes;
 use App\Http\Controllers\Admin\SpecificationsController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
+use App\Http\Controllers\Admin\ProductStockController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -81,7 +82,12 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     // flash-deal
     Route::resource('flash-deal', FlashDealController::class);
 
+    // stock
+    Route::post('stock/status/{id}', [ProductStockController::class, 'updateStatus'])->name('stock.status');
+    Route::resource('stock', ProductStockController::class);
+
     // Product
+    Route::get('product/stock/{id}', [ProductController::class, 'stock'])->name('product.stock');
     Route::post('product/status/{id}', [ProductController::class, 'updateStatus'])->name('product.status');
     Route::post('product/featured/{id}', [ProductController::class, 'updateFeatured'])->name('product.featured');
     Route::resource('product', ProductController::class);

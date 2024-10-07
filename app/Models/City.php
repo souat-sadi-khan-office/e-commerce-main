@@ -28,4 +28,10 @@ class City extends Model
     {
         return $this->hasMany(Area::class);
     }
+
+    // Relationship with product stock
+    public function stock()
+    {
+        return $this->belongsTo(ProductStock::class);
+    }
 }

@@ -64,4 +64,9 @@ class Admin extends Model implements AuthenticatableContract
     {
         return 'id'; // The identifier column name, usually 'id'
     }
+
+    public function stock_purchase()
+    {
+        return $this->belongsTo(StockPurchase::class);
+    }
 }

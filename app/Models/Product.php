@@ -79,10 +79,16 @@ class Product extends Model
         return $this->hasMany(ProductQuestion::class);
     }
 
-    // Relation with stock
-    public function stock()
+    // Relation with stock purchase
+    public function purchase()
     {
         return $this->hasMany(StockPurchase::class);
+    }
+
+    // Relation with product stock
+    public function stock()
+    {
+        return $this->hasMany(ProductStock::class);
     }
 
     // Relation with banner

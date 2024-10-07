@@ -38,4 +38,9 @@ class StockPurchase extends Model
     {
         return $this->belongsTo(Currency::class, 'currency_id');
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(ProductStock::class);
+    }
 }

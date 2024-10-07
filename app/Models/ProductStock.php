@@ -23,11 +23,15 @@ class ProductStock extends Model
     ];
 
     // Relationships
+    public function purchase()
+    {
+        return $this->belongsTo(StockPurchase::class);
+    }
 
     // Product relationship
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     // Zone relationship
@@ -46,6 +50,12 @@ class ProductStock extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    // Admin relation
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
     }
 
 }

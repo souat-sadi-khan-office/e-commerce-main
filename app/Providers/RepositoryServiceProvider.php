@@ -24,6 +24,7 @@ use App\Repositories\BrandTypeRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\FlashDealRepository;
 use App\Repositories\PcBuilderRepository;
+use App\Repositories\ProductStockRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
 use App\Repositories\Interface\TaxRepositoryInterface;
@@ -47,6 +48,7 @@ use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\DashBoardRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
+use App\Repositories\Interface\ProductStockRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 
@@ -80,6 +82,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TaxRepositoryInterface::class, TaxRepository::class);
         $this->app->bind(PageRepositoryInterface::class, PageRepository::class);
         $this->app->bind(FlashDealRepositoryInterface::class, FlashDealRepository::class);
+        $this->app->bind(ProductStockRepositoryInterface::class, ProductStockRepository::class);
     }
 
     /**

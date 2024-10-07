@@ -162,4 +162,20 @@ class SearchController extends Controller
             return response()->json();
         }
     }
+
+    // for product stock
+    public function searchForProductStock(Request $request) 
+    {
+        $productId = $request->product_id;
+    
+        if($productId != null) {
+            $model = Product::with('details')->find($productId);
+
+            if($model) {
+                return response()->json($model);
+            }
+        } else {
+            return response()->json();
+        }
+    }
 }

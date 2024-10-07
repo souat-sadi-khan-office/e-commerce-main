@@ -17,6 +17,12 @@
             </a>
         </li>
         <li>
+            <a class="dropdown-item" href="{{ route('admin.product.stock', $model->id) }}">
+                <i class="bi bi-archive"></i>
+                Stock
+            </a>
+        </li>
+        <li>
             <a class="dropdown-item" href="#">
                 <i class="bi bi-copy"></i>
                 Duplicate
