@@ -138,14 +138,42 @@
     <i class="lab la-whatsapp my-sudipmart"></i>
 </a> --}}
 
-<a href="#" class="cart-button compare-btn" target="_blank">
+<a href="javascript:;" class="cart-button compare-btn">
     <i class="ti-control-shuffle"></i>
     <div class="label">Compare</div>
     <span class="counter">0</span>
 </a>
 
-<a href="#" class="cart-button" target="_blank">
+<a href="javascript:;" class="cart-button">
     <i class="linearicons-bag2"></i>
     <div class="label">Cart</div>
     <span class="counter">0</span>
 </a>
+
+<div class="drawer m-cart" id="m-cart">
+    <div class="title">
+        <p>YOUR CART</p>
+        <span class="mc-toggler loaded close"><i class="material-icons">close</i></span>
+    </div>
+    <div class="content">
+                <div class="empty-content">
+            <p class="text-center">Your shopping cart is empty!</p>
+        </div>
+            </div>
+    <div class="footer">
+        <div class="promotion-code">
+            <div class="input-group">
+                <input type="text" placeholder="Promo Code" id="input-cart-coupon">
+                <span class="input-group-btn"><button data-target="#input-cart-coupon" class="btn button-coupon" type="submit">Apply</button></span>
+            </div>
+        </div>
+                <div class="total">
+            <div class="title">Sub-Total</div>
+            <div class="amount">0৳</div>
+        </div>
+                <div class="total">
+            <div class="title">Total</div>
+            <div class="amount">0৳</div>
+        </div>
+    </div>
+</div>

@@ -153,6 +153,11 @@
 	    }
 
 	});
+
+	$(document).on('click', '.cart-button', function() {
+		$('#m-cart').addClass('open');
+		$('#m-cart').fadeIn();
+	})
 	
 	var setHeight = function() {
 		var height_header = $(".header_wrap").height();

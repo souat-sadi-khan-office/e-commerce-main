@@ -7306,3 +7306,247 @@ blockquote p:last-child {
     font-weight: bold;
     text-align: center;
 }
+
+
+.drawer {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    background: #fff;
+    height: 100%;
+    width: 360px;
+    z-index: 999999;
+    max-width: 100%;
+    transition: all 300ms ease;
+    display: flex;
+    flex-direction: column
+}
+
+.drawer.open {
+    right: 0;
+    box-shadow: 0 0 30px rgba(0,0,0,.2) , -1px 0 0 0 rgba(255,255,255,.2)
+}
+
+.drawer .loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -20px 0 0 -35px
+}
+
+.drawer>.title {
+    background: #01132d;
+    padding: 0 20px;
+    position: relative;
+    flex: 0 0 50px
+}
+
+.drawer .title .mc-toggler,.drawer .title .cmpr-toggler {
+    color: #fff;
+    position: absolute;
+    right: 8px;
+    top: 0;
+    cursor: pointer
+}
+
+.drawer .title .mc-toggler i,.drawer .title .cmpr-toggler i {
+    font-size: 20px;
+    line-height: 50px
+}
+
+.drawer .title .close:hover i {
+    opacity: .5
+}
+
+.drawer .title p {
+    margin: 0;
+    line-height: 50px;
+    font-weight: 600;
+    color: #fff
+}
+
+.drawer .content {
+    overflow-y: auto;
+    flex: 1 1 auto
+}
+
+.drawer .content {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 100px
+}
+
+.drawer .content .item {
+    display: flex;
+    padding: 15px 20px;
+    position: relative;
+    border-bottom: 1px solid #eee
+}
+
+.drawer .content .item:hover {
+    background: rgba(55,73,187,.03)
+}
+
+.drawer .content .item .remove {
+    position: absolute;
+    right: 0;
+    top: 17px;
+    cursor: pointer
+}
+
+.drawer .content .item .remove i {
+    font-size: 16px;
+    opacity: .7
+}
+
+.drawer .content .item .remove:hover i {
+    opacity: 1
+}
+
+.drawer .content .item .name {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 15px 12px 0
+}
+
+.drawer .content .item .image {
+    flex: 0 0 60px;
+    display: flex
+}
+
+.drawer .item .image img {
+    max-width: 45px;
+    max-height: 45px;
+    overflow: hidden;
+    font-size: 0;
+    color: transparent;
+    background: #fafafa
+}
+
+.drawer .item .info>* {
+    vertical-align: middle
+}
+
+.drawer .item .info i {
+    font-size: 15px;
+    margin: 0 5px;
+    color: #999;
+    width: 15px;
+    height: 15px
+}
+
+.drawer .item .amount,.drawer .item .total {
+    font-weight: 600
+}
+
+.drawer .footer {
+    flex: 0 0 auto;
+    padding: 5px 0 43px;
+    position: relative
+}
+
+.drawer .footer .total {
+    display: flex;
+    padding: 12px 10px
+}
+
+.drawer .footer .total:nth-child(2) {
+    border-bottom: 1px solid #eee
+}
+
+.drawer .footer .total>div {
+    flex: 1 1 50%;
+    text-align: right;
+    font-size: 16px;
+    color: #666
+}
+
+.drawer .footer .total>div.amount {
+    color: #111;
+    font-weight: 600
+}
+
+.drawer .footer .checkout-btn {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0
+}
+
+.drawer .footer .checkout-btn a {
+    display: block;
+    width: 100%
+}
+
+.drawer .footer .checkout-btn a button {
+    width: 100%;
+    border: none;
+    background: var(--s-primary);
+    border-radius: 0
+}
+
+.footer .promotion-code {
+    background: var(--s-s-bg);
+    padding: 10px;
+    display: inline-block;
+    width: 100%
+}
+
+.footer .promotion-code input {
+    height: 36px;
+    font-size: 14px;
+    border: none
+}
+
+.footer .promotion-code button {
+    height: 36px;
+    line-height: 32px
+}
+
+.drawer.cmpr-panel {
+    top: auto;
+    bottom: 90px;
+    height: 0;
+    right: 20px;
+    overflow: hidden;
+    transition: none
+}
+
+.drawer.cmpr-panel.open {
+    height: auto;
+    overflow: visible;
+    max-width: calc(100% - 25px)
+}
+
+.drawer.cmpr-panel .item .info {
+    display: flex;
+    align-items: center
+}
+
+.drawer.cmpr-panel .item .image {
+    flex: 0 0 60px
+}
+
+.drawer.cmpr-panel .content .item .name {
+    padding: 0 15px 0 0
+}
+
+.drawer.cmpr-panel .footer {
+    border: none;
+    flex: 0 0 auto;
+    padding: 10px;
+    text-align: right
+}
+
+.drawer.cmpr-panel .footer .clear-all {
+    display: inline-block;
+    padding: 0 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    color: #111
+}
+
+.drawer.cmpr-panel .content .item .remove {
+    top: 50%;
+    margin-top: -9px
+}
