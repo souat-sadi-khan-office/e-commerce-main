@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\SpecificationAttributes;
 use App\Http\Controllers\Admin\SpecificationsController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
+use App\Http\Controllers\Frontend\HomePageController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -141,6 +142,8 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::resource('page', PageController::class);
 
     // Settings
+    Route::view('homepage/configuration', 'backend.settings.homepageSettings')->name('homepage.settings');
+    Route::post('homepage/settings/{section}', [HomePageController::class, 'visibility'])->name('homepage.settings.status');
     Route::controller(ConfigurationSettingController::class)->group(function () {
         Route::get('settings/general', 'general')->name('settings.general');
         Route::get('settings/otp', 'otp')->name('settings.otp');
