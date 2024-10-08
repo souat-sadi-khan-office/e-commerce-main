@@ -76,7 +76,6 @@
             
                                     <div class="Sub_Categories row"></div>
                                    
-            
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="brand_id">Brand</label>
                                         <select name="brand_id" id="brand_id" class="form-control"></select>
@@ -206,6 +205,23 @@
     
             <div class="col-md-5">
                 <div class="row">
+
+                    <!-- Product Specification -->
+                    <div class="col-mb-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="h5 mb-0">Product Specification</h2>
+                                <span class="text-danger"> Duplicate Types Will be Not Counted for a Specification Key</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <div class="specification_key row"></div>
+                                    <button id="add-another" type="button" class="btn btn-primary mt-2" style="display:none;">Add Another
+                                        Specification</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
     
                     <!-- Product Costing & Pricing -->
                     <div class="col-md-12 mb-4">
@@ -241,11 +257,17 @@
                                         <small class="text-muted">Total Price = Unit Price X Quantity</small>
                                     </div>
 
-                                    <!-- purchase_price -->
-                                    <div class="col-md-12 form-goup mb-3">
-                                        <label for="purchase_price">Purchase Price </label>
-                                        <input type="text" name="purchase_price" id="purchase_price" class="form-control number" value="0" >
+                                    <!-- purchase_unit_price -->
+                                    <div class="col-md-6 form-goup mb-3">
+                                        <label for="purchase_unit_price">Unit Purchase Price </label>
+                                        <input type="text" id="purchase_unit_price" class="form-control number" value="0" >
                                         <small class="text-muted">This is the product purchase price from sellter.</small>
+                                    </div>
+
+                                    <!-- purchase_total_price -->
+                                    <div class="col-md-6 form-goup mb-3">
+                                        <label for="purchase_total_price">Total Purchase Price </label>
+                                        <input type="text" id="purchase_total_price" class="form-control number" value="0" >
                                     </div>
 
                                     <!-- currency_id -->
@@ -287,8 +309,16 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <div class="alert alert-warning">
-                                            <b>Warning</b>: Here product stock must be the same quanity as on the <b>Product costing</b> quanity.
+                                            <b>Warning</b>: Here product stock must be the same quanity as on the <b>Product costing</b> quanity. You can add stock later.
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-12 form-group mb-3">
+                                        <label for="add_stock_now">Want to add stock now? </label>
+                                        <select name="add_stock_now" class="form-control select" id="add_stock_now">
+                                            <option selected value="now">Add Now</option>
+                                            <option value="later">Add Later</option>
+                                        </select>
                                     </div>
 
                                     <div class="col-md-12 mb-3 form-group">
@@ -353,23 +383,6 @@
 
                                         <div id="city_wise_data"></div>
                                     </div> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product Specification -->
-                    <div class="col-mb-12 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h2 class="h5 mb-0">Product Specification</h2>
-                                <span class="text-danger"> Duplicate Types Will be Not Counted for a Specification Key</span>
-                            </div>
-                            <div class="card-body">
-                                <div class="col-md-12">
-                                    <div class="specification_key row"></div>
-                                    <button id="add-another" type="button" class="btn btn-primary mt-2" style="display:none;">Add Another
-                                        Specification</button>
                                 </div>
                             </div>
                         </div>
@@ -624,6 +637,16 @@
             }
         });
 
+        $(document).on('change', '#add_stock_now', function() {
+            let add_stock_now = $(this).val();
+            if(add_stock_now == 'now') {
+                $('#stock_types').removeAttr('disabled');
+                $('#globally_area').show();
+            } else {
+                $('#stock_types').attr('disabled', true);
+                $('#globally_area').hide();
+            }
+        })
 
         $(document).on('change', '#stock_types', function() {
             let stock_type = $(this).val();
@@ -835,36 +858,77 @@
             let total_price = unit_price * quantity;
 
             $('#total_price').val(total_price);
+        });
+
+        $(document).on('keyup', '#purchase_unit_price', function() {
+            let purchase_unit_price = $(this).val();
+            let quantity = $('#quantity').val();
+            let total_price = parseInt(purchase_unit_price) * parseInt(quantity);
+
+            $('#purchase_total_price').val(total_price);
         })
         
         $(document).ready(function() {
-    $('#discount_start_date, #discount_end_date').on('change', function() {
-        const startDateValue = $('#discount_start_date').val();
-        const endDateValue = $('#discount_end_date').val();
-        const $errorDiv = $('#date_error');
+            $('#discount_start_date, #discount_end_date').on('change', function() {
+                const startDateValue = $('#discount_start_date').val();
+                const endDateValue = $('#discount_end_date').val();
+                const $errorDiv = $('#date_error');
 
-        // Clear any previous error message
-        $errorDiv.empty();
+                // Clear any previous error message
+                $errorDiv.empty();
 
-        // Check if start date is valid and not older than today
-        const today = new Date();
-        const startDate = new Date(startDateValue);
+                // Check if start date is valid and not older than today
+                const today = new Date();
+                const startDate = new Date(startDateValue);
 
-        // Check if the end date is empty
-        if (!endDateValue) {
-            $errorDiv.text('End date cannot be null.').show();
-            return; // Exit the function if the end date is null
+                // Check if the end date is empty
+                if (!endDateValue) {
+                    $errorDiv.text('End date cannot be null.').show();
+                    return; // Exit the function if the end date is null
+                }
+
+                // Validate if end date is earlier than start date
+                const endDate = new Date(endDateValue);
+                if (endDate < startDate) {
+                    $errorDiv.text('End date must be greater than or equal to start date.').show();
+                } else {
+                    $errorDiv.hide(); // Hide the error message if the dates are valid
+                }
+            });
+        });
+
+        function generateSlug(name) {
+            return name
+                .toString()
+                .toLowerCase()
+                .trim()
+                .replace(/&/g, '-and-')
+                .replace(/[^a-z0-9 -]/g, '')
+                .replace(/\s+/g, '-') 
+                .replace(/-+/g, '-');
         }
 
-        // Validate if end date is earlier than start date
-        const endDate = new Date(endDateValue);
-        if (endDate < startDate) {
-            $errorDiv.text('End date must be greater than or equal to start date.').show();
-        } else {
-            $errorDiv.hide(); // Hide the error message if the dates are valid
-        }
-    });
-});
+        $('#name').on('input', function() {
+            const name = $(this).val();
+            const slug = generateSlug(name);
+            $('#slug').val(slug);
+
+            // Check if the slug exists
+            $.ajax({
+                url: '{{ route('admin.slug.check') }}',
+                type: 'GET',
+                data: {
+                    slug: slug,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.exists) {
+                        const timestamp = Date.now();
+                        $('#slug').val(slug + '-' + timestamp);
+                    }
+                }
+            });
+        });
 
     </script>
     <script src="{{ asset('backend/assets/js/addproduct.js') }}"></script>

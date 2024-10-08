@@ -213,7 +213,6 @@ class ProductRepository implements ProductRepositoryInterface
             'taxes.*' => 'numeric|min:0',
             'tax_types' => 'required|array',
             'tax_types.*' => 'string',
-            'stock_types' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -279,100 +278,125 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // Stock Purchase
-            $stockPurchase = new StockPurchase;
-            $stockPurchase->product_id = $product->id;
-            $stockPurchase->admin_id = $product->admin_id;
-            $stockPurchase->currency_id = $product->currency_id;
-            $stockPurchase->sku = $request->sku;
-            $stockPurchase->quantity = $request->quantity;
-            $stockPurchase->unit_price = $request->unit_price;
-            $stockPurchase->purchase_unit_price = $request->purchase_unit_price;
-            $stockPurchase->purchase_total_price = $request->purchase_total_price;
-            $stockPurchase->is_sellable = $request->is_sellable;
-            if(isset($request->file)) {
-                $stockPurchase->file = Images::upload('products.files',$request->file);
-            }
-            $stockPurchase->save();
-            if($stockPurchase) {
+            if($request->add_stock_now == 'now') {
 
-                // update product in_stock column
-                if($stockPurchase->is_sellable == 1) {
-                    $product->in_stock = 1;
-                    $product->save();
-                }
-
-                // Add stock data into product_stock table by stock_types
-                switch($request->stock_types) {
-                    case 'globally':
-                        $stock = new ProductStock;
-                        $stock->product_id = $product->id;
-                        $stock->stock_purchase_id  = $stockPurchase->id;
-                        $stock->in_stock = 1;
-                        $stock->number_of_sale = 0;
-                        $stock->stock = $request->globally_stock_amount;
-                        $stock->save();
+                $totalGivenQuantity = $request->quantity;
+                $totalGetQuantity = 0;
+                $stockType = $request->stock_types;
+                switch($stockType) {
+                    case 'globally': 
+                        $totalGetQuantity = $request->globally_stock_amount;
                     break;
                     case 'zone_wise':
-
-                        $zoneIdArray = $request->zone_id;
-                        $zoneWiseStockQuantityArray = $request->zone_wise_stock_quantity;
-
-                        if(count($zoneIdArray) > 0) {
-                            for($zoneCounter = 0; $zoneCounter < count($zoneIdArray); $zoneCounter++) {
-                                $stock = new ProductStock;
-                                $stock->product_id = $product->id;
-                                $stock->stock_purchase_id  = $stockPurchase->id;
-                                $stock->zone_id  = $zoneIdArray[$zoneCounter];
-                                $stock->in_stock = 1;
-                                $stock->number_of_sale = 0;
-                                $stock->stock = $zoneWiseStockQuantityArray[$zoneCounter];
-                                $stock->save();
-                            }
-                        }
-
+                        $totalGetQuantity = array_sum($request->zone_wise_stock_quantity);
                     break;
                     case 'country_wise':
-                        $countryIdArray = $request->country_id;
-                        $countryWiseStockQuantityArray = $request->country_wise_quantity;
-
-                        if(count($countryIdArray) > 0) {
-                            for($countryCounter = 0; $countryCounter < count($countryIdArray); $countryCounter++) {
-                                $stock = new ProductStock;
-                                $stock->product_id = $product->id;
-                                $stock->stock_purchase_id  = $stockPurchase->id;
-                                $stock->country_id  = $countryIdArray[$countryCounter];
-                                $stock->in_stock = 1;
-                                $stock->number_of_sale = 0;
-                                $stock->stock = $countryWiseStockQuantityArray[$countryCounter];
-                                $stock->save();
-                            }
-                        }
+                        $totalGetQuantity = array_sum($request->country_wise_quantity);
                     break;
                     case 'city_wise':
-
-                        $cityIdArray = $request->city_id;
-                        $cityWiseStockQuantityArray = $request->city_wise_quantity;
-
-                        if(count($cityIdArray) > 0) {
-                            for($cityCounter = 0; $cityCounter < count($cityIdArray); $cityCounter++) {
-                                $stock = new ProductStock;
-                                $stock->product_id = $product->id;
-                                $stock->stock_purchase_id  = $stockPurchase->id;
-                                $stock->city_id  = $cityIdArray[$cityCounter];
-                                $stock->in_stock = 1;
-                                $stock->number_of_sale = 0;
-                                $stock->stock = $cityWiseStockQuantityArray[$cityCounter];
-                                $stock->save();
-                            }
-                        }
-
+                        $totalGetQuantity = array_sum($request->city_wise_quantity);
                     break;
                 }
 
-                // update current_stock data on product_details table
-                if($stockPurchase->is_sellable == 1) {
-                    $details->current_stock = $request->quantity;
-                    $details->save();
+                if($totalGivenQuantity != $totalGetQuantity) {
+                    return response()->json(['status' => false, 'message' => 'Your total given quantity is: '. $totalGivenQuantity. ', but we got '. $totalGetQuantity]);
+                }
+
+                $stockPurchase = new StockPurchase;
+                $stockPurchase->product_id = $product->id;
+                $stockPurchase->admin_id = $product->admin_id;
+                $stockPurchase->currency_id = $request->currency_id;
+                $stockPurchase->sku = $request->sku;
+                $stockPurchase->quantity = $request->quantity;
+                $stockPurchase->unit_price = $request->unit_price;
+                $stockPurchase->purchase_unit_price = $request->purchase_unit_price;
+                $stockPurchase->purchase_total_price = ($request->quantity * $request->purchase_unit_price);
+                $stockPurchase->is_sellable = $request->is_sellable;
+                if(isset($request->file)) {
+                    $stockPurchase->file = Images::upload('products.files',$request->file);
+                }
+                $stockPurchase->save();
+                if($stockPurchase) {
+    
+                    // update product in_stock column
+                    if($stockPurchase->is_sellable == 1) {
+                        $product->in_stock = 1;
+                        $product->save();
+                    }
+    
+                    // Add stock data into product_stock table by stock_types
+                    switch($request->stock_types) {
+                        case 'globally':
+                            $stock = new ProductStock;
+                            $stock->product_id = $product->id;
+                            $stock->stock_purchase_id  = $stockPurchase->id;
+                            $stock->in_stock = 1;
+                            $stock->number_of_sale = 0;
+                            $stock->stock = $request->globally_stock_amount;
+                            $stock->save();
+                        break;
+                        case 'zone_wise':
+    
+                            $zoneIdArray = $request->zone_id;
+                            $zoneWiseStockQuantityArray = $request->zone_wise_stock_quantity;
+    
+                            if(count($zoneIdArray) > 0) {
+                                for($zoneCounter = 0; $zoneCounter < count($zoneIdArray); $zoneCounter++) {
+                                    $stock = new ProductStock;
+                                    $stock->product_id = $product->id;
+                                    $stock->stock_purchase_id  = $stockPurchase->id;
+                                    $stock->zone_id  = $zoneIdArray[$zoneCounter];
+                                    $stock->in_stock = 1;
+                                    $stock->number_of_sale = 0;
+                                    $stock->stock = $zoneWiseStockQuantityArray[$zoneCounter];
+                                    $stock->save();
+                                }
+                            }
+    
+                        break;
+                        case 'country_wise':
+                            $countryIdArray = $request->country_id;
+                            $countryWiseStockQuantityArray = $request->country_wise_quantity;
+    
+                            if(count($countryIdArray) > 0) {
+                                for($countryCounter = 0; $countryCounter < count($countryIdArray); $countryCounter++) {
+                                    $stock = new ProductStock;
+                                    $stock->product_id = $product->id;
+                                    $stock->stock_purchase_id  = $stockPurchase->id;
+                                    $stock->country_id  = $countryIdArray[$countryCounter];
+                                    $stock->in_stock = 1;
+                                    $stock->number_of_sale = 0;
+                                    $stock->stock = $countryWiseStockQuantityArray[$countryCounter];
+                                    $stock->save();
+                                }
+                            }
+                        break;
+                        case 'city_wise':
+    
+                            $cityIdArray = $request->city_id;
+                            $cityWiseStockQuantityArray = $request->city_wise_quantity;
+    
+                            if(count($cityIdArray) > 0) {
+                                for($cityCounter = 0; $cityCounter < count($cityIdArray); $cityCounter++) {
+                                    $stock = new ProductStock;
+                                    $stock->product_id = $product->id;
+                                    $stock->stock_purchase_id  = $stockPurchase->id;
+                                    $stock->city_id  = $cityIdArray[$cityCounter];
+                                    $stock->in_stock = 1;
+                                    $stock->number_of_sale = 0;
+                                    $stock->stock = $cityWiseStockQuantityArray[$cityCounter];
+                                    $stock->save();
+                                }
+                            }
+    
+                        break;
+                    }
+    
+                    // update current_stock data on product_details table
+                    if($stockPurchase->is_sellable == 1) {
+                        $details->current_stock = $request->quantity;
+                        $details->save();
+                    }
                 }
             }
 
