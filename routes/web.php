@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
+Route::post('search/category-by-id', [SearchController::class, 'searchByCategoryId'])->name('search.category_by_id');
+Route::post('search/brand-by-id', [SearchController::class, 'searchByBrandId'])->name('search.brand_by_id');
 Route::post('search/brands', [SearchController::class, 'searchByBrands'])->name('search.brands');
 Route::post('search/product', [SearchController::class, 'searchByProduct'])->name('search.product');
 Route::post('search/product-stock', [SearchController::class, 'searchForProductStock'])->name('search.product_stock');

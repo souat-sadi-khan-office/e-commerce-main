@@ -107,6 +107,50 @@ class SearchController extends Controller
         
         return response()->json($json);
     }
+
+    // searching for category by id
+    public function searchByCategoryId(Request $request)
+    {
+        $category_id = $request->category_id;
+
+        if(!$category_id) {
+            return [
+                'status' => false,
+                'message' => 'Category not found'
+            ];
+        }
+
+        $category = Category::find($category_id);
+
+        return [
+            'status' => true,
+            'id' => $category->id, 
+            'text' => $category->name,
+            'thumb_image' => asset($category->photo)
+        ];
+    }
+
+    // searching for brand by id
+    public function searchByBrandId(Request $request)
+    {
+        $brand_id = $request->brand_id;
+
+        if(!$brand_id) {
+            return [
+                'status' => false,
+                'message' => 'Brand not found'
+            ];
+        }
+
+        $brand = Brand::find($brand_id);
+
+        return [
+            'status' => true,
+            'id' => $brand->id, 
+            'text' => $brand->name,
+            'thumb_image' => asset($brand->logo)
+        ];
+    }
     
     // for searching categories
     public function searchByCategory(Request $request) 

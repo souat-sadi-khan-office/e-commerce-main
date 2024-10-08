@@ -8,6 +8,7 @@ interface ProductRepositoryInterface
     public function storeProduct($request);
     public function updateProduct($request, $id);
     public function dataTable();
+    public function dataTableWithAjaxSearch($category_id, $brand_id);
     public function updateStatus($request, $id);
     public function getProductById($id);
     public function updateFeatured($request, $id);

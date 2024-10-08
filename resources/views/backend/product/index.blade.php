@@ -36,6 +36,30 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
+                <div class="col-md-12 mb-3">
+                    <div class="row">
+                        <div class="col-md-5 mb-3 form-group">
+                            <label for="category_id">Search Products by Category</label>
+                            <input type="hidden" id="selected_category_id" value="{{ $category_id == null ? '' : $category_id }}">
+                            <input type="hidden" id="default_category_image" value="">
+                            <select id="category_id" class="form-control"></select>
+                        </div>
+                        <div class="col-md-5 mb-3 form-group">
+                            <label for="brand_id">Search Products by Brand</label>
+                            <input type="hidden" id="selected_brand_id" value="{{ $brand_id == null ? '' : $brand_id }}">
+                            <input type="hidden" id="default_brand_image" value="">
+                            <select id="brand_id" class="form-control"></select>
+                        </div>
+                        <div class="col-md-2 form-group mb-3 mt-4 text-end">
+                            <button type="button" id="search_button" class="btn btn-sm btn-outline-success" data-bs-toggle="tooltip" data-bs-placement="Top" title="Search">
+                                <i class="bi bi-search"></i>
+                            </button>
+                            <button type="button" style="display: none;" id="reset_button" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="Top" title="Reset">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-12 table-responsive">
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
@@ -72,11 +96,56 @@
     <script>
 
         $(function () {
+
+            let selected_category_id = $('#selected_category_id').val();
+            let selected_brand_id = $('#selected_brand_id').val();
+
+            if(selected_brand_id != '' || selected_category_id != '') {
+                $('#reset_button').show();
+            } else {
+                $('#reset_button').hide();
+            }
+
+            if(selected_category_id != '') {
+                $.ajax({
+                    url: '/search/category-by-id',
+                    method: 'POST',
+                    data: { category_id: selected_category_id },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if(data.status) {
+                            $('#default_category_image').val(data.thumb_image);
+                            let option = new Option(data.text, data.id, true, true);
+                            $('#category_id').append(option).trigger('change');
+                        } else {
+                            toastr.warning(data.message)
+                        }
+                    }
+                });
+            }
+            
+            if(selected_brand_id != '') {
+                $.ajax({
+                    url: '/search/brand-by-id',
+                    method: 'POST',
+                    data: { brand_id: selected_brand_id },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if(data.status) {
+                            $('#default_brand_image').val(data.thumb_image);
+                            let option = new Option(data.text, data.id, true, true);
+                            $('#brand_id').append(option).trigger('change');
+                        } else {
+                            toastr.warning(data.message)
+                        }
+                    }
+                });
+            }
         
             var table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.product.index') }}",
+                ajax: "{{ route('admin.product.index', ['category_id' => $category_id, 'brand_id' => $brand_id]) }}",
                 columns: [
                     {data: 'product_name', name: 'product_name'},
                     {data: 'created_by', name: 'added_by'},
@@ -214,7 +283,133 @@
                     }
                 });
             });
-            
+
+            // for category searching
+            $('#category_id').select2({
+                width: '100%',
+                placeholder: 'Select category',
+                templateResult: formatCategoryOption, 
+                templateSelection: formatCategorySelection,
+                ajax: {
+                    url: '/search/category',
+                    method: 'POST',
+                    dataType: 'JSON',
+                    delay: 250,
+                    cache: true,
+                    data: function (data) {
+                        return {
+                            searchTerm: data.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results:response
+                        };
+                    }
+                }
+            });
+
+            function formatCategoryOption(category) {
+                if (!category.id) {
+                    return category.text;
+                }
+
+                var categoryImage = '<img src="' + category.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
+                var categoryOption = $('<span>' + categoryImage + category.text + '</span>');
+                return categoryOption;
+            }
+
+            function formatCategorySelection(category) {
+
+                if (!category.id) {
+                    return category.text;
+                }
+
+                var defaultImageUrl = $('#default_category_image').val();
+                var image_url = category.image_url ? category.image_url : defaultImageUrl;
+
+                var categoryImage = '<img src="' + image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
+                return $('<span>' + categoryImage + category.text + '</span>');
+            }
+
+            // for brands
+            $('#brand_id').select2({
+                width: '100%',
+                placeholder: 'Select Brand',
+                templateResult: formatBrandOption, 
+                templateSelection: formatBrandSelection,
+                ajax: {
+                    url: '/search/brands',
+                    method: 'POST',
+                    dataType: 'JSON',
+                    delay: 250,
+                    cache: true,
+                    data: function (data) {
+                        return {
+                            searchTerm: data.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results:response
+                        };
+                    }
+                }
+            });
+
+            function formatBrandOption(brand) {
+                if (!brand.id) {
+                    return brand.text;
+                }
+
+                var brandImage = '<img src="' + brand.image_url + '" class="img-flag" style="height: 20px; width: 20px; margin-right: 10px;" />';
+                var brandOption = $('<span>' + brandImage + brand.text + '</span>');
+                return brandOption;
+            }
+
+            function formatBrandSelection(brand) {
+                if (!brand.id) {
+                    return brand.text;
+                }
+
+                var defaultImageUrl = $('#default_brand_image').val();
+                var image_url = brand.image_url ? brand.image_url : defaultImageUrl;
+
+                var brandImage = '<img src="' + image_url + '" class="img-flag" style="height: 25px; width: 25px; margin-right: 10px;" />';
+                return $('<span>' + brandImage + brand.text + '</span>');
+            }
+
+            $(document).on('click', '#search_button', function() {
+                let category_id = $('#category_id').val();
+                let brand_id = $('#brand_id').val();
+
+                if(category_id == null && brand_id == null) {
+                    toastr.warning("Plaese select any searching option first.");
+                    return false;
+                }
+
+                let url = '?';
+                if(category_id != null) {
+                    url += 'category_id=' + category_id;
+                }
+                if(brand_id != null) {
+                    if(url != '?') {
+                        url += '&brand_id=' + brand_id;
+                    } else {
+                        url += 'brand_id=' + brand_id;
+                    }
+                }
+
+                window.location.href= "/admin/product" + url;
+            });
+
+            // reset button click
+            $(document).on('click', '#reset_button', function() {
+                let url = '/admin/product';
+                window.location.href = url;
+            })
         });
     </script>
 @endpush

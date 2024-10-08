@@ -48,10 +48,17 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            return $this->productRepository->dataTable();
+            if($request->category_id != null || $request->brand_id != null) {
+                return $this->productRepository->dataTableWithAjaxSearch($request->category_id, $request->brand_id);
+            } else {
+                return $this->productRepository->dataTable();
+            }
         }
 
-        return view('backend.product.index');
+        $category_id = $request->category_id;
+        $brand_id = $request->brand_id;
+
+        return view('backend.product.index', compact('category_id', 'brand_id'));
     }
 
     public function create(Request $request)
