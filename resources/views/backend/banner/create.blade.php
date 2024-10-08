@@ -57,7 +57,8 @@
                             </div>
 
                             <div class="col-md-12 form-group mb-3">
-                                <label for="source_type">Source type <span class="text-danger">if Have</span></label>
+                                <label for="source_type">Source type</label>
+                                <p class="text-danger" style="font-size: small;margin: 0;">Select only if you are adding Banners for any Specific Category/Product or Brand.</p>
                                 <select name="source_type" id="source_type" class="form-control select">
                                     <option selected value="" disabled>--Select Source--</option>
                                     <option value="category">Category</option>

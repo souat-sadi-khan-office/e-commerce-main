@@ -4,7 +4,10 @@ namespace App\Repositories;
 
 use DataTables;
 use App\CPU\Images;
+use App\Models\Brand;
 use App\Models\Banner;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\BannerRepositoryInterface;
 
@@ -29,19 +32,19 @@ class BannerRepository implements BannerRepositoryInterface
             ->editColumn('banner_type', function ($model) {
                 $bannerType = "-";
 
-                switch($model->banner_type) {
+                switch ($model->banner_type) {
                     case 'main':
                         $bannerType = "Main Banner";
-                    break;
+                        break;
                     case 'main_sidebar':
                         $bannerType = "Main Sidebar Banner";
-                    break;
+                        break;
                     case 'mid':
                         $bannerType = "Mid Website Banner";
-                    break;
+                        break;
                     case 'footer':
                         $bannerType = "Footer Banner";
-                    break;
+                        break;
                 }
 
                 return $bannerType;
@@ -61,6 +64,27 @@ class BannerRepository implements BannerRepositoryInterface
     {
         return Banner::findOrFail($id);
     }
+
+    public function getSourceOptions($source)
+    {
+        if ($source === 'category') {
+            $data = Category::select('id', 'name')
+                ->whereNull('parent_id')
+                ->where('status', true)
+                ->get();
+        } elseif ($source === 'product') {
+            $data = Product::select('id', 'name')
+                ->where('status', true)
+                ->get();
+        } elseif ($source === 'brand') {
+            $data = Brand::select('id', 'name')
+                ->where('status', true)
+                ->get();
+        }
+
+        return $data;
+    }
+
 
     public function createBanner($data)
     {
@@ -85,14 +109,14 @@ class BannerRepository implements BannerRepositoryInterface
         $banner = Banner::findOrFail($id);
         $banner->banner_type = $data->banner_type;
         $banner->name = $data->name;
-        // $banner->source_type = $data->source_type;
-        // $banner->source_id = $data->source_id;
+        $banner->source_type = $data->source_type;
+        $banner->source_id = $data->source_id;
         $banner->link = $data->link;
         $banner->alt_tag = $data->alt_tag;
         $banner->created_by = Auth::guard('admin')->id();
         $banner->status = $data->status;
 
-        if($data->image) {
+        if ($data->image) {
             $banner->image = Images::upload('banners', $data->image);
         }
 
@@ -107,7 +131,7 @@ class BannerRepository implements BannerRepositoryInterface
         return $brand->delete();
     }
 
-    public function updateStatus($request, $id) 
+    public function updateStatus($request, $id)
     {
         $request->validate([
             'status' => 'required|boolean',

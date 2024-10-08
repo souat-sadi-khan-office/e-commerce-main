@@ -11,4 +11,5 @@ interface BannerRepositoryInterface
     public function updateBanner($id, $data);
     public function deleteBanner($id);
     public function updateStatus($request, $id);
+    public function getSourceOptions($source);
 }

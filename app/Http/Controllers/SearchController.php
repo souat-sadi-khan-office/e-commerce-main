@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Repositories\Interface\BannerRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
@@ -13,13 +15,16 @@ class SearchController extends Controller
 {
     private $brandTypeRepository;
     private $brandRepository;
+    private $bannerRepository;
 
     public function __construct(
         BrandTypeRepositoryInterface $brandTypeRepository,
-        BrandRepositoryInterface $brandRepository
+        BrandRepositoryInterface $brandRepository,
+        BannerRepositoryInterface $bannerRepository
     ) {
         $this->brandTypeRepository = $brandTypeRepository;
         $this->brandRepository = $brandRepository;
+        $this->bannerRepository = $bannerRepository;
     }
 
     // for searching by types using brand_id
@@ -182,22 +187,7 @@ class SearchController extends Controller
 // For Brand Source Id
     public function getSourceOptions($source)
 {
-    $data = [];
-
-    if ($source === 'category') {
-        $data = Category::select('id', 'name')
-            ->whereNull('parent_id')  
-            ->where('status', true)      
-            ->get();
-    } elseif ($source === 'product') {
-        $data = Product::select('id', 'name')
-            ->where('status', true)     
-            ->get();
-    } elseif ($source === 'brand') {
-        $data = Brand::select('id', 'name')
-            ->where('status', true)      
-            ->get();
-    }
+    $data = $this->bannerRepository->getSourceOptions($source);
 
     return response()->json(['source' => $data]);
 }
