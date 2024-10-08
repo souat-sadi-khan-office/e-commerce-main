@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\ProductStockController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Frontend\HomePageController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', function () {
     return redirect()->route('admin.login');
@@ -156,6 +157,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     // Settings
     Route::view('homepage/configuration', 'backend.settings.homepageSettings')->name('homepage.settings');
     Route::post('homepage/settings/{section}', [HomePageController::class, 'visibility'])->name('homepage.settings.status');
+    Route::post('cache/clear', [HelperController::class, 'cacheClear'])->name('clear.cache');
     Route::controller(ConfigurationSettingController::class)->group(function () {
         Route::get('settings/general', 'general')->name('settings.general');
         Route::get('settings/otp', 'otp')->name('settings.otp');
@@ -170,6 +172,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
     // System
     Route::view('/server-status', 'backend.system.server_status')->name('system_server');
+    Route::get('banner/source/{source}', [SearchController::class, 'getSourceOptions'])->name('banner.source');
 });
 
 // Add this to your web.php for testing purposes

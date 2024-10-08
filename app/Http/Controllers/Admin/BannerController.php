@@ -58,6 +58,10 @@ class BannerController extends Controller
         ]);
     }
 
+    public function show(){
+        return 1;
+    }
+
     public function updateStatus(Request $request, $id)
     {
         return $this->bannerRepository->updateStatus($request, $id);

@@ -178,4 +178,28 @@ class SearchController extends Controller
             return response()->json();
         }
     }
+
+// For Brand Source Id
+    public function getSourceOptions($source)
+{
+    $data = [];
+
+    if ($source === 'category') {
+        $data = Category::select('id', 'name')
+            ->whereNull('parent_id')  
+            ->where('status', true)      
+            ->get();
+    } elseif ($source === 'product') {
+        $data = Product::select('id', 'name')
+            ->where('status', true)     
+            ->get();
+    } elseif ($source === 'brand') {
+        $data = Brand::select('id', 'name')
+            ->where('status', true)      
+            ->get();
+    }
+
+    return response()->json(['source' => $data]);
+}
+
 }

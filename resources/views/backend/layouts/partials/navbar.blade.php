@@ -13,12 +13,11 @@
             </li>
             
             <li class="nav-item d-none d-md-block"> 
-                <a href="javascript:;" class="btn btn-soft-danger">
-                    <i class="bi bi-hdd fa-fw   "></i>
-                    Clear Cache    
+                <a href="javascript:;" class="btn btn-soft-danger" id="clearCache" data-url="{{ route('admin.clear.cache') }}">
+                    <i class="bi bi-stars"></i>
+                    Optimize 
                 </a> 
             </li>
-
             <li class="nav-item d-none d-md-block"> 
                 <a href="javascript:;" class="nav-link">
                     {{ get_system_date(date('Y-m-d H:i:s')) }}

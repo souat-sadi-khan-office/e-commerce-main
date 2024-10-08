@@ -140,7 +140,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.banner.index') }}"
                                 class="nav-link {{ Request::is('admin/banner') || Request::is('admin/banner/*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-picture"></i>
+                                <i class="nav-icon bi bi-images"></i>
                                 <p>Banner</p>
                             </a>
                         </li>
