@@ -20,7 +20,7 @@ class UserTableSeeder extends Seeder
                 'currency_id' => '1',
                 'name' => 'Test User',
                 'email' => 'user1@example.com',
-                'avatar' => 'user1.png',
+                'avatar' => 'user.png',
                 'last_seen' => Carbon::now(),
                 'password' => Hash::make('password123'),
                 'status' => true,

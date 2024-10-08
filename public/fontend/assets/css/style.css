@@ -1615,7 +1615,7 @@ button:focus:not(:focus-visible) {
 	border-color: rgba(255,255,255,0.2);
 }
 .top-header {
-    padding: 10px 0;
+    /* padding: 10px 0; */
 	transition: all 0.5s ease-in-out;
 }
 .top-header[class*="bg_"], .top-header[class*="bg-"] {
@@ -4117,7 +4117,7 @@ footer .widget_title {
 	width: 100%;
 }
 .breadcrumb_section.page-title-mini {
-	padding: 70px 0;
+	padding: 15px 0;
 }
 .page-title-mini .page-title h1 {
 	font-size: 28px;
@@ -7253,4 +7253,56 @@ blockquote p:last-child {
 }
 .input-group > .input-group-append > .btn {
 	height: 100%;
+}
+
+.cart-button:hover {
+    background: #FF324D;
+	color: #fff;
+}
+
+.cart-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99999;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, .2);
+    color: #fff;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    cursor: pointer;
+    width: 59px;
+    height: 59px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, .1), -5px 5px 10px rgba(0, 0, 0, .1);
+    border-radius: 4px;
+	padding-top: 5px;
+}
+
+.compare-btn {
+    bottom: 90px;
+}
+
+.cart-button i {
+    margin: 10px 0 5px;
+	font-size: 25px;
+}
+
+.cart-button .label {
+    opacity: .8;
+}
+
+.cart-button span.counter {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    background: #FF324D;
+    line-height: 20px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
 }

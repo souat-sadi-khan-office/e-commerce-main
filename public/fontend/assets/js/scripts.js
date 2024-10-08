@@ -1,15 +1,11 @@
-/*===================================
-Author       : Bestwebcreator.
-Template Name: Shopwise - eCommerce Bootstrap 5 HTML Template
-Version      : 1.4
-===================================*/
-
-/*===================================*
-PAGE JS
-*===================================*/
-
 (function($) {
 	'use strict';
+
+	$.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
 	/*===================================*
 	01. LOADING JS
@@ -134,16 +130,26 @@ PAGE JS
 			}
 		}
 	});
+
+	var homePage = $('#isHomePage').val();
 	
 	$(window).on('scroll', function() {
 		var scroll = $(window).scrollTop();
-
+		
 	    if (scroll >= 150) {
 	        $('.header_sticky_bar').removeClass('d-none');
 			$('header.no-sticky').removeClass('nav-fixed');
+
+			if(homePage == 1) {
+				$('#navCatContent').removeClass('nav_cat');
+			}
 			
 	    } else {
 	        $('.header_sticky_bar').addClass('d-none');
+
+			if(homePage == 1) {
+				$('#navCatContent').addClass('nav_cat');
+			}
 	    }
 
 	});
@@ -192,7 +198,7 @@ PAGE JS
 		$(this).toggleClass('show');
 		$('.product_search_form').toggleClass('show');
 	});
-	
+
 	var rclass = true;
 	
 	$("html").on('click', function () {

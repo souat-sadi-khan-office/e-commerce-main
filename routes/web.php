@@ -3,10 +3,22 @@
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Frontend\Auth\LoginController;
+use App\Http\Controllers\Frontend\Auth\RegisterController;
+use App\Http\Controllers\Frontend\UserController;
+
 Route::get('/', function () {
     return view('fontend.homepage.index');
 })->name('home');
 
+Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::get('register', [RegisterController::class, 'index'])->name('register');
+Route::post('register/post', [RegisterController::class, 'register'])->name('register.post');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['isCustomer', 'web'])->group(function () {
+    Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+});
 
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
 Route::post('search/category-by-id', [SearchController::class, 'searchByCategoryId'])->name('search.category_by_id');

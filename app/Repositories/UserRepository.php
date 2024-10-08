@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\UserRepositoryInterface;
 
 
@@ -9,7 +10,8 @@ class UserRepository implements UserRepositoryInterface
 {
     public function index($request)
     {
-        return 1;
+        $user = Auth::guard('customer')->user();
+        dd($user);
     }
     
 }

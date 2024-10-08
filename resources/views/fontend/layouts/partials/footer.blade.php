@@ -1,5 +1,5 @@
 <!-- START FOOTER -->
-<footer class="bg_gray">
+<footer class="footer_dark">
 	<div class="footer_top small_pt pb_20">
         <div class="custom-container">
             <div class="row">
@@ -52,16 +52,6 @@
                 <div class="col-lg-4 col-md-4 col-sm-12">
                 	<div class="widget">
                         <h6 class="widget_title">Instagram</h6>
-                        <ul class="widget_instafeed instafeed_col4">
-                            <li><a href="#"><img src="assets/images/insta_img1.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img2.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img3.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img4.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img5.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img6.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img7.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                            <li><a href="#"><img src="assets/images/insta_img8.jpg" alt="insta_img"><span class="insta_icon"><i class="ti-instagram"></i></span></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -143,3 +133,19 @@
     </div>
 </footer>
 <!-- END FOOTER -->
+
+{{-- <a href="#" class="compare-button" target="_blank">
+    <i class="lab la-whatsapp my-sudipmart"></i>
+</a> --}}
+
+<a href="#" class="cart-button compare-btn" target="_blank">
+    <i class="ti-control-shuffle"></i>
+    <div class="label">Compare</div>
+    <span class="counter">0</span>
+</a>
+
+<a href="#" class="cart-button" target="_blank">
+    <i class="linearicons-bag2"></i>
+    <div class="label">Cart</div>
+    <span class="counter">0</span>
+</a>

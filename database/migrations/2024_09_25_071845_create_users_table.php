@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('currency_id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('avatar')->unique();
+            $table->string('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->timestamp('last_seen')->nullable();
