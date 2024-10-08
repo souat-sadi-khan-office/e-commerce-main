@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('image');
             $table->enum('source_type', ['none'])->default('none');
-            $table->unsignedBigInteger('source_id')->nullable();
+            $table->integer('source_id')->nullable();
             $table->string('link')->nullable();
             $table->string('alt_tag');
             $table->unsignedBigInteger('created_by');
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign key constraints
-            $table->foreign('source_id')->references('id')->on('categories')->onDelete('set null');
             $table->foreign('created_by')->references('id')->on('admins')->onDelete('cascade');
 
             // index

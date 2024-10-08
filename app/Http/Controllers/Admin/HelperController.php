@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\FlashDeal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Artisan;
 
 class HelperController extends Controller
 {
@@ -60,5 +61,11 @@ class HelperController extends Controller
         }
 
         // return $data;  to a view Based on Model
+    }
+
+    public function cacheClear(){
+        Artisan::call('optimize:clear');
+
+        return response()->json(['status'=>true,'message'=>'Optimized','load'=>true]);
     }
 }

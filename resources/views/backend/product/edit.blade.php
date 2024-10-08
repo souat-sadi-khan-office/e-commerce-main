@@ -44,8 +44,9 @@
 @endsection
 
 @section('content')
-   
-    <form action="{{ route('admin.product.update', $model->id)}}" method="POST" class="content_form" enctype="multipart/form-data">
+
+    <form action="{{ route('admin.product.update', $model->id) }}" method="POST" class="content_form"
+        enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         <div class="row">
@@ -61,35 +62,41 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="name">Product name <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" id="name" class="form-control" required value="{{ $model->name }}">
+                                        <input type="text" name="name" id="name" class="form-control" required
+                                            value="{{ $model->name }}">
                                     </div>
-            
+
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="slug">Product slug <span class="text-danger">*</span></label>
-                                        <input type="text" name="slug" id="slug" class="form-control" required value="{{ $model->slug }}">
+                                        <input type="text" name="slug" id="slug" class="form-control" required
+                                            value="{{ $model->slug }}">
                                     </div>
-            
+
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="category_id">Category <span class="text-danger">*</span></label>
-                                        <input type="hidden" id="defaultCategoryImage" value="{{ asset($model->category->photo) }}">
-                                        <select name="category_id[]" id="category_id" class="form-control category_id007 select">
+                                        <input type="hidden" id="defaultCategoryImage"
+                                            value="{{ asset($model->category->photo) }}">
+                                        <select name="category_id[]" id="category_id"
+                                            class="form-control category_id007 select">
                                             @if ($model->category_id)
-                                                <option selected value="{{ $model->category_id }}">{{ $model->category->name }}</option>
+                                                <option selected value="{{ $model->category_id }}">
+                                                    {{ $model->category->name }}</option>
                                             @endif
                                         </select>
                                     </div>
-            
+
                                     <div class="Sub_Categories row"></div>
-            
+
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="brand_id">Brand</label>
                                         <select name="brand_id" id="brand_id" class="form-control">
                                             @if ($model->brand_id)
-                                                <option selected value="{{ $model->brand_id }}">{{ $model->brand->name }}</option>
+                                                <option selected value="{{ $model->brand_id }}">{{ $model->brand->name }}
+                                                </option>
                                             @endif
                                         </select>
                                     </div>
-            
+
                                     <div class="col-md-12 form-group mb-3" style="display:none;" id="brand_type_area">
                                         <label for="brand_type_id">Brand type</label>
                                         <select name="brand_type_id" id="brand_type_id" class="form-control"></select>
@@ -109,8 +116,10 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="images">Gallery Images (540 X 600)</label>
-                                        <input type="file" name="images[]" id="images" class="form-control" multiple data-max-file-size="2M" >
-                                        <small class="text-muted">These images are visible in product details page gallery. Use 600x600 sizes images.</small>
+                                        <input type="file" name="images[]" id="images" class="form-control" multiple
+                                            data-max-file-size="2M">
+                                        <small class="text-muted">These images are visible in product details page gallery.
+                                            Use 600x600 sizes images.</small>
                                     </div>
 
                                     <div id="imagePreview" class="col-md-12.mb-3">
@@ -118,23 +127,28 @@
                                             <div class="row">
                                                 @foreach ($model->image as $key => $image)
                                                     <div class="col-md-2">
-                                                        <img src="{{ asset($image->image) }}" alt="{{ $model->title . ' - '. $key }}">
+                                                        <img src="{{ asset($image->image) }}"
+                                                            alt="{{ $model->title . ' - ' . $key }}">
                                                     </div>
                                                 @endforeach
                                             </div>
                                         @endif
                                     </div>
-    
+
                                     <div class="col-md-12 form-group">
                                         <label for="thumb_image">Thumbnail Image (540 X 600)</label>
-                                        <input type="file" name="thumb_image" id="thumb_image" class="form-control dropify" data-max-file-size="2M" data-default-file="{{ $model->thumb_image ? asset($model->thumb_image) : '' }}" >
-                                        <small class="text-muted">This image is visible in all product box. Use 300x300 sizes image. Keep some blank space around main object of your image as we had to crop some edge in different devices to make it responsive.</small>
+                                        <input type="file" name="thumb_image" id="thumb_image"
+                                            class="form-control dropify" data-max-file-size="2M"
+                                            data-default-file="{{ $model->thumb_image ? asset($model->thumb_image) : '' }}">
+                                        <small class="text-muted">This image is visible in all product box. Use 300x300
+                                            sizes image. Keep some blank space around main object of your image as we had to
+                                            crop some edge in different devices to make it responsive.</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Product Videos -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -145,20 +159,23 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="video_provider">Video Provider</label>
-                                        <input type="text" name="video_provider" id="video_provider" class="form-control" placeholder="YouTube">
+                                        <input type="text" name="video_provider" id="video_provider"
+                                            class="form-control" placeholder="YouTube">
                                     </div>
-    
+
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="video_link">Video Link</label>
-                                        <input type="url" name="video_link" id="video_link" class="form-control" placeholder="Video Link">
-                                        <small class="text-muted">Use proper link without extra parameter. Don't use short share link/embeded iframe code.</small>
+                                        <input type="url" name="video_link" id="video_link" class="form-control"
+                                            placeholder="Video Link">
+                                        <small class="text-muted">Use proper link without extra parameter. Don't use short
+                                            share link/embeded iframe code.</small>
                                     </div>
-    
+
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Product Description -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -167,12 +184,14 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    @include('backend.components.descriptionInput', ['description' => $model->details->description])
+                                    @include('backend.components.descriptionInput', [
+                                        'description' => $model->details->description,
+                                    ])
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- SEO Meta Tags -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -183,11 +202,13 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="site_title">Site title</label>
-                                        <input type="text" name="site_title" id="site_title" class="form-control" placeholder="Site Title" value="{{ $model->details->site_title }}">
+                                        <input type="text" name="site_title" id="site_title" class="form-control"
+                                            placeholder="Site Title" value="{{ $model->details->site_title }}">
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="meta_title">Meta title</label>
-                                        <input type="text" name="meta_title" id="meta_title" class="form-control" placeholder="Meta Title" value="{{ $model->details->meta_title }}">
+                                        <input type="text" name="meta_title" id="meta_title" class="form-control"
+                                            placeholder="Meta Title" value="{{ $model->details->meta_title }}">
                                     </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label for="meta_keyword">Meta keyword</label>
@@ -211,10 +232,10 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-md-5">
                 <div class="row">
-    
+
                     <!-- Discount -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -226,35 +247,46 @@
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="is_discounted">Discount Available</label>
                                         <select name="is_discounted" id="is_discounted" class="form-control">
-                                            <option {{ $model->is_discounted == 0 ? 'selected' : '' }} value="0">No</option>
-                                            <option {{ $model->is_discounted == 1 ? 'selected' : '' }} value="1">Yes</option>
+                                            <option {{ $model->is_discounted == 0 ? 'selected' : '' }} value="0">No
+                                            </option>
+                                            <option {{ $model->is_discounted == 1 ? 'selected' : '' }} value="1">Yes
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_type">Discount Type </label>
-                                        <select name="discount_type" id="discount_type" class="form-control" {{ $model->is_discounted == 0 ? 'disabled' : '' }}>
-                                            <option {{ $model->discount_type == 'amount' ? 'selected' : '' }} value="amount">Amount</option>
-                                            <option {{ $model->discount_type == 'amount' ? 'percentage' : '' }} value="percentage">Percent</option>
+                                        <select name="discount_type" id="discount_type" class="form-control"
+                                            {{ $model->is_discounted == 0 ? 'disabled' : '' }}>
+                                            <option {{ $model->discount_type == 'amount' ? 'selected' : '' }}
+                                                value="amount">Amount</option>
+                                            <option {{ $model->discount_type == 'amount' ? 'percentage' : '' }}
+                                                value="percentage">Percent</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount">Amount</label>
-                                        <input type="text" name="discount" id="discount" class="form-control" value="{{ $model->discount }}" {{ $model->is_discounted == 0 ? 'disabled' : '' }}>
+                                        <input type="text" name="discount" id="discount" class="form-control"
+                                            value="{{ $model->discount }}"
+                                            {{ $model->is_discounted == 0 ? 'disabled' : '' }}>
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_start_date">Discount start date</label>
-                                        <input type="text" name="discount_start_date" id="discount_start_date" class="form-control date" {{ $model->is_discounted == 0 ? 'disabled' : '' }} value="{{ $model->discount_start_date ? get_system_date($model->discount_start_date) : '' }}">
+                                        <input type="text" name="discount_start_date" id="discount_start_date"
+                                            class="form-control date" {{ $model->is_discounted == 0 ? 'disabled' : '' }}
+                                            value="{{ $model->discount_start_date ? get_system_date($model->discount_start_date) : '' }}">
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_end_date">Discount end date</label>
-                                        <input type="text" name="discount_end_date" id="discount_end_date" class="form-control date" {{ $model->is_discounted == 0 ? 'disabled' : '' }} value="{{ $model->discount_end_date ? get_system_date($model->discount_end_date) : '' }}">
+                                        <input type="text" name="discount_end_date" id="discount_end_date"
+                                            class="form-control date" {{ $model->is_discounted == 0 ? 'disabled' : '' }}
+                                            value="{{ $model->discount_end_date ? get_system_date($model->discount_end_date) : '' }}">
                                     </div>
                                     <div id="date_error" style="color: red; display: none;"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Status -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -265,15 +297,17 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <select name="status" id="status" class="form-control">
-                                            <option {{ $model->status == 1 ? 'selected' : '' }} value="1">Active</option>
-                                            <option {{ $model->status == 0 ? 'selected' : '' }} value="0">Inactive</option>
+                                            <option {{ $model->status == 1 ? 'selected' : '' }} value="1">Active
+                                            </option>
+                                            <option {{ $model->status == 0 ? 'selected' : '' }} value="0">Inactive
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Feature Product -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -285,15 +319,17 @@
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="is_featured">Feature Product</label>
                                         <select name="is_featured" id="is_featured" class="form-control">
-                                            <option {{ $model->is_featured == 0 ? 'selected' : '' }} value="0">No</option>
-                                            <option {{ $model->is_featured == 1 ? 'selected' : '' }} value="1">Yes</option>
+                                            <option {{ $model->is_featured == 0 ? 'selected' : '' }} value="0">No
+                                            </option>
+                                            <option {{ $model->is_featured == 1 ? 'selected' : '' }} value="1">Yes
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Return Policy -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -305,14 +341,19 @@
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="is_returnable">Is Returnable</label>
                                         <select name="is_returnable" id="is_returnable" class="form-control">
-                                            <option {{ $model->is_returnable == 0 ? 'selected' : '' }} value="0">No</option>
-                                            <option {{ $model->is_returnable == 1 ? 'selected' : '' }} value="1">Yes</option>
+                                            <option {{ $model->is_returnable == 0 ? 'selected' : '' }} value="0">No
+                                            </option>
+                                            <option {{ $model->is_returnable == 1 ? 'selected' : '' }} value="1">Yes
+                                            </option>
                                         </select>
                                     </div>
-    
+
                                     <label for="return_deadline">Return Deadline</label>
                                     <div class="col-md-12 input-group mb-3">
-                                        <input type="text" min="0" class="form-control number" name="return_deadline" id="return_deadline" {{ $model->is_returnable == 0 ? 'disabled' : '' }} value="{{ $model->return_deadline }}">
+                                        <input type="text" min="0" class="form-control number"
+                                            name="return_deadline" id="return_deadline"
+                                            {{ $model->is_returnable == 0 ? 'disabled' : '' }}
+                                            value="{{ $model->return_deadline }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
@@ -321,7 +362,7 @@
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Low Stock Quantity Warning -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -332,13 +373,15 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="low_stock_quantity">Quantity</label>
-                                        <input type="number" min="0" name="low_stock_quantity" id="low_stock_quantity" class="form-control" value="{{ $model->details ? $model->details->low_stock_quantity : 0 }}">
+                                        <input type="number" min="0" name="low_stock_quantity"
+                                            id="low_stock_quantity" class="form-control"
+                                            value="{{ $model->details ? $model->details->low_stock_quantity : 0 }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
+
                     <!-- Cash on Delivery -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -350,15 +393,19 @@
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="cash_on_delivery">Cash on Delivery</label>
                                         <select name="cash_on_delivery" id="case_on_deliver" class="form-control">
-                                            <option {{ $model->details ? ($model->details->cash_on_delivery == 1 ? 'selected' : '' ) : 0 }}  value="1">Available</option>
-                                            <option {{ $model->details ? ($model->details->cash_on_delivery == 0 ? 'selected' : '' ) : 0 }}  value="0">Not available</option>
+                                            <option
+                                                {{ $model->details ? ($model->details->cash_on_delivery == 1 ? 'selected' : '') : 0 }}
+                                                value="1">Available</option>
+                                            <option
+                                                {{ $model->details ? ($model->details->cash_on_delivery == 0 ? 'selected' : '') : 0 }}
+                                                value="0">Not available</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Estimate Shipping Time -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -369,7 +416,9 @@
                                 <div class="row">
                                     <label for="est_shipping_time">Estimate Shipping Time</label>
                                     <div class="col-md-12 input-group mb-3">
-                                        <input type="text" min="0" class="form-control number" name="est_shipping_time" id="est_shipping_time" value="{{ $model->details ? $model->details->est_shipping_days : '' }}">
+                                        <input type="text" min="0" class="form-control number"
+                                            name="est_shipping_time" id="est_shipping_time"
+                                            value="{{ $model->details ? $model->details->est_shipping_days : '' }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
@@ -378,7 +427,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Vat & TAX -->
                     <div class="col-md-12 mb-4">
                         <div class="card">
@@ -391,13 +440,18 @@
                                         <div class="col-md-6 form-group mb-3">
                                             <input type="hidden" name="tax_id[]" value="{{ $tax->id }}">
                                             <label for="taxes_{{ $tax->id }}">{{ $tax->tax_model->name }}</label>
-                                            <input type="text" min="0" name="taxes[]" id="taxes_{{ $tax->id }}" class="form-control" value="{{ $tax->tax }}">
+                                            <input type="text" min="0" name="taxes[]"
+                                                id="taxes_{{ $tax->id }}" class="form-control"
+                                                value="{{ $tax->tax }}">
                                         </div>
                                         <div class="col-md-6 form-group mb-3">
                                             <label for="tax_type_{{ $tax->id }}">Type</label>
-                                            <select name="tax_types[]" id="tax_type_{{ $tax->id }}" class="form-control">
-                                                <option {{ $tax->tax_type == 'amount' ? 'select' : '' }} value="flat">Flat</option>
-                                                <option {{ $tax->tax_type == 'pencent' ? 'select' : '' }} value="percent">Percent</option>
+                                            <select name="tax_types[]" id="tax_type_{{ $tax->id }}"
+                                                class="form-control">
+                                                <option {{ $tax->tax_type == 'amount' ? 'select' : '' }} value="flat">
+                                                    Flat</option>
+                                                <option {{ $tax->tax_type == 'pencent' ? 'select' : '' }} value="percent">
+                                                    Percent</option>
                                             </select>
                                         </div>
                                     </div>
@@ -407,7 +461,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="col-md-12 form-group mb-3 text-end">
                 <button class="btn btn-soft-success" type="submit" id="submit">
                     <i class="bi bi-send"></i>
@@ -441,24 +495,24 @@
                 imagePreview.innerHTML = '';
 
                 var files = event.target.files;
-                
+
                 if (files) {
                     for (var i = 0; i < files.length; i++) {
                         var file = files[i];
-                        
+
                         if (file.type.startsWith('image/')) {
                             var reader = new FileReader();
-                            
+
                             reader.onload = function(e) {
                                 var imgElement = document.createElement('img');
                                 imgElement.src = e.target.result;
                                 imgElement.style.maxWidth = '150px';
                                 imgElement.style.margin = '10px';
                                 imgElement.classList.add('img-thumbnail');
-                                
+
                                 imagePreview.appendChild(imgElement);
                             };
-                            
+
                             reader.readAsDataURL(file);
                         }
                     }
@@ -476,7 +530,7 @@
                         month: true,
                         year: true,
                         decades: true,
-                        clock: false 
+                        clock: false
                     }
                 }
             });
@@ -492,7 +546,7 @@
                         month: true,
                         year: true,
                         decades: true,
-                        clock: false 
+                        clock: false
                     }
                 }
             });
@@ -527,7 +581,7 @@
                     .trim()
                     .replace(/&/g, '-and-')
                     .replace(/[^a-z0-9 -]/g, '')
-                    .replace(/\s+/g, '-') 
+                    .replace(/\s+/g, '-')
                     .replace(/-+/g, '-');
             }
 

@@ -23,15 +23,16 @@
                                     <div class="form-check form-switch col-md-7"
                                         style=" padding-left: 2.9em!important;">
                                         <span>Key Feature? </span>
-                                        <input data-url="{{ route('admin.product.specification.keyfeature', $item['id']) }}"
+                                        <input
+                                            data-url="{{ route('admin.product.specification.keyfeature', $item['id']) }}"
                                             class="form-check-input" type="checkbox" role="switch" name="is_featured"
                                             id="status{{ $item['id'] }}"
                                             {{ $item['key_feature'] == 1 ? 'checked' : '' }}
                                             data-id="{{ $item['id'] }}">
                                     </div>
                                     <div class="col-md-5">
-                                        <a class="btn btn-sm btn-outline-danger" href="javascript:;" id="delete_specification"
-                                            data-id ="{{ $item['id'] }}"
+                                        <a class="btn btn-sm btn-outline-danger" href="javascript:;"
+                                            id="delete_specification" data-id ="{{ $item['id'] }}"
                                             data-url="{{ route('admin.product.specification.delete', $item['id']) }}">
                                             <i class="bi bi-trash"></i>
                                             Remove
@@ -44,8 +45,8 @@
                     @endforeach
                 @endforeach
 
-                <form action="{{ route('admin.product.specification.add',$product_id) }}" method="POST" class="content_form"
-                    enctype="multipart/form-data">
+                <form action="{{ route('admin.product.specification.add', $product_id) }}" method="POST"
+                    class="content_form" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
 
@@ -115,7 +116,9 @@
             $.ajax({
                 url: `/admin/products/specifications`,
                 type: 'GET',
-                data: { category_id: categoryId },
+                data: {
+                    category_id: categoryId
+                },
                 dataType: 'json',
                 success: function(data) {
                     if (specDiv) {
@@ -200,7 +203,9 @@
             });
             specDiv.append(removeSpecButton);
 
-            const row = $('<div>', { class: 'row' });
+            const row = $('<div>', {
+                class: 'row'
+            });
             specDiv.append(row);
 
             // Hide the remove button if this is the first specification
@@ -214,7 +219,7 @@
                 row.find('.types-group').remove();
                 addTypeButton.toggle(!!selectedSpecId); // Show or hide button based on selection
                 if (selectedSpecId) {
-                    fetchTypes(selectedSpecId, row, index,false);
+                    fetchTypes(selectedSpecId, row, index, false);
                 }
             });
 
@@ -222,7 +227,7 @@
             addTypeButton.click(function() {
                 const selectedSpecId = specDiv.find('select[name^="specification_key"]').val();
                 if (selectedSpecId) {
-                    fetchTypes(selectedSpecId, row, index,true);
+                    fetchTypes(selectedSpecId, row, index, true);
                 }
             });
 
@@ -234,14 +239,16 @@
             return specDiv;
         }
 
-        function fetchTypes(specId, parentDiv, index,isadd) {
+        function fetchTypes(specId, parentDiv, index, isadd) {
             $.ajax({
                 url: `/admin/products/specifications`,
                 type: 'GET',
-                data: { key_id: specId },
+                data: {
+                    key_id: specId
+                },
                 dataType: 'json',
                 success: function(data) {
-                    appendTypes(data.types, parentDiv, index,isadd);
+                    appendTypes(data.types, parentDiv, index, isadd);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching types:', error);
@@ -249,12 +256,14 @@
             });
         }
 
-        function appendTypes(types, parentDiv, index,isadd) {
+        function appendTypes(types, parentDiv, index, isadd) {
             const typesDiv = $('<div>', {
                 class: 'form-group mb-3 types-group col-md-6'
             });
 
-            const label = $('<label>', { text: 'Select Types' });
+            const label = $('<label>', {
+                text: 'Select Types'
+            });
             typesDiv.append(label);
 
             const typeSelect = $('<select>', {
@@ -276,14 +285,14 @@
                 dropdownParent: $(typesDiv)
             });
 
-            
-                const removeTypeButton = $('<button>', {
+
+            const removeTypeButton = $('<button>', {
                 class: 'btn btn-danger btn-sm mt-2 col-4 remove-type',
                 text: 'Remove Type',
                 type: 'button'
             });
             typesDiv.append(removeTypeButton);
-            if(!isadd){
+            if (!isadd) {
                 removeTypeButton.hide()
             }
 
@@ -302,7 +311,8 @@
             statusInput.change(function() {
                 const selectedTypeId = typeSelect.val();
                 if ($(this).is(':checked') && selectedTypeId) {
-                    $(this).attr('name', `specification_key[${index}][type_id][features][${selectedTypeId}]`);
+                    $(this).attr('name',
+                        `specification_key[${index}][type_id][features][${selectedTypeId}]`);
                 } else {
                     $(this).attr('name', ''); // Clear the name if unchecked
                 }
@@ -339,7 +349,9 @@
             $.ajax({
                 url: `/admin/products/specifications`,
                 type: 'GET',
-                data: { type_id: typeId },
+                data: {
+                    type_id: typeId
+                },
                 dataType: 'json',
                 success: function(data) {
                     appendAttributes(data.attributes, parentDiv, index, typeId);
@@ -354,7 +366,9 @@
             const attributesDiv = $('<div>', {
                 class: 'form-group mb-3 attributes-group'
             });
-            const label = $('<label>', { text: 'Select Attributes' });
+            const label = $('<label>', {
+                text: 'Select Attributes'
+            });
             attributesDiv.append(label);
 
             const attrSelect = $('<select>', {
@@ -365,7 +379,8 @@
             }).append('<option value="" disabled selected>--Select Attribute--</option>');
 
             $.each(attributes, function(i, attr) {
-                let extraText = attr.extra ? (attr.extra.length > 50 ? attr.extra.substring(0, 50) + '...' : attr.extra) : '';
+                let extraText = attr.extra ? (attr.extra.length > 50 ? attr.extra.substring(0, 50) +
+                    '...' : attr.extra) : '';
                 attrSelect.append(`<option value="${attr.id}">${attr.name} ${extraText}</option>`);
             });
 
@@ -389,6 +404,3 @@
         });
     });
 </script>
-
-
-

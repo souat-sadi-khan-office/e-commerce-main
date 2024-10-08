@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Repositories\Interface\BannerRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
@@ -13,13 +15,16 @@ class SearchController extends Controller
 {
     private $brandTypeRepository;
     private $brandRepository;
+    private $bannerRepository;
 
     public function __construct(
         BrandTypeRepositoryInterface $brandTypeRepository,
-        BrandRepositoryInterface $brandRepository
+        BrandRepositoryInterface $brandRepository,
+        BannerRepositoryInterface $bannerRepository
     ) {
         $this->brandTypeRepository = $brandTypeRepository;
         $this->brandRepository = $brandRepository;
+        $this->bannerRepository = $bannerRepository;
     }
 
     // for searching by types using brand_id
@@ -222,4 +227,13 @@ class SearchController extends Controller
             return response()->json();
         }
     }
+
+// For Brand Source Id
+    public function getSourceOptions($source)
+{
+    $data = $this->bannerRepository->getSourceOptions($source);
+
+    return response()->json(['source' => $data]);
+}
+
 }

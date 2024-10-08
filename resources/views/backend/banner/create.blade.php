@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="name">Name <span class="text-danger">*</span></label>
-                                <input type="text" placeholder="Enter Brand Name" name="name" id="name" class="form-control" required>
+                                <input type="text" placeholder="Enter Banner Name" name="name" id="name" class="form-control" required>
                             </div>
 
                             <div class="col-md-12 form-group mb-3">
@@ -53,6 +53,24 @@
                                     <option value="main_sidebar">Main Sidebar Banner</option>
                                     <option value="Mid">Mid Website Banner</option>
                                     <option value="Footer">Footer Banner</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="source_type">Source type</label>
+                                <p class="text-danger" style="font-size: small;margin: 0;">Select only if you are adding Banners for any Specific Category/Product or Brand.</p>
+                                <select name="source_type" id="source_type" class="form-control select">
+                                    <option selected value="" disabled>--Select Source--</option>
+                                    <option value="category">Category</option>
+                                    <option value="product">Product</option>
+                                    <option value="brand">Brand</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-12 form-group mb-3" id="sourceContainer" style="display: none;">
+                                <label for="source_id" id="sourceLabel">Source Name <span class="text-danger">*</span></label>
+                                <select name="source_id" id="source_id" class="form-control select">
+                                    <option selected value="" disabled>--Select Source--</option>
                                 </select>
                             </div>
                     
@@ -117,4 +135,39 @@
         });
         
     </script>
+  <script>
+    $(document).ready(function() {
+        $('#source_type').on('change', function() {
+            var sourceType = $(this).val();
+
+            $('#source_id').empty().append('<option selected value="" disabled>--Select Source--</option>');
+
+            if (sourceType) {
+                $('#sourceContainer').show();
+
+                var typeName = sourceType.charAt(0).toUpperCase() + sourceType.slice(1); 
+                $('#sourceLabel').text(typeName + ' Name'); 
+
+                $.ajax({
+                    url: '/admin/banner/source/' + sourceType, 
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.source && response.source.length > 0) {
+                            $.each(response.source, function(index, item) {
+                                $('#source_id').append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                        } else {
+                            $('#source_id').append('<option value="" disabled>No sources found</option>');
+                        }
+                    },
+                    error: function(xhr) {
+                        toastr.error('An error occurred while fetching the sources.');
+                    }
+                });
+            } else {
+                $('#sourceContainer').hide();
+            }
+        });
+    });
+</script>
 @endpush

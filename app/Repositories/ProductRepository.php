@@ -761,9 +761,9 @@ class ProductRepository implements ProductRepositoryInterface
     public function specificationproducts()
     {
         $data = Product::withCount('specifications')
-        ->with('admin:id,name')
-        ->orderBy('specifications_count', 'desc')
-        ->get();
+            ->with('admin:id,name')
+            ->orderBy('specifications_count', 'desc')
+            ->get();
         return $data->map(function ($item) {
             return [
                 'id' => $item->id,
@@ -839,11 +839,12 @@ class ProductRepository implements ProductRepositoryInterface
         });
         $models = $mapped->groupBy('key_id');
 
-        return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id','product_id'));
+        return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id', 'product_id'));
     }
 
 
-    public function specificationsAdd($request,$id){
+    public function specificationsAdd($request, $id)
+    {
 
         if (isset($request->specification_key)) {
 
@@ -904,7 +905,6 @@ class ProductRepository implements ProductRepositoryInterface
                 }
             }
             return response()->json(['status' => true, 'load' => true, 'message' => 'Product Specifications Created successfully.']);
-
         }
         return response()->json(['status' => false, 'message' => 'No Specificatiions Posted.']);
     }

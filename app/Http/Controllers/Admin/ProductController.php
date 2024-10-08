@@ -151,6 +151,7 @@ class ProductController extends Controller
         return view('backend.product.specification.index');
     }
 
+
     public function specificationproductModal($id)
     {
         return $this->productRepository->specificationproductModal($id);

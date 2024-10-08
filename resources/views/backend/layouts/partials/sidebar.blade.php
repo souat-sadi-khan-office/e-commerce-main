@@ -140,7 +140,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.banner.index') }}"
                                 class="nav-link {{ Request::is('admin/banner') || Request::is('admin/banner/*') ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-image"></i>
+                                <i class="nav-icon bi bi-images"></i>
                                 <p>Banner</p>
                             </a>
                         </li>
@@ -150,8 +150,7 @@
                 <!-- Brands -->
                 <li
                     class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">
-                    <a href="javascript:;"
-                        class="nav-link">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-ubuntu"></i>
                         <p>
                             Brands
@@ -180,8 +179,7 @@
                 <!-- Website Setup -->
                 <li
                     class="nav-item {{ Request::is('admin/website*') || Request::is('admin/page*') ? 'menu-open' : '' }}">
-                    <a href="javascript:;"
-                        class="nav-link">
+                    <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-globe"></i>
                         <p>
                             Website Setup
@@ -225,7 +223,7 @@
 
                 <!-- Setup & Configuration -->
                 <li
-                    class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/tax') ? 'menu-open' : '' }}">
+                    class="nav-item {{ Request::is('admin/settings/*') || Request::is('admin/currency') || Request::is('admin/homepage/*') || Request::is('admin/tax') ? 'menu-open' : '' }}">
                     <a href="javascript:;" class="nav-link">
                         <i class="nav-icon bi bi-gear"></i>
                         <p>
@@ -239,6 +237,14 @@
                                 class="nav-link {{ Request::is('admin/settings/general') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-gear"></i>
                                 <p>General Settings</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.homepage.settings') }}"
+                                class="nav-link {{ Request::is('admin/homepage/*') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-house-gear"></i>
+                                <p>Homepage Settings</p>
                             </a>
                         </li>
 

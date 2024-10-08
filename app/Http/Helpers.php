@@ -1,7 +1,10 @@
 <?php
 
-use App\Models\ConfigurationSetting;
+use App\CPU\Helpers;
 use App\Models\Currency;
+use App\Models\HomepageSettings;
+use App\Models\ConfigurationSetting;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('get_setting')) {
@@ -22,27 +25,71 @@ if (!function_exists('get_setting')) {
     }
 }
 
+// HomepageSettings
+if (!function_exists('homepage_setting')) {
+    function homepage_setting($key)
+    {
+        if (Session::has('homepage_setting.' . $key)) {
+            
+            return Session::get('homepage_setting.' . $key);
+        }
+
+        $settings = HomepageSettings::first();
+
+        if ($settings) {
+            $data = [
+                "bannerSection" => $settings->bannerSection,
+                "sliderSection" => $settings->sliderSection,
+                "midBanner" => $settings->midBanner,
+                "dealOfTheDay" => $settings->dealOfTheDay,
+                "trending" => $settings->trending,
+                "brands" => $settings->brands,
+                "popular&featured" => $settings->popularANDfeatured,
+                "newslatter" => $settings->newslatter,
+                "last_updated_by" => Helpers::adminName($settings->last_updated_by),
+                "last_updated_at" => $settings->updated_at,
+            ];
+
+            foreach ($data as $k => $setting) {
+                Session::put('homepage_setting.' . $k, $setting);
+            }
+
+            return Session::get('homepage_setting.' . $key);
+        } else {
+            $new = new HomepageSettings();
+            $new->last_updated_by = Auth::guard('admin')->id();
+            $new->save();
+
+            return false; 
+        }
+
+        return false; 
+    }
+}
+
+
 // format date
 if (!function_exists('get_system_date')) {
-    function get_system_date($date) {
+    function get_system_date($date)
+    {
 
         $dateObj = Carbon\Carbon::parse($date);
         $dateObj->setTimezone(get_settings('system_timezone'));
-        
-        $dateFormat = get_settings('system_date_format') ?? 'Y-m-d'; 
+
+        $dateFormat = get_settings('system_date_format') ?? 'Y-m-d';
 
         if ($dateFormat) {
             return $dateObj->format($dateFormat);
         } else {
             return $dateObj->format('Y-m-d');
         }
-
     }
 }
 
 // format time
 if (!function_exists('get_system_time')) {
-    function get_system_time($time, $timezone = null){
+    function get_system_time($time, $timezone = null)
+    {
         $dateObj = Carbon\Carbon::parse($time);
 
         if ($timezone) {
@@ -51,14 +98,15 @@ if (!function_exists('get_system_time')) {
             $dateObj->setTimezone(get_settings('system_timezone') ?? config('app.system_default_timezone'));
         }
 
-        $timeFormat = get_settings('system_time_format') ?? 'H:i:s A'; 
+        $timeFormat = get_settings('system_time_format') ?? 'H:i:s A';
 
         return $dateObj->format($timeFormat);
     }
 }
 
 if (!function_exists('tz_list')) {
-    function tz_list() {
+    function tz_list()
+    {
         $zones_array = array();
         $timestamp = time();
         foreach (timezone_identifiers_list() as $key => $zone) {
@@ -122,7 +170,7 @@ if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
         $currency = Currency::find(get_settings('system_default_currency'));
-        if($currency) {
+        if ($currency) {
             $currency_symbol = $currency->symbol;
         } else {
             $currency_symbol = '£';

@@ -19,6 +19,6 @@ interface ProductRepositoryInterface
     public function specificationproductsDatatable();
     public function specificationproductModal($id);
     public function keyfeature($id);
-    public function specificationsAdd($request,$id);
+    public function specificationsAdd($request, $id);
     public function delete($id);
 }

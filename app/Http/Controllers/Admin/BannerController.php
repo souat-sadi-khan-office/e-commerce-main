@@ -39,7 +39,11 @@ class BannerController extends Controller
     public function edit($id)
     {
         $model = $this->bannerRepository->findBannerById($id);
-        return view('backend.banner.edit', compact('model'));
+        $source = null;
+        if ($model->source_type != null) {
+            $source = $this->bannerRepository->getSourceOptions($model->source_type);
+        }
+        return view('backend.banner.edit', compact('model', 'source'));
     }
 
     public function update(Request $request, $id)
@@ -52,10 +56,15 @@ class BannerController extends Controller
         $this->bannerRepository->deleteBanner($id);
 
         return response()->json([
-            'status' => true, 
+            'status' => true,
             'load' => true,
             'message' => "Banner deleted successfully"
         ]);
+    }
+
+    public function show()
+    {
+        return 1;
     }
 
     public function updateStatus(Request $request, $id)

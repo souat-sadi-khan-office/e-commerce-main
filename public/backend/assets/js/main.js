@@ -200,6 +200,36 @@ var _modalClassFormValidation = function () {
 };
 
 
+ // Clear Cache Functionality
+ $(document).on('click', '#clearCache', function() {
+    var url = $(this).data('url');
+
+    $.ajax({
+        url: url, 
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'), 
+        },
+        success: function(response) {
+            if (response.status) {
+                toastr.success(response.message);
+                // Reload the page or perform an action if specified in the response
+                if (response.load) {
+                    setTimeout(function () {
+                        window.location.reload(); // Reload the current page
+                    }, 1000);
+                }
+            } else {
+                toastr.error(response.message); 
+            }
+        },
+        error: function(xhr) {
+            toastr.error('An error occurred while clearing the cache.');
+        }
+    });
+});
+
+
  // For Submitting Multiple Modal Forms
  var _initializeMultipleFormsValidation = function () {
     // Initialize validation for each form
