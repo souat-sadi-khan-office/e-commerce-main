@@ -7308,7 +7308,7 @@ blockquote p:last-child {
 }
 
 
-.drawer {
+.cart-modal {
     position: fixed;
     right: -400px;
     top: 0;
@@ -7322,26 +7322,26 @@ blockquote p:last-child {
     flex-direction: column
 }
 
-.drawer.open {
+.cart-modal.open {
     right: 0;
     box-shadow: 0 0 30px rgba(0,0,0,.2) , -1px 0 0 0 rgba(255,255,255,.2)
 }
 
-.drawer .loader {
+.cart-modal .loader {
     position: absolute;
     top: 50%;
     left: 50%;
     margin: -20px 0 0 -35px
 }
 
-.drawer>.title {
+.cart-modal>.title {
     background: #01132d;
     padding: 0 20px;
     position: relative;
     flex: 0 0 50px
 }
 
-.drawer .title .mc-toggler,.drawer .title .cmpr-toggler {
+.cart-modal .title .mc-toggler,.cart-modal .title .cmpr-toggler {
     color: #fff;
     position: absolute;
     right: 8px;
@@ -7349,72 +7349,72 @@ blockquote p:last-child {
     cursor: pointer
 }
 
-.drawer .title .mc-toggler i,.drawer .title .cmpr-toggler i {
+.cart-modal .title .mc-toggler i,.cart-modal .title .cmpr-toggler i {
     font-size: 20px;
     line-height: 50px
 }
 
-.drawer .title .close:hover i {
+.cart-modal .title .close:hover i {
     opacity: .5
 }
 
-.drawer .title p {
+.cart-modal .title p {
     margin: 0;
     line-height: 50px;
     font-weight: 600;
     color: #fff
 }
 
-.drawer .content {
+.cart-modal .content {
     overflow-y: auto;
     flex: 1 1 auto
 }
 
-.drawer .content {
+.cart-modal .content {
     overflow-y: auto;
     flex: 1 1 auto;
     min-height: 100px
 }
 
-.drawer .content .item {
+.cart-modal .content .item {
     display: flex;
     padding: 15px 20px;
     position: relative;
     border-bottom: 1px solid #eee
 }
 
-.drawer .content .item:hover {
+.cart-modal .content .item:hover {
     background: rgba(55,73,187,.03)
 }
 
-.drawer .content .item .remove {
+.cart-modal .content .item .remove {
     position: absolute;
     right: 0;
     top: 17px;
     cursor: pointer
 }
 
-.drawer .content .item .remove i {
+.cart-modal .content .item .remove i {
     font-size: 16px;
     opacity: .7
 }
 
-.drawer .content .item .remove:hover i {
+.cart-modal .content .item .remove:hover i {
     opacity: 1
 }
 
-.drawer .content .item .name {
+.cart-modal .content .item .name {
     font-size: 14px;
     line-height: 20px;
     padding: 0 15px 12px 0
 }
 
-.drawer .content .item .image {
+.cart-modal .content .item .image {
     flex: 0 0 60px;
     display: flex
 }
 
-.drawer .item .image img {
+.cart-modal .item .image img {
     max-width: 45px;
     max-height: 45px;
     overflow: hidden;
@@ -7423,11 +7423,11 @@ blockquote p:last-child {
     background: #fafafa
 }
 
-.drawer .item .info>* {
+.cart-modal .item .info>* {
     vertical-align: middle
 }
 
-.drawer .item .info i {
+.cart-modal .item .info i {
     font-size: 15px;
     margin: 0 5px;
     color: #999;
@@ -7435,58 +7435,58 @@ blockquote p:last-child {
     height: 15px
 }
 
-.drawer .item .amount,.drawer .item .total {
+.cart-modal .item .amount,.cart-modal .item .total {
     font-weight: 600
 }
 
-.drawer .footer {
+.cart-modal .footer {
     flex: 0 0 auto;
     padding: 5px 0 43px;
     position: relative
 }
 
-.drawer .footer .total {
+.cart-modal .footer .total {
     display: flex;
     padding: 12px 10px
 }
 
-.drawer .footer .total:nth-child(2) {
+.cart-modal .footer .total:nth-child(2) {
     border-bottom: 1px solid #eee
 }
 
-.drawer .footer .total>div {
+.cart-modal .footer .total>div {
     flex: 1 1 50%;
     text-align: right;
     font-size: 16px;
     color: #666
 }
 
-.drawer .footer .total>div.amount {
+.cart-modal .footer .total>div.amount {
     color: #111;
     font-weight: 600
 }
 
-.drawer .footer .checkout-btn {
+.cart-modal .footer .checkout-btn {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0
 }
 
-.drawer .footer .checkout-btn a {
+.cart-modal .footer .checkout-btn a {
     display: block;
     width: 100%
 }
 
-.drawer .footer .checkout-btn a button {
+.cart-modal .footer .checkout-btn a button {
     width: 100%;
     border: none;
-    background: var(--s-primary);
+    background: #ef4a23;
     border-radius: 0
 }
 
 .footer .promotion-code {
-    background: var(--s-s-bg);
+    background: rgba(55,73,187,.05);
     padding: 10px;
     display: inline-block;
     width: 100%
@@ -7495,15 +7495,22 @@ blockquote p:last-child {
 .footer .promotion-code input {
     height: 36px;
     font-size: 14px;
-    border: none
+    border: none;
+	padding: 0px 10px;
+	margin: 0px 16px;
 }
 
 .footer .promotion-code button {
     height: 36px;
-    line-height: 32px
 }
 
-.drawer.cmpr-panel {
+.empty-content {
+    padding: 50px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.cart-modal.cmpr-panel {
     top: auto;
     bottom: 90px;
     height: 0;
@@ -7512,33 +7519,33 @@ blockquote p:last-child {
     transition: none
 }
 
-.drawer.cmpr-panel.open {
+.cart-modal.cmpr-panel.open {
     height: auto;
     overflow: visible;
     max-width: calc(100% - 25px)
 }
 
-.drawer.cmpr-panel .item .info {
+.cart-modal.cmpr-panel .item .info {
     display: flex;
     align-items: center
 }
 
-.drawer.cmpr-panel .item .image {
+.cart-modal.cmpr-panel .item .image {
     flex: 0 0 60px
 }
 
-.drawer.cmpr-panel .content .item .name {
+.cart-modal.cmpr-panel .content .item .name {
     padding: 0 15px 0 0
 }
 
-.drawer.cmpr-panel .footer {
+.cart-modal.cmpr-panel .footer {
     border: none;
     flex: 0 0 auto;
     padding: 10px;
     text-align: right
 }
 
-.drawer.cmpr-panel .footer .clear-all {
+.cart-modal.cmpr-panel .footer .clear-all {
     display: inline-block;
     padding: 0 20px;
     margin-right: 20px;
@@ -7546,7 +7553,7 @@ blockquote p:last-child {
     color: #111
 }
 
-.drawer.cmpr-panel .content .item .remove {
+.cart-modal.cmpr-panel .content .item .remove {
     top: 50%;
     margin-top: -9px
 }

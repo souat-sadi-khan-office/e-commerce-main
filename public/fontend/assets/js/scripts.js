@@ -151,12 +151,16 @@
 				$('#navCatContent').addClass('nav_cat');
 			}
 	    }
-
 	});
 
 	$(document).on('click', '.cart-button', function() {
 		$('#m-cart').addClass('open');
 		$('#m-cart').fadeIn();
+	});
+
+	$(document).on('click', '.close', function() {
+		$('#m-cart').removeClass('open');
+		$('#m-cart').fadeOut();
 	})
 	
 	var setHeight = function() {
