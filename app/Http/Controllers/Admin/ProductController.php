@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\TaxRepositoryInterface;
 use App\Repositories\Interface\CityRepositoryInterface;
 use App\Repositories\Interface\ZoneRepositoryInterface;
@@ -23,6 +24,7 @@ class ProductController extends Controller
     private $zoneRepository;
     private $countryRepository;
     private $cityRepository;
+    private $brandTypeRepository;
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
@@ -33,6 +35,7 @@ class ProductController extends Controller
         ZoneRepositoryInterface $zoneRepository,
         CountryRepositoryInterface $countryRepository,
         CityRepositoryInterface $cityRepository,
+        BrandTypeRepositoryInterface $brandTypeRepository,
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->productRepository = $productRepository;
@@ -42,6 +45,7 @@ class ProductController extends Controller
         $this->zoneRepository = $zoneRepository;
         $this->countryRepository = $countryRepository;
         $this->cityRepository = $cityRepository;
+        $this->brandTypeRepository = $brandTypeRepository;
     }
 
 
@@ -118,12 +122,16 @@ class ProductController extends Controller
     {
         $model = $this->productRepository->getProductById($id);
 
+        $brandTypes = null;
+        if($model->brand_id) {
+            $brandTypes = $this->brandTypeRepository->getAllBrandTypesByBrandId($model->brand_id);
+        }
         $taxes = $this->taxRepository->getAllActiveTaxes();
         $currencies = $this->currencyRepository->getAllActiveCurrencies();
         $zones = $this->zoneRepository->getAllActiveZones();
         $countries = $this->countryRepository->getAllActiveCountry();
         $cities = $this->cityRepository->getAllActiveCity();
-        return view('backend.product.edit', compact('model', 'taxes', 'currencies', 'zones', 'countries', 'cities'));
+        return view('backend.product.edit', compact('model', 'brandTypes', 'taxes', 'currencies', 'zones', 'countries', 'cities'));
     }
 
     public function update(Request $request, $id)

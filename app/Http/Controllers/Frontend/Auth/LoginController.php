@@ -29,13 +29,13 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $guard = $this->authRepository->login($request, 'admin');
+        $guard = $this->authRepository->login($request, 'customer');
 
         if ($guard) {
             $request->session()->regenerate();
             return response()->json([
                 'status' => true, 
-                'goto' => route('admin.dashboard'),
+                'goto' => route('dashboard'),
                 'message' => "Login successfully"
             ]);
         }
@@ -53,7 +53,7 @@ class LoginController extends Controller
         
         return response()->json([
             'status' => true, 
-            'goto' => route('admin.login'),
+            'goto' => route('home'),
             'message' => "Logout successful"
         ]);
     }

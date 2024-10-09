@@ -97,10 +97,24 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-12 form-group mb-3" style="display:none;" id="brand_type_area">
-                                        <label for="brand_type_id">Brand type</label>
-                                        <select name="brand_type_id" id="brand_type_id" class="form-control"></select>
-                                    </div>
+                                    @if ($model->brand_type_id != null)
+                                        <div class="col-md-12 form-group mb-3" id="brand_type_area">
+                                            <label for="brand_type_id">Brand type</label>
+                                            <select name="brand_type_id" id="brand_type_id" class="form-control select">
+                                                @if ($brandTypes)
+                                                    @foreach ($brandTypes as $brandType)
+                                                        <option {{ $brandType->id == $model->brand_type_id ? 'selected' : '' }} value="{{ $brandType->id }}">{{ $brandType->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    @else   
+                                        <div class="col-md-12 form-group mb-3" style="display:none;" id="brand_type_area">
+                                            <label for="brand_type_id">Brand type</label>
+                                            <select name="brand_type_id" id="brand_type_id" class="form-control"></select>
+                                        </div>
+                                    @endif
+                                    
                                 </div>
                             </div>
                         </div>

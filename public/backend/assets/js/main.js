@@ -200,8 +200,8 @@ var _modalClassFormValidation = function () {
 };
 
 
- // Clear Cache Functionality
- $(document).on('click', '#clearCache', function() {
+// Clear Cache Functionality
+$(document).on('click', '#clearCache', function() {
     var url = $(this).data('url');
 
     $.ajax({

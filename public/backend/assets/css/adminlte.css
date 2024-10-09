@@ -15431,10 +15431,6 @@ html.maximized-card {
   font-size: 30px !important;
 }
 
-.select2-container--default .select2-selection--single {
-  border: 1px solid var(--bs-border-color) !important;
-}
-
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
   padding-left: 0px !important;
 }
@@ -15447,6 +15443,10 @@ html.maximized-card {
 
 .dropify-wrapper:hover {
   background-color: var(--bs-body-bg) !important;
+}
+
+.select2-container--default .select2-selection--single {
+  border: 1px solid var(--bs-border-color) !important;
 }
 
 .select2-container--default .select2-selection--single {

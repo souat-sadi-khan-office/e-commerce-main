@@ -153,6 +153,47 @@
 	    }
 	});
 
+	$(document).on('click', '#logout', function(e) {
+		e.preventDefault();
+		var url = $(this).data('url');
+		
+		$.ajax({
+			url: url,
+			method: 'POST',
+			contentType: false,
+			cache: false,
+			processData: false,
+			dataType: 'JSON',
+			success: function(data) {
+				toastr.success(data.message);
+	
+				setTimeout(function() {
+					window.location.href = data.goto;
+				}, 2000);
+			},
+			error: function(data) {
+				var jsonValue = $.parseJSON(data.responseText);
+				const errors = jsonValue.errors
+				var i = 0;
+				$.each(errors, function(key, value) {
+					toastr.success(value);
+					i++;
+				});
+			}
+		});
+	});
+
+	$(document).on('keyup', '.number', function() {
+		let value = $(this).val();
+		$(this).val(allowOnlyNumbers(value));
+	});
+
+
+	
+	function allowOnlyNumbers(input) {
+		return input.replace(/\D/g, '');
+	}
+
 	$(document).on('click', '.cart-button', function() {
 		$('#m-cart').addClass('open');
 		$('#m-cart').fadeIn();

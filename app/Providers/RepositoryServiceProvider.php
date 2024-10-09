@@ -14,6 +14,7 @@ use App\Repositories\AdminRepository;
 use App\Repositories\BrandRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\BannerRepository;
+use App\Repositories\AddressRepository;
 use App\Repositories\CountryRepository;
 use App\Repositories\PaymentRepository;
 use App\Repositories\ProductRepository;
@@ -25,6 +26,7 @@ use App\Repositories\BrandTypeRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\FlashDealRepository;
 use App\Repositories\PcBuilderRepository;
+use App\Repositories\PhoneBookRepository;
 use App\Repositories\ProductStockRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
@@ -40,6 +42,7 @@ use App\Repositories\Interface\AdminRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
 use App\Repositories\Interface\BannerRepositoryInterface;
+use App\Repositories\Interface\AddressControllerInterface;
 use App\Repositories\Interface\CountryRepositoryInterface;
 use App\Repositories\Interface\PaymentRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
@@ -50,6 +53,7 @@ use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\DashBoardRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\PcBuilderRepositoryInterface;
+use App\Repositories\Interface\PhoneBookRepositoryInterface;
 use App\Repositories\Interface\ProductStockRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
@@ -86,6 +90,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(FlashDealRepositoryInterface::class, FlashDealRepository::class);
         $this->app->bind(ProductStockRepositoryInterface::class, ProductStockRepository::class);
         $this->app->bind(BannerRepositoryInterface::class, BannerRepository::class);
+        $this->app->bind(PhoneBookRepositoryInterface::class, PhoneBookRepository::class);
+        $this->app->bind(AddressControllerInterface::class, AddressRepository::class);
     }
 
     /**

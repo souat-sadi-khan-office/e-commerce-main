@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\Auth\LoginController;
 use App\Http\Controllers\Frontend\Auth\RegisterController;
 use App\Http\Controllers\Frontend\UserController;
+use App\Http\Controllers\Frontend\PhoneBookController;
+use App\Http\Controllers\Frontend\AddressController;
 
 Route::get('/', function () {
     return view('fontend.homepage.index');
@@ -13,11 +15,32 @@ Route::get('/', function () {
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::get('register', [RegisterController::class, 'index'])->name('register');
+Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
 Route::post('register/post', [RegisterController::class, 'register'])->name('register.post');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['isCustomer', 'web'])->group(function () {
-    Route::get('dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('account', function() {
+        return redirect()->route('dashboard');
+    });
+
+    Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::resource('phone-book', PhoneBookController::class);
+        Route::resource('address-book', AddressController::class);
+        Route::get('my-orders', [UserController::class, 'myOrders'])->name('my_orders');
+        Route::get('quotes', [UserController::class, 'quotes'])->name('quote');
+        Route::get('edit-profile', [UserController::class, 'profile'])->name('edit_profile');
+        Route::post('update-profile', [UserController::class, 'updateProfile'])->name('update.profile');
+        Route::get('change-password', [UserController::class, 'password'])->name('change_password');
+        Route::post('update-password', [UserController::class, 'updatePassword'])->name('update.password');
+        Route::get('wish-list', [UserController::class, 'wishlist'])->name('wishlist');
+        Route::get('saved-pc', [UserController::class, 'saved_pc'])->name('saved_pc');
+        Route::get('star-points', [UserController::class, 'star_points'])->name('star_points');
+        Route::get('transaction', [UserController::class, 'transactions'])->name('transaction');
+    });
+
+    
 });
 
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');

@@ -8,13 +8,8 @@
 <div class="breadcrumb_section page-title-mini">
     <div class="custom-container">
         <div class="row align-items-center">
-        	<div class="col-md-6">
-                <div class="page-title">
-            		<h1>Register Account</h1>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <ol class="breadcrumb justify-content-md-end">
+            <div class="col-md-12">
+                <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">
                             <i class="linearicons-home"></i>
@@ -96,8 +91,6 @@
         </div>
     </div>
 </div>
-
-<input type="hidden" id="isHomePage" value="0">
 @endsection
 @push('scripts')
     <script src="{{ asset('backend/assets/js/parsley.min.js') }}"></script>

@@ -104,7 +104,7 @@ video {
 	width: 100%;
 }
 .section {
-	padding: 100px 0;
+	padding: 50px 0;
 	position:relative;
 }
 .section.small_pt,
@@ -442,7 +442,7 @@ button:focus:not(:focus-visible) {
 	vertical-align: middle;
 }
 .btn-group-sm > .btn, .btn-sm {
-    padding: 8px 25px;
+    padding: 5px 15px;
 }
 .btn-group-lg > .btn, .btn-lg {
     padding: 16px 45px;
@@ -459,7 +459,7 @@ button:focus:not(:focus-visible) {
     font-size: 10px;
 }
 .btn.btn-sm i {
-    font-size: 12px;
+    font-size: 20px;
 }
 .btn.btn-lg i {
     font-size: 22px;
@@ -4172,7 +4172,7 @@ footer .widget_title {
 	width: 100%;
 }
 .breadcrumb-item a i {
-	font-size: 26px;
+	font-size: 18px;
 	line-height: 1;
 	vertical-align: middle;
 	margin-right: 5px;
@@ -4618,11 +4618,8 @@ footer .widget_title {
   19.END 404 ERROR STYLE
 *===================================*/
 
-/*===================================*
-  20.START LOGIN REGISTER STYLE
-*===================================*/
 .login_wrap {
-	box-shadow: 0 0 10px rgba(0,0,0,0.2);
+	box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 .login_register_wrap {
 	display: -ms-flexbox;
@@ -7557,3 +7554,171 @@ blockquote p:last-child {
     top: 50%;
     margin-top: -9px
 }
+
+.dashboard_menu.bg_white {
+    background: #fff;
+}
+
+.ac-header {
+	background-color: #fff;
+    padding: 30px;
+    margin: 0 0 10px;
+	box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+
+@media only screen and (max-width: 600px) {
+	.ac-header {
+		margin-top: 25px;
+		padding: 10px;
+	}
+
+	.ac-header .right {
+		margin-top: 15px;
+	}
+
+	.ac-header .balance{
+		border-left: none !important;
+	}
+}
+
+.ac-header .left {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+}
+
+.ac-header .avatar img {
+    border-radius: 50%;
+}
+
+.ac-header .name {
+    padding-left: 20px;
+}
+
+.ac-header .name p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+.ac-header .name p.user {
+    color: #111;
+    font-size: 22px;
+    margin: 5px 0 0;
+}
+
+.ac-header .right {
+    flex: 0 0 300px;
+    display: flex;
+    align-items: center;
+	float: right;
+}
+
+.ac-header .balance {
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    text-align: center;
+    border-left: 1px solid #ddd;
+}
+
+.ac-header .balance .blurb {
+    color: #666;
+    font-size: 14px;
+}
+
+.ac-header .balance .amount {
+    color: #FF324D;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 30px;
+    margin: 5px 0 0;
+}
+
+.ac-header .balance {
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    text-align: center;
+    border-left: 1px solid #ddd;
+}
+
+.ac-header .balance .blurb {
+    color: #666;
+    font-size: 14px;
+}
+
+.ac-header .balance .amount {
+    color: #FF324D;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 30px;
+    margin: 5px 0 0;
+}
+
+.total-contain {
+    background-color: #fff;
+    padding: 20px 25px;
+    box-shadow: 0px 36px 48px rgba(31, 66, 135, 0.04);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    -webkit-transition: all 0.8s;
+    -ms-transition: all 0.8s;
+    transition: all 0.8s;
+}
+
+.total-contain .total-icon {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border: 1px solid #D7D7D7;
+	font-size: 30px;
+	color: #FF324D;
+}
+
+.total-contain:hover {
+    background-color: #FF324D;
+	color: #fff;
+}
+
+.total-contain .total-detail .text {
+    transition: all 0.8s;
+    font-size: 14px;
+}
+
+.total-contain .total-detail .title {
+    font-weight: 500;
+    margin-bottom: 0;
+    -webkit-transition: all 0.8s;
+    -ms-transition: all 0.8s;
+    transition: all 0.8s;
+}
+
+.custom-list li {
+	margin-bottom: 20px;
+}
+
+.custom-list img {
+	border: 1px solid #FF324D;
+    width: 50px;
+}
+
+.custom-list li:hover {
+    border: 1px solid #ddd;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, .1);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #FF324D !important;
+    color: white;
+}
+
+.select2-container--default .select2-selection--single {
+	border: 1px solid #ddd !important;
+}
+  

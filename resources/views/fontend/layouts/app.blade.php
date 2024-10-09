@@ -3,6 +3,11 @@
 @include('fontend.layouts.partials.head')
 
 <body>
+    @if (Request::is('/'))
+        <input type="hidden" id="isHomePage" value="1">
+    @else   
+        <input type="hidden" id="isHomePage" value="0">
+    @endif
     {{-- @include('fontend.layouts.partials.preloader') --}}
     {{-- @include('fontend.components.popup') --}}
     <!-- START HEADER -->

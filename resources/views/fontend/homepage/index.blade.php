@@ -34,8 +34,5 @@
             @include('fontend.homepage.newslatter')
         @endif
 
-    </div>
-
-    <input type="hidden" id="isHomePage" value="1">
-    
+    </div>    
 @endsection
