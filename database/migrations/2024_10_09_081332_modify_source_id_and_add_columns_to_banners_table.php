@@ -12,9 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('banners', function (Blueprint $table) {
-              // Drop the slug column
-              $table->dropColumn('slug');
-              
                $table->integer('source_id')->nullable()->change();
    
                // Add new nullable columns after the name column
