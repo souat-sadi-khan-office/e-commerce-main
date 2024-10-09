@@ -763,6 +763,7 @@ class ProductRepository implements ProductRepositoryInterface
         $data = Product::withCount('specifications')
             ->with('admin:id,name')
             ->orderBy('specifications_count', 'desc')
+            ->latest()
             ->get();
         return $data->map(function ($item) {
             return [

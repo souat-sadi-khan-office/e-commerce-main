@@ -260,7 +260,7 @@
                                     <!-- purchase_unit_price -->
                                     <div class="col-md-6 form-goup mb-3">
                                         <label for="purchase_unit_price">Unit Purchase Price </label>
-                                        <input type="text" id="purchase_unit_price" class="form-control number" value="0" >
+                                        <input type="text" id="purchase_unit_price" name="purchase_unit_price" class="form-control number" value="0" >
                                         <small class="text-muted">This is the product purchase price from sellter.</small>
                                     </div>
 

@@ -90,6 +90,9 @@ class BannerRepository implements BannerRepositoryInterface
     {
         Banner::create([
             'name' => $data->name,
+            'header_title' => $data->header_title,
+            'old_offer' => $data->old_offer,
+            'new_offer' => $data->new_offer,
             'banner_type' => $data->banner_type,
             'created_by' => Auth::guard('admin')->id(),
             'status' => $data->status,
@@ -109,6 +112,9 @@ class BannerRepository implements BannerRepositoryInterface
         $banner = Banner::findOrFail($id);
         $banner->banner_type = $data->banner_type;
         $banner->name = $data->name;
+        $banner->header_title= $data->header_title;
+        $banner->old_offer= $data->old_offer;
+        $banner->new_offer= $data->new_offer;
         $banner->source_type = $data->source_type;
         $banner->source_id = $data->source_id;
         $banner->link = $data->link;

@@ -44,7 +44,7 @@ if (!function_exists('homepage_setting')) {
                 "dealOfTheDay" => $settings->dealOfTheDay,
                 "trending" => $settings->trending,
                 "brands" => $settings->brands,
-                "popular&featured" => $settings->popularANDfeatured,
+                "popularANDfeatured" => $settings->popularANDfeatured,
                 "newslatter" => $settings->newslatter,
                 "last_updated_by" => Helpers::adminName($settings->last_updated_by),
                 "last_updated_at" => $settings->updated_at,
