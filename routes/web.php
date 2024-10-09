@@ -23,6 +23,9 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('account', function() {
         return redirect()->route('dashboard');
     });
+    Route::get('dashboard', function() {
+        return redirect()->route('dashboard');
+    });
 
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
@@ -39,8 +42,6 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
         Route::get('star-points', [UserController::class, 'star_points'])->name('star_points');
         Route::get('transaction', [UserController::class, 'transactions'])->name('transaction');
     });
-
-    
 });
 
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
@@ -51,3 +52,6 @@ Route::post('search/product', [SearchController::class, 'searchByProduct'])->nam
 Route::post('search/product-stock', [SearchController::class, 'searchForProductStock'])->name('search.product_stock');
 Route::post('search/product-data', [SearchController::class, 'searchForProductDetails'])->name('search.product_data');
 Route::post('search/brand-types', [SearchController::class, 'searchForBrandTypes'])->name('search.brand-types');
+
+Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->name('getCountries');
+Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');

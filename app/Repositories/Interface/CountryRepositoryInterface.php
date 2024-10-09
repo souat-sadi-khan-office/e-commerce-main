@@ -12,4 +12,5 @@ interface CountryRepositoryInterface
     public function updateCountry($id, array $data);
     public function deleteCountry($id);
     public function updateStatus($request, $id);
+    public function findCountriesByZoneId($zoneId);
 }

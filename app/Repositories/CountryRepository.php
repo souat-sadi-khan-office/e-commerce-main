@@ -37,6 +37,11 @@ class CountryRepository implements CountryRepositoryInterface
                 ->make(true);
     }
 
+    public function findCountriesByZoneId($zoneId)
+    {
+        return Country::where('zone_id', $zoneId)->where('status', 1)->orderBy('name', 'ASC')->get();
+    }
+
     public function findCountryById($id)
     {
         return Country::findOrFail($id);

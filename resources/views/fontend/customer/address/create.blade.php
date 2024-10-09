@@ -4,6 +4,7 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/select2.min.css') }}">
 @endpush
 
 @push('breadcrumb')
@@ -23,12 +24,12 @@
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('account.phone-book.index') }}">
-                                Phone Book
+                            <a href="{{ route('account.address-book.index') }}">
+                                Address Book
                             </a>
                         </li>
                         <li class="breadcrumb-item active">
-                            Add New Phone Number
+                            Add New Address
                         </li>
                     </ol>
                 </div>
@@ -53,30 +54,101 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-md-8">
-                                        <h1 style="margin-top: 10px;" class="h5">Add New Phone Number</h1>
+                                        <h1 style="margin-top: 10px;" class="h5">Add New Address</h1>
                                     </div>
                                     <div class="col-md-4 text-end">  
-                                        <a href="{{ route('account.phone-book.index') }}" class="btn btn-sm px-3 py-2 btn-fill-out">
+                                        <a href="{{ route('account.address-book.index') }}" class="btn btn-sm px-3 py-2 btn-fill-out">
                                             Back
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <form action="{{ route('account.phone-book.store') }}" method="POST" id="phone-book-form">
+                                <p>Please enter the required details to add a new address.</p>
+                                <form action="{{ route('account.address-book.store') }}" method="POST" id="phone-book-form">
                                     @csrf
                                     <div class="row">
-                                        <div class="col-md-12 form-group mb-3">
-                                            <label for="phone_number">Phone Number <span class="text-danger">*</span></label>
-                                            <input type="text" name="phone_number" id="phone_number" class="form-control number" required placeholder="Phone Number">
+                                        <!-- first_name -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="first_name">First Name <span class="text-danger">*</span></label>
+                                            <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" required>
                                         </div>
+
+                                        <!-- last_name -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="last_name">Last Name <span class="text-danger">*</span></label>
+                                            <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name" required>
+                                        </div>
+
+                                        <!-- company -->
                                         <div class="col-md-12 form-group mb-3">
-                                            <label for="is_default">Default Phone Number</label>
-                                            <select name="is_default" id="is_default" class="form-control">
-                                                <option value="0">No</option>
+                                            <label for="company">Company</label>
+                                            <input type="text" name="company" id="company" class="form-control" placeholder="Company">
+                                        </div>
+
+                                        <!-- address -->
+                                        <div class="col-md-12 form-group mb-3">
+                                            <label for="address">Address 1 <span class="text-danger">*</span></label>
+                                            <input type="text" name="address" id="address" class="form-control" placeholder="Address 1" required>
+                                        </div>
+
+                                        <!-- address_2 -->
+                                        <div class="col-md-12 form-group mb-3">
+                                            <label for="address_2">Address 2</label>
+                                            <input type="text" name="address_line_2" id="address_2" class="form-control" placeholder="Address 2">
+                                        </div>
+
+                                        <!-- zone -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="zone_id">Zone/Contenent <span class="text-danger">*</span></label>
+                                            <select name="zone_id" id="zone_id" class="form-control select" data-parsley-errors-container="#zone_id_error" required data-placeholder="Select Zone">
+                                                <option value="">Select Zone</option>
+                                                @foreach ($zones as $zone)
+                                                    <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span id="zone_id_error"></span>
+                                        </div>
+
+                                        <!-- country_id -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="country_id">Country <span class="text-danger">*</span></label>
+                                            <select name="country_id" id="country_id" class="form-control select" data-parsley-errors-container="#country_id_error" required data-placeholder="Select Country">
+                                                <option value="">Select Country</option>
+                                            </select>
+                                            <span id="country_id_error"></span>
+                                        </div>
+
+                                        <!-- city_id -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="city_id">City <span class="text-danger">*</span></label>
+                                            <select name="city_id" id="city_id" class="form-control select" data-parsley-errors-container="#city_id_error" required data-placeholder="Select City">
+                                                <option value="">Select City</option>
+                                            </select>
+                                            <span id="city_id_error"></span>
+                                        </div>
+
+                                        <!-- area -->
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="area">Area <span class="text-danger">*</span></label>
+                                            <input type="text" name="area" id="area" class="form-control" required placeholder="Area">
+                                        </div>
+
+                                        <!-- postcode -->
+                                        <div class="col-md-12 form-group mb-3">
+                                            <label for="postcode">Postcode <span class="text-danger">*</span></label>
+                                            <input type="text" name="postcode" id="postcode" class="form-control" required placeholder="Postcode">
+                                        </div>
+
+                                        <!-- is_default -->
+                                        <div class="col-md-12 form-group mb-3">
+                                            <label for="is_default">Default Address <span class="text-danger">*</span></label>
+                                            <select name="is_default" id="is_default" class="form-control select" required>
                                                 <option value="1">Yes</option>
+                                                <option value="0">No</option>
                                             </select>
                                         </div>
+                                        
                                         <div class="col-md-12 form-group mb-3">
                                             <button type="submit" class="btn btn-fill-out btn-sm" id="submit">Save</button>
                                         </div>
@@ -100,7 +172,12 @@
 @push('scripts')
     <script src="{{ asset('backend/assets/js/parsley.min.js') }}"></script>
     <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/select2.min.js') }}"></script>
     <script>
+
+        $('.select').select2({
+            width: '100%'
+        });
 
         var _formValidation = function () {
             if ($('#phone-book-form').length > 0) {
@@ -193,5 +270,49 @@
         };
 
         _formValidation();
+
+        $(document).on('change', '#zone_id', function() {
+            var zoneId = $(this).val();
+            if (zoneId) {
+                $.ajax({
+                    url: "{{ route('getCountries') }}",
+                    type: "GET",
+                    data: { zone_id: zoneId },
+                    success: function(data) {
+                        $('#country_id').empty();
+                        $('#country_id').append('<option value="">Select Country</option>');
+                        $.each(data, function(key, country) {
+                            $('#country_id').append('<option value="'+ country.id +'">'+ country.name +'</option>');
+                        });
+                        $('#country_id').trigger('change');
+                    }
+                });
+            } else {
+                $('#country_id').empty();
+                $('#country_id').append('<option value="">Select Country</option>');
+            }
+        });
+
+        $(document).on('change', '#country_id', function() {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: "{{ route('getCities') }}",
+                    type: "GET",
+                    data: { country_id: countryId },
+                    success: function(data) {
+                        $('#city_id').empty();
+                        $('#city_id').append('<option value="">Select City</option>');
+                        $.each(data, function(key, city) {
+                            $('#city_id').append('<option value="'+ city.id +'">'+ city.name +'</option>');
+                        });
+                        $('#city_id').trigger('change');
+                    }
+                });
+            } else {
+                $('#city_id').empty();
+                $('#city_id').append('<option value="">Select City</option>');
+            }
+        });
     </script>
 @endpush

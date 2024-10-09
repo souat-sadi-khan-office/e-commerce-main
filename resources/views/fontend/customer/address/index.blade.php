@@ -55,15 +55,14 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <p>You can add multiple address from here</p>
                                 <ul class="list-group custom-list">
-                                    @if ($models)
+                                    @if (count($models))
                                         @foreach ($models as $key => $model)
                                             <li class="list-group-item">
                                                 <div class="row">
                                                     <div class="col-md-8">
                                                         <div class="list-text">
-                                                            {{ $model->phone_number }}
+                                                            {{ $model->first_name. ' '. $model->last_name. ', '. $model->address. ' '. $model->city->name. '-'. $model->postcode. ' '. $model->country->name. ' '. $model->zone->name }}
                                                             @if ($model->is_default)
                                                                 <span class="badge bg-success">Success</span>
                                                             @endif

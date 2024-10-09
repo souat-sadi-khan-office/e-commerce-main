@@ -18,6 +18,11 @@ class CityRepository implements CityRepositoryInterface
         return City::where('status', 1)->get();
     }
 
+    public function findCitiesByCountryId($countryId)
+    {
+        return City::where('country_id', $countryId)->where('status', 1)->orderBy('name', 'ASC')->get();
+    }
+
     public function dataTable()
     {
         $models = $this->getAllCities();

@@ -35,12 +35,13 @@ class AddressRepository implements AddressControllerInterface
             'zone_id' => $data['zone_id'],
             'country_id' => $data['country_id'],
             'city_id' => $data['city_id'],
-            'area_id' => $data['area_id'],
+            'area' => $data['area'],
             'address' => $data['address'],
+            'address_line_2' => $data['address_line_2'],
             'postcode' => $data['postcode'],
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
-            'company_name' => $data['company_name'],
+            'company_name' => $data['company'],
             'is_default' => $data['is_default']
         ]);
     }
@@ -53,6 +54,12 @@ class AddressRepository implements AddressControllerInterface
         
         $model = UserAddress::findOrFail($id);
         $model->update($data);
+
+        if(!UserAddress::where('user_id', Auth::guard('customer')->user()->id)->where('is_default', 1)->first()) {
+            $address = UserAddress::where('user_id', Auth::guard('customer')->user()->id)->first();
+            $address->is_default = 1;
+            $address->save();
+        }
 
         return $model;
     }

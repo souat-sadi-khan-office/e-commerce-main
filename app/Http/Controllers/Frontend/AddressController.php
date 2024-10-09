@@ -47,8 +47,24 @@ class AddressController extends Controller
      */
     public function create()
     {
-        $zone = $this->zone->getAllActiveZones();
-        return view('fontend.customer.address.create', compact('zone'));
+        $zones = $this->zone->getAllActiveZones();
+        return view('fontend.customer.address.create', compact('zones'));
+    }
+
+    public function getCountriesByZone(Request $request)
+    {
+        $zoneId = $request->zone_id;
+        $countries = $this->country->findCountriesByZoneId($zoneId);
+        
+        return response()->json($countries);
+    }
+    
+    public function getCitiesByCountry(Request $request)
+    {
+        $countryId = $request->country_id;
+        $cities = $this->city->findCitiesByCountryId($countryId);
+        
+        return response()->json($cities);
     }
 
     /**
@@ -60,12 +76,12 @@ class AddressController extends Controller
             'zone_id'        => 'required',
             'country_id'     => 'required',
             'city_id'        => 'required',
-            'area_id'        => 'required',
+            'area'           => 'required',
             'address'        => 'required',
             'postcode'       => 'required',
             'first_name'     => 'required|string|max:55',
             'last_name'      => 'required|string|max:55',
-            'company_name'   => 'string|max:155',
+            'company'        => 'string|max:155',
             'address_line_2' => 'string',
             'is_default'     => 'required'
         ]);
@@ -93,7 +109,12 @@ class AddressController extends Controller
     public function edit(string $id)
     {
         $model = $this->address->findModelById($id);
-        return view('fontend.customer.address.edit', compact('model'));
+
+        $zones = $this->zone->getAllActiveZones();
+        $countries = $this->country->findCountriesByZoneId($model->zone_id);
+        $cities = $this->city->findCitiesByCountryId($model->country_id);
+
+        return view('fontend.customer.address.edit', compact('model', 'zones', 'countries', 'cities'));
     }
 
     /**
@@ -105,13 +126,13 @@ class AddressController extends Controller
             'zone_id'        => 'required',
             'country_id'     => 'required',
             'city_id'        => 'required',
-            'area_id'        => 'required',
+            'area'           => 'required',
             'address'        => 'required',
             'postcode'       => 'required',
             'first_name'     => 'required|string|max:55',
             'last_name'      => 'required|string|max:55',
             'company_name'   => 'string|max:155',
-            'address_line_2' => 'string',
+            'address_line_2' => '',
             'is_default'     => 'required'
         ]);
 

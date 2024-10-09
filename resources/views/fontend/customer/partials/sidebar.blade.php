@@ -38,7 +38,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('account/address-book*') ? 'active' : '' }}" href="{{ route('account.address-book.index') }}">
+            <a class="nav-link {{ Request::is('account/address-book*') ? 'active' : '' }}" href="{{ route('account.address-book.index') }}">
                     <i class="ti-location-pin"></i>
                     Address
                 </a>

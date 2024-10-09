@@ -14,9 +14,13 @@ class UserAddress extends Model
         'zone_id',
         'country_id',
         'city_id',
-        'area_id',
+        'area',
         'address',
         'postcode',
+        'first_name',
+        'last_name',
+        'company_name',
+        'address_line_2'
     ];
 
     // Relationship with User
@@ -41,11 +45,5 @@ class UserAddress extends Model
     public function city()
     {
         return $this->belongsTo(City::class);
-    }
-
-    // Relationship with Area
-    public function area()
-    {
-        return $this->belongsTo(Area::class);
     }
 }

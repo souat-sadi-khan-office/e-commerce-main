@@ -41,8 +41,8 @@
                                 <div class="row">
                                     <!-- email -->
                                     <div class="col-md-12 form-group mb-3">
-                                        <label for="email">Phone / E-Mail <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" name="email" placeholder="Phone / E-Mail" required>
+                                        <label for="email">E-Mail <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" name="email" placeholder="E-Mail" required>
                                     </div>
 
                                     <!-- password -->
