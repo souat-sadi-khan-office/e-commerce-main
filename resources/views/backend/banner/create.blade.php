@@ -42,8 +42,20 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12 mb-3 form-group">
+                                <label for="name">Header Title</label>
+                                <input type="text" placeholder="Enter Banner Header Title" maxlength="50" name="header_title" id="header_title" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3 form-group">
                                 <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" placeholder="Enter Banner Name" name="name" id="name" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="name">Old Offer</label>
+                                <input type="text" placeholder="If Have" name="old_offer" id="old_offer" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="name">New Offer </label>
+                                <input type="text" placeholder="If Have" name="new_offer" id="new_offer" class="form-control">
                             </div>
 
                             <div class="col-md-12 form-group mb-3">

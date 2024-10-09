@@ -43,9 +43,23 @@
                     <div class="card-body">
                         
                         <div class="row">
+
+                            <div class="col-md-12 mb-3 form-group">
+                                <label for="name">Header Title</label>
+                                <input type="text" placeholder="Enter Banner Header Title" maxlength="50" name="header_title" id="header_title" class="form-control" value="{{ $model->header_title }}">
+                            </div>
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" placeholder="Enter Brand Name" name="name" id="name" class="form-control" required value="{{ $model->name }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="name">Old Offer</label>
+                                <input type="text" placeholder="If Have" value="{{ $model->old_offer }}" name="old_offer" id="old_offer" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="name">New Offer </label>
+                                <input type="text" placeholder="If Have" value="{{ $model->new_offer }}"  name="new_offer" id="new_offer" class="form-control">
                             </div>
 
                             <div class="col-md-12 form-group mb-3">
@@ -59,7 +73,8 @@
                             </div>
 
                             <div class="col-md-12 form-group mb-3">
-                                <label for="source_type">Source type <span class="text-danger">if Have</span></label>
+                                <label for="source_type">Source type</label>
+                                <p class="text-danger" style="font-size: small;margin: 0;">Select only if you are adding Banners for any Specific Category/Product or Brand.</p>
                                 <select name="source_type" id="source_type" class="form-control select">
                                     <option selected value="" disabled>--Select Source--</option>
                                     <option value="category" {{ $model->source_type == 'category' ? 'selected' : '' }}>Category</option>
@@ -69,7 +84,7 @@
                             </div>
                             <div class="col-md-12 form-group mb-3" id="sourceContainer">
                                 <label for="source_id" id="sourceLabel">Source Name</label>
-                                <p class="text-danger" style="font-size: small;margin: 0;">Select only if you are adding Banners for any Specific Category/Product or Brand.</p>
+                               
                                 <select name="source_id" id="source_id" class="form-control select">
                                     <option selected value="" disabled>--Select Source--</option>
                                     @if (isset($model->source_id)&& isset($source))

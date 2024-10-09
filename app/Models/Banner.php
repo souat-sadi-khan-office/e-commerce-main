@@ -12,6 +12,9 @@ class Banner extends Model
     protected $fillable = [
         'banner_type',
         'name',
+        'header_title',
+        'old_offer',
+        'new_offer',
         'slug',
         'image',
         'source_type',
