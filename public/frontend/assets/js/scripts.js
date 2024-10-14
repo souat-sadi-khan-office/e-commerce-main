@@ -156,6 +156,7 @@
 	$(document).on('click', '#logout', function(e) {
 		e.preventDefault();
 		var url = $(this).data('url');
+		$(this).html('Loading...');
 		
 		$.ajax({
 			url: url,
@@ -165,8 +166,6 @@
 			processData: false,
 			dataType: 'JSON',
 			success: function(data) {
-				toastr.success(data.message);
-	
 				setTimeout(function() {
 					window.location.href = data.goto;
 				}, 2000);
@@ -400,69 +399,69 @@
 	/*===================================*
 	09. MASONRY JS
 	*===================================*/
-	$( window ).on( "load", function() {
-		var $grid_selectors  = $(".grid_container");
-		var filter_selectors = ".grid_filter > li > a";
-		if( $grid_selectors.length > 0 ) {
-			$grid_selectors.imagesLoaded(function(){
-				if ($grid_selectors.hasClass("masonry")){
-					$grid_selectors.isotope({
-						itemSelector: '.grid_item',
-						percentPosition: true,
-						layoutMode: "masonry",
-						masonry: {
-							columnWidth: '.grid-sizer'
-						},
-					});
-				} 
-				else {
-					$grid_selectors.isotope({
-						itemSelector: '.grid_item',
-						percentPosition: true,
-						layoutMode: "fitRows",
-					});
-				}
-			});
-		}
+	// $( window ).on( "load", function() {
+	// 	var $grid_selectors  = $(".grid_container");
+	// 	var filter_selectors = ".grid_filter > li > a";
+	// 	if( $grid_selectors.length > 0 ) {
+	// 		$grid_selectors.imagesLoaded(function(){
+	// 			if ($grid_selectors.hasClass("masonry")){
+	// 				$grid_selectors.isotope({
+	// 					itemSelector: '.grid_item',
+	// 					percentPosition: true,
+	// 					layoutMode: "masonry",
+	// 					masonry: {
+	// 						columnWidth: '.grid-sizer'
+	// 					},
+	// 				});
+	// 			} 
+	// 			else {
+	// 				$grid_selectors.isotope({
+	// 					itemSelector: '.grid_item',
+	// 					percentPosition: true,
+	// 					layoutMode: "fitRows",
+	// 				});
+	// 			}
+	// 		});
+	// 	}
 	
-		//isotope filter
-		$(document).on( "click", filter_selectors, function() {
-			$(filter_selectors).removeClass("current");
-			$(this).addClass("current");
-			var dfselector = $(this).data('filter');
-			if ($grid_selectors.hasClass("masonry")){
-				$grid_selectors.isotope({
-					itemSelector: '.grid_item',
-					layoutMode: "masonry",
-					masonry: {
-						columnWidth: '.grid_item'
-					},
-					filter: dfselector
-				});
-			} 
-			else {
-				$grid_selectors.isotope({
-					itemSelector: '.grid_item',
-					layoutMode: "fitRows",
-					filter: dfselector
-				});
-			}
-			return false;
-		});
+	// 	//isotope filter
+	// 	$(document).on( "click", filter_selectors, function() {
+	// 		$(filter_selectors).removeClass("current");
+	// 		$(this).addClass("current");
+	// 		var dfselector = $(this).data('filter');
+	// 		if ($grid_selectors.hasClass("masonry")){
+	// 			$grid_selectors.isotope({
+	// 				itemSelector: '.grid_item',
+	// 				layoutMode: "masonry",
+	// 				masonry: {
+	// 					columnWidth: '.grid_item'
+	// 				},
+	// 				filter: dfselector
+	// 			});
+	// 		} 
+	// 		else {
+	// 			$grid_selectors.isotope({
+	// 				itemSelector: '.grid_item',
+	// 				layoutMode: "fitRows",
+	// 				filter: dfselector
+	// 			});
+	// 		}
+	// 		return false;
+	// 	});
 		
-		$('.portfolio_filter').on('change', function() {
-			$grid_selectors.isotope({
-			  filter: this.value
-			});
-		});
+	// 	$('.portfolio_filter').on('change', function() {
+	// 		$grid_selectors.isotope({
+	// 		  filter: this.value
+	// 		});
+	// 	});
 
-		$(window).on("resize", function () {
-			setTimeout(function () {
-				$grid_selectors.find('.grid_item').removeClass('animation').removeClass('animated'); // avoid problem to filter after window resize
-				$grid_selectors.isotope('layout');
-			}, 300);
-		});
-	});
+	// 	$(window).on("resize", function () {
+	// 		setTimeout(function () {
+	// 			$grid_selectors.find('.grid_item').removeClass('animation').removeClass('animated'); // avoid problem to filter after window resize
+	// 			$grid_selectors.isotope('layout');
+	// 		}, 300);
+	// 	});
+	// });
 	
 	// $('.link_container').each(function () {
 	// 	$(this).magnificPopup({
