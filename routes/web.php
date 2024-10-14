@@ -8,10 +8,11 @@ use App\Http\Controllers\Frontend\Auth\RegisterController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Frontend\PhoneBookController;
 use App\Http\Controllers\Frontend\AddressController;
+use App\Http\Controllers\Frontend\HomePageController;
 
-Route::get('/', function () {
-    return view('frontend.homepage.index');
-})->name('home');
+// Route::get('/', function () {
+//     return view('frontend.homepage.index');
+// })->name('home');
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::get('forget-password', [LoginController::class, 'forgotPassword'])->name('forget-password');
@@ -26,6 +27,10 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 Route::get('login/facebook', [LoginController::class, 'redirectToFacebook'])->name('login.facebook');
 Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 
+Route::middleware('web')->group(function () {
+    Route::any('/',[HomePageController::class,'index'])->name('home');
+});
+
 Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('account', function() {
         return redirect()->route('dashboard');
@@ -33,7 +38,8 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('dashboard', function() {
         return redirect()->route('dashboard');
     });
-
+    
+    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
         Route::resource('phone-book', PhoneBookController::class);

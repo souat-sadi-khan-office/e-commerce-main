@@ -19,13 +19,124 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\ProductRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class ProductRepository implements ProductRepositoryInterface
 {
     public function index($request)
     {
-        return 1;
+        if ($request == null) {
+            return Product::where('status', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->latest()
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request->best_seller)) {
+
+            return Product::where('status', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderBY('ratings_count', 'DESC')
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request->featured)) {
+
+            return Product::where('status', 1)
+                ->where('is_featured', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request->offred)) {
+
+            return Product::where('status', 1)
+                ->where('is_discounted', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderByRaw('CASE 
+                                WHEN discount_type = "percentage" AND discount > 15 THEN 1
+                                WHEN discount_type = "flat" THEN 2
+                                ELSE 3
+                              END')
+                ->orderBY('discount', 'DESC')
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        }
     }
+
+    private function mapper($product)
+    {
+        // Determine if the product is discounted
+        $isDiscounted = $product->discount_type && $product->discount > 0;
+        $discountedPrice = $product->unit_price; // Default to unit price
+
+        if ($isDiscounted) {
+            $discountAmount = $product->discount_type == 'amount'
+                ? $product->discount
+                : ($product->unit_price * ($product->discount / 100));
+
+            $discountedPrice = $product->unit_price - $discountAmount;
+        }
+
+        // Get average rating and hover image
+        // Get average rating and convert to percentage
+        $averageRating = $product->ratings->isNotEmpty() ? $product->ratings->first()->averageRating : null;
+        $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : null;
+        $hoverImage = $product->image->isNotEmpty() ? $product->image->first()->image : null;
+
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'slug' => $product->slug,
+            'thumb_image' => $product->thumb_image,
+            'hover_image' => $hoverImage,
+            'unit_price' => $product->unit_price,
+            'discounted_price' => $discountedPrice, // Include discounted price
+            'discount' => $product->discount,
+            'discount_type' => $isDiscounted ? $product->discount_type : null,
+            'averageRating' => $averageRatingPercentage,
+            'ratingCount' => $product->ratings_count,
+            'stock_types' => $product->stock_types,
+        ];
+    }
+
 
     public function getAllProducts()
     {
@@ -37,7 +148,7 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::findOrFail($id);
     }
 
-    public function getProductStockPurchaseDetails($productId) 
+    public function getProductStockPurchaseDetails($productId)
     {
         return StockPurchase::where('product_id', $productId)->orderBy('id', 'DESC')->get();
     }
@@ -80,7 +191,7 @@ class ProductRepository implements ProductRepositoryInterface
             ->make(true);
     }
 
-    public function getSelectedProducts($category_id, $brand_id) 
+    public function getSelectedProducts($category_id, $brand_id)
     {
         // Query the product table
         $query = Product::query();
@@ -98,7 +209,7 @@ class ProductRepository implements ProductRepositoryInterface
         // Execute the query and return the result
         return $query->get();
     }
-    
+
     public function dataTableWithAjaxSearch($category_id, $brand_id)
     {
 
@@ -141,6 +252,10 @@ class ProductRepository implements ProductRepositoryInterface
     public function deleteProduct($id)
     {
         $product = Product::findOrFail($id);
+        Cache::forget('newProducts');
+        Cache::forget('homeProducts_best_seller');
+        Cache::forget('homeProducts_featured');
+        Cache::forget('homeProducts_offred');
         return $product->delete();
     }
 
@@ -158,7 +273,10 @@ class ProductRepository implements ProductRepositoryInterface
 
         $product->status = $request->input('status');
         $product->save();
-
+        Cache::forget('newProducts');
+        Cache::forget('homeProducts_best_seller');
+        Cache::forget('homeProducts_featured');
+        Cache::forget('homeProducts_offred');
         return response()->json(['success' => true, 'message' => 'Product status updated successfully.']);
     }
 
@@ -176,6 +294,8 @@ class ProductRepository implements ProductRepositoryInterface
 
         $product->is_featured = $request->input('status');
         $product->save();
+
+        Cache::forget('homeProducts_featured');
 
         return response()->json(['success' => true, 'message' => 'Product featured status updated successfully.']);
     }
@@ -220,11 +340,11 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         DB::beginTransaction();
-        
+
         $product = new Product();
         $product->name = $request->name;
         $product->slug = $request->slug;
-        $product->category_id = $request->category_id[count($request->category_id)-1];
+        $product->category_id = $request->category_id[count($request->category_id) - 1];
         $product->admin_id = Auth::guard('admin')->id();
         $product->brand_id = $request->brand_id;
         $product->brand_type_id = $request->brand_type_id;
@@ -263,11 +383,11 @@ class ProductRepository implements ProductRepositoryInterface
 
             // If any taxes array exist
             $taxArray = $request->taxes;
-            if(count($taxArray) > 0) {
+            if (count($taxArray) > 0) {
                 $taxIdArray = $request->tax_id;
                 $taxTypeArray = $request->tax_types;
 
-                for($taxCounter = 0; $taxCounter < count($taxArray); $taxCounter++) {
+                for ($taxCounter = 0; $taxCounter < count($taxArray); $taxCounter++) {
                     $tax = new ProductTax;
                     $tax->product_id = $product->id;
                     $tax->tax_id = $taxIdArray[$taxCounter];
@@ -278,28 +398,28 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // Stock Purchase
-            if($request->add_stock_now == 'now') {
+            if ($request->add_stock_now == 'now') {
 
                 $totalGivenQuantity = $request->quantity;
                 $totalGetQuantity = 0;
                 $stockType = $request->stock_types;
-                switch($stockType) {
-                    case 'globally': 
+                switch ($stockType) {
+                    case 'globally':
                         $totalGetQuantity = $request->globally_stock_amount;
-                    break;
+                        break;
                     case 'zone_wise':
                         $totalGetQuantity = array_sum($request->zone_wise_stock_quantity);
-                    break;
+                        break;
                     case 'country_wise':
                         $totalGetQuantity = array_sum($request->country_wise_quantity);
-                    break;
+                        break;
                     case 'city_wise':
                         $totalGetQuantity = array_sum($request->city_wise_quantity);
-                    break;
+                        break;
                 }
 
-                if($totalGivenQuantity != $totalGetQuantity) {
-                    return response()->json(['status' => false, 'message' => 'Your total given quantity is: '. $totalGivenQuantity. ', but we got '. $totalGetQuantity]);
+                if ($totalGivenQuantity != $totalGetQuantity) {
+                    return response()->json(['status' => false, 'message' => 'Your total given quantity is: ' . $totalGivenQuantity . ', but we got ' . $totalGetQuantity]);
                 }
 
                 $stockPurchase = new StockPurchase;
@@ -312,20 +432,20 @@ class ProductRepository implements ProductRepositoryInterface
                 $stockPurchase->purchase_unit_price = $request->purchase_unit_price;
                 $stockPurchase->purchase_total_price = ($request->quantity * $request->purchase_unit_price);
                 $stockPurchase->is_sellable = $request->is_sellable;
-                if(isset($request->file)) {
-                    $stockPurchase->file = Images::upload('products.files',$request->file);
+                if (isset($request->file)) {
+                    $stockPurchase->file = Images::upload('products.files', $request->file);
                 }
                 $stockPurchase->save();
-                if($stockPurchase) {
-    
+                if ($stockPurchase) {
+
                     // update product in_stock column
-                    if($stockPurchase->is_sellable == 1) {
+                    if ($stockPurchase->is_sellable == 1) {
                         $product->in_stock = 1;
                         $product->save();
                     }
-    
+
                     // Add stock data into product_stock table by stock_types
-                    switch($request->stock_types) {
+                    switch ($request->stock_types) {
                         case 'globally':
                             $stock = new ProductStock;
                             $stock->product_id = $product->id;
@@ -334,14 +454,14 @@ class ProductRepository implements ProductRepositoryInterface
                             $stock->number_of_sale = 0;
                             $stock->stock = $request->globally_stock_amount;
                             $stock->save();
-                        break;
+                            break;
                         case 'zone_wise':
-    
+
                             $zoneIdArray = $request->zone_id;
                             $zoneWiseStockQuantityArray = $request->zone_wise_stock_quantity;
-    
-                            if(count($zoneIdArray) > 0) {
-                                for($zoneCounter = 0; $zoneCounter < count($zoneIdArray); $zoneCounter++) {
+
+                            if (count($zoneIdArray) > 0) {
+                                for ($zoneCounter = 0; $zoneCounter < count($zoneIdArray); $zoneCounter++) {
                                     $stock = new ProductStock;
                                     $stock->product_id = $product->id;
                                     $stock->stock_purchase_id  = $stockPurchase->id;
@@ -352,14 +472,14 @@ class ProductRepository implements ProductRepositoryInterface
                                     $stock->save();
                                 }
                             }
-    
-                        break;
+
+                            break;
                         case 'country_wise':
                             $countryIdArray = $request->country_id;
                             $countryWiseStockQuantityArray = $request->country_wise_quantity;
-    
-                            if(count($countryIdArray) > 0) {
-                                for($countryCounter = 0; $countryCounter < count($countryIdArray); $countryCounter++) {
+
+                            if (count($countryIdArray) > 0) {
+                                for ($countryCounter = 0; $countryCounter < count($countryIdArray); $countryCounter++) {
                                     $stock = new ProductStock;
                                     $stock->product_id = $product->id;
                                     $stock->stock_purchase_id  = $stockPurchase->id;
@@ -370,14 +490,14 @@ class ProductRepository implements ProductRepositoryInterface
                                     $stock->save();
                                 }
                             }
-                        break;
+                            break;
                         case 'city_wise':
-    
+
                             $cityIdArray = $request->city_id;
                             $cityWiseStockQuantityArray = $request->city_wise_quantity;
-    
-                            if(count($cityIdArray) > 0) {
-                                for($cityCounter = 0; $cityCounter < count($cityIdArray); $cityCounter++) {
+
+                            if (count($cityIdArray) > 0) {
+                                for ($cityCounter = 0; $cityCounter < count($cityIdArray); $cityCounter++) {
                                     $stock = new ProductStock;
                                     $stock->product_id = $product->id;
                                     $stock->stock_purchase_id  = $stockPurchase->id;
@@ -388,68 +508,70 @@ class ProductRepository implements ProductRepositoryInterface
                                     $stock->save();
                                 }
                             }
-    
-                        break;
+
+                            break;
                     }
-    
+
                     // update current_stock data on product_details table
-                    if($stockPurchase->is_sellable == 1) {
+                    if ($stockPurchase->is_sellable == 1) {
                         $details->current_stock = $request->quantity;
                         $details->save();
                     }
                 }
             }
 
-            if(isset($request->images)){
-                foreach($request->images as $image){
-                    $product_image= new ProductImage();
+            if (isset($request->images)) {
+                foreach ($request->images as $image) {
+                    $product_image = new ProductImage();
                     $product_image->product_id = $product->id;
-                    $product_image->image = Images::upload('products',$image);
+                    $product_image->image = Images::upload('products', $image);
                     $product_image->status = 1;
                     $product_image->save();
-                }  
+                }
             }
 
             // $tax will be Added Later Product_Taxes
-            if(isset($request->specification_key)) {
+            if (isset($request->specification_key)) {
 
                 foreach ($request->specification_key as $specification) {
                     $keyId = $specification['key_id'];
                     $processedTypeIds = [];
-                
+
                     // Loop through type_id
                     foreach ($specification['type_id'] as $typeId => $value) {
 
-                        if(is_numeric($typeId)){
-                            $tkey=$value;
+                        if (is_numeric($typeId)) {
+                            $tkey = $value;
                         }
                         // Skip non-numeric keys
                         if (!is_numeric($typeId)) {
                             continue;
                         }
-                
+
                         // Skip if this type_id has already been processed
                         if (in_array($typeId, $processedTypeIds)) {
                             continue;
                         }
-                
+
                         // Initialize variables
                         $firstAttributeId = null;
                         $featuresExist = false;
                         // Check for attributes
-                        if (isset($specification['type_id']['attribute_id'][$value]) 
-                            && is_array($specification['type_id']['attribute_id'][$value]) 
-                            && !empty($specification['type_id']['attribute_id'][$value])) {
-                            
+                        if (
+                            isset($specification['type_id']['attribute_id'][$value])
+                            && is_array($specification['type_id']['attribute_id'][$value])
+                            && !empty($specification['type_id']['attribute_id'][$value])
+                        ) {
+
                             // Get the first attribute ID
                             $firstAttributeId = $specification['type_id']['attribute_id'][$value][0]; // First attribute
                         }
-                
+
                         // Check for features
                         if (isset($specification['type_id']['features'][$value])) {
                             $featuresExist = true; // Set to true if features exist
                         }
-                
+
                         // Create a ProductSpecification entry only if we have an attribute ID
                         if ($firstAttributeId !== null) {
                             $productSpecification = new ProductSpecification();
@@ -457,13 +579,13 @@ class ProductRepository implements ProductRepositoryInterface
                             $productSpecification->key_id = $keyId;
                             $productSpecification->type_id = intval($tkey);
                             $productSpecification->attribute_id = intval($firstAttributeId); // Store the first attribute ID
-                            
+
                             // Set key_feature as boolean
                             $productSpecification->key_feature = $featuresExist ? 1 : 0; // Use ternary for clarity
-                
+
                             $productSpecification->save(); // Save the entry
                         }
-                
+
                         // Mark this type_id as processed
                         $processedTypeIds[] = $typeId;
                     }
@@ -471,7 +593,10 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             DB::commit();
-
+            Cache::forget('newProducts');
+            Cache::forget('homeProducts_best_seller');
+            Cache::forget('homeProducts_featured');
+            Cache::forget('homeProducts_offred');
         } else {
             DB::rollBack();
         }
@@ -479,7 +604,7 @@ class ProductRepository implements ProductRepositoryInterface
         return response()->json(['status' => true, 'message' => 'Product created successfully.', 'load' => true]);
     }
 
-    public function updateProduct($request, $id) 
+    public function updateProduct($request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -488,7 +613,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'string',
                 'max:255',
                 Rule::unique('products', 'slug')->ignore($id),
-            ],            
+            ],
             'category_id' => 'required|array',
             'category_id.*' => 'exists:categories,id',
             'images' => 'required|array',
@@ -519,7 +644,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product = Product::findOrFail($id);
         $product->name = $request->name;
         $product->slug = $request->slug;
-        $product->category_id = $request->category_id[count($request->category_id)-1];
+        $product->category_id = $request->category_id[count($request->category_id) - 1];
         $product->brand_id = $request->brand_id;
         $product->brand_type_id = $request->brand_type_id;
         $product->is_discounted = $request->is_discounted;
@@ -532,18 +657,18 @@ class ProductRepository implements ProductRepositoryInterface
         $product->is_returnable = $request->is_returnable;
         $product->return_deadline = $request->return_deadline;
 
-        if($request->thumb_image) {
+        if ($request->thumb_image) {
             $product->thumb_image = Images::upload('products', $request->thumb_image);
         }
 
         $product->save();
 
         // if the product is saved
-        if($product) {
+        if ($product) {
 
             // saved the product details
             $details = ProductDetail::where('product_id', $product->id)->first();
-            if($details) {
+            if ($details) {
                 $details->video_provider = $request->video_provider;
                 $details->video_link = $request->video_link;
                 $details->description = $request->description;
@@ -560,12 +685,12 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // update the tax details
-            if(count($request->tax_id) > 0) {
+            if (count($request->tax_id) > 0) {
                 $taxIdArray = $request->tax_id;
                 $taxAmountArray = $request->taxes;
                 $taxTypeArray = $request->tax_types;
 
-                for($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
+                for ($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
                     $taxModel = ProductTax::find($taxIdArray[$taxCounter]);
                     $taxModel->tax = $taxAmountArray[$taxCounter];
                     $taxModel->tax_type = $taxTypeArray[$taxCounter];
@@ -574,13 +699,13 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // images
-            if(isset($request->images)) {
+            if (isset($request->images)) {
                 $this->removeImage($product->id);
 
-                foreach($request->images as $image) {
-                    $product_image= new ProductImage();
+                foreach ($request->images as $image) {
+                    $product_image = new ProductImage();
                     $product_image->product_id = $product->id;
-                    $product_image->image = Images::upload('products',$image);
+                    $product_image->image = Images::upload('products', $image);
                     $product_image->status = 1;
                     $product_image->save();
                 }
@@ -590,7 +715,7 @@ class ProductRepository implements ProductRepositoryInterface
         return response()->json(['status' => true, 'message' => 'Product updated successfully.', 'goto' => route('admin.product.index')]);
     }
 
-    private function removeImage($productId) 
+    private function removeImage($productId)
     {
         return ProductImage::where('product_id', $productId)->delete();
     }
@@ -615,7 +740,7 @@ class ProductRepository implements ProductRepositoryInterface
             'brand_id' => $originalProduct->brand_id,
             'brand_type_id' => $originalProduct->brand_type_id,
             'name' => $originalProduct->name,
-            'slug' => $originalProduct->slug . '-'. rand(100, 1000),
+            'slug' => $originalProduct->slug . '-' . rand(100, 1000),
             'unit_price' => $originalProduct->unit_price,
             'status' => $originalProduct->status,
             'in_stock' => $originalProduct->in_stock,
@@ -631,11 +756,11 @@ class ProductRepository implements ProductRepositoryInterface
             'stock_types' => $originalProduct->stock_types,
             'thumb_image' => $originalProduct->thumb_image
         ]);
-        
-        if($newProduct) {
-            
+
+        if ($newProduct) {
+
             // Duplicate ProductDetail
-            if($originalProduct->details) {
+            if ($originalProduct->details) {
                 ProductDetail::create([
                     'product_id' => $newProduct->id,
                     'video_provider' => $originalProduct->details->video_provider,
@@ -658,7 +783,7 @@ class ProductRepository implements ProductRepositoryInterface
                 ]);
             }
 
-            if($originalProduct->image && $request->product_images) {
+            if ($originalProduct->image && $request->product_images) {
                 foreach ($originalProduct->image as $image) {
                     $newImage = new ProductImage();
                     $newImage->product_id = $newProduct->id;
@@ -669,7 +794,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // Duplicate ProductSpecification
-            if($originalProduct->specifications && $request->product_specifications) {
+            if ($originalProduct->specifications && $request->product_specifications) {
                 foreach ($originalProduct->specifications as $specification) {
                     ProductSpecification::create([
                         'product_id' => $newProduct->id,
@@ -682,7 +807,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // Duplicate ProductTax
-            if($originalProduct->taxes && $request->product_taxes) {
+            if ($originalProduct->taxes && $request->product_taxes) {
                 foreach ($originalProduct->taxes as $tax) {
                     ProductTax::create([
                         'product_id' => $newProduct->id,
@@ -734,6 +859,10 @@ class ProductRepository implements ProductRepositoryInterface
             // }
 
             DB::commit();
+            Cache::forget('newProducts');
+            Cache::forget('homeProducts_best_seller');
+            Cache::forget('homeProducts_featured');
+            Cache::forget('homeProducts_offred');
         } else {
             DB::rollback();
         }
@@ -744,17 +873,17 @@ class ProductRepository implements ProductRepositoryInterface
     private function copyImage($imagePath)
     {
         $extension = File::extension($imagePath);
-    
+
         $newFilename = Str::random(10) . "-copy." . $extension;
-    
+
         $newFilePath = 'storage/images/products/' . $newFilename;
-    
+
         if (File::exists($imagePath)) {
             File::copy($imagePath, $newFilePath);
         } else {
             return null;
         }
-    
+
         return $newFilePath;
     }
 
