@@ -508,8 +508,8 @@ class ProductRepository implements ProductRepositoryInterface
             'low_stock_quantity' => 'required|integer|min:0',
             'cash_on_delivery' => 'required|boolean',
             'est_shipping_time' => 'nullable|string|max:255',
-            'taxes' => 'required|array',
-            'tax_types' => 'required|array',
+            'taxes' => 'array',
+            'tax_types' => 'array',
         ]);
 
         if ($validator->fails()) {
@@ -583,7 +583,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $product_image->image = Images::upload('products',$image);
                     $product_image->status = 1;
                     $product_image->save();
-                }  
+                }
             }
         }
 
