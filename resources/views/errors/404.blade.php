@@ -1,5 +1,12 @@
-@extends('fontend.layouts.app')
-@section('title', 'HOME | CPL eCommarce')
+@extends('frontend.layouts.app', ['title' => 'The page you requested cannot be found'])
+@push('page_meta_information')
+    
+    <link rel="canonical" href="{{ route('home') }}" />
+    <meta name="referrer" content="origin">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <meta name="title" content="The page you requested cannot be found | {{ get_settings('system_name') }}">
+@endpush
 
 @push('breadcrumb')
     <div class="breadcrumb_section page-title-mini">
@@ -33,12 +40,6 @@
                                 <div class="error_txt">404</div>
                                 <h5 class="mb-2 mb-sm-3">oops! The page you requested was not found!</h5> 
                                 <p>The page you are looking for was moved, removed, renamed or might never existed.</p>
-                                <div class="search_form pb-3 pb-md-4">
-                                    <form method="GET">
-                                        <input name="text" id="text" type="text" placeholder="Search" class="form-control">
-                                        <button type="submit" class="btn icon_search"><i class="ion-ios-search-strong"></i></button>
-                                    </form>
-                                </div>
                                 <a href="{{ route('home') }}" class="btn btn-fill-out">
                                     Back To Home
                                 </a>

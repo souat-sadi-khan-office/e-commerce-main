@@ -94,12 +94,12 @@ class AuthRepository implements AuthRepositoryInterface
     
     public function customer_login_form()
     {
-        return view('fontend.auth.login');
+        return view('frontend.auth.login');
     }
 
     public function customer_register_form()
     {
-        return view('fontend.auth.register');
+        return view('frontend.auth.register');
     }
 
     public function logout($guard)

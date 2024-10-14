@@ -22,17 +22,17 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return view('fontend.customer.dashboard');
+        return view('frontend.customer.dashboard');
     }
     
     public function myOrders()
     {
-        return view('fontend.customer.my-orders');
+        return view('frontend.customer.my-orders');
     }
     
     public function quotes()
     {
-        return view('fontend.customer.quotes');
+        return view('frontend.customer.quotes');
     }
     
     public function profile()
@@ -40,7 +40,7 @@ class UserController extends Controller
         $model = $this->user->getCustomerDetails();
         $currencies = $this->currency->getAllActiveCurrencies();
 
-        return view('fontend.customer.profile', compact('model', 'currencies'));
+        return view('frontend.customer.profile', compact('model', 'currencies'));
     }
 
     public function updateProfile(Request $request)
@@ -50,7 +50,7 @@ class UserController extends Controller
     
     public function password()
     {
-        return view('fontend.customer.password');
+        return view('frontend.customer.password');
     }
 
     public function updatePassword(Request $request) 
@@ -60,26 +60,26 @@ class UserController extends Controller
     
     public function addressBook()
     {
-        return view('fontend.customer.address');
+        return view('frontend.customer.address');
     }
     
     public function wishlist()
     {
-        return view('fontend.customer.wishlist');
+        return view('frontend.customer.wishlist');
     }
     
     public function star_points()
     {
-        return view('fontend.customer.star_points');
+        return view('frontend.customer.star_points');
     }
 
     public function saved_pc()
     {
-        return view('fontend.customer.saved_pc');
+        return view('frontend.customer.saved_pc');
     }
 
     public function transactions()
     {
-        return view('fontend.customer.transactions');
+        return view('frontend.customer.transactions');
     }
 }

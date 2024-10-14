@@ -39,7 +39,7 @@ class AddressController extends Controller
     public function index()
     {
         $models = $this->address->getAllByUser();
-        return view('fontend.customer.address.index', compact('models'));
+        return view('frontend.customer.address.index', compact('models'));
     }
 
     /**
@@ -48,7 +48,7 @@ class AddressController extends Controller
     public function create()
     {
         $zones = $this->zone->getAllActiveZones();
-        return view('fontend.customer.address.create', compact('zones'));
+        return view('frontend.customer.address.create', compact('zones'));
     }
 
     public function getCountriesByZone(Request $request)
@@ -114,7 +114,7 @@ class AddressController extends Controller
         $countries = $this->country->findCountriesByZoneId($model->zone_id);
         $cities = $this->city->findCitiesByCountryId($model->country_id);
 
-        return view('fontend.customer.address.edit', compact('model', 'zones', 'countries', 'cities'));
+        return view('frontend.customer.address.edit', compact('model', 'zones', 'countries', 'cities'));
     }
 
     /**

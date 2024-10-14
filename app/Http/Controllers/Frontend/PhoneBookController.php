@@ -30,7 +30,7 @@ class PhoneBookController extends Controller
     public function index()
     {
         $models = $this->phone->getAllByUser();
-        return view('fontend.customer.phone.index', compact('models'));
+        return view('frontend.customer.phone.index', compact('models'));
     }
 
     /**
@@ -38,7 +38,7 @@ class PhoneBookController extends Controller
      */
     public function create()
     {
-        return view('fontend.customer.phone.create');
+        return view('frontend.customer.phone.create');
     }
 
     /**
@@ -74,7 +74,7 @@ class PhoneBookController extends Controller
     public function edit(string $id)
     {
         $model = $this->phone->findModelById($id);
-        return view('fontend.customer.phone.edit', compact('model'));
+        return view('frontend.customer.phone.edit', compact('model'));
     }
 
     /**

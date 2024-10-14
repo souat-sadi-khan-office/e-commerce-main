@@ -1,5 +1,5 @@
 @extends('backend.layouts.app')
-@section('title', 'Home Page Configuration | Fontend')
+@section('title', 'Home Page Configuration | frontend')
 
 @section('content')
     <div class="row mt-5">

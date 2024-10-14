@@ -10,7 +10,7 @@ use App\Http\Controllers\Frontend\PhoneBookController;
 use App\Http\Controllers\Frontend\AddressController;
 
 Route::get('/', function () {
-    return view('fontend.homepage.index');
+    return view('frontend.homepage.index');
 })->name('home');
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
