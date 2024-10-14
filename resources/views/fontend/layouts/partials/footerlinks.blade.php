@@ -24,5 +24,6 @@
 <script src="{{asset('fontend/assets/js/slick.min.js')}}"></script>
 <!-- elevatezoom js -->
 <script src="{{asset('fontend/assets/js/jquery.elevatezoom.js')}}"></script>
+<script src="{{asset('backend/assets/js/select2.min.js')}}"></script>
 <!-- scripts js --> 
 <script src="{{asset('fontend/assets/js/scripts.js')}}"></script>

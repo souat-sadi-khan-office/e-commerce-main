@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{asset('fontend/assets/css/magnific-popup.css')}}">
     <link rel="stylesheet" href="{{asset('fontend/assets/css/slick.css')}}">
     <link rel="stylesheet" href="{{asset('fontend/assets/css/slick-theme.css')}}">
+    <link rel="stylesheet" href="{{asset('backend/assets/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{asset('fontend/assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('fontend/assets/css/responsive.css')}}">
 

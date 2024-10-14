@@ -188,7 +188,17 @@
 		$(this).val(allowOnlyNumbers(value));
 	});
 
+	$('.select').select2({
+		width: '100%'
+	});
 
+	$(document).on('click', '.system-selector', function() {
+		$('#globalSelector').css('display', 'block');
+	})
+	
+	$(document).on('click', '.close-global-selector', function() {
+		$('#globalSelector').css('display', 'none');
+	})
 	
 	function allowOnlyNumbers(input) {
 		return input.replace(/\D/g, '');

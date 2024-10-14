@@ -1553,7 +1553,7 @@ button:focus:not(:focus-visible) {
 	color: #333 !important;
 }
 .cart_list img {
-	border: 1px solid #ddd
+	border: 1px solid #ddd;
 	background-color: #ffffff;
 	float: left;
 	margin-right: 10px;
@@ -1581,6 +1581,10 @@ button:focus:not(:focus-visible) {
 	padding: 0 !important;
 	max-height: 242px;
 	overflow-y: auto;
+}
+
+.cart_list.country-dropdown {
+	max-height: 480px !important;
 }
 .cart_list li {
 	display: inline-block;
@@ -4300,7 +4304,7 @@ footer .widget_title {
 	top: 0;
 	bottom: 0;
 	background-color: #FF324D;
-	z-index: ;
+	z-index: 1;
 	transition: all 0.5s ease-in-out;
 	-moz-transform: scale(0);
 	-webkit-transform: scale(0);
@@ -7572,6 +7576,10 @@ blockquote p:last-child {
 		padding: 10px;
 	}
 
+	.cart-button {
+		display: none;
+	}
+
 	.ac-header .right {
 		margin-top: 15px;
 	}
@@ -7724,4 +7732,77 @@ blockquote p:last-child {
   
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
     padding-left: 0px !important;
+}
+
+.q-actions .ac {
+    float: left;
+    display: flex;
+    padding-left: 18px;
+}
+
+.q-actions .ac .ic {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 32px;
+    position: relative;
+    top: 1px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.q-actions .ac .ic i {
+    color: #FF324D;
+    font-size: 24px;
+    width: 30px;
+    height: 36px;
+    line-height: 36px;
+}
+
+.q-actions .ac * {
+    color: #000;
+}
+
+.q-actions .ac a {
+    text-decoration: none;
+}
+
+.q-actions .ac h5 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.q-actions .ac p {
+    font-size: 11px;
+    line-height: 16px;
+    margin: 0;
+    white-space: nowrap;
+    color: #6c757d;
+}
+
+.q-actions .ac p a {
+    color: #000;
+}
+
+.q-actions .ac p a:hover {
+    color: #FF324D;
+}
+
+#globalSelector {
+	direction: ltr;
+    display: none;
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+	width: 300px;
+    margin-top: 60px;
+    color: #191919;
+    background: #fff;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .2);
+    z-index: 1030;
 }
