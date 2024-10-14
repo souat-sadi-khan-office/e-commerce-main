@@ -108,4 +108,9 @@ class LoginController extends Controller
         return view('frontend.pc-builder');
     }
 
+    public function product()
+    {
+        return view('frontend.product-details');
+    }
+
 }

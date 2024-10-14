@@ -13,6 +13,7 @@ Route::get('/', function () {
     return view('frontend.homepage.index');
 })->name('home');
 
+Route::get('product', [LoginController::class, 'product'])->name('product');
 Route::get('laptop-buying-guide', [LoginController::class, 'laptopBuyingGuide'])->name('laptop-buying-guide');
 Route::get('pc-builder', [LoginController::class, 'pcBuilder'])->name('pc-builder');
 Route::get('login', [LoginController::class, 'index'])->name('login');
