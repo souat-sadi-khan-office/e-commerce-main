@@ -19,7 +19,6 @@ Route::get('forget-password', [LoginController::class, 'forgotPassword'])->name(
 Route::get('register', [RegisterController::class, 'index'])->name('register');
 Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
 Route::post('register/post', [RegisterController::class, 'register'])->name('register.post');
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
