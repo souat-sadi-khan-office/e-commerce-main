@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app', ['title' => 'Login | '. get_settings('system_name')])
+@extends('frontend.layouts.app', ['title' => 'Forgetten Your Password? | '. get_settings('system_name')])
 
 @push('page_meta_information')
     
@@ -6,7 +6,7 @@
     <meta name="referrer" content="origin">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
-    <meta name="title" content="Login | {{ get_settings('system_name') }}">
+    <meta name="title" content="Forget Password | {{ get_settings('system_name') }}">
 @endpush
 
 @push('breadcrumb')
@@ -20,8 +20,13 @@
                             <i class="linearicons-home"></i>
                         </a>
                     </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('login') }}">
+                            Account Login
+                        </a>
+                    </li>
                     <li class="breadcrumb-item active">
-                        Account Login
+                        Forgotten Password
                     </li>
                 </ol>
             </div>
@@ -43,30 +48,15 @@
                         <div class="login_wrap">
                             <div class="padding_eight_all bg-white">
                                 <div class="heading_s1">
-                                    <h3>Account Login</h3>
+                                    <h3>Forgot Your Password?</h3>
                                 </div>
-                                <form method="POST" id="login-form" action="{{ route('login.post') }}">
+                                <form method="POST" id="login-form" action="">
                                     <div class="row">
                                         <!-- email -->
                                         <div class="col-md-12 form-group mb-3">
-                                            <label for="email">E-Mail <span class="text-danger">*</span></label>
+                                            <label for="email">Enter Your E-Mail <span class="text-danger">*</span></label>
                                             <input type="email" class="form-control" name="email" placeholder="E-Mail" required>
                                         </div>
-
-                                        <!-- password -->
-                                        <div class="col-md-12 form-group mb-3">
-                                            <label for="password">Password <span class="text-danger">*</span></label>
-                                            <input class="form-control" type="password" name="password" placeholder="Password" required>
-                                        </div>
-                                    </div>
-                                    <div class="login_footer form-group mb-3">
-                                        <div class="chek-form">
-                                            <div class="custome-checkbox">
-                                                <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                                <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
-                                            </div>
-                                        </div>
-                                        <a href="{{ route('forget-password') }}">Forgot password?</a>
                                     </div>
                                     <div class="form-group mb-3">
                                         <button style="display: none;" type="submit" id="submit" class="btn btn-fill-out btn-block" name="login">Log in</button>
@@ -81,20 +71,6 @@
                                 <div class="different_login">
                                     <span> or</span>
                                 </div>
-                                <ul class="btn-login list_none text-center">
-                                    <li>
-                                        <a href="{{ route('login.facebook') }}" class="btn btn-facebook">
-                                            <i class="ion-social-facebook"></i>
-                                            Facebook
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('google.login') }}" class="btn btn-google">
-                                            <i class="ion-social-googleplus"></i>
-                                            Google
-                                        </a>
-                                    </li>
-                                </ul>
                                 <div class="form-note text-center">Don't Have an Account? <a href="{{ route('register') }}">Sign up now</a></div>
                             </div>
                         </div>

@@ -115,7 +115,7 @@
                                     <h5>Wishlist</h5>
                                 </a>
                                 <p>
-                                    <a href="https://www.startech.com.bd/account/logout">0</a>
+                                    <a href="#">0</a>
                                 </p>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                                     @if (Auth::guard('customer')->check())
                                         <a href="{{ route('dashboard') }}">Profile</a>
                                         or 
-                                        <a href="{{ route('logout') }}">Logout</a>
+                                        <a id="logout" href="javascript:;" data-url="{{ route('logout') }}">Logout</a>
                                     @else
                                         <a href="{{ route('login') }}">Login</a>
                                         or 

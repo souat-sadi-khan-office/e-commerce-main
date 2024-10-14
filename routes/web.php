@@ -14,10 +14,17 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
+Route::get('forget-password', [LoginController::class, 'forgotPassword'])->name('forget-password');
 Route::get('register', [RegisterController::class, 'index'])->name('register');
 Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
 Route::post('register/post', [RegisterController::class, 'register'])->name('register.post');
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+
+Route::get('login/facebook', [LoginController::class, 'redirectToFacebook'])->name('login.facebook');
+Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 
 Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('account', function() {

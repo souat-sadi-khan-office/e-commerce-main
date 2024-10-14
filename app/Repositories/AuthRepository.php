@@ -75,6 +75,30 @@ class AuthRepository implements AuthRepositoryInterface
 
         return $customer;
     }
+
+    public function social_login($socialUser, $provider) 
+    {
+        $user = User::where('email', $socialUser->getEmail())->first();
+        if (!$user) {
+            $user = User::create([
+                'currency_id' => 1,
+                'name' => $socialUser->getName(),
+                'email' => $socialUser->getEmail(),
+                'provider_id' => $socialUser->getId(),
+                'provider_name' => $provider,
+                'avatar' => $socialUser->getAvatar(),
+                'password' => Hash::make(123456)
+            ]);
+
+            UserWallet::create([
+                'user_id' => $user->id,
+                'amount' => 0,
+                'status' => 'active',
+            ]);
+        }
+
+        return $user;
+    }
     
     public function customer_login( $request, $guard)
     {
@@ -95,6 +119,11 @@ class AuthRepository implements AuthRepositoryInterface
     public function customer_login_form()
     {
         return view('frontend.auth.login');
+    }
+    
+    public function customer_forgot_password_form()
+    {
+        return view('frontend.auth.forget-password');
     }
 
     public function customer_register_form()

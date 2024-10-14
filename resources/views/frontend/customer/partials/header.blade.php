@@ -2,7 +2,15 @@
     <div class="col-md-6">
         <div class="left">
             <span class="avatar">
-                <img src="{{ Auth::guard('customer')->user()->avatar == 'default.png' ? asset('pictures/user.png') : asset(Auth::guard('customer')->user()->avatar) }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
+                @if (Auth::guard('customer')->user()->avatar == 'default.png')
+                <img src="{{ asset('pictures/user.png') }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
+                @else
+                    @if (Auth::guard('customer')->user()->provider_name == 'google' || Auth::guard('customer')->user()->provider_name == 'facebook')
+                        <img src="{{ Auth::guard('customer')->user()->avatar }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
+                    @else
+                        <img src="{{ asset(Auth::guard('customer')->user()->avatar) }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
+                    @endif
+                @endif
             </span>
             <div class="name">
                 <p>Hello,</p>

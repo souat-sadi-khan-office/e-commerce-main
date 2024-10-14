@@ -28,6 +28,8 @@ class User extends Authenticatable
         'status',
         'code',
         'latitude',
+        'provider_id',
+        'provider_name',
         'longitude'
     ];
 

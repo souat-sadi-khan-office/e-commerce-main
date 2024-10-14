@@ -1,5 +1,12 @@
-@extends('frontend.layouts.app')
-@section('title', 'Login ', get_settings('system_name'))
+@extends('frontend.layouts.app', ['title' => 'My Profile ', get_settings('system_name')])
+@push('page_meta_information')
+    
+    <link rel="canonical" href="{{ route('home') }}" />
+    <meta name="referrer" content="origin">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <meta name="title" content="My Profile | {{ get_settings('system_name') }}">
+@endpush
 @push('styles')
     <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">

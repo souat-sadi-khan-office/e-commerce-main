@@ -1128,8 +1128,9 @@ button:focus:not(:focus-visible) {
 }
 .dropdown-toggle::after, .dropdown-toggler::after {
 	border: 0 none;
-	content: "\f3d0";
-	font-family: "Ionicons";
+	content: "\f107";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 600;
 	margin-left: 5px;
 	vertical-align: middle;
 }
@@ -4150,8 +4151,9 @@ footer .widget_title {
 	padding: 0;
 }
 .breadcrumb-item + .breadcrumb-item::before {
-	content: "\f3d1";
-	font-family: "Ionicons";
+	content: "\f105";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 600; 
 	vertical-align: middle;
 }
 .page-title + .breadcrumb {

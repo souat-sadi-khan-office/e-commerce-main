@@ -1,6 +1,12 @@
-@extends('frontend.layouts.app')
-@section('title', 'Login ', get_settings('system_name'))
+@extends('frontend.layouts.app', ['title' => 'My Dashboard | '. get_settings('sysetm_name')])
+@push('page_meta_information')
+    
+    <link rel="canonical" href="{{ route('home') }}" />
+    <meta name="referrer" content="origin">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
+    <meta name="title" content="My Dashboard | {{ get_settings('system_name') }}">
+@endpush
 @push('breadcrumb')
 <div class="breadcrumb_section page-title-mini">
     <div class="custom-container">
@@ -45,7 +51,7 @@
                                     <div class="col-md-4">
                                         <div class="total-contain">
                                             <div class="total-icon">
-                                                <i class="ti-shopping-cart-full"></i>
+                                                <i class="fas fa-shopping-basket"></i>
                                             </div>
                                             <div class="total-detail">
                                                 <span class="text">Total Order</span>
@@ -56,7 +62,7 @@
                                     <div class="col-md-4">
                                         <div class="total-contain">
                                             <div class="total-icon">
-                                                <i class="ti-truck"></i>
+                                                <i class="fas fa-truck"></i>
                                             </div>
                                             <div class="total-detail">
                                                 <span class="text">Total Pending Order</span>
@@ -67,7 +73,7 @@
                                     <div class="col-md-4">
                                         <div class="total-contain">
                                             <div class="total-icon">
-                                                <i class="ti-heart"></i>
+                                                <i class="far fa-heart"></i>
                                             </div>
                                             <div class="total-detail">
                                                 <span class="text">Total Wishlist</span>
