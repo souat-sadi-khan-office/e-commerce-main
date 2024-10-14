@@ -28,5 +28,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (NotFoundHttpException $exception, Request $request) {
+            if ($exception->getStatusCode() == 404) {
+                return response()->view("errors.404", [], 404);
+            }
+        });
     })->create();

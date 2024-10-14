@@ -136,7 +136,7 @@
 	$(window).on('scroll', function() {
 		var scroll = $(window).scrollTop();
 		
-	    if (scroll >= 150) {
+	    if (scroll >= 250) {
 	        $('.header_sticky_bar').removeClass('d-none');
 			$('header.no-sticky').removeClass('nav-fixed');
 
