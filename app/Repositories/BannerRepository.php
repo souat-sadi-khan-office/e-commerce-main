@@ -9,6 +9,7 @@ use App\Models\Banner;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Repositories\Interface\BannerRepositoryInterface;
 
 class BannerRepository implements BannerRepositoryInterface
@@ -102,7 +103,7 @@ class BannerRepository implements BannerRepositoryInterface
             'alt_tag' => $data->alt_tag,
             'image' => $data->image ? Images::upload('banners', $data->image) : null,
         ]);
-
+        Cache::forget('banners');
         $json = ['status' => true, 'goto' => route('admin.banner.index'), 'message' => 'Banner created successfully'];
         return response()->json($json);
     }
@@ -112,9 +113,9 @@ class BannerRepository implements BannerRepositoryInterface
         $banner = Banner::findOrFail($id);
         $banner->banner_type = $data->banner_type;
         $banner->name = $data->name;
-        $banner->header_title= $data->header_title;
-        $banner->old_offer= $data->old_offer;
-        $banner->new_offer= $data->new_offer;
+        $banner->header_title = $data->header_title;
+        $banner->old_offer = $data->old_offer;
+        $banner->new_offer = $data->new_offer;
         $banner->source_type = $data->source_type;
         $banner->source_id = $data->source_id;
         $banner->link = $data->link;
@@ -128,12 +129,16 @@ class BannerRepository implements BannerRepositoryInterface
 
         $banner->update();
 
+        Cache::forget('banners');
+
         return response()->json(['status' => true, 'goto' => route('admin.banner.index'), 'message' => 'Banner updated successfully.']);
     }
 
     public function deleteBanner($id)
     {
         $brand = Banner::findOrFail($id);
+        // Clear the banners cache
+        Cache::forget('banners');
         return $brand->delete();
     }
 
@@ -151,7 +156,7 @@ class BannerRepository implements BannerRepositoryInterface
 
         $banner->status = $request->input('status');
         $banner->save();
-
+        Cache::forget('banners');
         return response()->json(['success' => true, 'message' => 'Banner status updated successfully.']);
     }
 }

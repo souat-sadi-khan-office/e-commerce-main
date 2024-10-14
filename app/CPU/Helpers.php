@@ -4,7 +4,9 @@ namespace App\CPU;
 
 use Exception;
 use App\Models\Admin;
+use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 
 class Helpers
@@ -77,6 +79,26 @@ class Helpers
     {
         return 1;
     }
+
+    public function SourceLink($type, $id) {
+        $slug = '';
+    
+        if ($type == 'product') {
+            $slug = Product::find($id)->slug ?? '';
+            return '#';
+        } elseif ($type == 'category') {
+            $slug = Category::find($id)->slug ?? '';
+            return '#';
+
+        } elseif ($type == 'brand') {
+            $slug = Brand::find($id)->slug ?? '';
+            return '#';
+
+        }
+    
+        return '#';
+    }
+    
 
     // public static function make_online()
     // {

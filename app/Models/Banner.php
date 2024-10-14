@@ -15,7 +15,6 @@ class Banner extends Model
         'header_title',
         'old_offer',
         'new_offer',
-        'slug',
         'image',
         'source_type',
         'source_id',
