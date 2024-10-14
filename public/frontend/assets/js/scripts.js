@@ -448,6 +448,37 @@
 	// 		}
 	// 		return false;
 	// 	});
+
+	$('#search').on('keyup', function(){
+		search();
+	});
+
+	$('#search').on('focus', function(){
+		search();
+	});
+
+	function search(){
+		var searchKey = $('#search').val();
+		if(searchKey.length > 0){
+
+			$('.typed-search-box').removeClass('d-none');
+			$('.searching-preloader').removeClass('d-none');
+			// $.post('https://sudipmart.com/ajax-search', { search:searchKey}, function(data){
+				// if(data == '0'){
+				// 	$('#search-content').html(null);
+				// 	$('.typed-search-box .search-nothing').removeClass('d-none').html('Sorry, nothing found for <strong>"'+searchKey+'"</strong>');
+				// 	$('.searching-preloader').addClass('d-none');
+
+				// } else {
+					$('.typed-search-box .search-nothing').addClass('d-none').html(null);
+					// $('#search-content').html(data);
+					$('.searching-preloader').addClass('d-none');
+				// }
+			// });
+		} else {
+			$('.typed-search-box').addClass('d-none');
+		}
+	}
 		
 	// 	$('.portfolio_filter').on('change', function() {
 	// 		$grid_selectors.isotope({
