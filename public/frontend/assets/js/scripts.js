@@ -464,17 +464,17 @@
 		});
 	});
 	
-	// $('.link_container').each(function () {
-	// 	$(this).magnificPopup({
-	// 		delegate: '.image_popup',
-	// 		type: 'image',
-	// 		mainClass: 'mfp-zoom-in',
-	// 		removalDelay: 500,
-	// 		gallery: {
-	// 			enabled: true
-	// 		}
-	// 	});
-	// });
+	$('.link_container').each(function () {
+		$(this).magnificPopup({
+			delegate: '.image_popup',
+			type: 'image',
+			mainClass: 'mfp-zoom-in',
+			removalDelay: 500,
+			gallery: {
+				enabled: true
+			}
+		});
+	});
 	
 	/*===================================*
 	10. SLIDER JS
@@ -573,30 +573,30 @@
 	// 	mainClass: 'mfp-zoom-in',
 	// });
 	
-	// $('.image_gallery').each(function() { // the containers for all your galleries
-	// 	$(this).magnificPopup({
-	// 		delegate: 'a', // the selector for gallery item
-	// 		type: 'image',
-	// 		gallery: {
-	// 		  enabled: true,
-	// 		},
-	// 	});
-	// });
+	$('.image_gallery').each(function() { // the containers for all your galleries
+		$(this).magnificPopup({
+			delegate: 'a', // the selector for gallery item
+			type: 'image',
+			gallery: {
+			  enabled: true,
+			},
+		});
+	});
 	
-	// function ajax_magnificPopup() {
-	// 	$('.popup-ajax').magnificPopup({
-	// 		type: 'ajax',
-	// 		callbacks: {
-	// 			ajaxContentAdded: function() {
-	// 				pluseminus(); 
-	// 				product_color_switch();
-	// 				galleryZoomProduct();
-	// 				slick_slider();
-	// 				carousel_slider();
-	// 			 }
-	// 		}
-	// 	});
-	// }
+	function ajax_magnificPopup() {
+		$('.popup-ajax').magnificPopup({
+			type: 'ajax',
+			callbacks: {
+				ajaxContentAdded: function() {
+					pluseminus(); 
+					product_color_switch();
+					galleryZoomProduct();
+					slick_slider();
+					carousel_slider();
+				 }
+			}
+		});
+	}
 	
 	// $('.video_popup, .iframe_popup').magnificPopup({
 	// 	type: 'iframe',
@@ -682,12 +682,12 @@
 	/*===================================*
     17. COUNTDOWN JS
     *===================================*/
-    $('.countdown_time').each(function() {
-        var endTime = $(this).data('time');
-        $(this).countdown(endTime, function(tm) {
-            $(this).html(tm.strftime('<div class="countdown_box"><div class="countdown-wrap"><span class="countdown days">%D </span><span class="cd_text">Days</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown hours">%H</span><span class="cd_text">Hours</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">Minutes</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">Seconds</span></div></div>'));
-        });
-    });
+    // $('.countdown_time').each(function() {
+    //     var endTime = $(this).data('time');
+    //     $(this).countdown(endTime, function(tm) {
+    //         $(this).html(tm.strftime('<div class="countdown_box"><div class="countdown-wrap"><span class="countdown days">%D </span><span class="cd_text">Days</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown hours">%H</span><span class="cd_text">Hours</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown minutes">%M</span><span class="cd_text">Minutes</span></div></div><div class="countdown_box"><div class="countdown-wrap"><span class="countdown seconds">%S</span><span class="cd_text">Seconds</span></div></div>'));
+    //     });
+    // });
 	
 	/*===================================*
 	18. List Grid JS
@@ -752,69 +752,69 @@
 	/*===================================*
 	21. QUICKVIEW POPUP + ZOOM IMAGE + PRODUCT SLIDER JS
 	*===================================*/
-	// function galleryZoomProduct() {
-	// 	var image = $('#product_img');
-	// 	//var zoomConfig = {};
-	// 	var zoomActive = false;
+	function galleryZoomProduct() {
+		var image = $('#product_img');
+		//var zoomConfig = {};
+		var zoomActive = false;
 		
-	// 	zoomActive = !zoomActive;
-	// 	if(zoomActive) {
-	// 		if ($(image).length > 0){
-	// 			$(image).elevateZoom({
-	// 				cursor: "crosshair",
-	// 				easing : true, 
-	// 				gallery:'pr_item_gallery',
-	// 				zoomType: "inner",
-	// 				galleryActiveClass: "active"
-	// 			}); 
-	// 		}
-	// 	}
-	// 	else {
-	// 		$.removeData(image, 'elevateZoom');//remove zoom instance from image
-	// 		$('.zoomContainer:last-child').remove();// remove zoom container from DOM
-	// 	}
+		zoomActive = !zoomActive;
+		if(zoomActive) {
+			if ($(image).length > 0){
+				$(image).elevateZoom({
+					cursor: "crosshair",
+					easing : true, 
+					gallery:'pr_item_gallery',
+					zoomType: "inner",
+					galleryActiveClass: "active"
+				}); 
+			}
+		}
+		else {
+			$.removeData(image, 'elevateZoom');//remove zoom instance from image
+			$('.zoomContainer:last-child').remove();// remove zoom container from DOM
+		}
 		
-	// 	$.magnificPopup.defaults.callbacks = {
-	// 	open: function() {
-	// 	  $('body').addClass('zoom_image');
-	// 	},
-	// 	close: function() {
-	// 	  // Wait until overflow:hidden has been removed from the html tag
-	// 	  setTimeout(function() {
-	// 		$('body').removeClass('zoom_image');
-	// 		$('body').removeClass('zoom_gallery_image');
-	// 		//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
-	// 		$('.zoomContainer').slice(1).remove();
-	// 		}, 100);
-	// 	  }
-	// 	};
+		$.magnificPopup.defaults.callbacks = {
+		open: function() {
+		  $('body').addClass('zoom_image');
+		},
+		close: function() {
+		  // Wait until overflow:hidden has been removed from the html tag
+		  setTimeout(function() {
+			$('body').removeClass('zoom_image');
+			$('body').removeClass('zoom_gallery_image');
+			//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
+			$('.zoomContainer').slice(1).remove();
+			}, 100);
+		  }
+		};
 		
-	// 	// Set up gallery on click
-	// 	var galleryZoom = $('#pr_item_gallery');
-	// 	galleryZoom.magnificPopup({
-	// 		delegate: 'a',
-	// 		type: 'image',
-	// 		gallery:{
-	// 			enabled: true
-	// 		},
-	// 		callbacks: {
-	// 			elementParse: function(item) {
-	// 				item.src = item.el.attr('data-zoom-image');
-	// 			}
-	// 		}
-	// 	});
+		// Set up gallery on click
+		var galleryZoom = $('#pr_item_gallery');
+		galleryZoom.magnificPopup({
+			delegate: 'a',
+			type: 'image',
+			gallery:{
+				enabled: true
+			},
+			callbacks: {
+				elementParse: function(item) {
+					item.src = item.el.attr('data-zoom-image');
+				}
+			}
+		});
 		
-	// 	// Zoom image when click on icon
-	// 	$('.product_img_zoom').on('click', function(){
-	// 		var atual = $('#pr_item_gallery a').attr('data-zoom-image');
-	// 		$('body').addClass('zoom_gallery_image');
-	// 		$('#pr_item_gallery .item').each(function(){
-	// 			if( atual == $(this).find('.product_gallery_item').attr('data-zoom-image') ) {
-	// 				return galleryZoom.magnificPopup('open', $(this).index());
-	// 			}
-	// 		});
-	// 	});
-	// }
+		// Zoom image when click on icon
+		$('.product_img_zoom').on('click', function(){
+			var atual = $('#pr_item_gallery a').attr('data-zoom-image');
+			$('body').addClass('zoom_gallery_image');
+			$('#pr_item_gallery .item').each(function(){
+				if( atual == $(this).find('.product_gallery_item').attr('data-zoom-image') ) {
+					return galleryZoom.magnificPopup('open', $(this).index());
+				}
+			});
+		});
+	}
 
 
 	/*INIT JS*/

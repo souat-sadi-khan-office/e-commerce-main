@@ -8,16 +8,20 @@ use App\Http\Controllers\Frontend\Auth\RegisterController;
 use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Frontend\PhoneBookController;
 use App\Http\Controllers\Frontend\AddressController;
+use App\Http\Controllers\Frontend\HomePageController;
 
-Route::get('/', function () {
-    return view('frontend.homepage.index');
-})->name('home');
+// Route::get('/', function () {
+//     return view('frontend.homepage.index');
+// })->name('home');
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::get('register', [RegisterController::class, 'index'])->name('register');
 Route::post('login/post', [LoginController::class, 'login'])->name('login.post');
 Route::post('register/post', [RegisterController::class, 'register'])->name('register.post');
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware('web')->group(function () {
+    Route::any('/',[HomePageController::class,'index'])->name('home');
+});
 
 Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('account', function() {
@@ -26,7 +30,8 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
     Route::get('dashboard', function() {
         return redirect()->route('dashboard');
     });
-
+    
+    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
         Route::resource('phone-book', PhoneBookController::class);

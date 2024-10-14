@@ -107,6 +107,17 @@ class Product extends Model
             ->with(['specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute']);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    // Method to get the average rating
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating') ?: 0;
+    }
+
     // // Relation with review
     // public function review()
     // {

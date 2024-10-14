@@ -3,11 +3,11 @@
 
 @section('content')
 
-        @include('frontend.homepage.bannerSection')
+    @include('frontend.homepage.bannerSection', ['banners' => $banners])
     <!-- Start MAIN CONTENT -->
     <div class="main_content">
         @if (View::exists('frontend.homepage.sliderSection') && homepage_setting('sliderSection'))
-            @include('frontend.homepage.sliderSection')
+            @include('frontend.homepage.sliderSection',['newProducts'=>$newProducts])
         @endif
 
         @if (View::exists('frontend.homepage.midBanner') && homepage_setting('midBanner'))
@@ -34,5 +34,6 @@
             @include('frontend.homepage.newslatter')
         @endif
 
-    </div>    
+    </div>
 @endsection
+
