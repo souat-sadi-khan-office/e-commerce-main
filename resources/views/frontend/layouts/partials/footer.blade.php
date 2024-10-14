@@ -133,13 +133,13 @@
 </a> --}}
 
 <a href="javascript:;" class="cart-button compare-btn">
-    <i class="ti-control-shuffle"></i>
+    <i class="fas fa-random"></i>
     <div class="label">Compare</div>
     <span class="counter">0</span>
 </a>
 
 <a href="javascript:;" class="cart-button">
-    <i class="linearicons-bag2"></i>
+    <i class="fas fa-shopping-bag"></i>
     <div class="label">Cart</div>
     <span class="counter">0</span>
 </a>

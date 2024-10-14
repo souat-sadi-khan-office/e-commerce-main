@@ -7295,7 +7295,7 @@ blockquote p:last-child {
 }
 
 .cart-button i {
-    margin: 10px 0 5px;
+    margin: 5px 0 5px;
 	font-size: 25px;
 }
 
@@ -7842,4 +7842,241 @@ blockquote p:last-child {
 
 .search-image {
 	width: 40px;
+}
+
+.pcb-container {
+    border: 1px solid #c3c8eb;
+    max-width: 950px;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.pcb-head {
+    background: #f9f9fc;
+    border-bottom: 1px solid #c3c8eb;
+    padding: 20px;
+    display: flex;
+}	
+
+.pcb-head .startech-logo {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.pcb-head .startech-logo img {
+    height: 43px;
+    margin-left: 10px;
+}
+
+.pcb-head .actions {
+    flex: 1 1 auto;
+    padding-top: 0;
+}
+
+.pcb-head .actions .all-actions {
+    display: flex;
+    float: right;
+}
+
+.pcb-head .actions .action {
+    display: inline-block;
+    text-align: center;
+    padding: 0 15px;
+    background: none;
+    border: none;
+    color: #FF324D;
+    height: auto;
+    line-height: normal;
+    font-weight: normal;
+    border-right: 1px solid rgba(0, 0, 0, .1);
+    outline: none;
+}
+
+.pcb-head .action .action-text {
+    display: block;
+    white-space: nowrap;
+    font-size: 12px;
+    color: #666;
+    padding-top: 2px;
+    min-width: 40px;
+}
+
+.pcb-inner-content {
+    margin: 25px auto;
+    max-width: 800px;
+}
+
+.pcb-top-content {
+    display: flex;
+    margin: 0 0 30px;
+}
+
+.pcb-top-content>div {
+    flex: 1 1 50%;
+}
+
+.pcb-top-content h1 {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #FF324D;
+    margin: 8px 0;
+}
+
+.pcb-top-content .checkbox-inline {
+    color: #808996;
+    font-size: 13px;
+}
+
+.checkbox-inline input {
+    margin-right: 5px;
+    position: relative;
+    top: 3px;
+}
+
+.pcb-top-content .right {
+    text-align: right;
+}
+
+.pcb-top-content .total-amount {
+    display: inline-block;
+    border: 1px dashed #808996;
+    padding: 8px 0;
+    margin-left: 10px;
+    min-width: 140px;
+    border-radius: 7px;
+    text-align: center;
+    color: #808996;
+    position: relative;
+}
+
+.pcb-top-content .total-amount .amount {
+    font-size: 18px;
+    color: #111;
+    padding-bottom: 3px;
+}
+
+.pcb-top-content .total-amount .items {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.betaa {
+    top: 5px;
+    right: 8px;
+    position: absolute;
+    color: #808996;
+    font-weight: bolder;
+    font-size: 10px;
+}
+
+.pcb-top-content .total-amount.t-price {
+    border: 1px solid #3749bb;
+    color: #fff;
+    background: #3749bb;
+}
+
+.pcb-top-content .total-amount .amount {
+    font-size: 18px;
+    color: #111;
+    padding-bottom: 3px;
+}
+
+.pcb-top-content .total-amount.t-price .amount {
+    color: #fff;
+}
+
+.pcb-top-content .total-amount .items {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.pcb-content .content-label {
+    background: #808996;
+    color: #fff;
+    line-height: 20px;
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.pcb-content .c-item {
+    display: flex;
+    padding: 15px 10px;
+    flex: 0 0 auto;
+    border-bottom: 1px solid #eee;
+}
+
+.pcb-content .c-item .img {
+    background: rgba(55,73,187,.05);
+    border-radius: 3px;
+    overflow: hidden;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    flex: 0 0 60px;
+}
+
+.pcb-content .c-item .img-ico {
+    background: url(https://www.startech.com.bd/catalog/view/theme/starship/images/cpu.svg) no-repeat center;
+    width: 60px;
+    height: 60px;
+    display: block;
+}
+
+.pcb-content .c-item .details {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 50px 0 20px;
+}
+
+.c-item.blank .details .component-name {
+    color: #666;
+}
+
+.c-item .details .component-name .mark {
+    margin-left: 5px;
+    background: #808996;
+    color: #fff;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-weight: normal;
+}
+
+.c-item.blank .details .product-name {
+    background: #f2f3f4;
+    min-height: 12px;
+    max-width: 80%;
+    margin-top: 4px;
+}
+
+.c-item .item-price {
+    flex: 0 0 100px;
+    margin: 10px 0;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #eee;
+}
+
+.c-item.blank .item-price:after {
+    content: "";
+    display: block;
+    min-height: 12px;
+    background: #f2f3f4;
+    width: 100%;
+}
+
+.c-item .actions {
+    flex: 0 0 110px;
+    text-align: right;
+    padding-top: 8px;
+}
+
+.st-outline {
+    background: none;
+    color: #3749bb;
 }

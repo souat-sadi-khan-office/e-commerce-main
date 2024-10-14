@@ -200,7 +200,7 @@
             <div class="col-lg-9 col-md-8 col-sm-6 col-9">
                 <nav class="navbar navbar-expand-lg">
                     <button class="navbar-toggler side_navbar_toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSidetoggle" aria-expanded="false"> 
-                        <span class="ion-android-menu"></span>
+                        <i class="fas fa-bars"></i>
                     </button>
                     <div class="pr_search_icon">
                         <a href="javascript:;" class="nav-link pr_search_trigger"><i class="linearicons-magnifier"></i></a>
@@ -414,11 +414,13 @@
                             <li><a class="nav-link nav_item" href="contact.html">Contact Us</a></li> 
                         </ul>
                     </div>
-                    <div class="contact_phone contact_support">
-                        <a href="pc-builder" class="btn btn-sm btn-fill-out rounded-0">
+                    <div class="pc-build-guide">
+                        <a href="{{ route('laptop-buying-guide') }}" class="btn btn-sm btn-fill-out rounded py-2">
+                            <i class="fas fa-laptop"></i>
                             Laptop Buying Guide
                         </a>
-                        <a href="pc-builder" class="btn btn-sm btn-fill-out rounded-0">
+                        <a href="{{ route('pc-builder') }}" class="btn btn-sm btn-fill-out rounded py-2">
+                            <i class="fas fa-desktop"></i>
                             PC Builder
                         </a>
                     </div>

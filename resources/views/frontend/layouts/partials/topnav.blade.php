@@ -211,7 +211,7 @@
                 </div>
             </div>
             <ul class="navbar-nav attr-nav align-items-center order-md-5">
-                <li>
+                <li id="wishList">
                     <div class="q-actions">
                         <div class="ac">
                             <a class="ic" href="">
@@ -228,7 +228,7 @@
                         </div>
                     </div>
                 </li>
-                <li>
+                <li id="accountLogin">
                     <div class="q-actions">
                         <div class="ac">
                             <a class="ic" href="{{ route('login') }}">
@@ -254,7 +254,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="contact_phone order-md-last">
+            <div id="contactPhone" class="contact_phone order-md-last">
                 <i class="linearicons-phone-wave"></i>
                 <span>123-456-7689</span>
             </div>

@@ -889,6 +889,10 @@ div.banner_large_pad {
 	padding: 0 0 0 20px;
 	overflow: hidden;
 }
+
+.mobile-menu-logo {
+	display: none;
+}
 }
 
 /* -------------------------------------------------
@@ -1215,6 +1219,73 @@ footer .widget_title {
 }
 .popup_content {
 	padding: 25px;
+}
+
+.pc-build-guide {
+	display: none;
+}
+
+.mobile-menu-logo {
+	display: block;
+}
+
+#wishList {
+	display: none;
+}
+#accountLogin {
+	display: none;
+}
+#contactPhone {
+	display: none;
+}
+
+#globalSelector {
+	margin-left: -140px;
+}
+.pcb-container {
+	box-shadow: none;
+	margin-top: 0;
+}
+.pcb-head {
+	padding: 10px;
+}
+.pcb-head .startech-logo img {
+	height: 38px;
+	margin-left: 0;
+}
+
+.pcb-head .actions {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.pcb-head .actions .action:hover {
+    box-shadow: none;
+    text-decoration: none;
+}
+.pcb-head .action .action-text {
+	display: none;
+}
+.pcb-inner-content {
+	margin: 0;
+}
+.pcb-top-content {
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 15px;
+}
+.pcb-top-content .left {
+	padding: 10px 0;
+}
+.c-item .component-name .mark, .c-item.blank .item-price {
+	display: none;
+}
+.m-hide {
+	display: none !important;
+}
+
+.pcb-head .actions .action {
+	font-size: 20px;
 }
 }
 

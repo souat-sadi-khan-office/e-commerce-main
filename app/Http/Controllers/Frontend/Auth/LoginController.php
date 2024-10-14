@@ -103,4 +103,9 @@ class LoginController extends Controller
         ]);
     }
 
+    public function pcBuilder()
+    {
+        return view('frontend.pc-builder');
+    }
+
 }

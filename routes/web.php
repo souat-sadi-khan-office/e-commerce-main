@@ -13,6 +13,8 @@ Route::get('/', function () {
     return view('frontend.homepage.index');
 })->name('home');
 
+Route::get('laptop-buying-guide', [LoginController::class, 'laptopBuyingGuide'])->name('laptop-buying-guide');
+Route::get('pc-builder', [LoginController::class, 'pcBuilder'])->name('pc-builder');
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::get('forget-password', [LoginController::class, 'forgotPassword'])->name('forget-password');
 Route::get('register', [RegisterController::class, 'index'])->name('register');
