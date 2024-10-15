@@ -244,11 +244,11 @@
                                         <small class="text-muted">Product quanity must be same on the product stock adding table.</small>
                                     </div>
 
-                                    <!-- sku -->
+                                    {{-- <!-- sku -->
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="sku">SKU</label>
                                         <input type="text" name="sku" id="sku" class="form-control">
-                                    </div>
+                                    </div> --}}
 
                                     <!-- total_price -->
                                     <div class="col-md-12 form-group mb-3">

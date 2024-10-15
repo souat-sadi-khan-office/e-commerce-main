@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css') }}">
-    @if (request()->routeIs('home'))
+    @if (request()->routeIs('home')||request()->routeIs('quick.view'))
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/animate.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/themify-icons.css') }}">

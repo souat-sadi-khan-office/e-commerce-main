@@ -31,6 +31,7 @@ Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCa
 
 Route::middleware('web')->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
+    Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
 });
 
 Route::middleware(['isCustomer', 'web'])->group(function () {

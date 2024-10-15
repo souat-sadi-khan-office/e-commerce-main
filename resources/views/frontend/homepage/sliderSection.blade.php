@@ -52,7 +52,7 @@
                             <div class="tab-pane fade show active" id="arrival" role="tabpanel"
                                 aria-labelledby="arrival-tab">
                                 <div class="product_slider carousel_slider owl-carousel owl-theme dot_style1"
-                                    data-loop="true" data-margin="20"
+                                    data-loop="true" data-margin="20" data-autoplay="true"
                                     data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "991":{"items": "4"}}'>
                                     @foreach ($newProducts as $product)
                                         <div class="item">
@@ -77,7 +77,8 @@
                                                             </li>
                                                             <li><a href="shop-compare.html" class="popup-ajax"><i
                                                                         class="icon-shuffle"></i></a></li>
-                                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i
+                                                            <li><a href="{{ route('quick.view', $product['slug']) }}"
+                                                                    class="popup-ajax"><i
                                                                         class="icon-magnifier-add"></i></a></li>
                                                             <li><a href="#"><i class="icon-heart"></i></a></li>
                                                         </ul>
@@ -107,9 +108,10 @@
                                                             <div class="product_rate"
                                                                 style="width:{{ $product['averageRating'] }}%"></div>
                                                         </div>
-                                                        <span class="rating_num">({{ $product['ratingCount'] }})</span>
+                                                        <span
+                                                            class="rating_num">({{ $product['ratingCount'] }})</span>
                                                     </div>
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
@@ -117,15 +119,22 @@
 
                                 </div>
                             </div>
+                            <div class="ajax_quick_view" style="display: none;">
+                                <div class="row">
+                                    <!-- Content will be populated via AJAX -->
+                                </div>
+                                <button title="Close (Esc)" type="button" class="mfp-close">×</button>
+                            </div>
+
                             <div class="tab-pane fade" id="sellers" role="tabpanel" aria-labelledby="sellers-tab">
-                                
+
                             </div>
                             <div class="tab-pane fade" id="featured" role="tabpanel"
                                 aria-labelledby="featured-tab">
-                              
+
                             </div>
                             <div class="tab-pane fade" id="special" role="tabpanel" aria-labelledby="special-tab">
-                               
+
                             </div>
                         </div>
                     </div>
@@ -146,7 +155,7 @@
                     dataType: 'HTML',
                     success: function(response) {
                         if (response) {
-                            
+
                             $('#sellers').html(response);
                             // carousel_slider();
                         } else {
@@ -167,7 +176,7 @@
                     dataType: 'HTML',
                     success: function(response) {
                         if (response) {
-                            
+
                             $('#featured').html(response);
                             // carousel_slider();
                         } else {
@@ -187,7 +196,7 @@
                     dataType: 'HTML',
                     success: function(response) {
                         if (response) {
-                            
+
                             $('#special').html(response);
                             // carousel_slider();
                         } else {
@@ -199,8 +208,63 @@
                     }
                 });
             });
+
+            $('.popup-ajax').on('click', function(e) {
+                e.preventDefault();
+
+                var url = $(this).attr('href');
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        $('.ajax_quick_view .row').html(response); // Populate the modal content
+                        $('.ajax_quick_view').css('display', 'block'); // Show the modal
+                    },
+                    error: function() {
+                        alert('Failed to load content.');
+                    }
+                });
+            });
+
+            // Close modal when clicking outside of it
+            $(window).on('click', function(event) {
+                if ($(event.target).hasClass('ajax_quick_view')) {
+                    $('.ajax_quick_view').css('display', 'none');
+                }
+            });
         });
-        
     </script>
+@endpush
+@push('styles')
+    <style>
+        .ajax_quick_view {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            /* Sit on top */
+            left: 0;
+            top: 10px;
+            width: 90%;
+            height: 90%;
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Black with opacity */
+        }
+
+        .ajax_quick_view .row {
+            margin: 5% auto;
+            /* Center the content */
+            background-color: #fff;
+            /* White background for the modal content */
+            padding: 20px;
+            border-radius: 8px;
+            /* Rounded corners */
+            width: 80%;
+            /* Adjust as needed */
+        }
+    </style>
 @endpush
 <!-- END SECTION SLIDERS -->
