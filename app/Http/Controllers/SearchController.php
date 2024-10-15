@@ -135,6 +135,28 @@ class SearchController extends Controller
         ];
     }
 
+    // searching for product by id
+    public function searchByProductId(Request $request)
+    {
+        $product_id = $request->product_id;
+
+        if(!$product_id) {
+            return [
+                'status' => false,
+                'message' => 'Product not found'
+            ];
+        }
+
+        $product = Product::find($product_id);
+
+        return [
+            'status' => true,
+            'id' => $product->id, 
+            'text' => $product->name,
+            'thumb_image' => asset($product->thumb_image)
+        ];
+    }
+
     // searching for brand by id
     public function searchByBrandId(Request $request)
     {

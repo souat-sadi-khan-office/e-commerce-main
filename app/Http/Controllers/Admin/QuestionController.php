@@ -19,11 +19,16 @@ class QuestionController extends Controller
     {
 
         if ($request->ajax()) {
-
-            return $this->customer->dataTable();
+            if($request->product_id != null) {
+                return $this->customer->dataTableWithAjaxSearch($request->product_id);
+            } else {
+                return $this->customer->dataTable();
+            }
         }
+        
+        $product_id = $request->product_id;
 
-        return view('backend.question.index');
+        return view('backend.question.index', compact('product_id'));
     }
 
     public function answer($id)

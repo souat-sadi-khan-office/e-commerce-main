@@ -42,6 +42,30 @@ class CustomerQuestionRepository implements CustomerQuestionRepositoryInterface
                 ->rawColumns(['action', 'date', 'question', 'product', 'answer', 'answer_by'])
                 ->make(true);
     }
+    
+    public function dataTableWithAjaxSearch($productId)
+    {
+        $models = $this->getAllQuestionsForProduct($productId);
+            return Datatables::of($models)
+                ->addIndexColumn()
+                ->editColumn('question', function ($model) {
+                    return $model->message;
+                })
+                ->editColumn('date', function ($model) {
+                    return get_system_date($model->created_at) . ' '. get_system_time($model->created_at);
+                })
+                ->editColumn('answer', function ($model) {
+                    return $model->answer ? $model->answer->message : '';
+                })
+                ->editColumn('answer_by', function ($model) {
+                    return $model->answer ? $model->answer->admin->name : '';
+                })
+                ->addColumn('action', function ($model) {
+                    return view('backend.question.action', compact('model'));
+                })
+                ->rawColumns(['action', 'date', 'question', 'answer', 'answer_by'])
+                ->make(true);
+    }
 
     public function getAllQuestionsForProduct($productId)
     {
