@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\CPU\Images;
 use App\Models\Zone;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -34,11 +35,19 @@ class CountryController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'zone_id'   => 'required',
             'name'      => 'required|string|max:255',
             'status'    => 'required',
+            'image'     => 'required|image'
         ]);
+
+        $data = [
+            'zone_id' => $request->zone_id,
+            'name'    => $request->name,
+            'status'  => $request->status,
+            'image'   => $request->image ? Images::upload('countries', $request->image) : null
+        ];
 
         $this->countryRepository->createCountry($data);
 
@@ -64,11 +73,22 @@ class CountryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = $request->validate([
+        $request->validate([
             'zone_id'   => 'required',
             'name'      => 'required|string|max:255',
             'status'    => 'required|string',
+            'image'     => 'image|nullable',
         ]);
+
+        $data = [
+            'zone_id' => $request->zone_id,
+            'name'    => $request->name,
+            'status'  => $request->status,
+        ];
+
+        if($request->image) {
+            $data['image'] = Images::upload('countries', $request->image);
+        }
 
         $this->countryRepository->updateCountry($id, $data);
 

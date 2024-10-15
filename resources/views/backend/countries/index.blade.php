@@ -45,6 +45,7 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
+                                <th>Flag</th>
                                 <th>Name</th>
                                 <th>Zone</th>
                                 <th>Status</th>
@@ -71,6 +72,7 @@
                 serverSide: true,
                 ajax: "{{ route('admin.country.index') }}",
                 columns: [
+                    {data: 'image', name: 'image'},
                     {data: 'name', name: 'name'},
                     {data: 'zone', name: 'zone'},
                     {data: 'status', name: 'status'},

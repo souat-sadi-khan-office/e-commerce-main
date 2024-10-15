@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form action="{{ route("admin.country.update", $model->id) }}" method="POST" class="ajax-form">
+    <form action="{{ route("admin.country.update", $model->id) }}" enctype="multipart/form-data" method="POST" class="ajax-form">
         @method('PATCH')
         <div class="row">
 
@@ -20,7 +20,12 @@
                 <span id="zone_error"></span>
             </div>
 
-            <div class="col-md-12 form-group">
+            <div class="col-md-12 mt-3 form-group">
+                <label for="image">Image <span class="text-danger">*</span></label>
+                <input type="file" name="image" id="image" class="form-control">
+            </div>
+
+            <div class="col-md-12 mt-3 form-group">
                 <label for="name">Name <span class="text-danger">*</span></label>
                 <input type="text" name="name" id="name" class="form-control" required value="{{ $model->name }}">
             </div>

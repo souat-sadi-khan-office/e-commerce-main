@@ -139,7 +139,7 @@
 <a href="javascript:;" class="cart-button compare-btn">
     <i class="fas fa-random"></i>
     <div class="label">Compare</div>
-    <span class="counter compare_counter">{{ count(session()->get('compare_list')) }}</span>
+    <span class="counter compare_counter">{{ session()->get('compare_list') ? count(session()->get('compare_list')) : 0 }}</span>
 </a>
 
 <a href="javascript:;" class="cart-button">

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use DataTables;
+use App\CPU\Images;
 use App\Models\Country;
 use App\Repositories\Interface\CountryRepositoryInterface;
 
@@ -26,6 +27,9 @@ class CountryRepository implements CountryRepositoryInterface
                 ->editColumn('zone', function ($model) {
                     return $model->zone->name;
                 })
+                ->editColumn('image', function ($model) {
+                    return Images::show($model->image);
+                })
                 ->editColumn('status', function ($model) {
                     $checked = $model->status == 1 ? 'checked' : '';
                     return '<div class="form-check form-switch"><input data-url="' . route('admin.country.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
@@ -33,7 +37,7 @@ class CountryRepository implements CountryRepositoryInterface
                 ->addColumn('action', function ($model) {
                     return view('backend.countries.action', compact('model'));
                 })
-                ->rawColumns(['action', 'status', 'zone'])
+                ->rawColumns(['action', 'image', 'status', 'zone'])
                 ->make(true);
     }
 

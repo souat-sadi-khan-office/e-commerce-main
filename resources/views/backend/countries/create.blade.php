@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form action="{{ route("admin.country.store") }}" method="POST" class="ajax-form">
+    <form action="{{ route("admin.country.store") }}" enctype="multipart/form-data" method="POST" class="ajax-form">
         <div class="row">
 
             <div class="col-md-12 form-group">
@@ -17,6 +17,11 @@
                     @endforeach
                 </select>
                 <span id="zone_error"></span>
+            </div>
+
+            <div class="col-md-12 mt-3 form-group">
+                <label for="image">Image <span class="text-danger">*</span></label>
+                <input type="file" name="image" id="image" class="form-control" required>
             </div>
 
             <div class="col-md-12 mt-3 form-group">
