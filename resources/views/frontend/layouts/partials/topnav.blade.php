@@ -11,12 +11,12 @@
                         <div class="q-actions system-selector">
                             <div class="ac">
                                 <a class="ic" href="javascript:;">
-                                    <img src="{{ asset('frontend/assets/images/eng.png') }}" alt="Country Flag">
+                                    <img src="{{ session()->get('country_flag') ? session()->get('country_flag') : asset('pictures/bangladesh.png') }}" alt="Country Flag">
                                 </a>
                                 <div class="ac-content">
-                                    <p>English</p>
+                                    <p id="country_name_selector">{{ session()->get('country_name') ? session()->get('country_name') : 'Bangladesh' }}</p>
                                     <h5>
-                                        Euro
+                                        <span id="currency_name_selector">{{ session()->get('currency_code') ? session()->get('currency_code') : 'BDT' }}</span>
                                         <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor" aria-hidden="false" focusable="false"><path d="M296.256 354.944l224 224 224-224a74.656 74.656 0 0 1 0 105.6l-197.6 197.6a37.344 37.344 0 0 1-52.8 0l-197.6-197.6a74.656 74.656 0 0 1 0-105.6z"></path></svg>
                                     </h5>
                                 </div>
@@ -37,21 +37,13 @@
                                         </div>
         
                                         <div class="col-md-12 form-group mb-2">
-                                            <select name="country_id" id="country_id" class="form-control select">
-                                                <option value="Bangladesh">Bangladesh</option>
-                                                <option value="Singapore">Singapore</option>
-                                                <option value="Malaysia">Malaysia</option>
-                                                <option value="Vieatnam">Vieatnam</option>
-                                                <option value="Srilanka">Srilanka</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-12 form-group">
-                                            <select name="city_id" id="city_id" class="form-control select">
-                                                <option value="Dhaka">Dhaka</option>
-                                                <option value="Chittagond">Chittagond</option>
-                                                <option value="Rajshahi">Rajshahi</option>
-                                                <option value="Khulna">Khulna</option>
-                                                <option value="Sylhet">Sylhet</option>
+                                            <select id="global_country_id" class="form-control">
+                                                @php
+                                                    $countries = App\Models\Country::where('status', 1)->orderBy('name', 'ASC')->get();
+                                                @endphp
+                                                @foreach ($countries as $country)
+                                                    <option {{ session()->get('country_id') ? (session()->get('country_id') == $country->id ? 'selected' : '') : '' }} data-image="{{ asset($country->image) }}" value="{{ $country->id }}">{{ $country->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -70,10 +62,13 @@
                                             <h6><b>Currency</b></h6>
                                         </div>
                                         <div class="col-md-12 form-group">
-                                            <select name="currency_id" id="currency_id" class="form-control select">
-                                                <option value="">USD</option>
-                                                <option value="">BDT</option>
-                                                <option value="">INR</option>
+                                            <select id="global_currency_id" class="form-control select">
+                                                @php
+                                                    $currencies = App\Models\Currency::where('status', 1)->orderBy('name', 'ASC')->get();
+                                                @endphp
+                                                @foreach ($currencies as $currency)
+                                                    <option {{ session()->get('currency_id') ? (session()->get('currency_id') == $currency->id ? 'selected' : '') : '' }} value="{{ $currency->id }}">{{ $currency->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -81,7 +76,7 @@
                             </ul>
                             <div class="cart_footer">
                                 <p class="cart_buttons">
-                                    <a href="#" class="btn btn-fill-line rounded-0 btn-block">Save</a>
+                                    <button type="button" id="change-global-method" class="btn-sm btn btn-fill-line btn-block">Save</button>
                                 </p>
                             </div>
                         </div>

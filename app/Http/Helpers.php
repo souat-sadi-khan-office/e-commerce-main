@@ -254,11 +254,11 @@ if (!function_exists('home_discounted_price')) {
 if (!function_exists('currency_symbol')) {
     function currency_symbol()
     {
-        if (Session::has('system_default_currency')) {
-            return Session::get('system_default_currency');
+        if (Session::has('currency_symbol')) {
+            return Session::get('currency_symbol');
         }
 
-        return get_system_default_currency();
+        return get_system_default_currency()->symbol;
     }
 }
 
@@ -266,11 +266,11 @@ if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
         $currency = Currency::find(get_settings('system_default_currency'));
-        if ($currency) {
-            $currency_symbol = $currency->symbol;
-        } else {
-            $currency_symbol = '£';
-        }
-        return $currency_symbol;
+        // if ($currency) {
+        //     $currency_symbol = $currency->symbol;
+        // } else {
+        //     $currency_symbol = '£';
+        // }
+        return $currency;
     }
 }

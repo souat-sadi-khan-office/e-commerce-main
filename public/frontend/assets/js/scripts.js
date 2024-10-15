@@ -12,6 +12,33 @@
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
+	// for country
+	$('#global_country_id').select2({
+		width: '100%',
+		templateResult: formatState,
+		templateSelection: formatState
+	});
+
+	$(document).on('click', '#change-global-method', function() {
+		let global_country_id = $('#global_country_id').val();
+		let global_currency_id = $('#global_currency_id').val();
+		$.post('/currency/change',{global_country_id:global_country_id, global_currency_id:global_currency_id}, function(data){
+			location.reload();
+		});
+	})
+
+	function formatState(state) {
+		if (!state.id) {
+			return state.text;
+		}
+	
+		var imageUrl = $(state.element).data('image');
+		var $state = $(
+			'<span><img src="' + imageUrl + '" class="img-flag" /> ' + state.text + '</span>'
+		);
+		return $state;
+	}
+
 	/*===================================*
 	01. LOADING JS
 	/*===================================*/
@@ -809,35 +836,35 @@
 			$('.zoomContainer:last-child').remove();// remove zoom container from DOM
 		}
 		
-		$.magnificPopup.defaults.callbacks = {
-		open: function() {
-		  $('body').addClass('zoom_image');
-		},
-		close: function() {
-		  // Wait until overflow:hidden has been removed from the html tag
-		  setTimeout(function() {
-			$('body').removeClass('zoom_image');
-			$('body').removeClass('zoom_gallery_image');
-			//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
-			$('.zoomContainer').slice(1).remove();
-			}, 100);
-		  }
-		};
+		// $.magnificPopup.defaults.callbacks = {
+		// open: function() {
+		//   $('body').addClass('zoom_image');
+		// },
+		// close: function() {
+		//   // Wait until overflow:hidden has been removed from the html tag
+		//   setTimeout(function() {
+		// 	$('body').removeClass('zoom_image');
+		// 	$('body').removeClass('zoom_gallery_image');
+		// 	//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
+		// 	$('.zoomContainer').slice(1).remove();
+		// 	}, 100);
+		//   }
+		// };
 		
 		// Set up gallery on click
-		var galleryZoom = $('#pr_item_gallery');
-		galleryZoom.magnificPopup({
-			delegate: 'a',
-			type: 'image',
-			gallery:{
-				enabled: true
-			},
-			callbacks: {
-				elementParse: function(item) {
-					item.src = item.el.attr('data-zoom-image');
-				}
-			}
-		});
+		// var galleryZoom = $('#pr_item_gallery');
+		// galleryZoom.magnificPopup({
+		// 	delegate: 'a',
+		// 	type: 'image',
+		// 	gallery:{
+		// 		enabled: true
+		// 	},
+		// 	callbacks: {
+		// 		elementParse: function(item) {
+		// 			item.src = item.el.attr('data-zoom-image');
+		// 		}
+		// 	}
+		// });
 		
 		// Zoom image when click on icon
 		$('.product_img_zoom').on('click', function(){
@@ -857,9 +884,9 @@
 		pluseminus();
 		product_color_switch();
 		galleryZoomProduct();
-		carousel_slider();
+		// carousel_slider();
 		slick_slider();
-		ajax_magnificPopup();
+		// ajax_magnificPopup();
 	});
 
 

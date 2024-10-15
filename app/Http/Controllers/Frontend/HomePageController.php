@@ -15,6 +15,8 @@ use App\Models\Product;
 use App\Models\ProductDetail;
 use App\Models\ProductQuestion;
 use App\Models\Rating;
+use App\Models\Country;
+use App\Models\Currency;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
@@ -215,6 +217,19 @@ class HomePageController extends Controller
             'counter' => $counter,
             'message' => 'Product added to compare list successfully.',
         ]);
+    }
+
+    public function currencyChange(Request $request)
+    {
+        $country = Country::find($request->global_country_id);
+        $currency = Currency::find($request->global_currency_id);
+        $request->session()->put('currency_id', $currency->id);
+        $request->session()->put('currency_code', $currency->code);
+        $request->session()->put('currency_symbol', $currency->symbol);
+        $request->session()->put('currency_exchange_rate', $currency->exchange_rate);
+        $request->session()->put('country_id', $country->id);
+        $request->session()->put('country_name', $country->name);
+        $request->session()->put('country_flag', asset($country->image));
     }
 }
 

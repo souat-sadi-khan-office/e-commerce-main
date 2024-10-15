@@ -8252,3 +8252,9 @@ blockquote p:last-child {
     padding-top: 20px;
     font-size: 14px;
 }
+
+.img-flag {
+	width: 25px;
+	float: none !important;
+	border: none !important;
+}

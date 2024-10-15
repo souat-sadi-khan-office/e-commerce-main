@@ -74,6 +74,7 @@ Route::post('search/brand-types', [SearchController::class, 'searchForBrandTypes
 
 Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->name('getCountries');
 Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');
+Route::post('/currency/change', [HomePageController::class, 'currencyChange'])->name('currency.change');
 
 Route::get('{slug}', [LoginController::class, 'productDetails'])->name('slug.handle');
 
