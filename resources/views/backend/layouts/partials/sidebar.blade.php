@@ -147,6 +147,35 @@
                     </ul>
                 </li>
 
+                <!-- Customer -->
+                <li
+                    class="nav-item {{ Request::is('admin/customer*') ? 'menu-open' : '' }}">
+                    <a href="javascript:;" class="nav-link">
+                        <i class="nav-icon bi bi-people"></i>
+                        <p>
+                            Customers
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.customer.index') }}"
+                                class="nav-link {{ Request::is('admin/customer') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-person-bounding-box"></i>
+                                <p>All Customers</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.customer.question.index') }}"
+                                class="nav-link {{ Request::is('admin/customer/question') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-patch-question"></i>
+                                <p>Questions</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- Brands -->
                 <li
                     class="nav-item {{ Request::is('admin/brand*') || Request::is('admin/brand-type') ? 'menu-open' : '' }}">

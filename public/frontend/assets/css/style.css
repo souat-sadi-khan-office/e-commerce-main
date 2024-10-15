@@ -3465,7 +3465,7 @@ h6.blog_title {
 	margin: 0;
 }
 .fit-videos {
-	background-color: #000000;
+	/* background-color: #000000; */
 }
 .blog_style1 {
 	border-radius: 10px;
@@ -5804,8 +5804,8 @@ footer .widget_title {
 }
 .review_author {
 	display: block;
-	color: #292b2c;
-	font-weight: 500;
+	color: #FF324D;
+	font-weight: 600;
 }
 .comment-date {
 	font-style: italic;
@@ -8079,4 +8079,176 @@ blockquote p:last-child {
 .st-outline {
     background: none;
     color: #3749bb;
+}
+
+.shop_info_tab {
+	background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+.product-details .section-head {
+    padding-bottom: 30px;
+}
+
+.product-details .section-head h2 {
+	font-size: 25px;
+}
+
+.product-details .data-table {
+    width: 100%;
+    margin-top: -20px;
+}
+
+.product-details .data-table .heading-row {
+    background: #f8f9fa;
+    color: #000;
+    font-size: 16px;
+    line-height: 30px;
+    font-weight: bold;
+    padding: 6px 20px;
+    margin: 20px 0 0;
+    border-radius: 5px;
+}
+
+.product-details .data-table tbody td.name {
+    color: #666;
+}
+
+.product-details .data-table tbody td {
+    padding: 10px 20px;
+    line-height: 22px;
+    border-bottom: 1px solid #ecedef;
+}
+
+.product-details .question-wrap {
+    padding: 20px 0 20px 30px;
+    border-bottom: 1px solid #ecedef;
+}
+
+.product-details .question-wrap p.author {
+    font-size: 13px;
+    margin: 0 0 10px;
+    color: #666;
+}
+
+.product-details .question-wrap p.author .name {
+    color: #FF324D;
+    font-weight: bold;
+}
+
+.product-details .question-wrap h3 {
+    position: relative;
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 22px;
+}
+
+.product-details .question-wrap .hint {
+    position: absolute;
+    left: -30px;
+    font-weight: bold;
+    color: #111;
+    font-size: 14px;
+}
+
+.product-details .question-wrap p {
+    margin-bottom: 0;
+    position: relative;
+}
+
+.product-details .question-wrap .hint {
+    position: absolute;
+    left: -30px;
+    font-weight: bold;
+    color: #111;
+    font-size: 14px;
+}
+
+.product-details .question-wrap p.answerer {
+    font-size: 13px;
+    color: #666;
+    margin: 10px 0 0;
+    display: block;
+}
+
+#question {
+	margin-bottom: 25px;
+}
+
+.star_rating .rating {
+	height: 40px !important;
+	width: 150px !important;
+}
+
+.star_rating .rating::before {
+	font-size: 25px !important;
+}
+
+.star_rating .product_rate::before {
+	font-size: 25px !important;
+}
+
+.product-details-tab {
+	background-color: #fff !important;
+	color: #000 !important;
+    line-height: 40px;
+    padding: 0 15px;
+    margin: 10px 25px 0 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    list-style: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+.product-details-tab.active {
+	background-color: #FF324D !important;
+	color: #fff !important;
+}
+
+.product-details-tab:hover {
+	background-color: #FF324D !important;
+	color: #fff !important;
+}
+
+.product-details-page .widget {
+	padding: 10px 20px;
+	padding-top: 30px;
+	background-color: #fff;
+	margin-bottom: 20px;
+    margin-top: 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+.btn-fill-secondary {
+	background-color: #dee2e6;
+	color: #FF324D;
+}
+
+.btn-fill-warning {
+	color: #FF324D;
+	background-color: #dee2e6;
+}
+
+.empty-content .icon {
+    padding: 20px;
+    background: #f8f9fa;
+    color: #FF324D;
+    border-radius: 50px;
+    font-size: 48px;
+    width: 88px;
+    height: 88px;
+}
+
+.empty-content .empty-text {
+    color: #666;
+    padding-top: 20px;
+    font-size: 14px;
 }

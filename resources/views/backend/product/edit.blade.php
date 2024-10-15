@@ -174,15 +174,13 @@
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="video_provider">Video Provider</label>
                                         <input type="text" name="video_provider" id="video_provider"
-                                            class="form-control" placeholder="YouTube">
+                                            class="form-control" placeholder="YouTube" value="{{ $model->video_provider }}">
                                     </div>
 
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="video_link">Video Link</label>
-                                        <input type="url" name="video_link" id="video_link" class="form-control"
-                                            placeholder="Video Link">
-                                        <small class="text-muted">Use proper link without extra parameter. Don't use short
-                                            share link/embeded iframe code.</small>
+                                        <textarea name="video_link" id="video_link" cols="30" rows="4" class="form-control">{{ $model->video_link }}</textarea>
+                                            <small class="text-muted">Use the proper embed code from youtube.</small>
                                     </div>
 
                                 </div>

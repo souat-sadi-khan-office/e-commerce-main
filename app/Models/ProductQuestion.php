@@ -12,6 +12,7 @@ class ProductQuestion extends Model
     protected $fillable = [
         'product_id',
         'user_id',
+        'name',
         'message',
     ];
 
@@ -30,6 +31,6 @@ class ProductQuestion extends Model
     // Relation with answer
     public function answer()
     {
-        return $this->belongsTo(ProductQuestionAnswer::class);
+        return $this->belongsTo(ProductQuestionAnswer::class, 'id', 'question_id');
     }
 }

@@ -23,10 +23,12 @@ use App\Repositories\CategoryRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\LocationRepository;
 use App\Repositories\BrandTypeRepository;
+use App\Repositories\CustomerQuestionRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\FlashDealRepository;
 use App\Repositories\PcBuilderRepository;
 use App\Repositories\PhoneBookRepository;
+use App\Repositories\CustomerRepository;
 use App\Repositories\ProductStockRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
@@ -57,6 +59,8 @@ use App\Repositories\Interface\PhoneBookRepositoryInterface;
 use App\Repositories\Interface\ProductStockRepositoryInterface;
 use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
+use App\Repositories\Interface\CustomerRepositoryInterface;
+use App\Repositories\Interface\CustomerQuestionRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -92,6 +96,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BannerRepositoryInterface::class, BannerRepository::class);
         $this->app->bind(PhoneBookRepositoryInterface::class, PhoneBookRepository::class);
         $this->app->bind(AddressControllerInterface::class, AddressRepository::class);
+        $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
+        $this->app->bind(CustomerQuestionRepositoryInterface::class, CustomerQuestionRepository::class);
     }
 
     /**

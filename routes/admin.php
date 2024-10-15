@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\SpecificationsController;
 use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\ProductStockController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Frontend\HomePageController;
 use App\Http\Controllers\SearchController;
 
@@ -107,6 +109,15 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
         });
     });
+
+    // Question
+    Route::get('customer/question', [QuestionController::class, 'index'])->name('customer.question.index');
+    Route::get('customer/question/answer/{id}', [QuestionController::class, 'answer'])->name('customer.question.answer');
+    Route::patch('customer/question/submit-answer', [QuestionController::class, 'submitAnswer'])->name('customer.question.update');
+
+    // Customer
+    Route::post('customer/status/{id}', [CustomerController::class, 'updateStatus'])->name('customer.status');
+    Route::resource('customer', CustomerController::class);
 
     // Brand Types
     Route::post('brand-type/status/{id}', [BrandTypeController::class, 'updateStatus'])->name('brand_type.status');

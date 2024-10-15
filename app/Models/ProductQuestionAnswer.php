@@ -18,7 +18,7 @@ class ProductQuestionAnswer extends Model
     // Define relationships
     public function question()
     {
-        return $this->belongsTo(ProductQuestion::class, 'question_id');
+        return $this->belongsTo(ProductQuestion::class, 'question_id', 'id');
     }
 
     // Relation with admin

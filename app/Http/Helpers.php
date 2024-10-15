@@ -154,6 +154,102 @@ if (!function_exists('format_price')) {
     }
 }
 
+// converts currency to home default currency
+if (!function_exists('convert_price')) {
+    function convert_price($price)
+    {
+        if (Session::has('currency_code') && (Session::get('currency_code') != get_system_default_currency()->code)) {
+            $price = floatval($price) / floatval(get_system_default_currency()->exchange_rate);
+            $price = floatval($price) * floatval(Session::get('currency_exchange_rate'));
+        }
+        return $price;
+    }
+}
+
+// Shows Price on page based on low to high
+if (!function_exists('home_price')) {
+    function home_price($product, $formatted = true)
+    {
+        $lowest_price = $product->unit_price;
+        $highest_price = $product->unit_price;
+
+        foreach ($product->taxes as $product_tax) {
+            if ($product_tax->tax_type == 'percent') {
+                $lowest_price += ($lowest_price * $product_tax->tax) / 100;
+                $highest_price += ($highest_price * $product_tax->tax) / 100;
+            } elseif ($product_tax->tax_type == 'flat') {
+                $lowest_price += $product_tax->tax;
+                $highest_price += $product_tax->tax;
+            }
+        }
+
+        if ($formatted) {
+            if ($lowest_price == $highest_price) {
+                return format_price(convert_price($lowest_price));
+            } else {
+                return format_price(convert_price($lowest_price)) . ' - ' . format_price(convert_price($highest_price));
+            }
+        } else {
+            return $lowest_price . ' - ' . $highest_price;
+        }
+    }
+}
+
+// Shows Price on page based on low to high with discount
+if (!function_exists('home_discounted_price')) {
+    function home_discounted_price($product, $formatted = true)
+    {
+        $lowest_price = $product->unit_price;
+        $highest_price = $product->unit_price;
+
+        $discount_applicable = false;
+
+        if($product->is_discounted == 1) {
+            if ($product->discount_start_date == null) {
+                $discount_applicable = true;
+            } elseif (
+                strtotime(date('d-m-Y H:i:s')) >= $product->discount_start_date &&
+                strtotime(date('d-m-Y H:i:s')) <= $product->discount_end_date
+            ) {
+                $discount_applicable = true;
+            }
+        } else {
+            $discount_applicable = false;
+        }
+
+
+        if ($discount_applicable) {
+            if ($product->discount_type == 'percentage') {
+                $lowest_price -= ($lowest_price * $product->discount) / 100;
+                $highest_price -= ($highest_price * $product->discount) / 100;
+            } elseif ($product->discount_type == 'amount') {
+                $lowest_price -= $product->discount;
+                $highest_price -= $product->discount;
+            }
+        }
+
+        foreach ($product->taxes as $product_tax) {
+            if ($product_tax->tax_type == 'percent') {
+                $lowest_price += ($lowest_price * $product_tax->tax) / 100;
+                $highest_price += ($highest_price * $product_tax->tax) / 100;
+            } elseif ($product_tax->tax_type == 'flat') {
+                $lowest_price += $product_tax->tax;
+                $highest_price += $product_tax->tax;
+            }
+        }
+
+        if ($formatted) {
+            if ($lowest_price == $highest_price) {
+                return format_price(convert_price($lowest_price));
+            } else {
+                return format_price(convert_price($lowest_price)) . ' - ' . format_price(convert_price($highest_price));
+            }
+        } else {
+            return $lowest_price . ' - ' . $highest_price;
+        }
+    }
+}
+
 //gets currency symbol
 if (!function_exists('currency_symbol')) {
     function currency_symbol()

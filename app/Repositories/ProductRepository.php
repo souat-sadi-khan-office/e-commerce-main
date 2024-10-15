@@ -311,7 +311,7 @@ class ProductRepository implements ProductRepositoryInterface
             'min_purchase_quantity' => 'required|integer|min:1',
             'images' => 'required|array',
             'video_provider' => 'nullable|string|max:255',
-            'video_link' => 'nullable|url',
+            'video_link' => 'nullable|string',
             'description' => 'nullable|string',
             'site_title' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
@@ -616,9 +616,9 @@ class ProductRepository implements ProductRepositoryInterface
             ],
             'category_id' => 'required|array',
             'category_id.*' => 'exists:categories,id',
-            'images' => 'required|array',
+            'images' => 'array',
             'video_provider' => 'nullable|string|max:255',
-            'video_link' => 'nullable|url',
+            'video_link' => 'nullable|string',
             'description' => 'nullable|string',
             'site_title' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
@@ -693,7 +693,7 @@ class ProductRepository implements ProductRepositoryInterface
                 for ($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
                     $taxModel = ProductTax::find($taxIdArray[$taxCounter]);
                     $taxModel->tax = $taxAmountArray[$taxCounter];
-                    $taxModel->tax_type = $taxTypeArray[$taxCounter];
+                    $taxModel->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
                     $taxModel->save();
                 }
             }
@@ -971,7 +971,62 @@ class ProductRepository implements ProductRepositoryInterface
 
         return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id', 'product_id'));
     }
+    
+    public function specificationProduct($id)
+    {
+        $data = ProductSpecification::where('product_id', $id)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
+        if ($data->isEmpty()) {
+            $product = Product::find($id);
+            $product_name = isset($product) ? $product->name : null;
+            $category_id = isset($product) ? $product->category_id : null;
+        } else {
 
+            $product_name = isset($data) ? $data[0]->product->name : null;
+            $category_id = isset($data) ? $data[0]->product->category_id : null;
+        }
+        $product_id = $id;
+
+
+        $mapped = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'key_id' => $item->key_id ?? null,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'specificationKey' => $item->specificationKey ? $item->specificationKey->name : null,
+                'specificationKeyType' => $item->specificationKeyType ? $item->specificationKeyType->name : null,
+                'specificationKeyTypeAttribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
+                'key_feature' => $item->key_feature,
+            ];
+        });
+        
+        return $mapped->groupBy('key_id');
+    }
+
+    public function specificationKeyFeaturedProduct($id)
+    {
+        $data = ProductSpecification::where('product_id', $id)->where('key_feature', 1)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
+        if ($data->isEmpty()) {
+            $product = Product::find($id);
+            $product_name = isset($product) ? $product->name : null;
+            $category_id = isset($product) ? $product->category_id : null;
+        } else {
+
+            $product_name = isset($data) ? $data[0]->product->name : null;
+            $category_id = isset($data) ? $data[0]->product->category_id : null;
+        }
+        $product_id = $id;
+
+
+        return $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'key' => $item->specificationKeyType ? $item->specificationKeyType->name : null,
+                'attribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
+            ];
+        });
+        
+    }
 
     public function specificationsAdd($request, $id)
     {

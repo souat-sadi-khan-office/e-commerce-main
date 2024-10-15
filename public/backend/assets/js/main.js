@@ -168,6 +168,7 @@ var _modalClassFormValidation = function () {
                 }
             },
             error: function (data) {
+                console.log(data.responseJSON);
                 var jsonValue = data.responseJSON;
                 const errors = jsonValue.errors;
                 if (errors) {

@@ -8,34 +8,37 @@
                     <div id="carouselExampleControls" class="carousel slide carousel-fade light_arrow"
                         data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            @foreach ($banners['main'] as $index => $carousel)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }} background_bg"
-                                    data-img-src="{{ asset($carousel->image) }}">
-                                    <div class="banner_slide_content banner_content_inner">
-                                        <div class="col-lg-7 col-10">
-                                            <div class="banner_content3 overflow-hidden">
-                                                <h5 class="mb-3 staggered-animation font-weight-light text-white "
-                                                    data-animation="slideInLeft" data-animation-delay="0.5s"
-                                                    style="z-index: 2">
-                                                    {{ @$carousel->header_title }}</h5>
-                                                <h2 class="staggered-animation text-white" data-animation="slideInLeft"
-                                                    data-animation-delay="1s" style="z-index: 2">{{ @$carousel->name }}
-                                                    </h5>
-                                                </h2>
-                                                <h4 class="staggered-animation mb-4 product-price"
-                                                    data-animation="slideInLeft" data-animation-delay="1.2s"><span
-                                                        class="price"
-                                                        style="z-index: 2">{{ @$carousel->old_offer }}</span><del>{{ @$carousel->new_offer }}</del>
-                                                </h4>
-                                                <a class="btn btn-fill-out btn-radius staggered-animation text-uppercase"
-                                                    href="{{ $carousel->link }}" data-animation="slideInLeft"
-                                                    data-animation-delay="1.5s"style="z-index: 2">Shop Now</a>
+                            @if (count($banners))
+                                @foreach ($banners['main'] as $index => $carousel)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }} background_bg"
+                                        data-img-src="{{ asset($carousel->image) }}">
+                                        <div class="banner_slide_content banner_content_inner">
+                                            <div class="col-lg-7 col-10">
+                                                <div class="banner_content3 overflow-hidden">
+                                                    <h5 class="mb-3 staggered-animation font-weight-light text-white "
+                                                        data-animation="slideInLeft" data-animation-delay="0.5s"
+                                                        style="z-index: 2">
+                                                        {{ @$carousel->header_title }}</h5>
+                                                    <h2 class="staggered-animation text-white" data-animation="slideInLeft"
+                                                        data-animation-delay="1s" style="z-index: 2">{{ @$carousel->name }}
+                                                        </h5>
+                                                    </h2>
+                                                    <h4 class="staggered-animation mb-4 product-price"
+                                                        data-animation="slideInLeft" data-animation-delay="1.2s"><span
+                                                            class="price"
+                                                            style="z-index: 2">{{ @$carousel->old_offer }}</span><del>{{ @$carousel->new_offer }}</del>
+                                                    </h4>
+                                                    <a class="btn btn-fill-out btn-radius staggered-animation text-uppercase"
+                                                        href="{{ $carousel->link }}" data-animation="slideInLeft"
+                                                        data-animation-delay="1.5s"style="z-index: 2">Shop Now</a>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="overlay"></div>
                                     </div>
-                                    <div class="overlay"></div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            @endif
+                            
                         </div>
                         
                         <ol class="carousel-indicators indicators_style3">

@@ -109,7 +109,7 @@ class Product extends Model
 
     public function ratings()
     {
-        return $this->hasMany(Rating::class);
+        return $this->hasMany(Rating::class)->orderBy('id', 'desc');
     }
 
     // Method to get the average rating
@@ -119,8 +119,8 @@ class Product extends Model
     }
 
     // // Relation with review
-    // public function review()
-    // {
-    //     return $this->hasMany(Review::class);
-    // }
+    public function review()
+    {
+        return $this->hasMany(Reviews::class, 'id', 'product_id');
+    }
 }

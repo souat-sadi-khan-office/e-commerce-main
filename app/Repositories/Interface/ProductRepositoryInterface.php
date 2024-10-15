@@ -15,6 +15,8 @@ interface ProductRepositoryInterface
     public function deleteProduct($id);
     public function getProductStockPurchaseDetails($id);
     public function duplicateProduct($request, $id);
+    public function specificationProduct($productId);
+    public function specificationKeyFeaturedProduct($productId);
     public function specificationproducts();
     public function specificationproductsDatatable();
     public function specificationproductModal($id);

@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\AuthRepositoryInterface;
+use App\Repositories\Interface\ProductRepositoryInterface;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,10 +18,14 @@ class LoginController extends Controller
 {
 
     protected $authRepository;
+    protected $productRepository;
 
-    public function __construct(AuthRepositoryInterface $authRepository)
-    {
+    public function __construct(
+        AuthRepositoryInterface $authRepository,
+        ProductRepositoryInterface $productRepository
+    ) {
         $this->authRepository = $authRepository;
+        $this->productRepository = $productRepository;
     }
 
     public function redirectToGoogle()
@@ -108,9 +114,37 @@ class LoginController extends Controller
         return view('frontend.pc-builder');
     }
 
-    public function product()
+    public function productDetails($slug)
     {
-        return view('frontend.product-details');
+        $product = Product::with(['category', 'brand', 'details', 'image', 'ratings', 
+            'question' => function($query) {
+                $query->orderBy('id', 'desc');
+            }
+        ])
+        ->where('status', 1)
+        ->where('slug', $slug)
+        ->first();        if($product) {
+            $breadcrumb = $this->getCategoryBreadcrumb($product->category);
+
+            $spec = $this->productRepository->specificationProduct($product->id);
+            $keySpec = $this->productRepository->specificationKeyFeaturedProduct($product->id);
+
+            return view('frontend.product-details', compact('product', 'breadcrumb', 'keySpec', 'spec'));
+        }
+
+        abort(404);
+    }
+
+    function getCategoryBreadcrumb($category)
+    {
+        $breadcrumb = [];
+
+        while ($category) {
+            $breadcrumb[] = $category;
+            $category = $category->parent_id;
+        }
+
+        return array_reverse($breadcrumb);
     }
 
 }

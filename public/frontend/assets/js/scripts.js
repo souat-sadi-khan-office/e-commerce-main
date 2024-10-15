@@ -7,6 +7,11 @@
         }
     });
 
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
 	/*===================================*
 	01. LOADING JS
 	/*===================================*/
@@ -836,10 +841,10 @@
 		
 		// Zoom image when click on icon
 		$('.product_img_zoom').on('click', function(){
-			var atual = $('#pr_item_gallery a').attr('data-zoom-image');
+			var actual = $('#pr_item_gallery a').attr('data-zoom-image');
 			$('body').addClass('zoom_gallery_image');
 			$('#pr_item_gallery .item').each(function(){
-				if( atual == $(this).find('.product_gallery_item').attr('data-zoom-image') ) {
+				if( actual == $(this).find('.product_gallery_item').attr('data-zoom-image') ) {
 					return galleryZoom.magnificPopup('open', $(this).index());
 				}
 			});
@@ -851,10 +856,10 @@
 	$(document).ready(function () {
 		pluseminus();
 		product_color_switch();
-		// galleryZoomProduct();
+		galleryZoomProduct();
 		carousel_slider();
 		slick_slider();
-		// ajax_magnificPopup();
+		ajax_magnificPopup();
 	});
 
 
@@ -884,8 +889,9 @@
 	23. RATING STAR JS
 	*===================================*/
 	$(document).ready(function () {
-	  $('.star_rating span').on('click', function(){
+	  	$('.star_rating span').on('click', function(){
 			var onStar = parseFloat($(this).data('value'), 10); // The star currently selected
+			$('.star_rating_field').val(onStar);			
 			var stars = $(this).parent().children('.star_rating span');
 			for (var i = 0; i < stars.length; i++) {
 				$(stars[i]).removeClass('selected');
@@ -930,11 +936,10 @@
 	26. ONLOAD POPUP JS
 	*===================================*/
 	
-	$(window).on('load',function(){
-		setTimeout(function() {
-			$("#onload-popup").modal('show', {}, 500);
-		}, 3000);
-		
-	});	
+	// $(window).on('load',function(){
+	// 	setTimeout(function() {
+	// 		$("#onload-popup").modal('show', {}, 500);
+	// 	}, 3000);
+	// });	
 	
 })(jQuery);

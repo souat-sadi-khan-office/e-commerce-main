@@ -141,8 +141,8 @@
     
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="video_link">Video Link</label>
-                                        <input type="url" name="video_link" id="video_link" class="form-control" placeholder="Video Link">
-                                        <small class="text-muted">Use proper link without extra parameter. Don't use short share link/embeded iframe code.</small>
+                                        <textarea name="video_link" id="video_link" cols="30" rows="4" placeholder="Video Link" class="form-control"></textarea>
+                                        <small class="text-muted">Use the proper embed code from youtube.</small>
                                     </div>
     
                                 </div>

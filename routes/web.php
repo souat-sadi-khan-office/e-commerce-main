@@ -14,7 +14,6 @@ use App\Http\Controllers\Frontend\HomePageController;
 //     return view('frontend.homepage.index');
 // })->name('home');
 
-Route::get('product', [LoginController::class, 'product'])->name('product');
 Route::get('laptop-buying-guide', [LoginController::class, 'laptopBuyingGuide'])->name('laptop-buying-guide');
 Route::get('pc-builder', [LoginController::class, 'pcBuilder'])->name('pc-builder');
 Route::get('login', [LoginController::class, 'index'])->name('login');
@@ -31,6 +30,10 @@ Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCa
 
 Route::middleware('web')->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
+    
+    Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
+    Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
+    Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
 });
 
 Route::middleware(['isCustomer', 'web'])->group(function () {
@@ -41,7 +44,7 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
         return redirect()->route('dashboard');
     });
     
-    Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
         Route::resource('phone-book', PhoneBookController::class);
@@ -70,3 +73,6 @@ Route::post('search/brand-types', [SearchController::class, 'searchForBrandTypes
 
 Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->name('getCountries');
 Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');
+
+Route::get('{slug}', [LoginController::class, 'productDetails'])->name('slug.handle');
+

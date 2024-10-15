@@ -11,8 +11,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use App\Models\Product;
+use App\Models\ProductDetail;
+use App\Models\ProductQuestion;
+use App\Models\Rating;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
+use Illuminate\Support\Facades\Validator;
 
 class HomePageController extends Controller
 {
@@ -103,6 +108,113 @@ class HomePageController extends Controller
 
         return view('frontend.homepage.index', compact('banners', 'newProducts'));
         // dd($banners);
+    }
+
+    public function submitQuestionForm(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'product' => 'nullable|string',
+            'message' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $product = Product::where('slug', $request->product)->where('status', 1)->first();
+        if(!$product) {
+            return response()->json(['status' => false, 'message' => 'Product not found']);
+        }
+
+        ProductQuestion::create([
+            'product_id' => $product->id,
+            'user_id' => Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null,
+            'name' => $request->name,
+            'message' => $request->message 
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Question Submitted Successfully', 'load' => true]);
+    }
+    
+    public function submitReviewForm(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'product' => 'nullable|string',
+            'message' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if($request->rating < 1) {
+            return response()->json(['status' => false, 'message' => 'Please add a rating first.']);
+        }
+
+        $product = Product::where('slug', $request->product)->where('status', 1)->first();
+        if(!$product) {
+            return response()->json(['status' => false, 'message' => 'Product not found']);
+        }
+
+        // add to rating table
+        $rating = Rating::create([
+            'product_id' => $product->id,
+            'user_id' => Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null,
+            'name' => $request->name,
+            'email' => $request->email,
+            'rating' => $request->rating,
+            'review' => $request->message 
+        ]);
+        
+        if($rating) {
+            $numberOfRating = Rating::where('product_id', $product->id)->count();
+            $newNumberOfRating = $numberOfRating;
+
+            $averageRating = (Rating::where('product_id', $product->id)->sum('rating') / $numberOfRating);
+
+            $details = ProductDetail::where('product_id', $product->id)->first();
+            $details->number_of_rating = $newNumberOfRating;
+            $details->average_rating = $averageRating;
+            $details->save();
+        }
+
+        return response()->json(['status' => true, 'message' => 'Review Submitted Successfully', 'load' => true]);
+    }
+
+    public function addToCompareList(Request $request)
+    {
+        $productId = $request->id;
+        $compareList = session()->get('compare_list', []);
+
+        if (!in_array($productId, $compareList)) {
+            $compareList[] = $productId;
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'This product is already added to your compare list.',
+            ]);
+        }
+
+        if(count($compareList) > 3) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You can not add more then 3 product at a time.',
+            ]);
+        }
+
+        session()->put('compare_list', $compareList);
+
+        $counter = count($compareList);
+
+        return response()->json([
+            'status' => true,
+            'counter' => $counter,
+            'message' => 'Product added to compare list successfully.',
+        ]);
     }
 }
 

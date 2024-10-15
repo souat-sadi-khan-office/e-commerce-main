@@ -5,6 +5,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-12 table-responsive">
+                
                 @foreach ($models as $data)
                     <hr>
 
