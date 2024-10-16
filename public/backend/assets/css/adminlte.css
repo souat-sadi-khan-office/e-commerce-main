@@ -15484,3 +15484,16 @@ html.maximized-card {
   background-color: var(--bs-body-bg) !important;
   border: 1px solid #aaa;
 }
+
+.iconpicker-popover.popover .popover-title {
+  border-bottom: 1px solid var(--bs-body-bg) !important;
+  background-color: var(--bs-body-bg) !important;
+}
+
+.iconpicker .iconpicker-items {
+  background: var(--bs-body-bg) !important;
+}
+
+.iconpicker .iconpicker-item:hover:not(.iconpicker-selected) {
+  background: var(--bs-body-bg) !important;
+}

@@ -49,7 +49,7 @@
                                         Slug 
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="slug" id="slug" class="form-control" readonly>
+                                    <input type="text" name="slug" id="slug" class="form-control">
                                 </div>
                             </div>
 

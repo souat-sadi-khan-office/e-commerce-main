@@ -1,6 +1,7 @@
 @php
     $main_categories = App\Models\Category::with('children')
     ->where('status', 1)
+    ->where('is_featured', 1)
     ->where('parent_id', null)
     ->orderBy('id', 'ASC')
     ->get();

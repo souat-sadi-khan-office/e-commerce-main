@@ -22,6 +22,12 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->select('id', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
             ->get();
     }
+
+    public function getAllCategories()
+    {
+        return Category::all();
+    }
+    
     public function index2()
     {
         return Category::with('parent:id,name')

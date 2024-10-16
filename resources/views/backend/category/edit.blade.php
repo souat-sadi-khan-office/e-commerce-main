@@ -1,7 +1,6 @@
 @extends('backend.layouts.app')
-@section('title', 'Category Edit')
-{{-- @section('page_name', 'Category Add') --}}
-@section('breadcrumb', 'Category Edit/'.$category->name)
+@section('title', 'Update Category Information')
+@section('breadcrumb', 'Update Category Information '.$category->name)
 
 @section('content')
     <div class="row">
@@ -9,14 +8,19 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h1 class="h3 mb-0">Edit Category</h1>
+                        <h1 class="h3 mb-0">Update Category Information</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">
                                     <i class="bi bi-house-add-fill"></i>
                                 </a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Category Edit / {{$category->name}}</li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">
+                                    Category
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Update Category Information / {{$category->name}}</li>
                         </ol>
                     </div>
 
@@ -49,31 +53,35 @@
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-4">
                                     <label for="icon" class="form-label">Icon <span class="text-danger">*</span></label>
                                     <input type="text" name="icon" value="{{App\CPU\Helpers::extractIconClassName($category->icon)}}" class="form-control iconpicker" required>
                                 </div>
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-4">
                                     <label for="header" class="form-label">Header <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="header" value="{{$category->header}}"  class="form-control" required>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="mb-3 col-6">
-                                    <label for="short_description" class="form-label">Short Description <span
-                                            class="text-danger">*</span></label>
-                                    <textarea name="short_description" class="form-control" rows="3" required> {{$category->short_description}}</textarea>
-                                </div>
-                                <div class="mb-3 col-6">
+                                <div class="mb-3 col-4">
                                     <label for="site_title" class="form-label">Site Title <span
                                             class="text-danger">*</span></label>
                                     <input type="text" name="site_title" value="{{$category->site_title}}" class="form-control" required>
                                 </div>
                             </div>
 
-                            @include('backend.components.descriptionInput')
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <label for="short_description" class="form-label">
+                                        Short Description
+                                    </label>
+                                    <textarea name="short_description" class="form-control" rows="3"> {{$category->short_description}}</textarea>
+                                </div>
+                               
+                            </div>
+
+                            @include('backend.components.descriptionInput', [
+                                'description' => $category->description,
+                            ])
 
                             <div class="row">
                                 <div class="mb-3 col-6">
