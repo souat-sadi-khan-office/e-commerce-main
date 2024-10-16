@@ -65,7 +65,13 @@ class UserController extends Controller
     
     public function wishlist()
     {
-        return view('frontend.customer.wishlist');
+        $models = $this->user->getUserWishList();
+        return view('frontend.customer.wishlist', compact('models'));
+    }
+
+    public function destroyWishlist($id)
+    {
+        return $this->user->removeWishList($id);
     }
     
     public function star_points()

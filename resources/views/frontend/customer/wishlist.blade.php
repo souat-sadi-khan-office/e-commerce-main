@@ -47,44 +47,62 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="table-responsive wishlist_table">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="product-thumbnail">&nbsp;</th>
-                                                        <th class="product-name">Product</th>
-                                                        <th class="product-price">Price</th>
-                                                        <th class="product-stock-status">Stock Status</th>
-                                                        <th class="product-add-to-cart"></th>
-                                                        <th class="product-remove">Remove</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="product-thumbnail"><a href="#"><img style="max-width:80px;" src="https://www.startech.com.bd/image/cache/catalog/processor/Intel/core-i5-14600k/core-i5-14600k-01-500x500.webp" alt="product1"></a></td>
-                                                        <td class="product-name" data-title="Product"><a href="#">Blue Dress For Woman</a></td>
-                                                        <td class="product-price" data-title="Price">$45.00</td>
-                                                          <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
-                                                        <td class="product-add-to-cart"><a href="#" class="btn btn-sm btn-fill-out"><i class="icon-basket-loaded"></i> Add to Cart</a></td>
-                                                        <td class="product-remove" data-title="Remove"><a href="#"><i class="ti-close"></i></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="product-thumbnail"><a href="#"><img style="max-width:80px;" src="https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-5600g/ryzen-5-5600g-500x500.jpg" alt="product2"></a></td>
-                                                        <td class="product-name" data-title="Product"><a href="#">Lether Gray Tuxedo</a></td>
-                                                        <td class="product-price" data-title="Price">$55.00</td>
-                                                          <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
-                                                        <td class="product-add-to-cart"><a href="#" class="btn btn-sm btn-fill-out"><i class="icon-basket-loaded"></i> Add to Cart</a></td>
-                                                        <td class="product-remove" data-title="Remove"><a href="#"><i class="ti-close"></i></a></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="product-thumbnail"><a href="#"><img style="max-width:80px;" src="https://www.startech.com.bd/image/cache/catalog/processor/intel/i5-12400/i5-12400-01-500x500.webp" alt="product3"></a></td>
-                                                        <td class="product-name" data-title="Product"><a href="#">woman full sliv dress</a></td>
-                                                        <td class="product-price" data-title="Price">$68.00</td>
-                                                          <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
-                                                        <td class="product-add-to-cart"><a href="#" class="btn btn-sm btn-fill-out"><i class="icon-basket-loaded"></i> Add to Cart</a></td>
-                                                        <td class="product-remove" data-title="Remove"><a href="#"><i class="ti-close"></i></a></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            @if (count($models))
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="product-thumbnail">&nbsp;</th>
+                                                            <th class="product-name">Product</th>
+                                                            <th class="product-price">Price</th>
+                                                            <th class="product-stock-status">Stock Status</th>
+                                                            <th class="product-add-to-cart"></th>
+                                                            <th class="product-remove">Remove</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($models as $model)
+                                                            @php
+                                                            @endphp
+                                                            <tr>
+                                                                <td class="product-thumbnail">
+                                                                    <a href="{{ $model->product->slug }}">
+                                                                        <img style="max-width:80px;" src="{{ asset($model->product->thumb_image) }}" alt="{{ $model->product->name }}">
+                                                                    </a>
+                                                                </td>
+                                                                <td class="product-name">
+                                                                    <a href="{{ $model->product->slug }}">
+                                                                        {{ $model->product->name }}
+                                                                    </a>
+                                                                </td>
+                                                                <td class="product-price">
+                                                                    {{ home_discounted_price($model->product) }}
+                                                                </td>
+                                                                <td class="product-stock-status">
+                                                                    @if ($model->product->in_stock)
+                                                                        <span class="badge rounded-pill text-bg-success">In Stock</span>
+                                                                    @else   
+                                                                        <span class="badge rounded-pill text-bg-danger">Out of Stock</span>
+                                                                    @endif
+                                                                </td>
+                                                                <td class="product-add-to-cart">
+                                                                    <a href="javascript:;" class="btn btn-sm btn-fill-out">
+                                                                        <i class="fas fa-shopping-basket"></i>
+                                                                        Add to Cart
+                                                                    </a>
+                                                                </td>
+                                                                <td class="product-remove" data-title="Remove">
+                                                                    <a id="delete_item" data-id="{{ $model->id }}" data-url="{{ route('account.wishlist.destroy', $model->id) }}" class="remove-column-{{ $model->id }}" href="javascript:;">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            @else   
+                                                <p>There is nothing to show</p>
+                                            @endif
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -99,3 +117,49 @@
 	</div>
 </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).on('click', '#delete_item', function(e) {
+            e.preventDefault();
+            var row = $(this).data('id');
+            var url = $(this).data('url');
+            $('.remove-column-'+row).html('<i class="fas fa-spin fa-spinner"></i>');
+            $.ajax({
+                url: url,
+                method: 'Delete',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function(data) {
+
+                    if (data.status) {
+
+                        toastr.success(data.message);
+                        if (data.load) {
+                            setTimeout(function() {
+
+                                window.location.href = "";
+                            }, 1000);
+                        }
+
+                    } else {
+                        $('.remove-column-'+row).html('<i class="fas fa-times"></i>');
+                        toastr.warning(data.message);
+                    }
+                },
+                error: function(data) {
+                    var jsonValue = $.parseJSON(data.responseText);
+                    const errors = jsonValue.errors
+                    var i = 0;
+                    $.each(errors, function(key, value) {
+                        toastr.error(value);
+                        i++;
+                    });
+                }
+            });
+              
+        });
+    </script>
+@endpush

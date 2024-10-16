@@ -58,6 +58,7 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
         Route::get('change-password', [UserController::class, 'password'])->name('change_password');
         Route::post('update-password', [UserController::class, 'updatePassword'])->name('update.password');
         Route::get('wish-list', [UserController::class, 'wishlist'])->name('wishlist');
+        Route::delete('wish-list/destroy/{id}', [UserController::class, 'destroyWishlist'])->name('wishlist.destroy');
         Route::get('saved-pc', [UserController::class, 'saved_pc'])->name('saved_pc');
         Route::get('star-points', [UserController::class, 'star_points'])->name('star_points');
         Route::get('transaction', [UserController::class, 'transactions'])->name('transaction');

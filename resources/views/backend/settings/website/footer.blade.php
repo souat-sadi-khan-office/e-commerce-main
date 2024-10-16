@@ -73,7 +73,7 @@
                                     @php
                                         $rand = rand(10000, 1000000);
                                     @endphp
-                                    @foreach ( json_decode(get_settings('footer_menu_one_labels')) as $key => $value)
+                                    @foreach ( (get_settings('footer_menu_one_labels')) as $key => $value)
                                         <div class="row mt-3" id="data-{{ $rand}}">
                                             <div class="col-4">
                                                 <div class="form-group">
@@ -121,7 +121,7 @@
                                     @php
                                         $rand = rand(10000, 1000000);
                                     @endphp
-                                    @foreach ( json_decode(get_settings('footer_menu_two_labels')) as $key => $value)
+                                    @foreach ( (get_settings('footer_menu_two_labels')) as $key => $value)
                                         <div class="row mt-3" id="data-{{ $rand}}">
                                             <div class="col-4">
                                                 <div class="form-group">
