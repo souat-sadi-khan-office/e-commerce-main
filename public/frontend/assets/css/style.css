@@ -8254,3 +8254,8 @@ blockquote p:last-child {
 	float: none !important;
 	border: none !important;
 }
+
+img.category-image {
+    width: 25px;
+    margin-right: 10px;
+}

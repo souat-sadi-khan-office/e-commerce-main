@@ -38,48 +38,66 @@
                             @csrf
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="name" class="form-label">Name <span class="text-danger">*</span>
+                                    <label for="name" class="form-label">
+                                        Name 
+                                        <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="name" id="name" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                    <label for="slug" class="form-label">
+                                        Slug 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="slug" id="slug" class="form-control" readonly>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-4">
-                                    <label for="icon" class="form-label">Icon <span class="text-danger">*</span></label>
+                                <div class="mb-3 col-6">
+                                    <label for="icon" class="form-label">
+                                        Icon 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="icon" class="form-control iconpicker" required>
                                 </div>
-                                <div class="mb-3 col-4">
-                                    <label for="header" class="form-label">Parent Category <span
-                                            class="text-danger">*</span></label>
-                                    <select name="parent_id" id="subCategory" class="form-control select" required>
-                                        <option value="" disabled>-- Select Parent Category --</option>
+                                <div class="mb-3 col-6">
+                                    <label for="header" class="form-label">
+                                        Parent Category 
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <select name="parent_id" data-placeholder="-- Select Parent Category --" id="subCategory" class="form-control select" required>
+                                        <option value="">-- Select Parent Category --</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3 col-4">
-                                    <label for="header" class="form-label">Header <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="header" class="form-control" required>
-                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="short_description" class="form-label">Short Description <span
-                                            class="text-danger">*</span></label>
-                                    <textarea name="short_description" class="form-control" rows="3" required></textarea>
+                                    <label for="header" class="form-label">
+                                        Header 
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="header" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="site_title" class="form-label">Site Title <span
-                                            class="text-danger">*</span></label>
+                                    <label for="site_title" class="form-label">
+                                        Site Title 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="site_title" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="mb-3 col-12">
+                                    <label for="short_description" class="form-label">
+                                        Short Description
+                                    </label>
+                                    <textarea name="short_description" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
 

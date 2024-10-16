@@ -2,6 +2,7 @@
 
 use App\CPU\Helpers;
 use App\Models\Currency;
+use App\Models\Category;
 use App\Models\HomepageSettings;
 use App\Models\ConfigurationSetting;
 use Illuminate\Support\Facades\Auth;
@@ -10,18 +11,21 @@ use Illuminate\Support\Facades\Session;
 if (!function_exists('get_setting')) {
     function get_settings($key, $default = null)
     {
-        if (Session::has('settings.' . $key)) {
-            return Session::get('settings.' . $key, $default);
-        }
+        // if (Session::has('settings.' . $key)) {
+        //     return Session::get('settings.' . $key, $default);
+        // }
 
+        $value = '';
         $setting = ConfigurationSetting::where('type', $key)->first();
-
-        if ($setting !== null) {
-            Session::put('settings.' . $key, $setting->value);
-            return $setting->value;
+        if($setting) {
+            $value = $setting->value;
         }
+        // if ($setting !== null) {
+        //     Session::put('settings.' . $key, $setting->value);
+        //     return $setting->value;
+        // }
 
-        return $default;
+        return $value;
     }
 }
 
@@ -66,7 +70,6 @@ if (!function_exists('homepage_setting')) {
         return false; 
     }
 }
-
 
 // format date
 if (!function_exists('get_system_date')) {
@@ -217,7 +220,6 @@ if (!function_exists('home_discounted_price')) {
             $discount_applicable = false;
         }
 
-
         if ($discount_applicable) {
             if ($product->discount_type == 'percentage') {
                 $lowest_price -= ($lowest_price * $product->discount) / 100;
@@ -266,11 +268,37 @@ if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
         $currency = Currency::find(get_settings('system_default_currency'));
-        // if ($currency) {
-        //     $currency_symbol = $currency->symbol;
-        // } else {
-        //     $currency_symbol = '£';
-        // }
+        if(!$currency) {
+            $currency = Currency::where('name', 'US Dollar')->first();
+        }
+
         return $currency;
+    }
+}
+
+if(!function_exists('get_immediate_children_ids')) {
+    function get_immediate_children_ids($id, $with_trashed = false)
+    {
+        $children = get_immediate_children($id, $with_trashed, true);
+
+        return !empty($children) ? array_column($children, 'id') : array();
+
+    }
+}
+
+if(!function_exists('get_immediate_children_count')) {
+    function get_immediate_children_count($id, $with_trashed = false)
+    {
+        return $with_trashed ? Category::where('status', 1)->where('parent_id', $id)->count() : Category::where('status', 1)->where('parent_id', $id)->count();
+    }
+}
+
+if(!function_exists('get_immediate_children')) {
+    function get_immediate_children($id, $with_trashed = false, $as_array = false)
+    {
+        $children = $with_trashed ? Category::where('status', 1)->where('parent_id', $id)->orderBy('name', 'ASC')->get() : Category::where('status', 1)->where('parent_id', $id)->orderBy('name', 'ASC')->get();
+        $children = $as_array && !is_null($children) ? $children->toArray() : $children;
+
+        return $children;
     }
 }

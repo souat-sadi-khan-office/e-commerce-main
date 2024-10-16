@@ -96,7 +96,7 @@
                         <div class="product_description">
                             <h1 class="h4 product_title">
                                 {{ $product->name }}
-                            </h1>
+                            </h1> 
                             <div class="product_price">
                                 @if (home_price($product) != home_discounted_price($product))
                                     <span class="price">{{ home_discounted_price($product) }}</span>

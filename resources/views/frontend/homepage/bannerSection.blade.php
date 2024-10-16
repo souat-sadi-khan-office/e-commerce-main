@@ -2,7 +2,6 @@
 <div class="mt-4 staggered-animation-wrap">
     <div class="custom-container">
         <div class="row">
-            {{-- {{dd($banners['main_sidebar'])}} --}}
             <div class="col-lg-7 offset-lg-3">
                 <div class="banner_section shop_el_slider">
                     <div id="carouselExampleControls" class="carousel slide carousel-fade light_arrow"
@@ -66,21 +65,20 @@
                 <div class="col-lg-2 d-none d-lg-block">
                     @if (isset($main_sidebar[0]))
                         <div class="shop_banner2 el_banner1">
-                            <a href="#" class="hover_effect1">
+                            <a href="{{ $main_sidebar[0]->link }}" class="hover_effect1">
                                 <div class="el_title text_white">
                                     <h6>{{ $main_sidebar[0]->name }}</h6>
                                     <span>{{ $main_sidebar[0]->new_offer ? $main_sidebar[0]->new_offer . ' off' : '' }}</span>
                                 </div>
                                 <div class="el_img">
-                                    <img src="{{ asset($main_sidebar[0]->image) }}"
-                                        alt="{{ $main_sidebar[0]->alt_tag }}">
+                                    <img src="{{ asset($main_sidebar[0]->image) }}" alt="{{ $main_sidebar[0]->alt_tag }}">
                                 </div>
                             </a>
                         </div>
                     @endif
                     @if (isset($main_sidebar[1]))
                         <div class="shop_banner2 el_banner2">
-                            <a href="#" class="hover_effect1">
+                            <a href="{{ $main_sidebar[1]->link }}" class="hover_effect1">
                                 <div class="el_title text_white">
                                     <h6>{{ $main_sidebar[1]->name }}</h6>
                                     <span><u>Shop Now</u></span>
@@ -93,7 +91,7 @@
                         </div>
                     @endif
                 </div>
-        </div>
+            </div>
         @endif
     </div>
 </div>
@@ -103,7 +101,6 @@
 <style>
     .carousel-item {
         position: relative;
-        /* Make sure the carousel item is positioned relatively */
     }
 
     .overlay {
@@ -117,9 +114,7 @@
 
     .banner_slide_content {
         position: relative;
-        /* Ensure content is above the overlay */
         z-index: 2;
-        /* Content should be above the overlay */
     }
 </style>
 @endpush

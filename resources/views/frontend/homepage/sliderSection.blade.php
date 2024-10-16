@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-xl-3 d-none d-xl-block">
                 <div class="sale-banner">
-                    <a class="hover_effect1" href="#">
+                    <a class="hover_effect1" href="javascript:;">
                         <img src="{{ asset('frontend/assets/images/shop_banner_img6.jpg') }}" alt="shop_banner_img6">
                     </a>
                 </div>
@@ -17,12 +17,10 @@
                                 <h4>Exclusive Products</h4>
                             </div>
                             <div class="tab-style2">
-                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#tabmenubar" aria-expanded="false">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#tabmenubar" aria-expanded="false">
                                     <span class="ion-android-menu"></span>
                                 </button>
-                                <ul class="nav nav-tabs justify-content-center justify-content-md-end" id="tabmenubar"
-                                    role="tablist">
+                                <ul class="nav nav-tabs justify-content-center justify-content-md-end" id="tabmenubar" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active" id="arrival-tab" data-bs-toggle="tab" href="#arrival"
                                             role="tab" aria-controls="arrival" aria-selected="true">New Arrival</a>
@@ -72,15 +70,26 @@
                                                     </a>
                                                     <div class="product_action_box">
                                                         <ul class="list_none pr_action_btn">
-                                                            <li class="add-to-cart"><a href="#"><i
-                                                                        class="icon-basket-loaded"></i> Add To Cart</a>
+                                                            <li class="add-to-cart">
+                                                                <a href="javascript:;">
+                                                                    <i class="icon-basket-loaded"></i> Add To Cart
+                                                                </a>
                                                             </li>
-                                                            <li><a href="shop-compare.html" class="popup-ajax"><i
-                                                                        class="icon-shuffle"></i></a></li>
-                                                            <li><a href="{{ route('quick.view', $product['slug']) }}"
-                                                                    class="popup-ajax"><i
-                                                                        class="icon-magnifier-add"></i></a></li>
-                                                            <li><a href="#"><i class="icon-heart"></i></a></li>
+                                                            <li>
+                                                                <a href="javascript:;" class="add_compare" data-id="{{ $product['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                                                    <i class="icon-shuffle"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{{ route('quick.view', $product['slug']) }}" class="popup-ajax">
+                                                                    <i class="icon-magnifier-add"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List" class="add_wishlist" >
+                                                                    <i class="icon-heart"></i>
+                                                                </a>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </div>
