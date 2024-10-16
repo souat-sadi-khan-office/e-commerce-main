@@ -350,6 +350,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->brand_type_id = $request->brand_type_id;
         $product->thumb_image = Images::upload('products', $request->thumb_image);
         $product->unit_price = isset($request->unit_price) ? $request->unit_price : 0;
+        $product->sku = $this->generateSku($request->category_id[count($request->category_id) - 1]);
         $product->status = $request->status;
         $product->in_stock = isset($request->in_stock) ? $request->in_stock : 0;
         $product->is_featured = $request->is_featured;
@@ -741,6 +742,7 @@ class ProductRepository implements ProductRepositoryInterface
             'brand_type_id' => $originalProduct->brand_type_id,
             'name' => $originalProduct->name,
             'slug' => $originalProduct->slug . '-' . rand(100, 1000),
+            'skq' => $this->generateSku($originalProduct->category_id),
             'unit_price' => $originalProduct->unit_price,
             'status' => $originalProduct->status,
             'in_stock' => $originalProduct->in_stock,
@@ -870,6 +872,19 @@ class ProductRepository implements ProductRepositoryInterface
         return response()->json(['status' => true, 'message' => 'Product duplication successfully.', 'load' => true]);
     }
 
+    private function generateSku($CiD)
+    {
+        $rand = rand(1000, 99999);
+
+        if ($CiD > 99) {
+            return $CiD . strtoupper(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 3)) . rand(1000, 9999);
+        } elseif ($rand > 9999) {
+            return $CiD . strtoupper(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 3)) . $rand;
+        } else {
+            return $CiD . $rand . strtoupper(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 3));
+        }
+    }
+
     private function copyImage($imagePath)
     {
         $extension = File::extension($imagePath);
@@ -886,6 +901,86 @@ class ProductRepository implements ProductRepositoryInterface
 
         return $newFilePath;
     }
+
+    public function quickview($slug)
+    {
+        $product = Product::where('slug', $slug)->with([
+            'details:id,product_id,description,current_stock,low_stock_quantity,cash_on_delivery,number_of_sale',
+            'category:id,name,slug',
+            'brand:id,name,slug',
+            'image' => function ($query) {
+                $query->select('id', 'product_id', 'image')->where('status', 1);
+            },
+            'specifications' => function ($query) {
+                $query->where('key_feature', 1)
+                    ->with([
+                        'specificationKeyType:id,name,position',
+                        'specificationKeyTypeAttribute:id,name,extra'
+                    ])->join('specification_key_types', 'product_specifications.type_id', '=', 'specification_key_types.id')
+                    ->orderBy('specification_key_types.position', 'ASC');
+            },
+            'ratings' => function ($query) {
+                $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                    ->groupBy('product_id');
+            }
+        ])->withCount('ratings')->first(['id', 'category_id', 'brand_id', 'name', 'thumb_image', 'sku', 'slug', 'unit_price', 'is_returnable', 'return_deadline', 'is_discounted', 'discount', 'discount_type']);
+
+        
+        $discountedPrice = $product->unit_price;
+        if ($product->is_discounted && $product->discount > 0) {
+            $discountAmount = $product->discount_type == 'amount'
+                ? $product->discount
+                : ($product->unit_price * ($product->discount / 100));
+
+            $discountedPrice -= $discountAmount;
+        }
+
+        $averageRating = $product->ratings->isNotEmpty() ? $product->ratings->first()->averageRating : null;
+        $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : 0;
+
+        $productDetails = [
+            'id' => $product->id,
+            'category_id' => $product->category_id,
+            'category_name' => $product->category->name,
+            'category_slug' => $product->category->slug,
+            'brand_id' => $product->brand_id,
+            'brand_name' => $product->brand->name,
+            'brand_slug' => $product->brand->slug,
+            'name' => $product->name,
+            'thumb_image' => $product->thumb_image,
+            'sku' => $product->sku,
+            'slug' => $product->slug,
+            'description' => $product->details->description ?? '',
+            'price' => $product->unit_price,
+            'return_deadline' => $product->is_returnable ? $product->return_deadline : 0,
+            'ratings_count' => $product->ratings_count,
+            'average_rating' => $averageRatingPercentage,
+            'discount' => $product->is_discounted ? $product->discount : 0,
+            'discount_type' => $product->discount_type,
+            'discounted_price' => $discountedPrice,
+            'current_stock' => $product->details->current_stock ?? 0,
+            'is_low_stock' => isset($product->details) && $product->details->current_stock <= $product->details->low_stock_quantity,
+            'is_COD_available' => $product->details->cash_on_delivery ?? false,
+            'total_sold' => $product->details->number_of_sale ?? 0,
+            'images' => $product->image,
+            'key_features' => []
+        ];
+
+        if ($product->specifications->isNotEmpty()) {
+            foreach ($product->specifications as $specification) {
+                $productDetails['key_features'][] = [
+                    'type_id' => $specification->specificationKeyType->id ?? null,
+                    'type_name' => $specification->specificationKeyType->name ?? '',
+                    'attribute_id' => $specification->specificationKeyTypeAttribute->id ?? null,
+                    'attribute_name' => ($specification->specificationKeyTypeAttribute->name ?? '') . ' ' . ($specification->specificationKeyTypeAttribute->extra ?? ''),
+                ];
+            }
+        }
+
+        return $productDetails;
+    }
+
+
 
     public function specificationproducts()
     {

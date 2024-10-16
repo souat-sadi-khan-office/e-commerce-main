@@ -104,6 +104,8 @@ class BannerRepository implements BannerRepositoryInterface
             'image' => $data->image ? Images::upload('banners', $data->image) : null,
         ]);
         Cache::forget('banners');
+        Cache::forget('mid_banners');
+
         $json = ['status' => true, 'goto' => route('admin.banner.index'), 'message' => 'Banner created successfully'];
         return response()->json($json);
     }
@@ -130,6 +132,7 @@ class BannerRepository implements BannerRepositoryInterface
         $banner->update();
 
         Cache::forget('banners');
+        Cache::forget('mid_banners');
 
         return response()->json(['status' => true, 'goto' => route('admin.banner.index'), 'message' => 'Banner updated successfully.']);
     }
@@ -139,6 +142,7 @@ class BannerRepository implements BannerRepositoryInterface
         $brand = Banner::findOrFail($id);
         // Clear the banners cache
         Cache::forget('banners');
+        Cache::forget('mid_banners');
         return $brand->delete();
     }
 
@@ -157,6 +161,7 @@ class BannerRepository implements BannerRepositoryInterface
         $banner->status = $request->input('status');
         $banner->save();
         Cache::forget('banners');
+        Cache::forget('mid_banners');
         return response()->json(['success' => true, 'message' => 'Banner status updated successfully.']);
     }
 }

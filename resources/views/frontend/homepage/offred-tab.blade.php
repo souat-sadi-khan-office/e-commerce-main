@@ -1,4 +1,4 @@
-<div class="product_slider carousel_slider owl-carousel owl-theme dot_style1" data-loop="true" data-margin="20"
+<div class="product_slider carousel_slider owl-carousel owl-theme dot_style1" data-loop="true" data-autoplay="true" data-margin="20"
     data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "991":{"items": "4"}}'>
     @foreach ($products as $product)
         <div class="item">

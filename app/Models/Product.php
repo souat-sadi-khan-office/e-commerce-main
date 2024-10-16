@@ -18,6 +18,7 @@ class Product extends Model
         'brand_type_id',
         'thumb_image',
         'unit_price',
+        'sku',
         'status',
         'in_stock',
         'is_featured',
@@ -64,7 +65,7 @@ class Product extends Model
     // Relation with product details
     public function details()
     {
-        return $this->belongsTo(ProductDetail::class, 'id', 'product_id');
+        return $this->hasOne(ProductDetail::class);
     }
 
     // Relation with product image

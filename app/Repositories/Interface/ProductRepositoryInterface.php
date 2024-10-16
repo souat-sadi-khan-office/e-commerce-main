@@ -13,6 +13,7 @@ interface ProductRepositoryInterface
     public function getProductById($id);
     public function updateFeatured($request, $id);
     public function deleteProduct($id);
+    public function quickview($slug);
     public function getProductStockPurchaseDetails($id);
     public function duplicateProduct($request, $id);
     public function specificationProduct($productId);

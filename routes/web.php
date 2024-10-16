@@ -35,6 +35,7 @@ Route::middleware('web')->group(function () {
     Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
     Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
     Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
+    Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
 });
 
 Route::middleware(['isCustomer', 'web'])->group(function () {

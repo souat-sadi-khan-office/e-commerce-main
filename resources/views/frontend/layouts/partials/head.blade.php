@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
     
-    @if (request()->routeIs('home'))
+    @if (request()->routeIs('home')||request()->routeIs('quick.view'))
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/animate.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('frontend/assets/css/themify-icons.css') }}">
