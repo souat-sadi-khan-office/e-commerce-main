@@ -21,11 +21,8 @@ use App\Models\Country;
 use App\Models\Currency;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Validator;
-=======
 use App\Repositories\Interface\FlashDealRepositoryInterface;
->>>>>>> f833aa6622fdcfaaa8eda342640e67c5f5a42f7b
 
 class HomePageController extends Controller
 {
