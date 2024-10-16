@@ -10,6 +10,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.add_compare', function() {
         let id = $(this).data('id');
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
         $.ajax({
             url: '/add-to-compare-list',
             method: 'POST',
@@ -22,8 +23,30 @@ $(document).ready(function() {
                     $('.compare_counter').html(data.counter);
                     toastr.success(data.message);
                 } else {
-                    toastr.error(data.message);
+                    toastr.warning(data.message);
                 }
+                $('.add_compare').html('<i class="fas fa-random"></i>');
+            }
+        })
+    });
+
+    $(document).on('click', '.add_wishlist', function() {
+        let id = $(this).data('id');
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+        $.ajax({
+            url: '/add-to-wish-list',
+            method: 'POST',
+            data: {
+                id: id 
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if(data.status) {
+                    toastr.success(data.message);
+                } else {
+                    toastr.warning(data.message);
+                }
+                $('.add_wishlist').html('<i class="far fa-heart"></i>');
             }
         })
     })

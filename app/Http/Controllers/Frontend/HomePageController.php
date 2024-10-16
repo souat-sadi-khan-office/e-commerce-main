@@ -219,6 +219,24 @@ class HomePageController extends Controller
         ]);
     }
 
+    public function addToWishList(Request $request)
+    {
+        $productId = $request->id;
+
+        if(!Auth::guard('customer')->check()) {
+            return response()->json(['status' => false, 'message' => 'You must login or create an account to save products on your wishlist.']);
+        }
+
+        $userId = Auth::guard('customer')->user()->id;
+
+        WishList::create([
+            'user_id' => $userId,
+            'product_id' => $productId
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Successfully added to your Wishlist.']);
+    }
+
     public function currencyChange(Request $request)
     {
         $country = Country::find($request->global_country_id);
@@ -230,6 +248,9 @@ class HomePageController extends Controller
         $request->session()->put('country_id', $country->id);
         $request->session()->put('country_name', $country->name);
         $request->session()->put('country_flag', asset($country->image));
+
+        session()->flash('success', 'Country changed to '. $country->name . ' and Currency changed to '. $currency->name);
+
     }
 }
 

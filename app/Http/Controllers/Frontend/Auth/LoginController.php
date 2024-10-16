@@ -123,7 +123,9 @@ class LoginController extends Controller
         ])
         ->where('status', 1)
         ->where('slug', $slug)
-        ->first();        if($product) {
+        ->first();
+
+        if($product) {
             $breadcrumb = $this->getCategoryBreadcrumb($product->category);
 
             $spec = $this->productRepository->specificationProduct($product->id);

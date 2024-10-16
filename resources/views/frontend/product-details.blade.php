@@ -55,8 +55,6 @@
     </div>
 @endpush
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/parsley.css') }}">
-    <link rel="stylesheet" href="{{ asset('backend/assets/css/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/animate.css') }}">	
     <link rel="stylesheet" href="{{ asset('frontend/assets/owlcarousel/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/owlcarousel/css/owl.theme.css') }}">
@@ -126,7 +124,10 @@
                                     <h6><b>Key Features</b>: </h6>
                                     <ul class="mt-4">
                                         @foreach ($keySpec as $keySpefication)
-                                            <li><i class="fas fa-dot-circle"></i> {{ $keySpefication['key'] }}: {{ $keySpefication['attribute'] }}/A</li>
+                                            <li>
+                                                <i class="fas fa-dot-circle"></i> 
+                                                {{ $keySpefication['key'] }}: {{ $keySpefication['attribute'] }}
+                                            </li>
                                         @endforeach
                                     </ul>
                                 @endif
@@ -155,7 +156,7 @@
                                 <a class="add_compare" data-id="{{ $product->id }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                                     <i class="fas fa-random"></i>
                                 </a>
-                                <a class="add_wishlist" href="#">
+                                <a class="add_wishlist" data-id="{{ $product->id }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
                                     <i class="far fa-heart"></i>
                                 </a>
                             </div>
@@ -865,8 +866,6 @@
 </div>
 @endsection
 @push('scripts')
-    <script src="{{ asset('backend/assets/js/parsley.min.js') }}"></script>
-    <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/owlcarousel/js/owl.carousel.min.js')}}"></script> 
     <script src="{{ asset('frontend/assets/js/magnific-popup.min.js')}}"></script> 
     <script src="{{ asset('frontend/assets/js/waypoints.min.js')}}"></script> 

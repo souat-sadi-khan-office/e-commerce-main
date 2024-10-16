@@ -32,6 +32,7 @@ Route::middleware('web')->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
     
     Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
+    Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
     Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
     Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
 });

@@ -5,6 +5,8 @@
     <script src="{{ asset('frontend/assets/bootstrap/js/bootstrap.min.js') }}"></script> 
     <script src="{{ asset('backend/assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/parsley.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
     
     @if (request()->routeIs('home'))
      <!-- owl-carousel min js  -->
@@ -29,4 +31,11 @@
      <script src="{{ asset('frontend/assets/js/jquery.elevatezoom.js') }}"></script>
     <!-- Optional JS -->
     @endif
+    <script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @elseif(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
     @stack('scripts')
