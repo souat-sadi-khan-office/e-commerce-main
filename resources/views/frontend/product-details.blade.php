@@ -1,4 +1,4 @@
-@extends('frontend.layouts.app', ['title' => $product->details->site_title ])
+@extends('frontend.layouts.app', ['title' => $product['site_title'] ])
 
 @push('page_meta_information')
 
@@ -6,25 +6,27 @@
     <meta property="og:image:height" content="200">
     <meta property="og:site_name" content="{{ get_settings('system_name') }}">
     
-    <meta name="title" content="{{ $product->details->meta_title }}">
+    <meta name="title" content="{{ $product['meta_title'] }}">
     <meta name="author" content="{{ get_settings('system_name') }} : {{ route('home') }}">
-    <meta name="keywords" content="{{ $product->details->meta_keyword }}" />
-    <meta name="description" content="{{ $product->details->meta_description }}">	
+    <meta name="keywords" content="{{ $product['meta_keyword'] }}" />
+    <meta name="description" content="{{ $product['meta_description'] }}">	
 
     <!-- For Open Graph -->
     <meta property="og:url" content="{{ route('home') }}">	
     <meta property="og:type" content="Product">
-    <meta property="og:title" content="{{ $product->details->meta_title }}">	
-    <meta property="og:description" content="{{ $product->details->meta_description }}">	
-    <meta property="og:image" content="{{ asset($product->thumb_image) }}">	
+    <meta property="og:title" content="{{ $product['meta_title'] }}">	
+    <meta property="og:description" content="{{ $product['meta_description'] }}">	
+    <meta property="og:image" content="{{ asset($product['thumb_image']) }}">	
 
     <!-- For Twitter -->
     <meta name="twitter:card" content="Product" />
     <meta name="twitter:creator" content="{{ get_settings('system_name') }}" /> 
-    <meta name="twitter:title" content="{{ $product->details->meta_title }}" />
-    <meta name="twitter:description" content="{{ $product->details->meta_description }}" />	
+    <meta name="twitter:title" content="{{ $product['meta_title'] }}" />
+    <meta name="twitter:description" content="{{ $product['meta_description'] }}" />	
     <meta name="twitter:site" content="{{ route('home') }}" />		
-    <meta name="twitter:image" content="{{ asset($product->thumb_image) }}">
+    <meta name="twitter:image" content="{{ asset($product['thumb_image']) }}">
+    {!!$product['meta_article_tags']!!}   
+
 @endpush
 
 @push('breadcrumb')
@@ -46,7 +48,7 @@
                             </li>
                         @endforeach
                         <li class="breadcrumb-item active">
-                            {{ $product->name }}
+                            {{ $product['name'] }}
                         </li>
                     </ol>
                 </div>
@@ -73,18 +75,18 @@
                 <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
                     <div class="product-image vertical_gallery">
                         <div id="pr_item_gallery" class="product_gallery_item slick_slider" data-vertical="true" data-vertical-swiping="true" data-slides-to-show="5" data-slides-to-scroll="1" data-infinite="false">
-                            @if ($product->image)
-                                @foreach ($product->image as $key => $image)
+                            @if (isset($product['images']))
+                                @foreach ($product['images'] as $key => $image)
                                     <div class="item">
                                         <a href="javascript:;" class="product_gallery_item {{ $key == 0 ? 'active' : '' }}" data-image="{{ asset($image->image) }}" data-zoom-image="{{ asset($image->image) }}">
-                                            <img src="{{ asset($image->image) }}" alt="{{ $product->name . ' Image '. $key }}" />
+                                            <img src="{{ asset($image->image) }}" alt="{{ $product['name'] . ' Image '. $key }}" />
                                         </a>
                                     </div>
                                 @endforeach
                             @endif
                         </div>
                         <div class="product_img_box">
-                            <img id="product_img" src="{{ asset($product->thumb_image) }}" data-zoom-image="{{ asset($product->thumb_image) }}" alt="{{ $product->name }} Original Image" />
+                            <img id="product_img" src="{{ asset($product['thumb_image']) }}" data-zoom-image="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }} Original Image" />
                             <a href="javascript:;" class="product_img_zoom" title="Zoom">
                                 <span class="linearicons-zoom-in"></span>
                             </a>
@@ -95,51 +97,60 @@
                     <div class="pr_detail">
                         <div class="product_description">
                             <h1 class="h4 product_title">
-                                {{ $product->name }}
+                                {{ $product['name'] }}
                             </h1>
                             <div class="product_price">
-                                @if (home_price($product) != home_discounted_price($product))
-                                    <span class="price">{{ home_discounted_price($product) }}</span>
-                                    <del>{{ home_price($product) }}</del>
-                                    <div class="on_sale">
-                                        @if ($product->discount_type == 'amount')
-                                            <span>Flat {{ $product->discount }} Off</span>
-                                        @else 
-                                            <span>{{ $product->discount }}% Off</span>
-                                        @endif
-                                    </div>
-                                @else
-                                    <span class="price">{{ home_discounted_price($product) }}</span>
-                                @endif
+                                @if (isset($product['discount_type']))
+                                <span class="price">{{ format_price($product['discounted_price']) }}</span>
+                                <del>{{ format_price($product['price']) }}</del>
+                                <div class="on_sale">
+                                    <span>{{ $product['discount_type'] == 'amount' ? format_price($product['discount']) : $product['discount'] . '%' }}
+                                        Off</span>
+                                </div>
+                            @else
+                                <span class="price">{{ format_price($product['price']) }}</span>
+                            @endif
                             </div>
                             <div class="rating_wrap">
                                 <div class="rating">
-                                    <div class="product_rate" style="width:{{ ($product->details->average_rating * 100) / ($product->details->number_of_rating == 0 ? 1 : $product->details->number_of_rating) }}%"></div>
+                                    <div class="product_rate" style="width:{{ $product['average_rating_percantage'] }}%"></div>
+
                                 </div>
-                                <span class="rating_num">({{ $product->details->number_of_rating }})</span>
+                                <span class="rating_num">{{ $product['average_rating'] }}</span>
+
+                                <span class="rating_num">({{ $product['ratings_count'] }})</span>
                             </div>
                             <div style="margin-top: 60px;" class="pr_desc"></div>
                             <div class="product_sort_info">
-                                @if ($keySpec)
-                                    <h6><b>Key Features</b>: </h6>
-                                    <ul class="mt-4">
-                                        @foreach ($keySpec as $keySpefication)
-                                            <li>
-                                                <i class="fas fa-dot-circle"></i> 
-                                                {{ $keySpefication['key'] }}: {{ $keySpefication['attribute'] }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
+                                <ul>
+                                    @if ($product['total_sold'] > 0)
+                                        <li><i class="linearicons-shield-check"></i> {{ $product['total_sold'] }}Units Sold</li>
+                                    @endif
+                                    @if ($product['return_deadline'] > 0)
+                                        <li><i class="linearicons-sync"></i> {{ $product['return_deadline'] }} Day Return Policy</li>
+                                    @endif
+                                    @if ($product['is_COD_available'])
+                                        <li><i class="linearicons-bag-dollar"></i> Cash on Delivery available</li>
+                                    @endif
+                                </ul>
+                            </div>
+                            <div class="pr_switch_wrap">
+                                <span class="switch_lable">Key Features</span><br>
+                                @foreach ($product['key_features'] as $features)
+                                    <li>
+                                        <a href="#">{{ $features['type_name'] }}</a> : 
+                                        <a href="#">{{ $features['attribute_name'] }}</a>
+                                    </li>
+                                @endforeach
                             </div>
                         </div>
-                        @if ($product->low_stock)
+                        @if ($product['is_low_stock'])
                             <button class="btn btn-fill-warning btn-sm" type="button">
                                 <i class="fas fa-info-circle"></i>
                                 Limited Stock
                             </button>
                         @endif
-                        @if ($product->in_stock)
+                        @if ($product['current_stock']>0)
                         <hr />
                         <div class="cart_extra">
                             <div class="cart-product-quantity">
@@ -153,10 +164,10 @@
                                 <button class="btn btn-fill-out btn-sm btn-addtocart" type="button"><i class="icon-basket-loaded"></i> Add to cart</button>
                                 <a href="#" class="btn btn-fill-out btn-sm">Buy Now</a>
 
-                                <a class="add_compare" data-id="{{ $product->id }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                <a class="add_compare" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                                     <i class="fas fa-random"></i>
                                 </a>
-                                <a class="add_wishlist" data-id="{{ $product->id }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
+                                <a class="add_wishlist" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
                                     <i class="far fa-heart"></i>
                                 </a>
                             </div>
@@ -171,19 +182,19 @@
                         <hr />
                         <ul class="product-meta">
                             <li>SKU: <a href="#">BE45VGRT</a></li>
-                            @if ($product->category)
+                            @if (isset($product['category']))
                                 <li>
                                     Category: 
-                                    <a href="{{ route('slug.handle', ['slug' => $product->category->slug]) }}">
-                                        {{ $product->category->name }}
+                                    <a href="{{ route('slug.handle', ['slug' => $product['category']->slug]) }}">
+                                        {{ $product['category']->name }}
                                     </a>
                                 </li>
                             @endif
-                            @if ($product->brand)
+                            @if ($product['brand_name'] !=null &&$product['brand_slug'] !=null)
                                 <li>
                                     Brand: 
-                                    <a href="{{ route('slug.handle', ['slug' => $product->brand->slug]) }}">
-                                        {{ $product->brand->name }}
+                                    <a href="{{ route('slug.handle', ['slug' => $product['brand_slug']]) }}">
+                                        {{$product['brand_name']}}
                                     </a>
                                 </li>
                             @endif
@@ -193,27 +204,27 @@
                             <span>Share:</span>
                             <ul class="social_icons">
                                 <li>
-                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('slug.handle', ['slug' => $product->slug])) }}">
+                                    <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('slug.handle', ['slug' => $product['slug']])) }}">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('slug.handle', ['slug' => $product->slug])) }}&text={{ urlencode($product->name) }}" target="_blank">
+                                    <a href="https://twitter.com/intent/tweet?url={{ urlencode(route('slug.handle', ['slug' => $product['slug']])) }}&text={{ urlencode($product['name']) }}" target="_blank">
                                         <i class="fab fa-twitter"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://pinterest.com/pin/create/button/?url={{ urlencode(route('slug.handle', ['slug' => $product->slug])) }}&media={{ urlencode($product->thumb_image) }}&description={{ urlencode($product->name) }}" target="_blank">
+                                    <a href="https://pinterest.com/pin/create/button/?url={{ urlencode(route('slug.handle', ['slug' => $product['slug']])) }}&media={{ urlencode($product['thumb_image']) }}&description={{ urlencode($product['name']) }}" target="_blank">
                                         <i class="fab fa-pinterest"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="mailto:?subject={{ urlencode('Check out this product: ' . $product->name) }}&body={{ urlencode('Check out this product: ' . route('slug.handle', ['slug' => $product->slug])) }}"  target="_blank">
+                                    <a href="mailto:?subject={{ urlencode('Check out this product: ' . $product['name']) }}&body={{ urlencode('Check out this product: ' . route('slug.handle', ['slug' => $product['slug']])) }}"  target="_blank">
                                         <i class="far fa-envelope"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="https://api.whatsapp.com/send?text={{ urlencode('Check out this product: ' . route('slug.handle', ['slug' => $product->slug])) }}" target="_blank">
+                                    <a href="https://api.whatsapp.com/send?text={{ urlencode('Check out this product: ' . route('slug.handle', ['slug' => $product['slug']])) }}" target="_blank">
                                         <i class="fab fa-whatsapp"></i>
                                     </a>
                                 </li>
@@ -239,17 +250,17 @@
                                 <a class="nav-link product-details-tab" id="Description-tab" data-bs-toggle="tab" href="#Description" role="tab" aria-controls="Description" aria-selected="false">Description</a>
                             </li>
 
-                            @if ($product->details->video_link)
+                            @if ($product['video_link'])
                                 <li class="nav-item">
                                     <a class="nav-link product-details-tab" id="Video-tab" data-bs-toggle="tab" href="#Video" role="tab" aria-controls="Video" aria-selected="false">Video</a>
                                 </li>
                             @endif
                             
                             <li class="nav-item">
-                                <a class="nav-link product-details-tab" id="Question-tab" data-bs-toggle="tab" href="#Question" role="tab" aria-controls="Question" aria-selected="false">Questions ({{ count($product->question) }})</a>
+                                <a class="nav-link product-details-tab" id="Question-tab" data-bs-toggle="tab" href="#Question" role="tab" aria-controls="Question" aria-selected="false">Questions ({{ count($product['question']) }})</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link product-details-tab" id="Reviews-tab" data-bs-toggle="tab" href="#Reviews" role="tab" aria-controls="Reviews" aria-selected="false">Reviews ({{ $product->details->number_of_rating }})</a>
+                                <a class="nav-link product-details-tab" id="Reviews-tab" data-bs-toggle="tab" href="#Reviews" role="tab" aria-controls="Reviews" aria-selected="false">Reviews ({{ $product['ratings_count'] }})</a>
                             </li>
                         </ul>
                         <div class="tab-content product-details shop_info_tab">
@@ -290,13 +301,13 @@
                                 </div>
 
                                 <div class="full-description" itemprop="description">
-                                    {!! $product->details->description !!}
+                                    {!! $product['description'] !!}
                                 </div>
 
                             </div>
                             
                             <!-- Video Tab -->
-                            @if ($product->details->video_link)
+                            @if ($product['video_link'])
                                 <div class="tab-pane fade" id="Video" role="tabpanel" aria-labelledby="Video-tab">
                                     <div class="section-head">
                                         <h2>Video</h2>
@@ -305,7 +316,7 @@
 
                                     <div class="full-description" itemprop="description">
                                         <div class="fluid-width-video-wrapper">
-                                            {!! $product->details->video_link !!}
+                                            {!! $product['video_link'] !!}
                                         </div>
                                     </div>
                                 </div>
@@ -314,13 +325,13 @@
                             <!-- Questions Tab -->
                             <div class="tab-pane fade" id="Question" role="tabpanel" aria-labelledby="Question-tab">
                                 <div class="section-head" style="padding-bottom: 0px;">
-                                    <h2>Questions ({{ count($product->question) }})</h2>
+                                    <h2>Questions ({{ count($product['question']) }})</h2>
                                     <p>Have question about this product? Get specific details about this product from expert.</p>
                                 </div>
                                 
                                 <div id="question">
-                                    @if (count($product->question))
-                                        @foreach ($product->question as $question)
+                                    @if (count($product['question']))
+                                        @foreach ($product['question'] as $question)
                                             <div class="question-wrap">
                                                 <p class="author">
                                                     <span class="name">{{ $question->name }}</span> on {{ get_system_date($question->created_at) }}
@@ -362,7 +373,7 @@
                                             <textarea required="required" placeholder="Your review *" class="form-control" name="message" rows="4"></textarea>
                                         </div>
                                         <div class="form-group col-12 mb-3">
-                                            <input type="hidden" name="product" value="{{ $product->slug }}">
+                                            <input type="hidden" name="product" value="{{ $product['slug'] }}">
                                             <button type="submit" style="display:none;" class="btn btn-fill-out" id="submit_question_form">Submit Review</button>
                                         </div>
                                         <div class="form-group col-12 mb-3">
@@ -378,11 +389,11 @@
                             <!-- Reviews Tab -->
                             <div class="tab-pane fade" id="Reviews" role="tabpanel" aria-labelledby="Reviews-tab">
                                 <div class="section-head" style="padding-bottom: 0px;">
-                                    <h2>Customer Reviews ({{ $product->details->number_of_rating }})</h2>
+                                    <h2>Customer Reviews ({{ $product['ratings_count'] }})</h2>
                                     <p>Get specific details about this product from customers who own it.</p>
                                 </div>
                                 <div class="comments">
-                                    @if ($product->details->number_of_rating == 0)
+                                    @if ($product['ratings_count'] == 0)
                                         <div class="empty-content">
                                             <i class="icon far fa-comment-alt"></i>
                                             <div class="empty-text">There are no review added yet. Be the first one to add a review.</div>
@@ -391,16 +402,16 @@
                                         <h5 class="product_tab_title">
                                             <div class="rating_wrap star_rating">
                                                 <div class="rating">
-                                                    <div class="product_rate" style="width:{{ ($product->details->average_rating * 100) / ($product->details->number_of_rating == 0 ? 1 : $product->details->number_of_rating) }}%"></div>
+                                                    <div class="product_rate" style="width:{{$product['average_rating_percantage']}}%"></div>
                                                 </div>
 
-                                                {{ round($product->details->average_rating) }} out of 5
+                                                {{ $product['average_rating'] }} out of 5.00
                                             </div>
                                         </h5>
-                                        @if ($product->ratings)
+                                        @if (count($product['ratings']))
                                             
                                             <ul class="list_none comment_list mt-4">
-                                                @foreach ($product->ratings as $rating)
+                                                @foreach ($product['ratings'] as $rating)
                                                     <li>
                                                         <div style="padding-left: 0px;" class="comment_block">
                                                             <div class="rating_wrap">
@@ -449,7 +460,7 @@
                                         
                                         
                                         <div class="form-group col-12 mb-3">
-                                            <input type="hidden" name="product" value="{{ $product->slug }}">
+                                            <input type="hidden" name="product" value="{{ $product['slug'] }}">
                                             <button type="submit" class="btn btn-fill-out" id="submit_review_form">Submit Review</button>
                                         </div>
                                         <div class="form-group col-12 mb-3">
@@ -877,6 +888,7 @@
     <script src="{{ asset('frontend/assets/js/jquery.elevatezoom.js')}}"></script>
     <script src="{{ asset('frontend/assets/js/pages/product.js')}}"></script>
 
+    {{!!$product['meta_script_tags']!!}}
 
 
 @endpush

@@ -203,31 +203,6 @@
                     }
                 });
             });
-
-            $('.popup-ajax').on('click', function(e) {
-                e.preventDefault();
-
-                var url = $(this).attr('href');
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(response) {
-                        $('.ajax_quick_view .row').html(response); // Populate the modal content
-                        $('.ajax_quick_view').css('display', 'block'); // Show the modal
-                    },
-                    error: function() {
-                        alert('Failed to load content.');
-                    }
-                });
-            });
-
-            // Close modal when clicking outside of it
-            $(window).on('click', function(event) {
-                if ($(event.target).hasClass('ajax_quick_view')) {
-                    $('.ajax_quick_view').css('display', 'none');
-                }
-            });
         });
     </script>
 @endpush
