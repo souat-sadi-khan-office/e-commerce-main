@@ -1,4 +1,7 @@
-<link rel="stylesheet" href="{{ asset('frontend/assets/css/magnific-popup.css') }}">
+<div class="ajax_quick_view">
+    <div class="row">
+        <!-- Content will be populated via AJAX -->
+    
 
 <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
     <div class="product-image">
@@ -101,6 +104,8 @@
             </ul>
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <style>
