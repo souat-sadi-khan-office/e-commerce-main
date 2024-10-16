@@ -7,6 +7,7 @@ use App\CPU\Images;
 use App\Models\Brand;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\BrandRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class BrandRepository implements BrandRepositoryInterface
 {
@@ -63,6 +64,8 @@ class BrandRepository implements BrandRepositoryInterface
             'logo' => $data->logo ? Images::upload('brands', $data->logo) : null,
         ]);
 
+        Cache::forget('brands_');
+
         $json = ['status' => true, 'goto' => route('admin.brand.index'), 'message' => 'Brand created successfully'];
         return response()->json($json);
     }
@@ -87,12 +90,17 @@ class BrandRepository implements BrandRepositoryInterface
 
         $brand->update();
 
+        Cache::forget('brands_');
+
         return response()->json(['status' => true, 'goto' => route('admin.brand.index'), 'message' => 'Brand updated successfully.']);
     }
 
     public function deleteBrand($id)
     {
         $brand = Brand::findOrFail($id);
+
+        Cache::forget('brands_');
+
         return $brand->delete();
     }
 
@@ -111,6 +119,8 @@ class BrandRepository implements BrandRepositoryInterface
         $brand->status = $request->input('status');
         $brand->save();
 
+        Cache::forget('brands_');
+
         return response()->json(['success' => true, 'message' => 'Brand status updated successfully.']);
     }
 
@@ -128,6 +138,8 @@ class BrandRepository implements BrandRepositoryInterface
 
         $brand->is_featured = $request->input('status');
         $brand->save();
+        
+        Cache::forget('brands_');
 
         return response()->json(['success' => true, 'message' => 'Brand featured status updated successfully.']);
     }

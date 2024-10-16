@@ -25,17 +25,21 @@ use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
+use App\Repositories\Interface\BrandRepositoryInterface;
 
 class HomePageController extends Controller
 {
     private $banner;
+    private $brands;
     private $product;
     private $flashDeals;
     public function __construct(
         BannerRepositoryInterface $banner,
         ProductRepositoryInterface $product,
+        BrandRepositoryInterface $brands,
         FlashDealRepositoryInterface $flashDeals,
     ) {
+        $this->brands = $brands;
         $this->banner = $banner;
         $this->product = $product;
         $this->flashDeals = $flashDeals;
@@ -109,6 +113,14 @@ class HomePageController extends Controller
                 return view('frontend.homepage.featured-tab', compact('products'));
             } elseif (isset($request->offred)) {
                 return view('frontend.homepage.offred-tab', compact('products'));
+            } elseif (isset($request->brands)) {
+
+                $brands = Cache::remember('brands_', now()->addMinutes(10), function () use ($request) {
+                    $models = $this->brands->getAllBrands();
+                    return $models->select('slug', 'logo', 'name')->where('status', 1);
+                });
+                
+                return view('frontend.homepage.brands-tab', compact('brands'));
             }
 
 
@@ -376,5 +388,14 @@ class HomePageController extends Controller
     {
         $categories = Category::where('status', 1)->where('parent_id', null)->orderBy('name', 'ASC')->get();
         return view('frontend.categories', compact('categories'));
+    }
+    
+    public function allBrands()
+    {
+        $brands = $this->brands
+                    ->getAllBrands()
+                    ->where('status', 1);
+
+        return view('frontend.brands', compact('brands'));
     }
 }
