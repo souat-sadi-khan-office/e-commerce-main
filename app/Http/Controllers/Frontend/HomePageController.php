@@ -143,7 +143,7 @@ class HomePageController extends Controller
     public function quickview($slug)
     {
         $product = Cache::remember($slug, now()->addMinutes(10), function () use ($slug) {
-            $this->product->quickview($slug);
+            return $this->product->quickview($slug);
         });
         return view('frontend.modals.quick-view', compact('product'));
     }
