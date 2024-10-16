@@ -32,6 +32,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.add_wishlist', function() {
         let id = $(this).data('id');
+        let wish_list_counter = parseInt($('#wish_list_counter').html());
         $(this).html('<i class="fas fa-spin fa-spinner"></i>');
         $.ajax({
             url: '/add-to-wish-list',
@@ -42,6 +43,7 @@ $(document).ready(function() {
             dataType: 'JSON',
             success: function(data) {
                 if(data.status) {
+                    $('#wish_list_counter').html(parseInt(wish_list_counter) + 1);
                     toastr.success(data.message);
                 } else {
                     toastr.warning(data.message);

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\CPU\Images;
 use App\Models\User;
+use App\Models\WishList;
 use App\Models\UserPhone;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +20,29 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    public function getUserWishList()
+    {
+        $userId = Auth::guard('customer')->id();
+        return WishList::where('user_id', $userId)->orderBy('id', 'DESC')->get();
+    }
+
     public function getCustomerDetails()
     {
         $userId = Auth::guard('customer')->id();
         return User::find($userId);
+    }
+
+    public function removeWishList($id)
+    {
+        $wishlist = WishList::find($id);
+        
+        if(!$wishlist) {
+            return response()->json(['status' => false, 'message' => 'Product not found']);
+        }
+
+        $wishlist->delete();
+
+        return response()->json(['status' => true, 'load' => true, 'message' => 'Item is removed from your wishlist']);
     }
 
     public function updateProfile($request)

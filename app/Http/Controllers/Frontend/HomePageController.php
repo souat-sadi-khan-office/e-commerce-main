@@ -20,6 +20,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Session;
+use App\Models\Product;
+use App\Models\ProductDetail;
+use App\Models\ProductQuestion;
+use App\Models\Rating;
+use App\Models\WishList;
+use App\Models\Country;
+use App\Models\Currency;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
@@ -340,6 +347,10 @@ class HomePageController extends Controller
 
         $userId = Auth::guard('customer')->user()->id;
 
+        if(WishList::where('user_id', $userId)->where('product_id', $productId)->first()) {
+            return response()->json(['status' => false, 'message' => 'This product is already added to your wishlist.']);
+        }
+        
         WishList::create([
             'user_id' => $userId,
             'product_id' => $productId

@@ -25,7 +25,8 @@ return new class extends Migration
 
             // Foreign keys
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('stock_purchase_id')->references('id')->on('stock_purchase')->onDelete('cascade');
+            $table->foreign('stock_purchase_id')->references('id')->on('stock_purchases')->onDelete('cascade');
+
             $table->foreign('zone_id')->references('id')->on('zones')->onDelete('set null');
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
             $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');

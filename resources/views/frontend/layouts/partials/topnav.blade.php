@@ -209,15 +209,21 @@
                 <li id="wishList">
                     <div class="q-actions">
                         <div class="ac">
-                            <a class="ic" href="">
-                                <i class="linearicons-heart"></i>
+                            <a class="ic" href="{{ route('account.wishlist') }}">
+                                <i class="far fa-heart"></i>
                             </a>
                             <div class="ac-content">
-                                <a href="">
+                                <a href="{{ route('account.wishlist') }}">
                                     <h5>Wishlist</h5>
                                 </a>
                                 <p>
-                                    <a href="#">0</a>
+                                    <a id="wish_list_counter" href="{{ route('account.wishlist') }}">
+                                        @if (!Auth::guard('customer')->check())
+                                            0
+                                        @else
+                                            {{ App\Models\WishList::where('user_id', Auth::guard('customer')->user()->id)->count() }}
+                                        @endif
+                                    </a>
                                 </p>
                             </div>
                         </div>
@@ -227,7 +233,7 @@
                     <div class="q-actions">
                         <div class="ac">
                             <a class="ic" href="{{ route('login') }}">
-                                <i class="linearicons-user"></i>
+                                <i class="far fa-user"></i>
                             </a>
                             <div class="ac-content">
                                 <a href="{{ route('login') }}">
