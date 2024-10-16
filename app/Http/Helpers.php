@@ -258,7 +258,7 @@ if (!function_exists('currency_symbol')) {
             return Session::get('currency_symbol');
         }
 
-        return get_system_default_currency()->symbol;
+        return isset(get_system_default_currency()->symbol) ? get_system_default_currency()->symbol : '$';
     }
 }
 
