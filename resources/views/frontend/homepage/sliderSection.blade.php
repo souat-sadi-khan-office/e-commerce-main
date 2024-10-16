@@ -119,12 +119,7 @@
 
                                 </div>
                             </div>
-                            <div class="ajax_quick_view" style="display: none;">
-                                <div class="row">
-                                    <!-- Content will be populated via AJAX -->
-                                </div>
-                                <button title="Close (Esc)" type="button" class="mfp-close">×</button>
-                            </div>
+                          
 
                             <div class="tab-pane fade" id="sellers" role="tabpanel" aria-labelledby="sellers-tab">
 
@@ -235,36 +230,5 @@
             });
         });
     </script>
-@endpush
-@push('styles')
-    <style>
-        .ajax_quick_view {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            /* Sit on top */
-            left: 0;
-            top: 10px;
-            width: 90%;
-            height: 90%;
-            overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Black with opacity */
-        }
-
-        .ajax_quick_view .row {
-            margin: 5% auto;
-            /* Center the content */
-            background-color: #fff;
-            /* White background for the modal content */
-            padding: 20px;
-            border-radius: 8px;
-            /* Rounded corners */
-            width: 80%;
-            /* Adjust as needed */
-        }
-    </style>
 @endpush
 <!-- END SECTION SLIDERS -->

@@ -5,8 +5,15 @@ namespace App\Http\Controllers\Frontend;
 use Exception;
 use Carbon\Carbon;
 use App\CPU\Helpers;
+use App\Models\Rating;
+use App\Models\Country;
+use App\Models\Product;
+use App\Models\Currency;
+use App\Models\WishList;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ProductDetail;
+use App\Models\ProductQuestion;
 use App\Models\HomepageSettings;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +27,9 @@ use App\Models\Rating;
 use App\Models\WishList;
 use App\Models\Country;
 use App\Models\Currency;
+use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
-use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 
 class HomePageController extends Controller

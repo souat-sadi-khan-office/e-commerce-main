@@ -836,35 +836,35 @@
 			$('.zoomContainer:last-child').remove();// remove zoom container from DOM
 		}
 		
-		// $.magnificPopup.defaults.callbacks = {
-		// open: function() {
-		//   $('body').addClass('zoom_image');
-		// },
-		// close: function() {
-		//   // Wait until overflow:hidden has been removed from the html tag
-		//   setTimeout(function() {
-		// 	$('body').removeClass('zoom_image');
-		// 	$('body').removeClass('zoom_gallery_image');
-		// 	//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
-		// 	$('.zoomContainer').slice(1).remove();
-		// 	}, 100);
-		//   }
-		// };
+		$.magnificPopup.defaults.callbacks = {
+		open: function() {
+		  $('body').addClass('zoom_image');
+		},
+		close: function() {
+		  // Wait until overflow:hidden has been removed from the html tag
+		  setTimeout(function() {
+			$('body').removeClass('zoom_image');
+			$('body').removeClass('zoom_gallery_image');
+			//$('.zoomContainer:last-child').remove();// remove zoom container from DOM
+			$('.zoomContainer').slice(1).remove();
+			}, 100);
+		  }
+		};
 		
 		// Set up gallery on click
-		// var galleryZoom = $('#pr_item_gallery');
-		// galleryZoom.magnificPopup({
-		// 	delegate: 'a',
-		// 	type: 'image',
-		// 	gallery:{
-		// 		enabled: true
-		// 	},
-		// 	callbacks: {
-		// 		elementParse: function(item) {
-		// 			item.src = item.el.attr('data-zoom-image');
-		// 		}
-		// 	}
-		// });
+		var galleryZoom = $('#pr_item_gallery');
+		galleryZoom.magnificPopup({
+			delegate: 'a',
+			type: 'image',
+			gallery:{
+				enabled: true
+			},
+			callbacks: {
+				elementParse: function(item) {
+					item.src = item.el.attr('data-zoom-image');
+				}
+			}
+		});
 		
 		// Zoom image when click on icon
 		$('.product_img_zoom').on('click', function(){
@@ -884,9 +884,9 @@
 		pluseminus();
 		product_color_switch();
 		galleryZoomProduct();
-		// carousel_slider();
+		carousel_slider();
 		slick_slider();
-		// ajax_magnificPopup();
+		ajax_magnificPopup();
 	});
 
 
