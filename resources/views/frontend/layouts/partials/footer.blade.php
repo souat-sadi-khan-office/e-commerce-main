@@ -46,7 +46,7 @@
                         <h6 class="widget_title">{{ get_settings('footer_menu_one_label_text') }}</h6>
                         <ul class="widget_links">
                             @if (get_settings('footer_menu_one_labels') != null)
-                                @foreach ( (get_settings('footer_menu_one_labels')) as $key => $value)
+                                @foreach ( json_decode(get_settings('footer_menu_one_labels')) as $key => $value)
                                     <li>
                                         <a href="{{ json_decode(App\Models\ConfigurationSetting::where('type', 'footer_menu_one_links')->first()->value, true)[$key] }}">
                                             {{ $value }}
@@ -62,7 +62,7 @@
                         <h6 class="widget_title">{{ get_settings('footer_menu_tow_label_text') }}</h6>
                         <ul class="widget_links">
                             @if (get_settings('footer_menu_two_labels') != null)
-                                @foreach ( (get_settings('footer_menu_two_labels')) as $key => $value)
+                                @foreach ( json_decode(get_settings('footer_menu_two_labels')) as $key => $value)
                                     <li>
                                         <a href="{{ json_decode(App\Models\ConfigurationSetting::where('type', 'footer_menu_two_links')->first()->value, true)[$key] }}">
                                             {{ $value }}
