@@ -63,7 +63,7 @@
                                                     <span class="pr_flash">New</span>
                                                 @endif
                                                 <div class="product_img">
-                                                    <a href="shop-product-detail.html">
+                                                    <a href="{{ route('slug.handle', $product['slug']) }}">
                                                         <img src="{{ asset($product['thumb_image']) }}"
                                                             alt="thumb_image">
                                                         <img class="product_hover_img"
@@ -86,7 +86,7 @@
                                                 </div>
                                                 <div class="product_info">
                                                     <h6 class="product_title"><a
-                                                            href="shop-product-detail.html">{{ ucwords($product['name']) }}</a>
+                                                            href="{{ route('slug.handle', $product['slug']) }}">{{ ucwords($product['name']) }}</a>
                                                     </h6>
                                                     <div class="product_price">
                                                         @if (isset($product['discount_type']))

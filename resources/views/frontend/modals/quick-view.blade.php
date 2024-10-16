@@ -47,6 +47,7 @@
             <div class="pr_desc">
                 {!! $product['description'] !!}
             </div>
+            <br>
             <div class="product_sort_info">
                 <ul>
                     @if ($product['total_sold'] > 0)
