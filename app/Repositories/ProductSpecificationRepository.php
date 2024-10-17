@@ -316,22 +316,35 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     {
         $validator = Validator::make($data->all(), [
             'key_type_id' => 'required|integer',
-            'name' => 'required|string|max:255',
-            'extra' => 'nullable',
+            'name' => 'array|required|max:255',
+            'extra' => 'array|nullable',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
-        }
-        try {
+        } try {
 
-            SpecificationKeyTypeAttribute::create([
-                'name' => $data->name,
-                'admin_id' => Auth::guard('admin')->id(),
-                'key_type_id' => intval($data->key_type_id),
-                'extra' => $data->extra,
-                'status' => isset($data->is_active),
-            ]);
+            $nameArray = $data['name'];
+
+            if(count($nameArray) > 0) {
+                for($i = 0; $i < count($nameArray); $i++) {
+                    SpecificationKeyTypeAttribute::create([
+                        'name' => $nameArray[$i] ? $nameArray[$i] : '',
+                        'admin_id' => Auth::guard('admin')->id(),
+                        'key_type_id' => intval($data->key_type_id),
+                        'extra' => isset($data['extra'][$i]) ? $data['extra'][$i] : '',
+                        'status' => isset($data->is_active),
+                    ]);
+                }
+            }
+
+            // SpecificationKeyTypeAttribute::create([
+            //     'name' => $data->name,
+            //     'admin_id' => Auth::guard('admin')->id(),
+            //     'key_type_id' => intval($data->key_type_id),
+            //     'extra' => $data->extra,
+            //     'status' => isset($data->is_active),
+            // ]);
 
             return response()->json(['message' => 'Specification Type Attribute Created successfully!', 'status' => true, 'load' => true]);
         } catch (Exception $e) {

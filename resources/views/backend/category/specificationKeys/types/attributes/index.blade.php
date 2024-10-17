@@ -100,7 +100,40 @@
             _componentRemoteModalLoadAfterAjax();
             _statusUpdate();
 
+            $(document).on('click', '.add-new', function() {
+                let randomNum = getRandomInt(1, 1000);
+                let model = `
+                    <div class="row mt-2" id="model_`+ randomNum +`">
+                        <div class="col-md-6 form-group">
+                            <label for="name_`+ randomNum +`">Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name[]" id="name_`+ randomNum +`" class="form-control mt-3 py-2" required>
+                        </div>
+            
+                        <div class="col-md-5 form-group">
+                            <label for="extra_`+ randomNum +`">Extra Words</label>
+                            <input type="text" name="extra" id="extra_`+ randomNum +`" class="form-control mt-3 py-2">
+                        </div>
+                        <div class="col-md-1 pt-5">
+                            <button type="button" data-id="`+ randomNum +`" class="remove-model-data btn btn-sm btn-outline-danger">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            
+                $('.model-data').append(model);
+            });
+
         });
+
+        $(document).on('click', '.remove-model-data', function() {
+            let id = $(this).data('id');
+            $('#model_'+id).remove();
+        })
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
     </script>
   
 @endpush

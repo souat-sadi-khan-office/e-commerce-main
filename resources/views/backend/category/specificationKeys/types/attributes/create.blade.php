@@ -7,34 +7,50 @@
 <div class="modal-body">
     <form action="{{ route("admin.category.specification.type.attribute.store") }}" method="POST" class="ajax-form">
         <div class="row">
-            <div class="col-md-6 form-group">
-                <label for="name">Name <span class="text-danger">*</span></label>
-                <input type="text" name="name" id="name" class="form-control mt-3 py-2" required>
-            </div>
 
-            <div class="col-md-6 form-group">
-                <label for="name">Extra Words</label>
-                <input type="text" name="extra" id="extra" class="form-control mt-3 py-2">
+            <div class="col-md-11 form-group">
+                <label for="key_type_id" class="form-label">
+                    Select Specification Key Type 
+                    <span class="text-danger">*</span>
+                </label>
+                <select name="key_type_id" data-placeholder="-- Select Specification Key Type --" id="key_type_id" class="form-control select" required data-parsley-errors-container="#key_type_error">
+                    <option value="">-- Select Specification Key Type --</option>
+                    @foreach ($keys as $category)
+                        <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                    @endforeach
+                </select>
+                <span id="key_type_error"></span>
             </div>
-
-            <div class="col-md-7 form-group">
-                <label for="key_type_id" class="form-label">Select Specification Key Type <span
-                    class="text-danger">*</span></label>
-            <select name="key_type_id" id="key_type_id" class="form-control select" required>
-                <option value="" disabled selected>-- Select Specification Key Type --</option>
-                @foreach ($keys as $category)
-                    <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
-                @endforeach
-            </select>
-            </div>
-            <div class="col-md-5 mt-3 form-group">
+            <div class="col-md-1 mt-3 form-group">
                 <label for="status">Status <span class="text-danger">*</span></label>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" name="is_active" checked >
                 </div>
             </div>
+        </div>
+        
+        <div class="model-data">
+            <div class="row mt-2">
+                <div class="col-md-6 form-group">
+                    <label for="name">Name <span class="text-danger">*</span></label>
+                    <input type="text" name="name[]" id="name" class="form-control mt-3 py-2" required>
+                </div>
+    
+                <div class="col-md-6 form-group">
+                    <label for="name">Extra Words</label>
+                    <input type="text" name="extra[]" id="extra" class="form-control mt-3 py-2">
+                </div>
+            </div>
+        </div>
 
-            <div class="col-md-12 mt-3 text-end">
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <button type="button" class="btn add-new btn-outline-primary">
+                    <i class="bi bi-plus"></i>
+                    Add New
+                </button>
+            </div>
+            <div class="col-md-6 text-end">
                 <button class="btn btn-soft-success" type="submit" id="submit">
                     <i class="bi bi-send"></i>
                     Create
