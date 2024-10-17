@@ -114,39 +114,6 @@ class LoginController extends Controller
         return view('frontend.pc-builder');
     }
 
-    public function productDetails($slug)
-    {
-        $product = Product::with(['category', 'brand', 'details', 'image', 'ratings', 
-            'question' => function($query) {
-                $query->orderBy('id', 'desc');
-            }
-        ])
-        ->where('status', 1)
-        ->where('slug', $slug)
-        ->first();
-
-        if($product) {
-            $breadcrumb = $this->getCategoryBreadcrumb($product->category);
-
-            $spec = $this->productRepository->specificationProduct($product->id);
-            $keySpec = $this->productRepository->specificationKeyFeaturedProduct($product->id);
-
-            return view('frontend.product-details', compact('product', 'breadcrumb', 'keySpec', 'spec'));
-        }
-
-        abort(404);
-    }
-
-    function getCategoryBreadcrumb($category)
-    {
-        $breadcrumb = [];
-
-        while ($category) {
-            $breadcrumb[] = $category;
-            $category = $category->parent_id;
-        }
-
-        return array_reverse($breadcrumb);
-    }
+    
 
 }

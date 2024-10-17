@@ -25,16 +25,15 @@
                     </h6>
                     <div class="product_price">
                         @if (isset($product['discount_type']))
-                            <span class="price">{{ format_price($product['discounted_price']) }}</span>
-                            <del>{{ format_price($product['unit_price']) }}</del>
-                            <div class="on_sale">
-                                <span>{{ $product['discount_type'] == 'amount' ? format_price($product['discount']) : $product['discount'] . '%' }}
-                                    Off</span>
-                            </div>
-                        @else
-                            <span class="price">{{ format_price($product['unit_price']) }}</span>
-                        @endif
-
+                        <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
+                        <del>{{ format_price(convert_price($product['unit_price'])) }}</del>
+                        <div class="on_sale">
+                            <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['unit_price'])) : $product['discount'] . '%' }}
+                                Off</span>
+                        </div>
+                    @else
+                        <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
+                    @endif
                     </div>
                     <div class="rating_wrap">
                         <div class="rating">

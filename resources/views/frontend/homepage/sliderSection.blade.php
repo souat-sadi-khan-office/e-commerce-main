@@ -99,18 +99,15 @@
                                                     </h6>
                                                     <div class="product_price">
                                                         @if (isset($product['discount_type']))
-                                                            <span
-                                                                class="price">{{ format_price($product['discounted_price']) }}</span>
-                                                            <del>{{ format_price($product['unit_price']) }}</del>
-                                                            <div class="on_sale">
-                                                                <span>{{ $product['discount_type'] == 'amount' ? format_price($product['discount']) : $product['discount'] . '%' }}
-                                                                    Off</span>
-                                                            </div>
-                                                        @else
-                                                            <span
-                                                                class="price">{{ format_price($product['unit_price']) }}</span>
-                                                        @endif
-
+                                                        <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
+                                                        <del>{{ format_price(convert_price($product['unit_price'])) }}</del>
+                                                        <div class="on_sale">
+                                                            <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['unit_price'])) : $product['discount'] . '%' }}
+                                                                Off</span>
+                                                        </div>
+                                                    @else
+                                                        <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
+                                                    @endif
                                                     </div>
                                                     <div class="rating_wrap">
                                                         <div class="rating">
@@ -211,31 +208,6 @@
                         console.error('Error:', error);
                     }
                 });
-            });
-
-            $('.popup-ajax').on('click', function(e) {
-                e.preventDefault();
-
-                var url = $(this).attr('href');
-
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(response) {
-                        $('.ajax_quick_view .row').html(response); // Populate the modal content
-                        $('.ajax_quick_view').css('display', 'block'); // Show the modal
-                    },
-                    error: function() {
-                        alert('Failed to load content.');
-                    }
-                });
-            });
-
-            // Close modal when clicking outside of it
-            $(window).on('click', function(event) {
-                if ($(event.target).hasClass('ajax_quick_view')) {
-                    $('.ajax_quick_view').css('display', 'none');
-                }
             });
         });
     </script>

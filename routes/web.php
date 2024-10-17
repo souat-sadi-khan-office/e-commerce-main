@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HelperController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,7 @@ Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCa
 
 Route::middleware('web')->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
+Route::get('{slug}', [HelperController::class, 'fatcher'])->name('slug.handle');
     
     Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
     Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
@@ -82,4 +84,4 @@ Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->
 Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');
 Route::post('/currency/change', [HomePageController::class, 'currencyChange'])->name('currency.change');
 
-Route::get('{slug}', [LoginController::class, 'productDetails'])->name('slug.handle');
+
