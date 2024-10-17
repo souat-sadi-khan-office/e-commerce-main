@@ -40,7 +40,7 @@ class SpecificationAttributes extends SpecificationsTypes
         return $this->productSpecificationRepository->attributesstore($request);
     }
     public function show(Request $request,$id){
-        $models=SpecificationKeyTypeAttribute::where('key_type_id',$id)->with('admin')->get();
+        $models = SpecificationKeyTypeAttribute::where('key_type_id',$id)->with('admin')->get();
         return view('backend.category.specificationKeys.types.attributes.attributesModal',compact('models'));
     }
 

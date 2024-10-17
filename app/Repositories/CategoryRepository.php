@@ -58,7 +58,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'slug' => $data->slug,
                 'icon' => Helpers::icon($data->icon),
                 'header' => $data->header,
-                'short_description' => $data->short_description ? $data->short_description : $data->name,
+                'short_description' => $data->short_description,
                 'site_title' => $data->site_title,
                 'description' => $data->description,
                 'meta_title' => $data->meta_title,
@@ -103,7 +103,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'slug' => $data->slug,
                 'icon' => Helpers::icon($data->icon),
                 'header' => $data->header,
-                'short_description' => $data->short_description ? $data->short_description : $data->name,
+                'short_description' => $data->short_description,
                 'site_title' => $data->site_title,
                 'description' => $data->description,
                 'meta_title' => $data->meta_title,
@@ -120,6 +120,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'status' => false]);
         }
+    }
+
+    public function getCategoryBySlug($slug)
+    {
+        return Category::where('slug', $slug)->where('status', 1)->first();
     }
 
     public function checkSlugExists(string $slug): bool
@@ -177,7 +182,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 Rule::unique('categories')->ignore($id),
             ],
             'icon' => 'required|string',
-            'header' => 'required|string|max:255',
+            'header' => 'nullable|string|max:255',
             'short_description' => 'nullable|string',
             'site_title' => 'required|string|max:255',
             'description' => 'required|string',

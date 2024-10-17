@@ -527,6 +527,12 @@ button:focus:not(:focus-visible) {
 .bg_apricot {
 	background-color: #fde0ca !important;
 }
+.bg_white {
+	background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+	padding: 10px 10px 10px 20px;
+}
 
 .radius_all_5,
 .radius_all_5:before,
@@ -1812,7 +1818,7 @@ button:focus:not(:focus-visible) {
 .navbar-toggler {
 	float: right;
 	margin: 13px 0 0 3px;
-	font-size: 20px;
+	font-size: 28px;
 	color: #333;
 	transition: all 0.5s ease 0s;
 	border-radius: 0;
@@ -2398,7 +2404,7 @@ input.text {
 	float: right;
 }
 .categories_btn.categories_menu {
-	padding: 5px 8px;
+	padding: 12px 15px;
 	border-radius: 4px;
 }
 .categories_btn span {
@@ -5030,8 +5036,12 @@ footer .widget_title {
 	transform: translateX(0);
 }
 .pr_desc {
-	display: none;
+	padding: 10px 0 0 18px;
+    flex: 1 1 auto;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
 }
+
 .pr_flash {
 	background-color: #FF9F00;
 	position: absolute;
@@ -5696,8 +5706,6 @@ footer .widget_title {
 	width: 100%;
 	overflow: hidden;
 	margin-bottom: 10px;
-	min-height: 58px;
-	max-height: 84px;
 }
 .shop_container.list .pr_desc p {
 	margin-bottom: 0px;
@@ -6091,8 +6099,8 @@ select option {
 	height: 50px;
 }
 .custom_select::before {
-	content: "\e64b";
-	font-family: 'themify';
+	content: "\f107";
+	font-family: 'Font Awesome 5 Free';
 	position: absolute;
 	display: block;
 	color: #848484;
@@ -6233,9 +6241,9 @@ select option {
 	font-size: 14px;
 }
 .sidebar .widget + .widget {
-    border-top: 1px solid #ddd;
-    margin-top: 30px;
-    padding-top: 30px;
+    /* border-top: 1px solid #ddd; */
+    margin-top: 15px;
+    /* padding-top: 30px; */
 }
 .widget_newsletter p {
 	font-size: 14px;
@@ -8278,4 +8286,71 @@ img.brand-image {
     width: 245px !important;
     height: 125px !important;
     object-fit: contain !important;
+}
+
+.listing-headers h1 {
+	font-size: 22px;
+    line-height: 28px;
+    font-weight: 400;
+	margin: 0 0 12px;
+    color: #3749bb;
+}
+
+.listing-headers p {
+	margin-bottom: 20px;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+select {
+    padding: 10px;
+}
+
+select option {
+    padding: 10px !important;
+}
+
+select option:hover {
+    background-color: #FF324D !important;
+    color: #fff !important;
+}
+
+.accordion-button {
+	color: #000;
+	font-weight: bold;
+    background-color: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.accordion-button:not(.collapsed) {
+	color: #000;
+	font-weight: bold;
+    background-color: #fff;
+	border-bottom: 1px solid #eee;
+}
+
+.scrollbar{
+	padding-right: 30px; 
+	position: sticky;
+	top: 0;
+	max-height: 250px;
+	overflow-y: scroll;
+}
+
+.scrollbar::-webkit-scrollbar {
+	width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 2px grey; 
+	border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+	background: #C6C6C9; 
+	border-radius: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+	background: #C6C6C9; 
 }

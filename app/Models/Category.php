@@ -64,8 +64,22 @@ class Category extends Model
     {
         return $this->hasMany(Banner::class);
     }
+    
     public function specificationKeys()
     {
-        return $this->hasMany(SpecificationKey::class);
+        return $this->hasMany(SpecificationKey::class, 'category_id');
+    }
+
+    public function getParentCategoryIds()
+    {
+        $categoryIds = [];
+        $category = $this;
+
+        while ($category->parent) {
+            $categoryIds[] = $category->parent->id;
+            $category = $category->parent;
+        }
+
+        return $categoryIds;
     }
 }

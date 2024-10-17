@@ -12,16 +12,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use App\Repositories\Interface\ProductRepositoryInterface;
+use App\Repositories\Interface\CategoryRepositoryInterface;
 
 class HelperController extends Controller
 {
 
     protected $productRepository;
+    protected $categoryRepository;
 
     public function __construct(
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function checkSlug(Request $request)
@@ -63,7 +67,6 @@ class HelperController extends Controller
 
         // Get the current model name
         $model = $models[$index];
-// dd($this->productDetails($slug));
         if ($model == 'Product' && Product::where('slug', $slug)->exists()) {
             $product = $this->productDetails($slug);
             if ($product) {
@@ -74,27 +77,36 @@ class HelperController extends Controller
 
                 return view('frontend.product-details', compact('product', 'breadcrumb', 'keySpec', 'spec'));
             } else {
-
                 return $this->fetcher($slug, $index + 1);
             }
 
-        }else {
+        } elseif ($model == 'Category' && Category::where('slug', $slug)->exists()) {
+            $model = $this->categoryRepository->getCategoryBySlug($slug);
+            if($model) {
 
+                $categoryIdArray = $model->getParentCategoryIds();
+                $categoryIdArray[] = $model->id;
+
+                $breadcrumb = $this->getCategoryBreadcrumb($model);
+                return view('frontend.listing', compact('model', 'categoryIdArray', 'breadcrumb'));
+            } else {
+                return $this->fetcher($slug, $index + 1);
+            }
+        } else {
             return $this->fetcher($slug, $index + 1);
         }
 
         // // Check for data in the current model
         // $data = $model::where('slug', $slug)->first();
 
-        // // If no data found, recursively call fatcher with the next index
+        // // If no data found, recursively call fetcher with the next index
         // if (!$data) {
-        //     return $this->fatcher($slug, $index + 1);
+        //     return $this->fetcher($slug, $index + 1);
         // }
 
         // Return the data to the view based on the model
 
     }
-
 
     public function productDetails($slug)
     {
@@ -184,17 +196,15 @@ class HelperController extends Controller
                 ];
             }
         }
-// dd($productDetails,$product->details);
         return $productDetails;
     }
 
     public function getCategoryBreadcrumb($category)
     {
         $breadcrumb = [];
-
         while ($category) {
             $breadcrumb[] = $category;
-            $category = $category->parent_id;
+            $category = $category->parent;
         }
 
         return array_reverse($breadcrumb);
