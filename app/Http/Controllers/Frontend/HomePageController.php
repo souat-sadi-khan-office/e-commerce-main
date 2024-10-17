@@ -9,6 +9,7 @@ use App\Models\Rating;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\Currency;
+use App\Models\Category;
 use App\Models\WishList;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -24,17 +25,21 @@ use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
+use App\Repositories\Interface\BrandRepositoryInterface;
 
 class HomePageController extends Controller
 {
     private $banner;
+    private $brands;
     private $product;
     private $flashDeals;
     public function __construct(
         BannerRepositoryInterface $banner,
         ProductRepositoryInterface $product,
+        BrandRepositoryInterface $brands,
         FlashDealRepositoryInterface $flashDeals,
     ) {
+        $this->brands = $brands;
         $this->banner = $banner;
         $this->product = $product;
         $this->flashDeals = $flashDeals;
@@ -108,6 +113,14 @@ class HomePageController extends Controller
                 return view('frontend.homepage.featured-tab', compact('products'));
             } elseif (isset($request->offred)) {
                 return view('frontend.homepage.offred-tab', compact('products'));
+            } elseif (isset($request->brands)) {
+
+                $brands = Cache::remember('brands_', now()->addMinutes(10), function () use ($request) {
+                    $models = $this->brands->getAllBrands();
+                    return $models->select('slug', 'logo', 'name')->where('status', 1);
+                });
+                
+                return view('frontend.homepage.brands-tab', compact('brands'));
             }
 
 
@@ -356,15 +369,33 @@ class HomePageController extends Controller
     {
         $country = Country::find($request->global_country_id);
         $currency = Currency::find($request->global_currency_id);
+
+        // For Currency
         $request->session()->put('currency_id', $currency->id);
         $request->session()->put('currency_code', $currency->code);
         $request->session()->put('currency_symbol', $currency->symbol);
         $request->session()->put('currency_exchange_rate', $currency->exchange_rate);
-        $request->session()->put('country_id', $country->id);
+
+        // for country
         $request->session()->put('country_name', $country->name);
         $request->session()->put('country_flag', asset($country->image));
 
         session()->flash('success', 'Country changed to '. $country->name . ' and Currency changed to '. $currency->name);
 
+    }
+
+    public function allCategories()
+    {
+        $categories = Category::where('status', 1)->where('parent_id', null)->orderBy('name', 'ASC')->get();
+        return view('frontend.categories', compact('categories'));
+    }
+    
+    public function allBrands()
+    {
+        $brands = $this->brands
+                    ->getAllBrands()
+                    ->where('status', 1);
+
+        return view('frontend.brands', compact('brands'));
     }
 }

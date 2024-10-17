@@ -1,7 +1,5 @@
 @extends('backend.layouts.app')
-@section('title', 'Category Add')
-{{-- @section('page_name', 'Category Add') --}}
-@section('breadcrumb', 'Category Add')
+@section('title', 'Create New Category')
 
 @section('content')
     <div class="row">
@@ -9,17 +7,21 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h1 class="h3 mb-0">Add Category</h1>
+                        <h1 class="h3 mb-0">Create new Category</h1>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="{{ route('admin.dashboard') }}">
                                     <i class="bi bi-house-add-fill"></i>
                                 </a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Category Add</li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">
+                                    All Category
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Create new Category</li>
                         </ol>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -38,75 +40,97 @@
                             @csrf
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="name" class="form-label">Name <span class="text-danger">*</span>
+                                    <label for="name" class="form-label">
+                                        Name 
+                                        <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="name" id="name" class="form-control" required>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
+                                    <label for="slug" class="form-label">
+                                        Slug 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="slug" id="slug" class="form-control" readonly>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
-                                    <label for="icon" class="form-label">Icon <span class="text-danger">*</span></label>
-                                    <input type="text" name="icon" class="form-control iconpicker" required>
+                                <div class="mb-3 col-4">
+                                    <label for="icon" class="form-label">
+                                        Icon 
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="icon" autocomplete="off" class="form-control iconpicker" required>
                                 </div>
-                                <div class="mb-3 col-6">
-                                    <label for="header" class="form-label">Header <span
-                                            class="text-danger">*</span></label>
+                                <div class="mb-3 col-4">
+                                    <label for="header" class="form-label">
+                                        Header 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="header" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3 col-4">
+                                    <label for="site_title" class="form-label">
+                                        Site Title 
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" name="site_title" class="form-control" required>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="mb-3 col-6">
-                                    <label for="short_description" class="form-label">Short Description <span
-                                            class="text-danger">*</span></label>
-                                    <textarea name="short_description" class="form-control" rows="3" required></textarea>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <label for="site_title" class="form-label">Site Title <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="site_title" class="form-control" required>
+                                <div class="mb-3 col-12">
+                                    <label for="short_description" class="form-label">
+                                        Short Description 
+                                    </label>
+                                    <textarea name="short_description" class="form-control" rows="3"></textarea>
                                 </div>
                             </div>
 
                             @include('backend.components.descriptionInput')
 
                             <div class="row">
-                                <div class="mb-3 col-6">
-                                    <label for="meta_title" class="form-label">Meta Title <span
-                                            class="text-danger">*</span></label>
+                                <div class="mb-3 col-12">
+                                    <label for="meta_title" class="form-label">
+                                        Meta Title 
+                                        <span class="text-danger">*</span>
+                                    </label>
                                     <input type="text" name="meta_title" class="form-control" required>
                                 </div>
-                                <div class="mb-3 col-6">
-                                    <label for="meta_keyword" class="form-label">Meta Keyword <span class="text-danger"> Use
-                                            Comma " , " *</span></label>
-                                    <input type="text" name="meta_keyword" class="form-control" required>
+                                <div class="mb-3 col-12">
+                                    <label for="meta_keyword" class="form-label">
+                                        Meta Keyword 
+                                        <span class="text-danger"> Use Comma " , " *</span>
+                                    </label>
+                                    <textarea name="meta_keyword" id="meta_keyword" cols="30" rows="4" class="form-control"></textarea>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="meta_description" class="form-label">Meta Description <span
-                                        class="text-danger">*</span></label>
+                                <label for="meta_description" class="form-label">
+                                    Meta Description 
+                                    <span class="text-danger">*</span>
+                                </label>
                                 <textarea name="meta_description" class="form-control" rows="3" required></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="mb-3 col-6">
-                                    <label for="meta_article_tag" class="form-label">Meta Article Tag <span
-                                            class="text-danger"> Use Comma " , "</span></label>
-                                    <input type="text" name="meta_article_tag" class="form-control">
+                                    <label for="meta_article_tag" class="form-label">
+                                        Meta Article Tag 
+                                    </label>
+                                    <textarea name="meta_article_tag" id="meta_article_tag" cols="30" rows="4" class="form-control"></textarea>
                                 </div>
                                 <div class="mb-3 col-6">
-                                    <label for="meta_script_tag" class="form-label">Meta Script Tag <span
-                                            class="text-danger"> Use Comma " , "</span></label>
-                                    <input type="text" name="meta_script_tag" class="form-control">
+                                    <label for="meta_script_tag" class="form-label">
+                                        Meta Script Tag 
+                                    </label>
+                                    <textarea name="meta_script_tag" id="meta_script_tag" cols="30" rows="4" class="form-control"></textarea>
                                 </div>
                             </div>
-                            {{-- <input type="file" name="image" class="form-control"> --}}
+
                             <div class="row">
                                 <div class="col-4 mt-4 p-5">
                                     <div class="row">

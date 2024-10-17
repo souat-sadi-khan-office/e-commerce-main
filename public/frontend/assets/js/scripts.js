@@ -644,6 +644,51 @@
 			},
 		});
 	});
+
+	$(document).on('click', '.add_compare', function() {
+        let id = $(this).data('id');
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+        $.ajax({
+            url: '/add-to-compare-list',
+            method: 'POST',
+            data: {
+                id: id 
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if(data.status) {
+                    $('.compare_counter').html(data.counter);
+                    toastr.success(data.message);
+                } else {
+                    toastr.warning(data.message);
+                }
+                $('.add_compare').html('<i class="fas fa-random"></i>');
+            }
+        })
+    });
+
+	$(document).on('click', '.add_wishlist', function() {
+        let id = $(this).data('id');
+        let wish_list_counter = parseInt($('#wish_list_counter').html());
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+        $.ajax({
+            url: '/add-to-wish-list',
+            method: 'POST',
+            data: {
+                id: id 
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if(data.status) {
+                    $('#wish_list_counter').html(parseInt(wish_list_counter) + 1);
+                    toastr.success(data.message);
+                } else {
+                    toastr.warning(data.message);
+                }
+                $('.add_wishlist').html('<i class="far fa-heart"></i>');
+            }
+        })
+    })
 	
 	function ajax_magnificPopup() {
 		$('.popup-ajax').magnificPopup({

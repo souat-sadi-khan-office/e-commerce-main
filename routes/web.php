@@ -67,6 +67,9 @@ Route::middleware(['isCustomer', 'web'])->group(function () {
     });
 });
 
+Route::get('brands', [HomePageController::class, 'allBrands'])->name('brands');
+Route::get('categories', [HomePageController::class, 'allCategories'])->name('categories');
+
 Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
 Route::post('search/category-by-id', [SearchController::class, 'searchByCategoryId'])->name('search.category_by_id');
 Route::post('search/brand-by-id', [SearchController::class, 'searchByBrandId'])->name('search.brand_by_id');

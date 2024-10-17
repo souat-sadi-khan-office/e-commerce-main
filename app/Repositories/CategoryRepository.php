@@ -22,6 +22,12 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->select('id', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
             ->get();
     }
+
+    public function getAllCategories()
+    {
+        return Category::all();
+    }
+    
     public function index2()
     {
         return Category::with('parent:id,name')
@@ -52,7 +58,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'slug' => $data->slug,
                 'icon' => Helpers::icon($data->icon),
                 'header' => $data->header,
-                'short_description' => $data->short_description,
+                'short_description' => $data->short_description ? $data->short_description : $data->name,
                 'site_title' => $data->site_title,
                 'description' => $data->description,
                 'meta_title' => $data->meta_title,
@@ -97,7 +103,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'slug' => $data->slug,
                 'icon' => Helpers::icon($data->icon),
                 'header' => $data->header,
-                'short_description' => $data->short_description,
+                'short_description' => $data->short_description ? $data->short_description : $data->name,
                 'site_title' => $data->site_title,
                 'description' => $data->description,
                 'meta_title' => $data->meta_title,
@@ -172,7 +178,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             ],
             'icon' => 'required|string',
             'header' => 'required|string|max:255',
-            'short_description' => 'required|string',
+            'short_description' => 'nullable|string',
             'site_title' => 'required|string|max:255',
             'description' => 'required|string',
             'meta_title' => 'required|string|max:255',
