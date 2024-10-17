@@ -1812,7 +1812,7 @@ button:focus:not(:focus-visible) {
 .navbar-toggler {
 	float: right;
 	margin: 13px 0 0 3px;
-	font-size: 28px;
+	font-size: 20px;
 	color: #333;
 	transition: all 0.5s ease 0s;
 	border-radius: 0;
@@ -2398,7 +2398,7 @@ input.text {
 	float: right;
 }
 .categories_btn.categories_menu {
-	padding: 12px 15px;
+	padding: 5px 8px;
 	border-radius: 4px;
 }
 .categories_btn span {

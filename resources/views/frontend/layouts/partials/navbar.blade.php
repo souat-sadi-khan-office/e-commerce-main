@@ -288,8 +288,16 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="pr_search_icon">
-                        <a href="javascript:;" class="nav-link pr_search_trigger"><i class="linearicons-magnifier"></i></a>
+                        <a href="javascript:;" class="nav-link pr_search_trigger">
+                            <i class="linearicons-cart"></i>
+                        </a>
                     </div> 
+                    <div class="pr_search_icon">
+                        <a href="javascript:;" class="nav-link">
+                            <i class="linearicons-magnifier"></i>
+                        </a>
+                    </div> 
+                    
                     <div class="collapse navbar-collapse mobile_side_menu" id="navbarSidetoggle">
                         {{-- <ul class="navbar-nav">
                             <li class="dropdown">
