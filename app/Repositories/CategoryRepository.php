@@ -122,6 +122,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
     }
 
+    public function getCategoryBySlug($slug)
+    {
+        return Category::where('slug', $slug)->where('status', 1)->first();
+    }
+
     public function checkSlugExists(string $slug): bool
     {
         return Category::where('slug', $slug)->exists();

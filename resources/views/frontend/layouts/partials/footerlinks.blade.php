@@ -1,17 +1,16 @@
 
 <!-- Required JS -->
     <script src="{{ asset('frontend/assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('frontend/assets/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/popper.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/bootstrap/js/bootstrap.min.js') }}"></script> 
     <script src="{{ asset('backend/assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>
+    
     <script src="{{ asset('backend/assets/js/parsley.min.js') }}"></script>
     <script src="{{ asset('backend/assets/js/toastr.min.js') }}"></script>
-    
-    @if (request()->routeIs('home'))
-     <!-- owl-carousel min js  -->
+
+    {{-- @if (request()->routeIs('home')) --}}
      <script src="{{ asset('frontend/assets/owlcarousel/js/owl.carousel.min.js') }}"></script>
-     <!-- magnific-popup min js  -->
      <script src="{{ asset('frontend/assets/js/magnific-popup.min.js') }}"></script>
      <!-- waypoints min js  -->
      <script src="{{ asset('frontend/assets/js/waypoints.min.js') }}"></script>
@@ -29,8 +28,8 @@
      <script src="{{ asset('frontend/assets/js/slick.min.js') }}"></script>
      <!-- elevatezoom js -->
      <script src="{{ asset('frontend/assets/js/jquery.elevatezoom.js') }}"></script>
+    {{-- @endif     --}}
     <!-- Optional JS -->
-    @endif
     <script>
         @if(session('success'))
             toastr.success("{{ session('success') }}");
@@ -38,4 +37,7 @@
             toastr.error("{{ session('error') }}");
         @endif
     </script>
+
     @stack('scripts')
+
+    <script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>
