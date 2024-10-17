@@ -1,11 +1,13 @@
 <?php
 
 use App\CPU\Helpers;
-use App\Models\Currency;
 use App\Models\Category;
+use App\Models\Currency;
 use App\Models\HomepageSettings;
 use App\Models\ConfigurationSetting;
+use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 if (!function_exists('get_setting')) {
@@ -17,7 +19,7 @@ if (!function_exists('get_setting')) {
 
         $value = '';
         $setting = ConfigurationSetting::where('type', $key)->first();
-        if($setting) {
+        if ($setting) {
             $value = $setting->value;
         }
         // if ($setting !== null) {
@@ -34,7 +36,7 @@ if (!function_exists('homepage_setting')) {
     function homepage_setting($key)
     {
         if (Session::has('homepage_setting.' . $key)) {
-            
+
             return Session::get('homepage_setting.' . $key);
         }
 
@@ -64,10 +66,10 @@ if (!function_exists('homepage_setting')) {
             $new->last_updated_by = Auth::guard('admin')->id();
             $new->save();
 
-            return false; 
+            return false;
         }
 
-        return false; 
+        return false;
     }
 }
 
@@ -123,7 +125,7 @@ if (!function_exists('tz_list')) {
 
 //formats currency
 if (!function_exists('format_price')) {
-    function format_price($price, $isMinimize = false)
+    function format_price($price, $isMinimize = false, $isAdmin = false)
     {
         if (get_settings('system_decimal_separator') == 1) {
             $format_price = number_format($price, intval(get_settings('system_no_of_decimals')));
@@ -146,28 +148,101 @@ if (!function_exists('format_price')) {
         }
 
         if (get_settings('system_symbol_format') == '[Symbol][Amount]') {
-            return currency_symbol() . $format_price;
+            return currency_symbol($isAdmin) . $format_price;
         } else if (get_settings('system_symbol_format') == "[Symbol] [Amount]") {
-            return currency_symbol() . ' ' . $format_price;
+            return currency_symbol($isAdmin) . ' ' . $format_price;
         } else if (get_settings('system_symbol_format') == "[Amount] [Symbol]") {
-            return $format_price . ' ' . currency_symbol();
+            return $format_price . ' ' . currency_symbol($isAdmin);
         }
 
-        return $format_price . currency_symbol();
+        return $format_price . currency_symbol($isAdmin);
     }
+}
+
+function covert_to_usd($price)
+{
+    if ((get_system_default_currency()->code != "USD")) {
+        return ($price / get_exchange_rate(get_system_default_currency()->code));
+    }
+    return $price;
+}
+function covert_to_defalut_currency($price)
+{
+    if ((get_system_default_currency()->code != "USD")) {
+        return ($price * get_exchange_rate(get_system_default_currency()->code));
+    }
+    return $price;
 }
 
 // converts currency to home default currency
 if (!function_exists('convert_price')) {
     function convert_price($price)
     {
-        if (Session::has('currency_code') && (Session::get('currency_code') != get_system_default_currency()->code)) {
-            $price = floatval($price) / floatval(get_system_default_currency()->exchange_rate);
-            $price = floatval($price) * floatval(Session::get('currency_exchange_rate'));
+        if (Session::has('currency_code') && (Session::get('currency_code') != "USD")) {
+            $currency_code = Session::get('currency_code');
+            $exchange_rate = get_exchange_rate($currency_code);
+
+            if ($exchange_rate !== null) {
+                $price = floatval($price) * $exchange_rate;
+            }
         }
         return $price;
     }
 }
+
+
+
+function fetch_exchange_rate($currency_code)
+{
+    $api_url = "https://api.currencybeacon.com/v1/convert?api_key=tisDcm3hOvaLnnbrZPP1I5UMgF2JSzkL&from=USD&to=" . strtoupper($currency_code) . "&amount=1";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($response, true);
+}
+function store_exchange_rate($currency_code, $rate)
+{
+    // Try to find the existing currency entry
+    $currency = Currency::where('code', $currency_code)->first();
+
+    if ($currency) {
+        // If it exists, update the exchange rate
+        $currency->exchange_rate = $rate;
+        $currency->save();
+    }
+
+    // Store in cache as well
+    Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time') ?? 3600);
+}
+
+
+function get_exchange_rate($currency_code)
+{
+    return Cache::remember("exchange_rate_{$currency_code}", get_settings('currency_api_fetch_time') ?? 3600, function () use ($currency_code) {
+        // Check if the currency exists in the database
+        $currency = Currency::where('code', $currency_code)->first();
+
+        // If the currency exists, fetch the exchange rate from the API
+        if ($currency) {
+            $exchange_rate_data = fetch_exchange_rate($currency_code);
+            if ($exchange_rate_data && $exchange_rate_data['meta']['code'] == 200) {
+                $rate = $exchange_rate_data['response']['value'];
+                // Store in the database
+                store_exchange_rate($currency_code, $rate);
+                return $rate; // Return the newly fetched rate
+            }
+        }
+
+        // If currency is not found or API call fails, return null
+        return null;
+    });
+}
+
 
 // Shows Price on page based on low to high
 if (!function_exists('home_price')) {
@@ -207,7 +282,7 @@ if (!function_exists('home_discounted_price')) {
 
         $discount_applicable = false;
 
-        if($product->is_discounted == 1) {
+        if ($product->is_discounted == 1) {
             if ($product->discount_start_date == null) {
                 $discount_applicable = true;
             } elseif (
@@ -254,8 +329,11 @@ if (!function_exists('home_discounted_price')) {
 
 //gets currency symbol
 if (!function_exists('currency_symbol')) {
-    function currency_symbol()
+    function currency_symbol($isAdmin = false)
     {
+        if ($isAdmin) {
+            return isset(get_system_default_currency()->symbol) ? get_system_default_currency()->symbol : '$';
+        }
         if (Session::has('currency_symbol')) {
             return Session::get('currency_symbol');
         }
@@ -268,32 +346,30 @@ if (!function_exists('get_system_default_currency')) {
     function get_system_default_currency()
     {
         $currency = Currency::find(get_settings('system_default_currency'));
-        if(!$currency) {
+        if (!$currency) {
             $currency = Currency::where('name', 'US Dollar')->first();
         }
-
         return $currency;
     }
 }
 
-if(!function_exists('get_immediate_children_ids')) {
+if (!function_exists('get_immediate_children_ids')) {
     function get_immediate_children_ids($id, $with_trashed = false)
     {
         $children = get_immediate_children($id, $with_trashed, true);
 
         return !empty($children) ? array_column($children, 'id') : array();
-
     }
 }
 
-if(!function_exists('get_immediate_children_count')) {
+if (!function_exists('get_immediate_children_count')) {
     function get_immediate_children_count($id, $with_trashed = false)
     {
         return $with_trashed ? Category::where('status', 1)->where('parent_id', $id)->count() : Category::where('status', 1)->where('parent_id', $id)->count();
     }
 }
 
-if(!function_exists('get_immediate_children')) {
+if (!function_exists('get_immediate_children')) {
     function get_immediate_children($id, $with_trashed = false, $as_array = false)
     {
         $children = $with_trashed ? Category::where('status', 1)->where('parent_id', $id)->orderBy('name', 'ASC')->get() : Category::where('status', 1)->where('parent_id', $id)->orderBy('name', 'ASC')->get();

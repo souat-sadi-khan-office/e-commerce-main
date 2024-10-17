@@ -13,8 +13,9 @@
                                 <a class="ic" href="javascript:;">
                                     <img src="{{ session()->get('country_flag') ? session()->get('country_flag') : asset('pictures/bangladesh.png') }}" alt="Country Flag">
                                 </a>
+                               
                                 <div class="ac-content">
-                                    <p id="country_name_selector">{{ session()->get('country_name') ? session()->get('country_name') : 'Bangladesh' }}</p>
+                                    <p id="country_name_selector">{{session()->get('user_country') }}</p>
                                     <h5>
                                         <span id="currency_name_selector">{{ session()->get('currency_code') ? session()->get('currency_code') : 'USD' }}</span>
                                         <svg viewBox="0 0 1024 1024" width="1em" height="1em" fill="currentColor" aria-hidden="false" focusable="false"><path d="M296.256 354.944l224 224 224-224a74.656 74.656 0 0 1 0 105.6l-197.6 197.6a37.344 37.344 0 0 1-52.8 0l-197.6-197.6a74.656 74.656 0 0 1 0-105.6z"></path></svg>

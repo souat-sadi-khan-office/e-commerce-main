@@ -101,11 +101,11 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h2 class="h5 mb-0">Test Currency</h2>
+                            <h2 class="h5 mb-0">Current Defult : {{get_system_default_currency()->name}}</h2>
                         </div>
                         <div class="card-body">
                             <div class="alert alert-warning">
-                                {{ format_price(2500) }}
+                                {{ format_price(2500,false,true) }}
                             </div>
                         </div>
                     </div>
@@ -184,6 +184,19 @@
                                             <option {{ get_settings('system_no_of_decimals') == 1 ? 'selected' : '' }} value="1">100.1</option>
                                             <option {{ get_settings('system_no_of_decimals') == 2 ? 'selected' : '' }} value="2">100.22</option>
                                             <option {{ get_settings('system_no_of_decimals') == 3 ? 'selected' : '' }} value="3">100.333</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-12 form-group mb-3">
+                                        <label for="currency_api_fetch_time">Exchange Rate Refresh Time (API)</label>
+                                        <select name="currency_api_fetch_time" id="currency_api_fetch_time" class="form-control select" data-placeholder="Select Number">
+                                            <option value="">Select Time</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 60 ? 'selected' : '' }} value="60">1 Minute</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 1800 ? 'selected' : '' }} value="1800">30 Minute</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 3600 ? 'selected' : '' }} value="3600">1 Hour</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 21600 ? 'selected' : '' }} value="21600">6 Hour</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 43200 ? 'selected' : '' }} value="43200">12 Hour</option>
+                                            <option {{ get_settings('currency_api_fetch_time') == 86400 ? 'selected' : '' }} value="86400">Per Day</option>
                                         </select>
                                     </div>
             

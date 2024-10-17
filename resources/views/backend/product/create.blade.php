@@ -273,7 +273,7 @@
                                     <!-- currency_id -->
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="currency_id">Currency</label>
-                                        <select name="currency_id" id="currency_id" class="form-control select">
+                                        <select name="currency_id" id="currency_id" disabled class="form-control">
                                             @foreach ($currencies as $currency)
                                                 <option {{ get_settings('system_default_currency') == $currency->id ? 'selected' : '' }} value="{{ $currency->id }}">{{ $currency->name }}</option>
                                             @endforeach
