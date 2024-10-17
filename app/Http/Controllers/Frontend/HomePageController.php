@@ -115,11 +115,10 @@ class HomePageController extends Controller
                 return view('frontend.homepage.offred-tab', compact('products'));
             } elseif (isset($request->brands)) {
 
-                $brands = Cache::remember('brands_', now()->addMinutes(10), function () use ($request) {
-                    $models = $this->brands->getAllBrands();
-                    return $models->select('slug', 'logo', 'name')->where('status', 1);
+                $brands = Cache::remember('brands_', (36000 * 10), function () use ($request) {
+                    return $this->brands->getAllBrands()->select('slug', 'logo', 'name', 'status')->where('status', 1);
                 });
-                
+
                 return view('frontend.homepage.brands-tab', compact('brands'));
             }
 

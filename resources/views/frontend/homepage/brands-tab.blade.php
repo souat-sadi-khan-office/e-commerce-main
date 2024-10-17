@@ -2,8 +2,8 @@
     @foreach ($brands as $brand)
         <div class="item">
             <div class="cl_logo">
-                <a href="{{ $brand->slug }}">
-                    <img class="brand-image" src="{{ asset($brand->logo) }}" alt="{{ $brand->name }}"/>
+                <a href="{{ $brand['slug'] }}">
+                    <img class="brand-image" src="{{ asset($brand['logo']) }}" alt="{{ $brand['name'] }}"/>
                 </a>
             </div>
         </div>
