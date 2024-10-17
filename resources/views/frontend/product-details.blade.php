@@ -101,14 +101,14 @@
                             </h1>
                             <div class="product_price">
                                 @if (isset($product['discount_type']))
-                                <span class="price">{{ format_price($product['discounted_price']) }}</span>
-                                <del>{{ format_price($product['price']) }}</del>
+                                <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
+                                <del>{{ format_price(convert_price($product['price'])) }}</del>
                                 <div class="on_sale">
-                                    <span>{{ $product['discount_type'] == 'amount' ? format_price($product['discount']) : $product['discount'] . '%' }}
+                                    <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['price'])) : $product['discount'] . '%' }}
                                         Off</span>
                                 </div>
                             @else
-                                <span class="price">{{ format_price($product['price']) }}</span>
+                                <span class="price">{{ format_price(convert_price($product['price'])) }}</span>
                             @endif
                             </div>
                             <div class="rating_wrap">
