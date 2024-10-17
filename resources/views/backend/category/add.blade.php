@@ -51,7 +51,7 @@
                                         Slug 
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="slug" id="slug" class="form-control" readonly>
+                                    <input type="text" required name="slug" id="slug" class="form-control">
                                 </div>
                             </div>
 
@@ -66,9 +66,8 @@
                                 <div class="mb-3 col-4">
                                     <label for="header" class="form-label">
                                         Header 
-                                        <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="header" class="form-control" required>
+                                    <input type="text" name="header" class="form-control">
                                 </div>
 
                                 <div class="mb-3 col-4">
@@ -152,7 +151,6 @@
                                 </div>
                                 <div class="col-8">
                                     @include('backend.components.imageInput')
-
                                 </div>
                             </div>
 

@@ -48,7 +48,7 @@
                                 <div class="mb-3 col-6">
                                     <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
                                     <input type="text" name="slug" id="slug" value="{{ $category->slug }}"
-                                        class="form-control" readonly>
+                                        class="form-control">
                                 </div>
                             </div>
 

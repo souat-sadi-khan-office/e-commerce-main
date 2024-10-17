@@ -29,8 +29,14 @@ class Images
     }
     public static function show($path)
     {
-        return '<img src="' . asset($path) . '" alt="Image ' . $path . '" style="width:70px;">';
+        if ($path && file_exists(public_path($path))) {
+            return '<img src="' . asset($path) . '" alt="Image ' . $path . '" style="width:70px;">';
+        } else {
+            $placeholder = 'pictures/placeholder.jpg';
+            return '<img src="' . asset($placeholder) . '" alt="Placeholder Image" style="width:70px;">';
+        }
     }
+
 
     public static function update($folder, $oldImagePath, $newImage)
     {

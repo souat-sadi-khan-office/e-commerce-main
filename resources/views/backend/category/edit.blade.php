@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label for="slug" class="form-label">Slug <span class="text-danger">*</span></label>
-                                    <input type="text" name="slug" id="slug" value="{{$category->slug}}" class="form-control" readonly>
+                                    <input type="text" name="slug" id="slug" value="{{$category->slug}}" class="form-control">
                                 </div>
                             </div>
 
@@ -58,9 +58,8 @@
                                     <input type="text" name="icon" value="{{App\CPU\Helpers::extractIconClassName($category->icon)}}" class="form-control iconpicker" required>
                                 </div>
                                 <div class="mb-3 col-4">
-                                    <label for="header" class="form-label">Header <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" name="header" value="{{$category->header}}"  class="form-control" required>
+                                    <label for="header" class="form-label">Header</label>
+                                    <input type="text" name="header" value="{{$category->header}}"  class="form-control">
                                 </div>
                                 <div class="mb-3 col-4">
                                     <label for="site_title" class="form-label">Site Title <span
@@ -76,7 +75,6 @@
                                     </label>
                                     <textarea name="short_description" class="form-control" rows="3"> {{$category->short_description}}</textarea>
                                 </div>
-                               
                             </div>
 
                             @include('backend.components.descriptionInput', [
