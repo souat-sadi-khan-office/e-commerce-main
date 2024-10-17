@@ -40,10 +40,10 @@ class ProductStockRepository implements ProductStockRepositoryInterface
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.stock.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
             ->editColumn('unit_price', function ($model) {
-                return format_price($model->unit_price);
+                return get_system_default_currency()->symbol.covert_to_defalut_currency($model->unit_price);
             })
             ->editColumn('total_price', function ($model) {
-                return format_price($model->quantity * $model->unit_price);
+                return get_system_default_currency()->symbol.covert_to_defalut_currency($model->quantity * $model->unit_price);
             })
             ->addColumn('action', function ($model) {
                 return view('backend.stock.action', compact('model'));
@@ -94,9 +94,9 @@ class ProductStockRepository implements ProductStockRepositoryInterface
         $stockPurchase->currency_id = $data['currency_id'];
         $stockPurchase->sku = $data['sku'];
         $stockPurchase->quantity = $data['quantity'];
-        $stockPurchase->unit_price = $data['unit_price'];
-        $stockPurchase->purchase_unit_price = $data['purchase_unit_price'];
-        $stockPurchase->purchase_total_price = $data['purchase_total_price'];
+        $stockPurchase->unit_price = covert_to_usd($data['unit_price']);
+        $stockPurchase->purchase_unit_price = covert_to_usd($data['purchase_unit_price']);
+        $stockPurchase->purchase_total_price = covert_to_usd($data['purchase_total_price']);
         if(isset($data['file'])) {
             $stockPurchase->file = Images::upload('products.files',$data['file']);
         }
@@ -107,7 +107,7 @@ class ProductStockRepository implements ProductStockRepositoryInterface
             // update product in_stock column
             $product = Product::find($stockPurchase->product_id);
             $product->stock_types = $data['stock_types'];
-            $product->unit_price = $data['unit_price'];
+            $product->unit_price = covert_to_usd($data['unit_price']);
             $product->in_stock = 1;
             $product->save();
 

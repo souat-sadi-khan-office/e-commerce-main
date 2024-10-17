@@ -104,7 +104,7 @@
                                 <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
                                 <del>{{ format_price(convert_price($product['price'])) }}</del>
                                 <div class="on_sale">
-                                    <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['price'])) : $product['discount'] . '%' }}
+                                    <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
                                         Off</span>
                                 </div>
                             @else

@@ -167,7 +167,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 return '
                     <b>Number of Sale</b>: ' . $numberOfSale . ' <br> 
-                    <b>Base Price</b>:' . format_price($model->unit_price) . '<br>
+                    <b>Base Price</b>:' .get_system_default_currency()->symbol.covert_to_defalut_currency($model->unit_price) . '<br>
                     <b>Rating</b>: ' . $averageRating;
             })
             ->editColumn('created_by', function ($model) {
@@ -225,7 +225,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 return '
                     <b>Number of Sale</b>: ' . $numberOfSale . ' <br> 
-                    <b>Base Price</b>:' . format_price($model->unit_price) . '<br>
+                    <b>Base Price</b>:' . get_system_default_currency()->symbol.covert_to_defalut_currency($model->unit_price) . '<br>
                     <b>Rating</b>: ' . $averageRating;
             })
             ->editColumn('created_by', function ($model) {
@@ -349,14 +349,15 @@ class ProductRepository implements ProductRepositoryInterface
         $product->brand_id = $request->brand_id;
         $product->brand_type_id = $request->brand_type_id;
         $product->thumb_image = Images::upload('products', $request->thumb_image);
-        $product->unit_price = isset($request->unit_price) ? $request->unit_price : 0;
+        $product->unit_price = isset($request->unit_price) ? covert_to_usd($request->unit_price) : 0;
         $product->sku = $this->generateSku($request->category_id[count($request->category_id) - 1]);
         $product->status = $request->status;
         $product->in_stock = isset($request->in_stock) ? $request->in_stock : 0;
         $product->is_featured = $request->is_featured;
         $product->low_stock = isset($request->low_stock) ? $request->low_stock : 0;
         $product->is_discounted = $request->is_discounted;
-        $product->discount = $request->discount;
+        $product->discount_type = $request->discount_type;
+        $product->discount = isset($request->discount_type)&&$request->discount_type !='amount'?$request->discount:covert_to_usd( $request->discount);
         $product->discount_start_date = $request->discount_start_date;
         $product->discount_end_date = $request->discount_end_date;
         $product->is_returnable = $request->is_returnable;
@@ -392,7 +393,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $tax = new ProductTax;
                     $tax->product_id = $product->id;
                     $tax->tax_id = $taxIdArray[$taxCounter];
-                    $tax->tax = $taxArray[$taxCounter];
+                    $tax->tax = $taxTypeArray[$taxCounter] == 'flat' ?covert_to_usd($taxArray[$taxCounter]):$taxArray[$taxCounter];
                     $tax->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
                     $tax->save();
                 }
@@ -429,9 +430,9 @@ class ProductRepository implements ProductRepositoryInterface
                 $stockPurchase->currency_id = $request->currency_id;
                 $stockPurchase->sku = $request->sku;
                 $stockPurchase->quantity = $request->quantity;
-                $stockPurchase->unit_price = $request->unit_price;
-                $stockPurchase->purchase_unit_price = $request->purchase_unit_price;
-                $stockPurchase->purchase_total_price = ($request->quantity * $request->purchase_unit_price);
+                $stockPurchase->unit_price = covert_to_usd($request->unit_price);
+                $stockPurchase->purchase_unit_price = covert_to_usd($request->purchase_unit_price);
+                $stockPurchase->purchase_total_price = covert_to_usd($request->quantity * $request->purchase_unit_price);
                 $stockPurchase->is_sellable = $request->is_sellable;
                 if (isset($request->file)) {
                     $stockPurchase->file = Images::upload('products.files', $request->file);
@@ -650,7 +651,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->brand_type_id = $request->brand_type_id;
         $product->is_discounted = $request->is_discounted;
         $product->discount_type = $request->discount_type;
-        $product->discount = $request->discount;
+        $product->discount = isset($request->discount_type)&&$request->discount_type !='amount'?$request->discount:covert_to_usd( $request->discount);
         $product->discount_start_date = $request->discount_start_date == null ? null : date('Y-m-d', strtotime($request->discount_start_date));
         $product->discount_end_date = $request->discount_end_date == null ? null : date('Y-m-d', strtotime($request->discount_end_date));
         $product->status = $request->status;
@@ -693,7 +694,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 for ($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
                     $taxModel = ProductTax::find($taxIdArray[$taxCounter]);
-                    $taxModel->tax = $taxAmountArray[$taxCounter];
+                    $taxModel->tax =$taxTypeArray[$taxCounter] == 'flat' ?covert_to_usd($taxAmountArray[$taxCounter]) : $taxAmountArray[$taxCounter];
                     $taxModel->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
                     $taxModel->save();
                 }

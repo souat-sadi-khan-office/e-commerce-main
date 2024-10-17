@@ -75,12 +75,12 @@ class HelperController extends Controller
                 return view('frontend.product-details', compact('product', 'breadcrumb', 'keySpec', 'spec'));
             } else {
 
-                return $this->fatcher($slug, $index + 1);
+                return $this->fetcher($slug, $index + 1);
             }
 
         }else {
 
-            return $this->fatcher($slug, $index + 1);
+            return $this->fetcher($slug, $index + 1);
         }
 
         // // Check for data in the current model
