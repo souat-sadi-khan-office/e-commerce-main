@@ -53,7 +53,7 @@ class HelperController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-    public function fatcher($slug, $index = 0)
+    public function fetcher($slug, $index = 0)
     {
         $models = ['Product', 'Category', 'Brand', 'Page', 'Offer', 'FlashDeal'];
 
