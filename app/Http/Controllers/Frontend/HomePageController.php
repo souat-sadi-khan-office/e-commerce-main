@@ -377,7 +377,7 @@ class HomePageController extends Controller
         $request->session()->put('currency_exchange_rate', $currency->exchange_rate);
 
         // for country
-        $request->session()->put('country_name', $country->name);
+        $request->session()->put('user_country', $country->name);
         $request->session()->put('country_flag', asset($country->image));
 
         session()->flash('success', 'Country changed to '. $country->name . ' and Currency changed to '. $currency->name);

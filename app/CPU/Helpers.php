@@ -5,9 +5,11 @@ namespace App\CPU;
 use Exception;
 use App\Models\Admin;
 use App\Models\Brand;
-use App\Models\Category;
+use App\Models\Country;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class Helpers
 {
@@ -28,6 +30,7 @@ class Helpers
             return $e->getMessage();
         }
     }
+
 
     public function profile($guard)
     {

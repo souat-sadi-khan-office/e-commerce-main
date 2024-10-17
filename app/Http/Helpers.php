@@ -5,6 +5,7 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\HomepageSettings;
 use App\Models\ConfigurationSetting;
+use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
@@ -124,7 +125,7 @@ if (!function_exists('tz_list')) {
 
 //formats currency
 if (!function_exists('format_price')) {
-    function format_price($price, $isMinimize = false, $isAdmin=false)
+    function format_price($price, $isMinimize = false, $isAdmin = false)
     {
         if (get_settings('system_decimal_separator') == 1) {
             $format_price = number_format($price, intval(get_settings('system_no_of_decimals')));
@@ -158,14 +159,16 @@ if (!function_exists('format_price')) {
     }
 }
 
-function covert_to_usd($price){
-    if (( get_system_default_currency()->code != "USD")) {
-        return ($price/get_exchange_rate(get_system_default_currency()->code));
+function covert_to_usd($price)
+{
+    if ((get_system_default_currency()->code != "USD")) {
+        return ($price / get_exchange_rate(get_system_default_currency()->code));
     }
     return $price;
 }
-function covert_to_defalut_currency($price){
-    if (( get_system_default_currency()->code != "USD")) {
+function covert_to_defalut_currency($price)
+{
+    if ((get_system_default_currency()->code != "USD")) {
         return ($price * get_exchange_rate(get_system_default_currency()->code));
     }
     return $price;
@@ -175,7 +178,6 @@ function covert_to_defalut_currency($price){
 if (!function_exists('convert_price')) {
     function convert_price($price)
     {
-
         if (Session::has('currency_code') && (Session::get('currency_code') != "USD")) {
             $currency_code = Session::get('currency_code');
             $exchange_rate = get_exchange_rate($currency_code);
@@ -215,13 +217,13 @@ function store_exchange_rate($currency_code, $rate)
     }
 
     // Store in cache as well
-    Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time')??3600);
+    Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time') ?? 3600);
 }
 
 
 function get_exchange_rate($currency_code)
 {
-    return Cache::remember("exchange_rate_{$currency_code}", get_settings('currency_api_fetch_time')??3600, function () use ($currency_code) {
+    return Cache::remember("exchange_rate_{$currency_code}", get_settings('currency_api_fetch_time') ?? 3600, function () use ($currency_code) {
         // Check if the currency exists in the database
         $currency = Currency::where('code', $currency_code)->first();
 
@@ -327,9 +329,9 @@ if (!function_exists('home_discounted_price')) {
 
 //gets currency symbol
 if (!function_exists('currency_symbol')) {
-    function currency_symbol($isAdmin=false)
+    function currency_symbol($isAdmin = false)
     {
-        if($isAdmin){
+        if ($isAdmin) {
             return isset(get_system_default_currency()->symbol) ? get_system_default_currency()->symbol : '$';
         }
         if (Session::has('currency_symbol')) {
