@@ -126,9 +126,9 @@ if (!function_exists('format_price')) {
     function format_price($price, $isMinimize = false)
     {
         if (get_settings('system_decimal_separator') == 1) {
-            $format_price = number_format($price, get_settings('system_no_of_decimals'));
+            $format_price = number_format($price, intval(get_settings('system_no_of_decimals')));
         } else {
-            $format_price = number_format($price, get_settings('system_no_of_decimals'), ',', '.');
+            $format_price = number_format($price, intval(get_settings('system_no_of_decimals')), ',', '.');
         }
 
         // Minimize the price 
