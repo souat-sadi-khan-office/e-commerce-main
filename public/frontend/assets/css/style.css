@@ -455,7 +455,7 @@ button:focus:not(:focus-visible) {
     font-size: 10px;
 }
 .btn.btn-sm i {
-    font-size: 20px;
+    font-size: 16px;
 }
 .btn.btn-lg i {
     font-size: 22px;
@@ -6088,6 +6088,10 @@ select option {
 }
 .custom_select {
 	position: relative;
+	margin-right: 10px;
+}
+.custom_select:last-child {
+	margin-right: 0px;
 }
 .custom_select select {
 	-webkit-appearance: none;
@@ -6240,9 +6244,13 @@ select option {
 	float: right;
 	font-size: 14px;
 }
+.lc-close {
+	display: none;
+	cursor:pointer;
+}
 .sidebar .widget + .widget {
     /* border-top: 1px solid #ddd; */
-    margin-top: 15px;
+    margin-top: 10px;
     /* padding-top: 30px; */
 }
 .widget_newsletter p {
@@ -7590,10 +7598,6 @@ blockquote p:last-child {
 		padding: 10px;
 	}
 
-	.cart-button {
-		display: none;
-	}
-
 	.ac-header .right {
 		margin-top: 15px;
 	}
@@ -8288,12 +8292,20 @@ img.brand-image {
     object-fit: contain !important;
 }
 
+.pc-build-guide {
+	margin-top: 0px;
+}
+
+.cart_dropdown {
+	display: none;
+}
+
 .listing-headers h1 {
 	font-size: 22px;
     line-height: 28px;
-    font-weight: 400;
+    font-weight: bold;
 	margin: 0 0 12px;
-    color: #3749bb;
+    color: #000;
 }
 
 .listing-headers p {
@@ -8353,4 +8365,86 @@ select option:hover {
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
 	background: #C6C6C9; 
+}
+
+.product_header_left h4 {
+	font-size: 1rem;
+}
+
+.description {
+	margin: 20px 0 30px
+}
+
+.description .bg_white {
+	padding: 20px;
+}
+
+.description a {
+	color: #FF324D;
+}
+
+.description a:hover {
+	font-weight: bold;
+}
+
+.description h2 {
+    font-weight: 400;
+    margin: 0 0 15px;
+    font-size: 20px;
+    line-height: 24px;
+    color: #353637;
+}
+.description h3 {
+    font-weight: 400;
+    margin: 0 0 15px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #353637;
+}
+
+.description h3,.category-description h4 {
+    color: #353637;
+}
+
+.description>div,.description p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: #353637;
+    line-height: 22px
+}
+
+.tool-btn {
+    display: none;
+}
+
+.tool-btn i {
+    margin-right: 5px;
+}
+
+.overlay.open {
+    display: block;
+}
+
+#column-left {
+    -ms-flex: 0 0 280px;
+    flex: 0 0 280px;
+    max-width: 280px;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.overlay {
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .2);
+    z-index: 90;
+    -webkit-transition: all 300ms ease;
+    -moz-transition: all 300ms ease;
+    -o-transition: all 300ms ease;
+    transition: all 300ms ease;
+    display: none;
 }

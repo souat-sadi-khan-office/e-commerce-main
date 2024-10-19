@@ -27,6 +27,68 @@ class SearchController extends Controller
         $this->bannerRepository = $bannerRepository;
     }
 
+    public function filterProducts(Request $request)
+    {
+        $query = Product::query();
+
+        // Stock Availability Filter
+        if ($request->has('in_stock') && $request->in_stock == 1) {
+            $query->where('in_stock', 1);
+        }
+        
+        if ($request->has('out_of_stock') && $request->out_of_stock == true) {
+            $query->where('in_stock', 0);
+        }
+
+        // if ($request->pre_order) {
+        //     $query->where('pre_order', 1);
+        // }
+        // if ($request->up_coming) {
+        //     $query->where('up_coming', 1);
+        // }
+
+        // Sorting Filter
+        if ($request->sortBy == 'popularity') {
+            // $query->orderBy('popularity', 'desc');
+        } elseif ($request->sortBy == 'date') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($request->sortBy == 'price') {
+            $query->orderBy('unit_price', 'asc');
+        } elseif ($request->sortBy == 'price-desc') {
+            $query->orderBy('unit_price', 'desc');
+        }
+
+        // Filter by brand
+        if ($request->has('brands') && !empty($request->brands)) {
+            $query->whereIn('brand_id', $request->brands);
+        }
+
+        // Filter by specifications
+        if ($request->has('specifications') && !empty($request->specifications)) {
+            $query->whereHas('specifications', function($specificationQuery) use ($request) {
+                $specificationQuery->whereIn('attribute_id', $request->specifications);
+            });
+        }
+
+        // Data Showing Filter
+        if ($request->showData) {
+            $products = $query->paginate($request->showData);
+        } else {
+            $products = $query->paginate(18);
+        }
+
+        $sql = $query->toSql();
+        $bindings = $query->getBindings();
+
+        // dd(vsprintf(str_replace('?', '%s', $sql), array_map(function ($binding) {
+        //     return is_numeric($binding) ? $binding : "'$binding'";
+        // }, $bindings)));
+
+        $html = view('frontend.components.product_list', compact('products'))->render();
+        return response()->json($html);
+    }
+
+
     // for searching by types using brand_id
     public function searchForBrandTypes(Request $request) 
     {
@@ -250,12 +312,12 @@ class SearchController extends Controller
         }
     }
 
-// For Brand Source Id
+    // For Brand Source Id
     public function getSourceOptions($source)
-{
-    $data = $this->bannerRepository->getSourceOptions($source);
+    {
+        $data = $this->bannerRepository->getSourceOptions($source);
 
-    return response()->json(['source' => $data]);
-}
+        return response()->json(['source' => $data]);
+    }
 
 }

@@ -138,8 +138,7 @@
                                 <span class="switch_lable">Key Features</span><br>
                                 @foreach ($product['key_features'] as $features)
                                     <li>
-                                        <a href="#">{{ $features['type_name'] }}</a> : 
-                                        <a href="#">{{ $features['attribute_name'] }}</a>
+                                        {{ $features['type_name'] }} : {{ $features['attribute_name'] }}
                                     </li>
                                 @endforeach
                             </div>

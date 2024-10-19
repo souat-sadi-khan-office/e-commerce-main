@@ -42,6 +42,11 @@ class BrandRepository implements BrandRepositoryInterface
             ->make(true);
     }
 
+    public function getBrandBySlug($slug)
+    {
+        return Brand::where('slug', $slug)->first();
+    }
+
     public function findBrandById($id)
     {
         return Brand::findOrFail($id);

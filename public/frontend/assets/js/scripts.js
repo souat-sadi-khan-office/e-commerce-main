@@ -644,66 +644,6 @@
 			},
 		});
 	});
-
-	$(document).on('click', '.add_compare', function() {
-        let id = $(this).data('id');
-        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
-        $.ajax({
-            url: '/add-to-compare-list',
-            method: 'POST',
-            data: {
-                id: id 
-            },
-            dataType: 'JSON',
-            success: function(data) {
-                if(data.status) {
-                    $('.compare_counter').html(data.counter);
-                    toastr.success(data.message);
-                } else {
-                    toastr.warning(data.message);
-                }
-                $('.add_compare').html('<i class="fas fa-random"></i>');
-            }
-        })
-    });
-
-	$(document).on('click', '.add_wishlist', function() {
-        let id = $(this).data('id');
-        let wish_list_counter = parseInt($('#wish_list_counter').html());
-        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
-        $.ajax({
-            url: '/add-to-wish-list',
-            method: 'POST',
-            data: {
-                id: id 
-            },
-            dataType: 'JSON',
-            success: function(data) {
-                if(data.status) {
-                    $('#wish_list_counter').html(parseInt(wish_list_counter) + 1);
-                    toastr.success(data.message);
-                } else {
-                    toastr.warning(data.message);
-                }
-                $('.add_wishlist').html('<i class="far fa-heart"></i>');
-            }
-        })
-    })
-	
-	function ajax_magnificPopup() {
-		$('.popup-ajax').magnificPopup({
-			type: 'ajax',
-			callbacks: {
-				ajaxContentAdded: function() {
-					pluseminus(); 
-					product_color_switch();
-					galleryZoomProduct();
-					slick_slider();
-					carousel_slider();
-				 }
-			}
-		});
-	}
 	
 	// $('.video_popup, .iframe_popup').magnificPopup({
 	// 	type: 'iframe',
@@ -1013,5 +953,82 @@
 	// 		$("#onload-popup").modal('show', {}, 500);
 	// 	}, 3000);
 	// });	
+
+	// mobile listing menu open
+	$(document).on('click', '#lc-toggle', function() {
+		$('#column-left').addClass('open');
+		$('.overlay').addClass('open');
+		$("body").addClass('no-scroll')
+	})
+
+	// mobile listing menu close
+	$(document).on('click', '.lc-close', function() {
+		$('#column-left').removeClass('open');
+		$('.overlay').removeClass('open');
+		$("body").removeClass('no-scroll');
+	});
+
+	// Product Add to Compare List
+	$(document).on('click', '.add_compare', function() {
+        let id = $(this).data('id');
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+        $.ajax({
+            url: '/add-to-compare-list',
+            method: 'POST',
+            data: {
+                id: id 
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if(data.status) {
+                    $('.compare_counter').html(data.counter);
+                    toastr.success(data.message);
+                } else {
+                    toastr.warning(data.message);
+                }
+                $('.add_compare').html('<i class="fas fa-random"></i>');
+            }
+        })
+    });
+
+	// Product Add to Wish List
+	$(document).on('click', '.add_wishlist', function() {
+        let id = $(this).data('id');
+        let wish_list_counter = parseInt($('#wish_list_counter').html());
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+		console.log("HI");
+        $.ajax({
+            url: '/add-to-wish-list',
+            method: 'POST',
+            data: {
+                id: id 
+            },
+            dataType: 'JSON',
+            success: function(data) {
+                if(data.status) {
+                    $('#wish_list_counter').html(parseInt(wish_list_counter) + 1);
+                    toastr.success(data.message);
+                } else {
+                    toastr.warning(data.message);
+                }
+                $('.add_wishlist').html('<i class="far fa-heart"></i>');
+            }
+        })
+    })
+	
+	function ajax_magnificPopup() {
+		$('.popup-ajax').magnificPopup({
+			type: 'ajax',
+			callbacks: {
+				ajaxContentAdded: function() {
+					pluseminus(); 
+					product_color_switch();
+					galleryZoomProduct();
+					slick_slider();
+					carousel_slider();
+				 }
+			}
+		});
+	}
 	
 })(jQuery);

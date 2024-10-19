@@ -83,4 +83,5 @@ Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->
 Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');
 Route::post('/currency/change', [HomePageController::class, 'currencyChange'])->name('currency.change');
 
+Route::post('filter.products', [SearchController::class, 'filterProducts'])->name('filter.products');
 Route::get('{slug}', [HelperController::class, 'fetcher'])->middleware('web')->name('slug.handle');

@@ -12,4 +12,5 @@ interface BrandRepositoryInterface
     public function deleteBrand($id);
     public function updateStatus($request, $id);
     public function updateFeatured($request, $id);
+    public function getBrandBySlug($slug);
 }

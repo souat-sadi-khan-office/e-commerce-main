@@ -42,7 +42,15 @@
                 </div>
                 <div class="p-3 p-lg-4">
                     <div class="row">
-                        
+                        @if ($brandTypes = $brand->types->where('status', 1))
+                            @foreach ($brandTypes as $brandType)
+                                <div class="col-lg-4 col-6 text-left">
+                                    <h6 class="mb-3">
+                                        {{ $brandType->name }}
+                                    </h6>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>

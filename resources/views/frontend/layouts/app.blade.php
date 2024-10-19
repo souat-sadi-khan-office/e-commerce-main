@@ -33,7 +33,7 @@
     @include('frontend.layouts.partials.footer')
 
     @include('frontend.layouts.partials.footerlinks')
-
+    <div class="overlay"></div>
 </body>
 
 </html>

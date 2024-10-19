@@ -118,7 +118,6 @@
         font-size: 30px !important;
     }
 </style>
-<script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>
 <script>
     $(document).ready(function() {
         slick_slider();

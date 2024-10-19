@@ -13,17 +13,21 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Interface\BrandRepositoryInterface;
 
 class HelperController extends Controller
 {
 
+    protected $brandRepository;
     protected $productRepository;
     protected $categoryRepository;
 
     public function __construct(
         ProductRepositoryInterface $productRepository,
-        CategoryRepositoryInterface $categoryRepository
+        CategoryRepositoryInterface $categoryRepository,
+        BrandRepositoryInterface $brandRepository
     ) {
+        $this->brandRepository = $brandRepository;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
     }
@@ -87,8 +91,18 @@ class HelperController extends Controller
                 $categoryIdArray = $model->getParentCategoryIds();
                 $categoryIdArray[] = $model->id;
 
+                $products = Product::where('category_id', $model->id)->paginate(18);
+
                 $breadcrumb = $this->getCategoryBreadcrumb($model);
-                return view('frontend.listing', compact('model', 'categoryIdArray', 'breadcrumb'));
+                return view('frontend.listing', compact('model', 'products', 'categoryIdArray', 'breadcrumb'));
+                
+            } else {
+                return $this->fetcher($slug, $index + 1);
+            }
+        } elseif ($model == 'Brand' && Brand::where('slug', $slug)->exists()) {
+            $model = $this->brandRepository->getBrandBySlug($slug);
+            if($model) {
+                return view('frontend.brand-listing', compact('model'));
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
