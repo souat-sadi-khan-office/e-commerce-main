@@ -229,7 +229,7 @@ class HomePageController extends Controller
         return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
     }
 
-    public function removeCartItems(Request $request)
+    public function addQtyToCart(Request $request) 
     {
         $id = $request->id;
         
@@ -248,7 +248,13 @@ class HomePageController extends Controller
             return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
         }
 
-        $item->delete();
+        // getting this product stock
+        $this->productStock($item->product_id, ($item->quantity + 1));
+
+        $item->quantity = $item->quantity + 1;
+        $item->save();
+
+        $item_sub_total = format_price(convert_price($item->quantity * $item->price));
 
         $items = CartDetail::where('cart_id', $cartId)->get();
         $total_quantity = 0;
@@ -257,7 +263,7 @@ class HomePageController extends Controller
         if($items) {
             foreach($items as $item) {
                 $total_quantity += $item->quantity;
-                $total_price += $item->price;
+                $total_price += ($item->quantity * $item->price);
             }
         }
 
@@ -270,10 +276,122 @@ class HomePageController extends Controller
             $items = CartDetail::where('cart_id', $cart->id)->get();
             $counter = count($items);
             $total_price = $cart->total_price;
+            $cart_total_amount = format_price(convert_price($total_price));
+            $cart_sub_total_amount = format_price(convert_price($total_price));
         }
 
         // Return view with cart items
-        if($request->has('show') && $request->show == 'main-cart-area') {
+        return response()->json([
+            'status' => true, 
+            'message' => 'Cart is updated', 
+            'id' => $id,
+            'item_sub_total' => $item_sub_total,
+            'cart_sub_total_amount' => $cart_sub_total_amount, 
+            'cart_total_amount' => $cart_total_amount
+        ]);
+    }
+
+    public function productStock($productId, $numberOfQty)
+    {
+        $product = Product::find($productId);
+        if(!$product) {
+            return response()->json(['status' => false, 'message' => 'Product not found.']);
+        }
+
+        dd($product->in_stock);
+        if($product->in_stock == 0) {
+            return response()->json(['status' => false, 'message' => 'Product is out of stock.']);
+        }
+
+        if($product->details->current_stock < $numberOfQty) {
+
+        }
+
+        switch($product->stock_types) {
+            case 'globally':
+                $stock = ProductStock::where('product_id', $productId)->first();
+                if(!$stock) {
+                    return response()->json(['status' => false, 'message' => 'Product stock not found.']);
+                }
+            break;
+        }
+    }
+
+    public function getCartItems(Request $request)
+    {
+        $items = [];
+        $counter = 0;
+        $total_price = 0;
+
+        // Check if customer is logged in
+        if (Auth::guard('customer')->check()) {
+            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
+        } else {
+            // Otherwise, check for cart using IP address
+            $cart = Cart::where('ip', $request->ip())->first();
+        }
+
+        // If cart exists, get the cart details
+        if ($cart) {
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+        }
+
+        // Return view with cart items
+        if ($request->has('show') && $request->show == 'main-cart-area') {
+            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
+        } else {
+            $html = view('frontend.components.cart_listing', compact('items'))->render();
+        }
+        return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
+    }
+
+    public function removeCartItems(Request $request)
+    {
+        $id = $request->id;
+
+        if (!$id) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        $item = CartDetail::find($id);
+        if (!$item) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+        $cartId = $item->cart_id;
+
+        $cart = Cart::find($cartId);
+        if (!$cart) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        $item->delete();
+
+        $items = CartDetail::where('cart_id', $cartId)->get();
+        $total_quantity = 0;
+        $total_price = 0;
+
+        if ($items) {
+            foreach ($items as $item) {
+                $total_quantity += $item->quantity;
+                $total_price += $item->price;
+            }
+        }
+
+        $cart = Cart::find($cartId);
+        if ($cart) {
+            $cart->total_price = $total_price;
+            $cart->total_quantity = $total_quantity;
+            $cart->save();
+
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+        }
+
+        // Return view with cart items
+        if ($request->has('show') && $request->show == 'main-cart-area') {
             $html = view('frontend.components.main_cart_listing', compact('items'))->render();
         } else {
             $html = view('frontend.components.cart_listing', compact('items'))->render();
@@ -286,7 +404,7 @@ class HomePageController extends Controller
         $sku = $request->slug;
 
         $product = Product::where('sku', $sku)->first();
-        if(!$product) {
+        if (!$product) {
             return response()->json([
                 'status' => false,
                 'message' => "Product not Found"
@@ -398,6 +516,7 @@ class HomePageController extends Controller
             // Not Implemented Yet
             if (isset($request->flash_deals)) {
                 $flashDeals = $this->flashDeals();
+                return view('frontend.homepage.falsh_deals-tab',compact('flashDeals'));
                 return response()->json([
                     'success' => true,
                     'data' => $flashDeals
@@ -469,8 +588,37 @@ class HomePageController extends Controller
                     $dealTypes = $deal->type()->select('id', 'product_id')->get();
 
                     $productDetails = $dealTypes->map(function ($type) {
-                        return $type->productDetails()->select('id','current_stock', 'number_of_sale')->first();
+                        $product = $type->product()
+                            ->with(['details' => function ($query) {
+                                $query->select('product_id', 'current_stock', 'number_of_sale'); 
+                            }])
+                            ->select('id', 'thumb_image','name', 'slug', 'unit_price', 'discount_type', 'discount')
+                            ->first();
+
+                        $discountedPrice = $product ? $product->unit_price : 0;
+
+                        if ($product && $product->discount_type && $product->discount > 0) {
+                            $discountAmount = $product->discount_type == 'amount'
+                                ? $product->discount
+                                : ($product->unit_price * ($product->discount / 100));
+                            $discountedPrice = $product->unit_price - $discountAmount;
+                        }
+
+                        $currentStock = $product && $product->details ? $product->details->current_stock : 0;
+                        $numberOfSale = $product && $product->details ? $product->details->number_of_sale : 0;
+
+                        return [
+                            'id' => $product ? $product->id : null,
+                            'name' => $product ? $product->name : null,
+                            'thumb_image' => $product ? $product->thumb_image : null,
+                            'slug' => $product ? $product->slug : null,
+                            'unit_price' => $product ? format_price(convert_price($product->unit_price)) : null,
+                            'discounted_price' => format_price(convert_price($discountedPrice)),
+                            'current_stock' => $currentStock,
+                            'number_of_sale' => $numberOfSale,
+                        ];
                     });
+
 
                     $deal->starting_time = get_system_date($deal->starting_time);
                     $deal->product_details = $productDetails;
@@ -483,7 +631,7 @@ class HomePageController extends Controller
                         'starting_time' => $deal->starting_time,
                         'end_time' => $deal->end_time,
                         'product_details' => $productDetails
-                    ]; // Return the filtered deal
+                    ]; 
                 });
             }
         });
@@ -502,7 +650,7 @@ class HomePageController extends Controller
         }
 
         $product = Product::where('slug', $request->product)->where('status', 1)->first();
-        if(!$product) {
+        if (!$product) {
             return response()->json(['status' => false, 'message' => 'Product not found']);
         }
 
@@ -510,12 +658,12 @@ class HomePageController extends Controller
             'product_id' => $product->id,
             'user_id' => Auth::guard('customer')->check() ? Auth::guard('customer')->user()->id : null,
             'name' => $request->name,
-            'message' => $request->message 
+            'message' => $request->message
         ]);
 
         return response()->json(['status' => true, 'message' => 'Question Submitted Successfully', 'load' => true]);
     }
-    
+
     public function submitReviewForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -530,12 +678,12 @@ class HomePageController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if($request->rating < 1) {
+        if ($request->rating < 1) {
             return response()->json(['status' => false, 'message' => 'Please add a rating first.']);
         }
 
         $product = Product::where('slug', $request->product)->where('status', 1)->first();
-        if(!$product) {
+        if (!$product) {
             return response()->json(['status' => false, 'message' => 'Product not found']);
         }
 
@@ -546,10 +694,10 @@ class HomePageController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'rating' => $request->rating,
-            'review' => $request->message 
+            'review' => $request->message
         ]);
-        
-        if($rating) {
+
+        if ($rating) {
             $numberOfRating = Rating::where('product_id', $product->id)->count();
             $newNumberOfRating = $numberOfRating;
 
@@ -578,7 +726,7 @@ class HomePageController extends Controller
             ]);
         }
 
-        if(count($compareList) > 3) {
+        if (count($compareList) > 3) {
             return response()->json([
                 'status' => false,
                 'message' => 'You can not add more then 3 product at a time.',
@@ -600,16 +748,16 @@ class HomePageController extends Controller
     {
         $productId = $request->id;
 
-        if(!Auth::guard('customer')->check()) {
+        if (!Auth::guard('customer')->check()) {
             return response()->json(['status' => false, 'message' => 'You must login or create an account to save products on your wishlist.']);
         }
 
         $userId = Auth::guard('customer')->user()->id;
 
-        if(WishList::where('user_id', $userId)->where('product_id', $productId)->first()) {
+        if (WishList::where('user_id', $userId)->where('product_id', $productId)->first()) {
             return response()->json(['status' => false, 'message' => 'This product is already added to your wishlist.']);
         }
-        
+
         WishList::create([
             'user_id' => $userId,
             'product_id' => $productId
@@ -633,8 +781,7 @@ class HomePageController extends Controller
         $request->session()->put('user_country', $country->name);
         $request->session()->put('country_flag', asset($country->image));
 
-        session()->flash('success', 'Country changed to '. $country->name . ' and Currency changed to '. $currency->name);
-
+        session()->flash('success', 'Country changed to ' . $country->name . ' and Currency changed to ' . $currency->name);
     }
 
     public function allCategories()
@@ -642,12 +789,12 @@ class HomePageController extends Controller
         $categories = Category::where('status', 1)->where('parent_id', null)->orderBy('name', 'ASC')->get();
         return view('frontend.categories', compact('categories'));
     }
-    
+
     public function allBrands()
     {
         $brands = $this->brands
-                    ->getAllBrands()
-                    ->where('status', 1);
+            ->getAllBrands()
+            ->where('status', 1);
 
         return view('frontend.brands', compact('brands'));
     }
