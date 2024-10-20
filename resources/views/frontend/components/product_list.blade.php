@@ -9,8 +9,9 @@
                         </a>
                         <div class="product_action_box">
                             <ul class="list_none pr_action_btn">
-                                <li class="add-to-cart">
-                                    <a href="javascript:;">
+                                <li>
+                                    <input type="hidden" id="product-{{ $product->sku }}" value="1">
+                                    <a href="javascript:;" class="add-to-cart" data-id="{{ $product->sku }}">
                                         <i class="icon-basket-loaded"></i> 
                                         Add To Cart
                                     </a>

@@ -235,14 +235,11 @@
 		return input.replace(/\D/g, '');
 	}
 
-	$(document).on('click', '.cart-button', function() {
-		$('#m-cart').addClass('open');
-		$('#m-cart').fadeIn();
-	});
-
 	$(document).on('click', '.close', function() {
 		$('#m-cart').removeClass('open');
 		$('#m-cart').fadeOut();
+		$('.overlay-loader').removeClass('open');
+		$("body").removeClass('no-scroll')
 	})
 	
 	var setHeight = function() {
@@ -957,14 +954,14 @@
 	// mobile listing menu open
 	$(document).on('click', '#lc-toggle', function() {
 		$('#column-left').addClass('open');
-		$('.overlay').addClass('open');
+		$('.overlay-loader').addClass('open');
 		$("body").addClass('no-scroll')
 	})
 
 	// mobile listing menu close
 	$(document).on('click', '.lc-close', function() {
 		$('#column-left').removeClass('open');
-		$('.overlay').removeClass('open');
+		$('.overlay-loader').removeClass('open');
 		$("body").removeClass('no-scroll');
 	});
 
@@ -996,7 +993,6 @@
         let id = $(this).data('id');
         let wish_list_counter = parseInt($('#wish_list_counter').html());
         $(this).html('<i class="fas fa-spin fa-spinner"></i>');
-		console.log("HI");
         $.ajax({
             url: '/add-to-wish-list',
             method: 'POST',
@@ -1015,6 +1011,42 @@
             }
         })
     })
+
+	$('.add-to-cart').click(function () {
+		// Get product data
+		let productSlug = $(this).data('id');
+		let quantity =  $('#product-'+productSlug).val();
+
+        $(this).html('<i class="fas fa-spin fa-spinner"></i>');
+
+		$.ajax({
+			url: '/cart/add',
+			method: 'POST',
+			data: {
+				slug: productSlug,
+				quantity: quantity
+			},
+			dataType: 'JSON',
+			success: function (response) {
+				if(response.status) {
+					toastr.success(response.message);
+
+					$('#cart-total-quantity').text(response.total_quantity);
+					$('#cart-total-price').text(response.total_price);
+				} else {
+					toastr.warning(response.message);
+				}
+				
+
+				$('.add-to-cart').html('<i class="icon-basket-loaded"></i>Add To Cart');
+			},
+			error: function (error) {
+				toastr.error("Something went wrong! Please try again");
+				
+				$('.add-to-cart').html('<i class="icon-basket-loaded"></i>Add To Cart');
+			}
+		});
+	});
 	
 	function ajax_magnificPopup() {
 		$('.popup-ajax').magnificPopup({
@@ -1030,5 +1062,87 @@
 			}
 		});
 	}
+
+	$(document).on('click', '.cart-button', function() {
+		$('#m-cart').addClass('open');
+		$('#m-cart').fadeIn();
+		$('.overlay-loader').addClass('open');
+		$("body").addClass('no-scroll');
+
+		getCartItems('main-cart-area');
+	});
+
+	function getCartItems(showArea) {
+		$.ajax({
+			url: '/get-cart-items',
+			method: 'POST',
+			data: {
+				show: showArea 
+			},
+			dataType: 'JSON',
+			success: function(data) {
+				if(showArea == 'main-cart-area') {
+					$('.cart-content').html(data.content);
+					$('.amount').html(data.total_price);
+					if(data.counter > 0) {
+						$('.checkout-btn').show();
+					}
+				} else {
+					$('.cart_total_price').html(data.total_price);
+					$('.cart_count').html(data.counter);
+					$('.cart-container .counter').html(data.counter);
+					$('.mobile_cart_list').html(data.content);
+					if(data.counter > 0) {
+						$('.cart_footer').show();
+					}
+					$('.cart-loader').hide();
+				}
+			}
+		})
+	}
+
+	getCartItems();
+
+	function removeCartItems(id, showArea = null) {
+		$.ajax({
+			url: '/remove-cart-items',
+			method: 'DELETE',
+			data: {
+				show: showArea,
+				id: id
+			},
+			dataType: 'JSON',
+			success: function(data) {
+				if(data.status) {
+					toastr.success(data.message);
+					if(showArea == 'main-cart-area') {
+						$('.cart-content').html(data.content);
+						$('.amount').html(data.total_price);
+						if(data.counter > 0) {
+							$('.checkout-btn').show();
+						}
+					} else {
+						$('.cart_total_price').html(data.total_price);
+						$('.cart_count').html(data.counter);
+						$('.cart-container .counter').html(data.counter);
+						$('.mobile_cart_list').html(data.content);
+						if(data.counter > 0) {
+							$('.cart_footer').show();
+						}
+						$('.cart-loader').hide();
+					}
+				} else {
+					toastr.error(data.message);
+				}
+				
+			}
+		})
+	}
+
+	$(document).on('click', '.remove-item-from-cart', function() {
+		let id = $(this).data('id');
+		$(this).html('<i class="fas fa-spin fa-spinner"></i>')
+		removeCartItems(id, 'main-cart-area');
+	});
 	
 })(jQuery);

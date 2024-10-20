@@ -37,6 +37,10 @@ Route::middleware('web')->group(function () {
     Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
     Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
     Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
+
+    Route::post('/get-cart-items', [HomePageController::class, 'getCartItems'])->name('get-cart-items');
+    Route::delete('/remove-cart-items', [HomePageController::class, 'removeCartItems'])->name('remove-cart-items');
+    Route::post('/cart/add', [HomePageController::class, 'addToCart'])->name('cart.add');
 });
 
 Route::middleware(['isCustomer', 'web'])->group(function () {

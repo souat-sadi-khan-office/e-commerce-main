@@ -319,9 +319,6 @@
 	overflow: auto;
 	border-radius: 0;
 }
-body.no-scroll {
-	overflow: hidden;
-}
 }
 
 /* -------------------------------------------------

@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Cache;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Cart;
+use App\Models\CartDetail;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
@@ -80,6 +82,143 @@ class HomePageController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'success' => false]);
         }
+    }
+
+    public function getCartItems(Request $request) 
+    {
+        $items = [];
+        $counter = 0;
+        $total_price = 0;
+
+        // Check if customer is logged in
+        if(Auth::guard('customer')->check()) {
+            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
+        } else {
+            // Otherwise, check for cart using IP address
+            $cart = Cart::where('ip', $request->ip())->first();
+        }
+
+        // If cart exists, get the cart details
+        if($cart) {
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+        }
+
+        // Return view with cart items
+        if($request->has('show') && $request->show == 'main-cart-area') {
+            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
+        } else {
+            $html = view('frontend.components.cart_listing', compact('items'))->render();
+        }
+        return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
+    }
+
+    public function removeCartItems(Request $request)
+    {
+        $id = $request->id;
+        
+        if(!$id) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        $item = CartDetail::find($id);
+        if(!$item) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+        $cartId = $item->cart_id;
+
+        $cart = Cart::find($cartId);
+        if(!$cart) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        $item->delete();
+
+        $items = CartDetail::where('cart_id', $cartId)->get();
+        $total_quantity = 0;
+        $total_price = 0;
+
+        if($items) {
+            foreach($items as $item) {
+                $total_quantity += $item->quantity;
+                $total_price += $item->price;
+            }
+        }
+
+        $cart = Cart::find($cartId);
+        if($cart) {
+            $cart->total_price = $total_price;
+            $cart->total_quantity = $total_quantity;
+            $cart->save();
+
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+        }
+
+        // Return view with cart items
+        if($request->has('show') && $request->show == 'main-cart-area') {
+            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
+        } else {
+            $html = view('frontend.components.cart_listing', compact('items'))->render();
+        }
+        return response()->json(['status' => true, 'message' => 'Item is removed', 'content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
+    }
+
+    public function addToCart(Request $request)
+    {
+        $sku = $request->slug;
+
+        $product = Product::where('sku', $sku)->first();
+        if(!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => "Product not Found"
+            ]);
+        }
+
+        // Find or create a cart for the user or by IP address
+        $cart = Cart::firstOrCreate(
+            ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
+            ['total_price' => 0, 'total_quantity' => 0, 'currency_id' => 1]
+        );
+
+        // Check if the product already exists in the cart
+        $cartDetail = CartDetail::where('cart_id', $cart->id)
+            ->where('product_id', $product->id)
+            ->first();
+
+        // If the product exists in the cart, update quantity
+        if ($cartDetail) {
+            $cartDetail->quantity += $request->quantity;
+            $cartDetail->price += $product->unit_price * $request->quantity;
+        } else {
+            // Otherwise, create a new cart detail
+            $cartDetail = new CartDetail([
+                'cart_id' => $cart->id,
+                'product_id' => $product->id,
+                'price' => $product->unit_price,
+                'quantity' => $request->quantity,
+                'promo_applied' => 0,
+                'discount' => 0
+            ]);
+        }
+        $cartDetail->save();
+
+        // Update cart total price and quantity
+        $cart->total_price += $product->unit_price * $request->quantity;
+        $cart->total_quantity += $request->quantity;
+        $cart->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Product added to cart successfully',
+            'thumb_image' => asset($product->thumb_image),
+            'name' => $product->name,
+            'total_price' => $cart->total_price,
+            'total_quantity' => $cart->total_quantity
+        ]);
     }
 
     public function index(Request $request)

@@ -142,7 +142,7 @@
     <span class="counter compare_counter">{{ session()->get('compare_list') ? count(session()->get('compare_list')) : 0 }}</span>
 </a>
 
-<a href="javascript:;" class="cart-button">
+<a href="javascript:;" class="cart-button cart-container">
     <i class="fas fa-shopping-bag"></i>
     <div class="label">Cart</div>
     <span class="counter">0</span>
@@ -155,9 +155,11 @@
             <i class="ti-close"></i>
         </span>
     </div>
-    <div class="content">
-        <div class="empty-content">
-            <p class="text-center">Your shopping cart is empty!</p>
+    <div class="content cart-content">
+        <div style="overflow-x: hidden;" class="row mt-5">
+            <div class="col-md-12 text-center">
+                <i class="fas fa-spinner fa-spin fa-5x"></i>
+            </div>
         </div>
     </div>
     <div class="footer">
@@ -180,6 +182,14 @@
         <div class="total">
             <div class="title">Total</div>
             <div class="amount">0৳</div>
+        </div>
+
+        <div class="checkout-btn">
+            <a href="https://www.startech.com.bd/checkout/onepagecheckout">
+                <button type="button" class="btn submit">
+                    Go To Cart
+                </button>
+            </a>
         </div>
     </div>
 </div>
