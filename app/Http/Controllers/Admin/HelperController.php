@@ -83,27 +83,24 @@ class HelperController extends Controller
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
-
         } elseif ($model == 'Category' && Category::where('slug', $slug)->exists()) {
             $model = $this->categoryRepository->getCategoryBySlug($slug);
-            if($model) {
+            if ($model) {
+                $childrenIds = $model->children()->pluck('id')->toArray();
+                $Ids = array_merge([$model->id],$childrenIds);
 
                 $categoryIdArray = $model->getParentCategoryIds();
                 $categoryIdArray[] = $model->id;
 
-                $request['category_id'] = $model->id;
-            
-                $products = $this->productRepository->index($request, $model->id);
-
+                $products = $this->productRepository->index($slug, $Ids);
                 $breadcrumb = $this->getCategoryBreadcrumb($model);
                 return view('frontend.listing', compact('model', 'products', 'categoryIdArray', 'breadcrumb'));
-                
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
         } elseif ($model == 'Brand' && Brand::where('slug', $slug)->exists()) {
             $model = $this->brandRepository->getBrandBySlug($slug);
-            if($model) {
+            if ($model) {
 
                 $request['brand_id'] = $model->id;
                 $products = $this->productRepository->index($request);
@@ -130,11 +127,12 @@ class HelperController extends Controller
 
     public function filterProduct(Request $request)
     {
-        if($request->ajax()){
-            $products = $this->productRepository->index($request, $request->category_id);
+        if ($request->ajax()) {
+            $category = Category::find($request->category_id);
+            $allIds = $category ? array_merge([$category->id], $category->children()->pluck('id')->toArray()) : [];
+            $products = $this->productRepository->index($request, $allIds);
 
-            return view('frontend.components.product_list',compact('products'));
-
+            return view('frontend.components.product_list', compact('products'));
         }
     }
 
@@ -163,14 +161,24 @@ class HelperController extends Controller
         ])->withCount(['ratings as averageRating' => function ($query) {
             $query->select(\DB::raw('AVG(rating)'))->groupBy('product_id'); // Calculate average rating
         }])
-        ->withCount( 'ratings') // Count of ratings
-        ->first([
-            'id', 'category_id', 'brand_id', 'name', 'thumb_image', 'sku', 'slug', 
-            'unit_price', 'is_returnable', 'return_deadline', 'is_discounted', 
-            'discount', 'discount_type'
-        ]);
-        
-  
+            ->withCount('ratings') // Count of ratings
+            ->first([
+                'id',
+                'category_id',
+                'brand_id',
+                'name',
+                'thumb_image',
+                'sku',
+                'slug',
+                'unit_price',
+                'is_returnable',
+                'return_deadline',
+                'is_discounted',
+                'discount',
+                'discount_type'
+            ]);
+
+
         $discountedPrice = $product->unit_price;
         if ($product->is_discounted && $product->discount > 0) {
             $discountAmount = $product->discount_type == 'amount'
@@ -210,7 +218,7 @@ class HelperController extends Controller
             'is_low_stock' => isset($product->details) && $product->details->current_stock <= $product->details->low_stock_quantity,
             'is_COD_available' => $product->details->cash_on_delivery ?? false,
             'total_sold' => $product->details->number_of_sale ?? 0,
-            'question'=>$product->question,
+            'question' => $product->question,
             'ratings' => $product->ratings,
             'images' => $product->image,
             'key_features' => []

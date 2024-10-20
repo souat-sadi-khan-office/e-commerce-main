@@ -7,7 +7,7 @@
         @foreach ($deal['product_details'] as $product)
             <div class="item">
                 <div class="deal_wrap">
-                    <div class="product_img">
+                    <div class="product_img" style="margin-right:10px">
                         <a href="{{ route('slug.handle', ['slug' => $product['slug']]) }}">
                             <img src="{{ asset($product['thumb_image'] ?? 'frontend/assets/images/default-image.png') }}"
                                  alt="{{ $product['name'] }}">

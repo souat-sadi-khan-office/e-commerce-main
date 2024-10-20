@@ -148,9 +148,10 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
-        } elseif (isset($category_id) && $category_id != null) {
+        } elseif (isset($category_id) && count($category_id)>0) {
+
             return Product::where('status', 1)
-                ->where('category_id', $category_id)
+                ->whereIn('category_id', $category_id)
                 ->withCount('ratings')
                 ->with('brand:id,name,slug')
                 ->when(isset($request->in_stock) && $request->in_stock == true && !isset($request->out_of_stock), function ($q) {
@@ -880,7 +881,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // update the tax details
-            if (count($request->tax_id) > 0) {
+            if (isset($request->tax_id)&&count($request->tax_id) > 0) {
                 $taxIdArray = $request->tax_id;
                 $taxAmountArray = $request->taxes;
                 $taxTypeArray = $request->tax_types;
