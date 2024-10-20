@@ -128,6 +128,12 @@ class HelperController extends Controller
 
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        return view('frontend.search', compact('search'));
+    }
+
     public function filterProduct(Request $request)
     {
         if($request->ajax()){

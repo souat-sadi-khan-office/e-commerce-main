@@ -98,5 +98,6 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::get('cart', [HomePageController::class, 'cart'])->name('cart');
     Route::post('add-quantity-to-cart', [HomePageController::class, 'addQtyToCart'])->name('add.cart');
 
-    Route::any('{slug}', [HelperController::class, 'fetcher'])->middleware('web')->name('slug.handle');
+    Route::get('search', [HelperController::class, 'search'])->name('search');
+    Route::any('{slug}', [HelperController::class, 'fetcher'])->name('slug.handle');
 });

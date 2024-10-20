@@ -85,7 +85,7 @@
                 </ul>
             </div>
             <div class="product_search_form order-md-3">
-                <form>
+                <form action="{{ route('search') }}" method="GET">
                     <div class="input-group">
                         <input class="form-control" autocomplete="off" placeholder="Search" required id="search" name="search" type="text">
                         <button type="submit" class="search_btn">
