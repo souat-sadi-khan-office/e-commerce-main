@@ -368,7 +368,27 @@ class HomePageController extends Controller
                 return view('frontend.homepage.featured-tab', compact('products'));
             } elseif (isset($request->offred)) {
                 return view('frontend.homepage.offred-tab', compact('products'));
-            } elseif (isset($request->brands)) {
+            } elseif (isset($request->on_sale_product)) {
+                
+                $products = Cache::remember('on_sale_products_', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.on-sale-tab-tab', compact('products'));
+
+            } elseif (isset($request->is_featured_list)) {
+                $products = Cache::remember('featured_products_', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.featured-list-tab', compact('products'));
+            } elseif (isset($request->top_rated_product)) {
+                $products = Cache::remember('top_rated_product', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.top_rated_product_tab', compact('products'));
+            }  elseif (isset($request->brands)) {
 
                 $brands = Cache::remember('brands_', (36000 * 10), function () use ($request) {
                     return $this->brands->getAllBrands()->select('slug', 'logo', 'name', 'status')->where('status', 1);

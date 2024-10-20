@@ -117,11 +117,133 @@
 
         $(document).ready(function() {
             _newsletterFormValidation();
+            _loadTopRatedProduct();
+            _loadFeaturedProduct();
+            _loadOnSaleProduct();
 
             $('#newsletter_submit').show();
             $('#newsletter_submitting').hide();
         })
-        
+
+        var _loadOnSaleProduct = function() {
+            $.ajax({
+                url: '/?on_sale_product=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#on-sale-product-area').html(response);
+                        $('.on-sale-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        var _loadFeaturedProduct = function() {
+            $.ajax({
+                url: '/?is_featured_list=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#featured-product-area').html(response);
+                        $('.featured-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        var _loadTopRatedProduct = function() {
+            $.ajax({
+                url: '/?top_rated_product=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#top-rated-product-area').html(response);
+                        $('.top-rated-product-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
 
         var _newsletterFormValidation = function () {
             if ($('#newletter-form').length > 0) {
