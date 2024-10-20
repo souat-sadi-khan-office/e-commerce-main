@@ -185,7 +185,7 @@
         </div>
 
         <div class="checkout-btn">
-            <a href="https://www.startech.com.bd/checkout/onepagecheckout">
+            <a href="{{ route('cart') }}">
                 <button type="button" class="btn submit">
                     Go To Cart
                 </button>

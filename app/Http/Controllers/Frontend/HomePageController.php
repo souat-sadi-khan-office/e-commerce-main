@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\CartDetail;
+use App\Models\ProductStock;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
@@ -81,6 +82,120 @@ class HomePageController extends Controller
             }
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'success' => false]);
+        }
+    }
+
+    public function cart(Request $request) 
+    {
+        $items = [];
+        $counter = 0;
+        $total_price = 0;
+
+        // Check if customer is logged in
+        if(Auth::guard('customer')->check()) {
+            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
+        } else {
+            // Otherwise, check for cart using IP address
+            $cart = Cart::where('ip', $request->ip())->first();
+        }
+
+        // If cart exists, get the cart details
+        if($cart) {
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+        }
+
+        return view('frontend.cart', compact('items', 'cart'));
+    }
+
+    public function addQtyToCart(Request $request) 
+    {
+        $id = $request->id;
+        $cart_total_amount = 0;
+        $cart_sub_total_amount = 0;
+        $item_sub_total = 0;
+        
+        if(!$id) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        $item = CartDetail::find($id);
+        if(!$item) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+        $cartId = $item->cart_id;
+
+        $cart = Cart::find($cartId);
+        if(!$cart) {
+            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+        }
+
+        // getting this product stock
+        $this->productStock($item->product_id, ($item->quantity + 1));
+
+        $item->quantity = $item->quantity + 1;
+        $item->save();
+
+        $item_sub_total = format_price(convert_price($item->quantity * $item->price));
+
+        $items = CartDetail::where('cart_id', $cartId)->get();
+        $total_quantity = 0;
+        $total_price = 0;
+        if($items) {
+            foreach($items as $item) {
+                $total_quantity += $item->quantity;
+                $total_price += ($item->quantity * $item->price);
+            }
+        }
+
+        $cart = Cart::find($cartId);
+        if($cart) {
+            $cart->total_price = $total_price;
+            $cart->total_quantity = $total_quantity;
+            $cart->save();
+
+            $items = CartDetail::where('cart_id', $cart->id)->get();
+            $counter = count($items);
+            $total_price = $cart->total_price;
+            $cart_total_amount = format_price(convert_price($total_price));
+            $cart_sub_total_amount = format_price(convert_price($total_price));
+        }
+
+        // Return view with cart items
+        return response()->json([
+            'status' => true, 
+            'message' => 'Cart is updated', 
+            'id' => $id,
+            'item_sub_total' => $item_sub_total,
+            'cart_sub_total_amount' => $cart_sub_total_amount, 
+            'cart_total_amount' => $cart_total_amount
+        ]);
+    }
+
+    public function productStock($productId, $numberOfQty)
+    {
+        $product = Product::find($productId);
+        if(!$product) {
+            return response()->json(['status' => false, 'message' => 'Product not found.']);
+        }
+
+        dd($product->in_stock);
+        if($product->in_stock == 0) {
+            return response()->json(['status' => false, 'message' => 'Product is out of stock.']);
+        }
+
+        if($product->details->current_stock < $numberOfQty) {
+
+        }
+
+        switch($product->stock_types) {
+            case 'globally':
+                $stock = ProductStock::where('product_id', $productId)->first();
+                if(!$stock) {
+                    return response()->json(['status' => false, 'message' => 'Product stock not found.']);
+                }
+            break;
         }
     }
 

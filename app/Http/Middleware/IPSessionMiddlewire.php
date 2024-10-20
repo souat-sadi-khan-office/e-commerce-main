@@ -29,15 +29,14 @@ class IPSessionMiddlewire
             if ($location) {
                 $country = $location->countryName;
                 $city = $location->cityName;
-                $currency_code = isset($location->currencyCode) ? $location->currencyCode : "USD";
-                if (!Session::has('currency_id')) {
+                $currency_code = $location->currencyCode;
 
-                    $currency = Currency::where('status', 1)->where('code', $currency_code)->select('id')->first();
-                    if (isset($currency)) {
-                        Session::put('currency_id', $currency->id);
-                        Session::put('currency_code', $currency_code ?? "USD");
-                    }
+                $currency = Currency::where('status', 1)->where('code', $currency_code)->select('id')->first();
+                if (isset($currency)) {
+                    Session::put('currency_id', $currency->id);
+                    Session::put('currency_code', $currency_code ?? "USD");
                 }
+
                 Session::put('country_flag', 'https://flagsapi.com/' . $location->countryCode . '/flat/64.png');
                 Session::put('user_country', $country);
                 Session::put('user_city', $city);
