@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
+
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -24,7 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'isAdmin' => \App\Http\Middleware\AdminAuth::class,
-            'isCustomer' => \App\Http\Middleware\CustomerAuth::class
+            'isCustomer' => \App\Http\Middleware\CustomerAuth::class,
+            'ipSession' => \App\Http\Middleware\IPSessionMiddlewire::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

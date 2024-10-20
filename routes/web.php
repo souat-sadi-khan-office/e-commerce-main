@@ -29,21 +29,7 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 Route::get('login/facebook', [LoginController::class, 'redirectToFacebook'])->name('login.facebook');
 Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 
-Route::middleware('web')->group(function () {
-    Route::any('/',[HomePageController::class,'index'])->name('home');
-    
-    Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
-    Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
-    Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
-    Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
-    Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
-
-    Route::post('/get-cart-items', [HomePageController::class, 'getCartItems'])->name('get-cart-items');
-    Route::delete('/remove-cart-items', [HomePageController::class, 'removeCartItems'])->name('remove-cart-items');
-    Route::post('/cart/add', [HomePageController::class, 'addToCart'])->name('cart.add');
-});
-
-Route::middleware(['isCustomer', 'web'])->group(function () {
+Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
     Route::get('account', function() {
         return redirect()->route('dashboard');
     });
@@ -89,3 +75,34 @@ Route::post('/currency/change', [HomePageController::class, 'currencyChange'])->
 
 Route::post('filter.products', [SearchController::class, 'filterProducts'])->name('filter.products');
 Route::get('{slug}', [HelperController::class, 'fetcher'])->middleware('web')->name('slug.handle');
+Route::middleware(['web','ipSession'])->group(function () {
+    Route::any('/',[HomePageController::class,'index'])->name('home');
+    
+    Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
+    Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
+    Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
+    Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
+    Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
+    Route::get('brands', [HomePageController::class, 'allBrands'])->name('brands');
+    Route::get('categories', [HomePageController::class, 'allCategories'])->name('categories');
+    
+    Route::post('search/category', [SearchController::class, 'searchByCategory'])->name('search.category');
+    Route::post('search/category-by-id', [SearchController::class, 'searchByCategoryId'])->name('search.category_by_id');
+    Route::post('search/brand-by-id', [SearchController::class, 'searchByBrandId'])->name('search.brand_by_id');
+    Route::post('search/brands', [SearchController::class, 'searchByBrands'])->name('search.brands');
+    Route::post('search/product', [SearchController::class, 'searchByProduct'])->name('search.product');
+    Route::post('search/product-by-id', [SearchController::class, 'searchByProductId'])->name('search.product_id');
+    Route::post('search/product-stock', [SearchController::class, 'searchForProductStock'])->name('search.product_stock');
+    Route::post('search/product-data', [SearchController::class, 'searchForProductDetails'])->name('search.product_data');
+    Route::post('search/brand-types', [SearchController::class, 'searchForBrandTypes'])->name('search.brand-types');
+    
+    Route::get('/get-countries', [AddressController::class, 'getCountriesByZone'])->name('getCountries');
+    Route::get('/get-cities', [AddressController::class, 'getCitiesByCountry'])->name('getCities');
+    Route::post('/currency/change', [HomePageController::class, 'currencyChange'])->name('currency.change');
+
+    Route::post('/get-cart-items', [HomePageController::class, 'getCartItems'])->name('get-cart-items');
+    Route::delete('/remove-cart-items', [HomePageController::class, 'removeCartItems'])->name('remove-cart-items');
+    Route::post('/cart/add', [HomePageController::class, 'addToCart'])->name('cart.add');
+    
+    Route::get('{slug}', [HelperController::class, 'fetcher'])->middleware('web')->name('slug.handle');
+});

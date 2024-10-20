@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Currency;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
@@ -14,7 +15,7 @@ class UserLocationServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        
     }
 
     /**
@@ -22,7 +23,7 @@ class UserLocationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-    }
 
+    }
    
 }

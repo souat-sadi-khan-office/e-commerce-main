@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\CPU\Helpers;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Middleware\IPSessionMiddlewire;
 use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
-use Laravel\Socialite\Facades\Socialite;
-use App\Models\User;
-use App\Models\Product;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
 
-class LoginController extends Controller
+class LoginController extends Controller implements IPSessionMiddlewire
 {
 
     protected $authRepository;
