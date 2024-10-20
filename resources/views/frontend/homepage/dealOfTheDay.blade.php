@@ -1,9 +1,9 @@
 <!-- START SECTION SHOP -->
 <div class="section pt-0 pb-0">
-	<div class="custom-container">
-    	<div class="row">
-        	<div class="col-md-12">
-            	<div class="heading_tab_header">
+    <div class="custom-container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="heading_tab_header">
                     <div class="heading_s2">
                         <h4>Flash Deals</h4>
                     </div>
@@ -11,89 +11,151 @@
             </div>
         </div>
         <div class="row">
-        	<div class="col-md-12">
-            	<div class="product_slider carousel_slider owl-carousel owl-theme nav_style3" data-loop="true" data-dots="false" data-nav="true" data-margin="30" data-responsive='{"0":{"items": "1"}, "650":{"items": "2"}, "1199":{"items": "2"}}' id="FlashDeals">
-            		<div class="item">
-                        <div class="deal_wrap">
-                            <div class="product_img">
-                                <a href="shop-product-detail.html">
-                                    <img src="{{asset('frontend/assets/images/el_img1.jpg')}}" alt="el_img1">
-                                </a>
-                            </div>
-                            <div class="deal_content">
-                                <div class="product_info">
-                                    <h5 class="product_title"><a href="shop-product-detail.html">Red & Black Headphone</a></h5>
-                                    <div class="product_price">
-                                        <span class="price">$45.00</span>
-                                        <del>$55.25</del>
+            <div id="Flash_Deals">
+                <div class="product_slider carousel_slider owl-carousel owl-theme nav_style3" data-loop="true"
+                    data-dots="false" data-nav="true" data-margin="30"
+                    data-responsive='{"0":{"items": "1"}, "650":{"items": "2"}, "1199":{"items": "2"}}'>
+                    @for ($i = 0; $i < 4; $i++)
+                        <!-- Adjust the number of placeholders as needed -->
+                        <div class="item pre-loader">
+                            <div class="deal_wrap">
+                                <div class="product_img">
+                                    <div class="pre-loader-image"></div>
+                                </div>
+                                <div class="deal_content">
+                                    <div class="product_info">
+                                        <div class="pre-loader-title"></div>
+                                        <div class="pre-loader-price"></div>
+                                    </div>
+                                    <div class="deal_progress">
+                                        <div class="pre-loader-stock"></div>
+                                        <div class="pre-loader-stock"></div>
+                                        <div class="pre-loader-progress-bar"></div>
                                     </div>
                                 </div>
-                                <div class="deal_progress">
-                                    <span class="stock-sold">Already Sold: <strong>6</strong></span>
-                                    <span class="stock-available">Available: <strong>8</strong></span>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="46" aria-valuemin="0" aria-valuemax="100" style="width:46%"> 46% </div>
-                                    </div>
-                                </div>
-                                <div class="countdown_time countdown_style4 mb-4" data-time="2021/10/02 12:30:15"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="deal_wrap">
-                            <div class="product_img">
-                                <a href="shop-product-detail.html">
-                                    <img src="{{asset('frontend/assets/images/el_img2.jpg')}}" alt="el_img2">
-                                </a>
-                            </div>
-                            <div class="deal_content">
-                                <div class="product_info">
-                                    <h5 class="product_title"><a href="shop-product-detail.html">Smart Watch External</a></h5>
-                                    <div class="product_price">
-                                        <span class="price">$55.00</span>
-                                        <del>$95.00</del>
-                                    </div>
-                                </div>
-                                <div class="deal_progress">
-                                    <span class="stock-sold">Already Sold: <strong>4</strong></span>
-                                    <span class="stock-available">Available: <strong>22</strong></span>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100" style="width:26%"> 26% </div>
-                                    </div>
-                                </div>
-                                <div class="countdown_time countdown_style4 mb-4" data-time="2021/09/02 12:30:15"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="deal_wrap">
-                            <div class="product_img">
-                                <a href="shop-product-detail.html">
-                                    <img src="{{asset('frontend/assets/images/el_img3.jpg')}}" alt="el_img3">
-                                </a>
-                            </div>
-                            <div class="deal_content">
-                                <div class="product_info">
-                                    <h5 class="product_title"><a href="shop-product-detail.html">Nikon HD camera</a></h5>
-                                    <div class="product_price">
-                                        <span class="price">$68.00</span>
-                                        <del>$99.25</del>
-                                    </div>
-                                </div>
-                                <div class="deal_progress">
-                                    <span class="stock-sold">Already Sold: <strong>16</strong></span>
-                                    <span class="stock-available">Available: <strong>20</strong></span>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" style="width:28%"> 28% </div>
-                                    </div>
-                                </div>
-                                <div class="countdown_time countdown_style4 mb-4" data-time="2021/11/02 12:30:15"></div>
-                            </div>
-                        </div>
-                    </div>
+                    @endfor
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('styles')
+    <style>
+        .pre-loader-loader {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+
+        .pre-loader {
+
+            background: #f6f7f8;
+            /* Light background */
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+            /* Rounded corners */
+        }
+
+        .pre-loader-image {
+            /* Adjust based on your image height */
+            background: linear-gradient(90deg, #f6f7f8 25%, #e0e0e0 50%, #f6f7f8 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        .pre-loader-title,
+        .pre-loader-price,
+        .pre-loader-stock {
+            height: 20px;
+            /* Adjust height */
+            background: #e0e0e0;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .pre-loader-title {
+            width: 60%;
+            /* Adjust width */
+        }
+
+        .pre-loader-price {
+            width: 40%;
+            /* Adjust width */
+        }
+
+        .pre-loader-progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+
+            100% {
+                background-position: 200px 0;
+            }
+        }
+    </style>
+@endpush
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/?flash_deals=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        console.log(response);
+
+                        $('#Flash_Deals').html(response);
+                        $('.flash_deal_slider').each(function() {
+                            var $carousel = $(this);
+
+                            $carousel.owlCarousel({
+                                dots: $carousel.data("dots"),
+                                loop: $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="ion-ios-arrow-left"></i>',
+                                    '<i class="ion-ios-arrow-right"></i>'
+                                ],
+                                autoplay: $carousel.data("autoplay"),
+                                animateIn: $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout: $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });
+                        })
+                    } else {
+                        console.error('No response received.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    // Optional: Display an error message in the UI
+                    $('#Flash_Deals').html(
+                        '<p>Failed to load flash deals. Please try again later.</p>');
+                }
+            });
+        });
+    </script>
+@endpush
 <!-- END SECTION SHOP -->
