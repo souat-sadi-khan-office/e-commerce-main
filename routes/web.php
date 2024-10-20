@@ -59,6 +59,8 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
 Route::middleware(['web','ipSession'])->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
 
+    Route::post('ajax-search', [SearchController::class, 'ajaxSearch'])->name('ajax-search');
+
     Route::get('on-sale-products', [HomePageController::class, 'onSaleProduct'])->name('on-sale-product');
     Route::get('featured-products', [HomePageController::class, 'onSaleProduct'])->name('featured-product');
     Route::get('top-rated-products', [HomePageController::class, 'onSaleProduct'])->name('top-rated-product');

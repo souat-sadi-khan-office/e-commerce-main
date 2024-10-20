@@ -35,24 +35,6 @@
                                                 </li>
                                             @endforeach
                                         </ul>
-                                            {{-- <li class="mega-menu-col col-lg-5">
-                                                <div class="header-banner2">
-                                                    <img src="{{ asset('frontend/assets/images/menu_banner7.jpg') }}" alt="menu_banner1">
-                                                    <div class="banne_info">
-                                                        <h6>10% Off</h6>
-                                                        <h4>Computers</h4>
-                                                        <a href="#">Shop now</a>
-                                                    </div>
-                                                </div>
-                                                <div class="header-banner2">
-                                                    <img src="{{ asset('frontend/assets/images/menu_banner8.jpg') }}" alt="menu_banner2">
-                                                    <div class="banne_info">
-                                                        <h6>15% Off</h6>
-                                                        <h4>Top Laptops</h4>
-                                                        <a href="#">Shop now</a>
-                                                    </div>
-                                                </div>
-                                            </li> --}}
                                     </div>
                                     @endif
                                 </li>

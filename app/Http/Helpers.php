@@ -220,7 +220,6 @@ function store_exchange_rate($currency_code, $rate)
     Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time') ?? 3600);
 }
 
-
 function get_exchange_rate($currency_code)
 {
     $fetch_time = 3600;
