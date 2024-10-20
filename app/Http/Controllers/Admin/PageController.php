@@ -29,7 +29,9 @@ class PageController extends Controller
 
     public function create()
     {
-        return view('backend.page.create');
+        $pages = $this->pagedRepository->getAllPages()->where('status', 1);
+
+        return view('backend.page.create', compact('pages'));
     }
 
     public function store(PageRequest $request)
@@ -40,7 +42,8 @@ class PageController extends Controller
     public function edit($id)
     {
         $model = $this->pagedRepository->findPageById($id);
-        return view('backend.page.edit', compact('model'));
+        $pages = $this->pagedRepository->getAllPages()->where('status', 1);
+        return view('backend.page.edit', compact('model', 'pages'));
     }
 
     public function update(PageRequest $request, $id)

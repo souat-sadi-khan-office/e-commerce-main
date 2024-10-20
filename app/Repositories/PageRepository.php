@@ -21,6 +21,9 @@ class PageRepository implements PageRepositoryInterface
         $models = $this->getAllpages();
         return Datatables::of($models)
             ->addIndexColumn()
+            ->editColumn('parent', function($model) {
+                return $model->parent_id != null ? $model->parent->title : 'Parent Page';
+            })
             ->editColumn('url', function ($model) {
                 return '<a href="'. URL::to($model->slug) .'" target="_blank">'. URL::to($model->slug) .'</a>';
             })
@@ -31,7 +34,7 @@ class PageRepository implements PageRepositoryInterface
             ->addColumn('action', function ($model) {
                 return view('backend.page.action', compact('model'));
             })
-            ->rawColumns(['action', 'status', 'url'])
+            ->rawColumns(['action', 'parent', 'status', 'url'])
             ->make(true);
     }
 
@@ -43,6 +46,7 @@ class PageRepository implements PageRepositoryInterface
     public function createPage($data)
     {
         $page = Page::create([
+            'parent_id' => $data->parent_id,
             'title' => $data->name,
             'slug' => $data->slug,
             'status' => $data->status,
@@ -52,6 +56,7 @@ class PageRepository implements PageRepositoryInterface
             'meta_description' => $data->meta_description,
             'meta_article_tag' => $data->meta_article_tag,
             'meta_script_tag' => $data->meta_script_tag,
+            'show_on_navbar' => $data->show_on_navbar,
             'meta_image' => $data->meta_image ? Images::upload('pages', $data->meta_image) : null,
         ]);
 
@@ -62,6 +67,7 @@ class PageRepository implements PageRepositoryInterface
     public function updatepage($id, $data)
     {
         $page = Page::findOrFail($id);
+        $page->parent_id = $data->parent_id;
         $page->title = $data->name;
         $page->slug = $data->slug;
         $page->status = $data->status;
@@ -71,6 +77,7 @@ class PageRepository implements PageRepositoryInterface
         $page->meta_description = $data->meta_description;
         $page->meta_article_tag = $data->meta_article_tag;
         $page->meta_script_tag = $data->meta_script_tag;
+        $page->show_on_navbar = $data->show_on_navbar;
 
         if($data->meta_image) {
             $page->meta_image = Images::upload('pages', $data->meta_image);

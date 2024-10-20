@@ -42,6 +42,18 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
+
+                            <div class="col-md-12 form-group mb-3">
+                                <label for="parent_id">Parent Page ></label>
+                                <select name="parent_id" id="parent_id" class="form-control select" data-placeholder="Parent Page" data-parsley-errors-container="#parent_id_error">
+                                    <option value="">Parent Page</option>
+                                    @foreach ($pages as $page)
+                                        <option {{ $model->parent_id == $page->id ? 'selected' : '' }} value="{{ $page->id}}">{{ $page->title }}</option>
+                                    @endforeach
+                                </select>
+                                <span id="parent_id_error"></span>
+                            </div>
+
                             <div class="col-md-12 mb-3 form-group">
                                 <label for="name">Name <span class="text-danger">*</span></label>
                                 <input type="text" placeholder="Enter Brand Name" name="name" id="name" class="form-control" required value="{{ $model->title    }}">
@@ -52,11 +64,19 @@
                                 <input type="text" name="slug" id="slug" class="form-control" required value="{{ $model->slug }}">
                             </div>
 
-                            <div class="col-md-12 mb-3 form-group">
+                            <div class="col-md-6 mb-3 form-group">
                                 <label for="status">Status <span class="text-danger">*</span></label>
                                 <select name="status" id="status" class="form-control select" required>
                                     <option {{ $model->status == 1 ? 'selected' : ''}} value="1">Active</option>
                                     <option {{ $model->status == 0 ? 'selected' : ''}} value="0">Inactive</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3 form-group">
+                                <label for="show_on_navbar">Status <span class="text-danger">*</span></label>
+                                <select name="show_on_navbar" id="show_on_navbar" class="form-control select" required>
+                                    <option {{ $model->sow_on_navbar == 0 ? 'selected' : '' }} value="0">No</option>
+                                    <option {{ $model->sow_on_navbar == 1 ? 'selected' : '' }} value="1">Yes</option>
                                 </select>
                             </div>
 

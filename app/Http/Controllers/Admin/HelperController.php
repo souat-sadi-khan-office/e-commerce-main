@@ -112,6 +112,14 @@ class HelperController extends Controller
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
+        } elseif ($model == 'Page' && Page::where('slug', $slug)->exists()) {
+            $model = Page::where('status', 1)->where('slug', $slug)->first();
+            if($model) {
+
+                return view('frontend.page', compact('model'));
+            } else {
+                return $this->fetcher($slug, $index + 1);
+            }
         } else {
             return $this->fetcher($slug, $index + 1);
         }

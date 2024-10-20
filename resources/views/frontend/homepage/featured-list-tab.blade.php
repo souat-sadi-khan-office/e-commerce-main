@@ -20,7 +20,7 @@
                     <div class="product_wrap">
                         <span class="pr_flash bg-danger">Hot</span>
                         <div class="product_img">
-                            <a href="shop-product-detail.html">
+                            <a href="{{ route('search', ['sort' => 'featured']) }}">
                                 <img src="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }}">
                                 <img class="product_hover_img" src="{{ asset($product['hover_image']) }}" alt="{{ $product['name'] }}">
                             </a>
@@ -28,11 +28,11 @@
                         <div class="product_info">
                             <h6 class="product_title"><a href="shop-product-detail.html">{{ $product['name'] }}</a></h6>
                             <div class="product_price">
-                                <span class="price">{{ $product['unit_price'] }}</span>
+                                <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
                                 @if($product['discount'])
-                                    <del>{{ $product['unit_price'] }}</del>
+                                    <del>{{ format_price(convert_price$product['unit_price'])) }}</del>
                                     <div class="on_sale">
-                                        <span>{{ $product['discounted_price'] }}% Off</span>
+                                        <span>{{ format_price(convert_price$product['discounted_price'])) }}% Off</span>
                                     </div>
                                 @endif
                             </div>

@@ -40,6 +40,7 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
+                                <th>Parent Page</th>
                                 <th>Name</th>
                                 <th>URL</th>
                                 <th>Status</th>
@@ -67,6 +68,7 @@
                 serverSide: true,
                 ajax: "{{ route('admin.page.index') }}",
                 columns: [
+                    {data: 'parent', name: 'parent'},
                     {data: 'title', name: 'name'},
                     {data: 'url', name: 'url'},
                     {data: 'status', name: 'status'},

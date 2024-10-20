@@ -11,6 +11,8 @@ class Page extends Model
 
     protected $fillable = [
         'title',
+        'parent_id',
+        'show_on_navbar',
         'slug',
         'content',
         'meta_title',
@@ -20,4 +22,16 @@ class Page extends Model
         'meta_script_tag',
         'meta_image',
     ];
+
+    // Each page can have one parent
+    public function parent()
+    {
+        return $this->belongsTo(Page::class, 'parent_id');
+    }
+
+    // Each page can have multiple children
+    public function children()
+    {
+        return $this->hasMany(Page::class, 'parent_id');
+    }
 }

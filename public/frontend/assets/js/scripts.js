@@ -1148,5 +1148,16 @@
 		$(this).html('<i class="fas fa-spin fa-spinner"></i>')
 		removeCartItems(id, 'main-cart-area');
 	});
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dropdownLinks = document.querySelectorAll('.dropdown-item.dropdown-toggler');
+	
+		dropdownLinks.forEach(function (link) {
+			link.addEventListener('click', function (e) {
+				e.preventDefault(); // Default behavior (dropdown) বন্ধ করা
+				window.location.href = this.getAttribute('href'); // লিংকে রিডাইরেক্ট করা
+			});
+		});
+	});
 	
 })(jQuery);
