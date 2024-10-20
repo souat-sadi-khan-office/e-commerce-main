@@ -85,7 +85,7 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::delete('/remove-cart-items', [HomePageController::class, 'removeCartItems'])->name('remove-cart-items');
     Route::post('/cart/add', [HomePageController::class, 'addToCart'])->name('cart.add');
     
-    Route::post('filter.products', [HelperController::class, 'filterProduct'])->name('filter.products');
+    Route::post('filter/products', [HelperController::class, 'filterProduct'])->name('filter.products');
 
     Route::get('cart', [HomePageController::class, 'cart'])->name('cart');
     Route::post('add-quantity-to-cart', [HomePageController::class, 'addQtyToCart'])->name('add.cart');

@@ -102,6 +102,18 @@ class ProductRepository implements ProductRepositoryInterface
             return Product::where('status', 1)
                 ->where('category_id', $category_id)
                 ->withCount('ratings')
+                ->with('brand:id,name,slug')
+                ->when(isset($request->in_stock) && $request->in_stock == true && !isset($request->out_of_stock), function ($q) {
+                    $q->where('in_stock', 1);
+                })
+                ->when(isset($request->out_of_stock) && $request->out_of_stock == true && !isset($request->in_stock), function ($q) {
+                    $q->where('in_stock', 0);
+                })
+                ->when(isset($request->brands) && count($request->brands) > 0, function ($q) use ($request) {
+                    $q->whereHas('brand', function ($query) use ($request) {
+                        $query->whereIn('id', $request->brands);
+                    });
+                })
                 ->with(['ratings' => function ($query) {
                     $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
                         ->groupBy('product_id');
@@ -117,7 +129,27 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
-                ->latest()
+                ->when(isset($request->sortBy) && $request->sortBy != null, function ($q) use ($request) {
+                    switch ($request->sortBy) {
+                        case 'latest':
+                            $q->orderBy('created_at', 'desc');
+                            break;
+                        case 'popularity':
+                            $q->orderBy('ratings_count', 'desc');
+                            break;
+                        case 'price':
+                            $q->orderBy('unit_price', 'asc');
+                            break;
+                        case 'price-desc':
+                            $q->orderBy('unit_price', 'desc');
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                ->when(!isset($request->sortBy), function ($q) {
+                    $q->orderBy('ratings_count', 'desc');
+                })
                 ->paginate(18)
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -145,7 +177,7 @@ class ProductRepository implements ProductRepositoryInterface
         $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : null;
         $hoverImage = $product->image->isNotEmpty() ? $product->image->first()->image : null;
 
-        if($product->specifications) {
+        if ($product->specifications) {
             return [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -181,7 +213,6 @@ class ProductRepository implements ProductRepositoryInterface
                 'stock_types' => $product->stock_types,
             ];
         }
-        
     }
 
     private function specificationMapper($specification)
@@ -222,7 +253,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 return '
                     <b>Number of Sale</b>: ' . $numberOfSale . ' <br> 
-                    <b>Base Price</b>:' .get_system_default_currency()->symbol.covert_to_defalut_currency($model->unit_price) . '<br>
+                    <b>Base Price</b>:' . get_system_default_currency()->symbol . covert_to_defalut_currency($model->unit_price) . '<br>
                     <b>Rating</b>: ' . $averageRating;
             })
             ->editColumn('created_by', function ($model) {
@@ -280,7 +311,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 return '
                     <b>Number of Sale</b>: ' . $numberOfSale . ' <br> 
-                    <b>Base Price</b>:' . get_system_default_currency()->symbol.covert_to_defalut_currency($model->unit_price) . '<br>
+                    <b>Base Price</b>:' . get_system_default_currency()->symbol . covert_to_defalut_currency($model->unit_price) . '<br>
                     <b>Rating</b>: ' . $averageRating;
             })
             ->editColumn('created_by', function ($model) {
@@ -412,7 +443,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->low_stock = isset($request->low_stock) ? $request->low_stock : 0;
         $product->is_discounted = $request->is_discounted;
         $product->discount_type = $request->discount_type;
-        $product->discount = isset($request->discount_type)&&$request->discount_type !='amount'?$request->discount:covert_to_usd( $request->discount);
+        $product->discount = isset($request->discount_type) && $request->discount_type != 'amount' ? $request->discount : covert_to_usd($request->discount);
         $product->discount_start_date = $request->discount_start_date;
         $product->discount_end_date = $request->discount_end_date;
         $product->is_returnable = $request->is_returnable;
@@ -448,7 +479,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $tax = new ProductTax;
                     $tax->product_id = $product->id;
                     $tax->tax_id = $taxIdArray[$taxCounter];
-                    $tax->tax = $taxTypeArray[$taxCounter] == 'flat' ?covert_to_usd($taxArray[$taxCounter]):$taxArray[$taxCounter];
+                    $tax->tax = $taxTypeArray[$taxCounter] == 'flat' ? covert_to_usd($taxArray[$taxCounter]) : $taxArray[$taxCounter];
                     $tax->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
                     $tax->save();
                 }
@@ -706,7 +737,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->brand_type_id = $request->brand_type_id;
         $product->is_discounted = $request->is_discounted;
         $product->discount_type = $request->discount_type;
-        $product->discount = isset($request->discount_type)&&$request->discount_type !='amount'?$request->discount:covert_to_usd( $request->discount);
+        $product->discount = isset($request->discount_type) && $request->discount_type != 'amount' ? $request->discount : covert_to_usd($request->discount);
         $product->discount_start_date = $request->discount_start_date == null ? null : date('Y-m-d', strtotime($request->discount_start_date));
         $product->discount_end_date = $request->discount_end_date == null ? null : date('Y-m-d', strtotime($request->discount_end_date));
         $product->status = $request->status;
@@ -749,7 +780,7 @@ class ProductRepository implements ProductRepositoryInterface
 
                 for ($taxCounter = 0; $taxCounter < count($taxIdArray); $taxCounter++) {
                     $taxModel = ProductTax::find($taxIdArray[$taxCounter]);
-                    $taxModel->tax =$taxTypeArray[$taxCounter] == 'flat' ?covert_to_usd($taxAmountArray[$taxCounter]) : $taxAmountArray[$taxCounter];
+                    $taxModel->tax = $taxTypeArray[$taxCounter] == 'flat' ? covert_to_usd($taxAmountArray[$taxCounter]) : $taxAmountArray[$taxCounter];
                     $taxModel->tax_type = $taxTypeArray[$taxCounter] == 'flat' ? 'amount' : 'percent';
                     $taxModel->save();
                 }
@@ -981,7 +1012,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
         ])->withCount('ratings')->first(['id', 'category_id', 'brand_id', 'name', 'thumb_image', 'sku', 'slug', 'unit_price', 'is_returnable', 'return_deadline', 'is_discounted', 'discount', 'discount_type']);
 
-        
+
         $discountedPrice = $product->unit_price;
         if ($product->is_discounted && $product->discount > 0) {
             $discountAmount = $product->discount_type == 'amount'
@@ -1122,7 +1153,7 @@ class ProductRepository implements ProductRepositoryInterface
 
         return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id', 'product_id'));
     }
-    
+
     public function specificationProduct($id)
     {
         $data = ProductSpecification::where('product_id', $id)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
@@ -1150,7 +1181,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'key_feature' => $item->key_feature,
             ];
         });
-        
+
         return $mapped->groupBy('key_id');
     }
 
@@ -1176,7 +1207,6 @@ class ProductRepository implements ProductRepositoryInterface
                 'attribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
             ];
         });
-        
     }
 
     public function specificationsAdd($request, $id)

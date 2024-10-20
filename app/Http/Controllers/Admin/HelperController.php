@@ -126,8 +126,12 @@ class HelperController extends Controller
 
     public function filterProduct(Request $request)
     {
-        dd($request->all());
-        $products = $this->productRepository->index($request, $model->id);
+        if($request->ajax()){
+            $products = $this->productRepository->index($request, $request->category_id);
+
+            return view('frontend.components.product_list',compact('products'));
+
+        }
     }
 
     public function productDetails($slug)
