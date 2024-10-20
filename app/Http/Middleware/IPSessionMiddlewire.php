@@ -31,9 +31,10 @@ class IPSessionMiddlewire
                 $city = $location->cityName;
                 $currency_code = $location->currencyCode;
 
-                $currency = Currency::where('status', 1)->where('code', $currency_code)->select('id')->first();
+                $currency = Currency::where('status', 1)->where('code', $currency_code)->select('id','symbol')->first();
                 if (isset($currency)) {
                     Session::put('currency_id', $currency->id);
+                    Session::put('currency_symbol', $currency->symbol);
                     Session::put('currency_code', $currency_code ?? "USD");
                 }
 
