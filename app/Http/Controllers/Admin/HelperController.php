@@ -91,7 +91,9 @@ class HelperController extends Controller
                 $categoryIdArray = $model->getParentCategoryIds();
                 $categoryIdArray[] = $model->id;
 
-                $products = Product::where('category_id', $model->id)->paginate(18);
+                $request['category_id'] = $model->id;
+            
+                $products = $this->productRepository->index($request, $model->id);
 
                 $breadcrumb = $this->getCategoryBreadcrumb($model);
                 return view('frontend.listing', compact('model', 'products', 'categoryIdArray', 'breadcrumb'));
@@ -120,6 +122,12 @@ class HelperController extends Controller
 
         // Return the data to the view based on the model
 
+    }
+
+    public function filterProduct(Request $request)
+    {
+        dd($request->all());
+        $products = $this->productRepository->index($request, $model->id);
     }
 
     public function productDetails($slug)

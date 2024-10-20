@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function index($request)
+    public function index($request, $category_id = null)
     {
         if ($request == null) {
             return Product::where('status', 1)
@@ -98,6 +98,30 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
+        } elseif (isset($category_id) && $category_id != null) {
+            return Product::where('status', 1)
+                ->where('category_id', $category_id)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['specifications' => function ($query) {
+                    $query->where('key_feature', 1)
+                        ->with([
+                            'specificationKeyType:id,name,position',
+                            'specificationKeyTypeAttribute:id,name,extra'
+                        ])->join('specification_key_types', 'product_specifications.type_id', '=', 'specification_key_types.id')
+                        ->orderBy('specification_key_types.position', 'ASC');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->latest()
+                ->paginate(18)
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
         }
     }
 
@@ -121,19 +145,50 @@ class ProductRepository implements ProductRepositoryInterface
         $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : null;
         $hoverImage = $product->image->isNotEmpty() ? $product->image->first()->image : null;
 
+        if($product->specifications) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'sku' => $product->sku,
+                'thumb_image' => $product->thumb_image,
+                'hover_image' => $hoverImage,
+                'unit_price' => $product->unit_price,
+                'discounted_price' => $discountedPrice, // Include discounted price
+                'discount' => $product->discount,
+                'discount_type' => $isDiscounted ? $product->discount_type : null,
+                'averageRating' => $averageRatingPercentage,
+                'ratingCount' => $product->ratings_count,
+                'stock_types' => $product->stock_types,
+                'specifications' => $product->specifications->take(4)->map(function ($specifications) {
+                    return $this->specificationMapper($specifications);
+                })
+            ];
+        } else {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'sku' => $product->sku,
+                'thumb_image' => $product->thumb_image,
+                'hover_image' => $hoverImage,
+                'unit_price' => $product->unit_price,
+                'discounted_price' => $discountedPrice, // Include discounted price
+                'discount' => $product->discount,
+                'discount_type' => $isDiscounted ? $product->discount_type : null,
+                'averageRating' => $averageRatingPercentage,
+                'ratingCount' => $product->ratings_count,
+                'stock_types' => $product->stock_types,
+            ];
+        }
+        
+    }
+
+    private function specificationMapper($specification)
+    {
         return [
-            'id' => $product->id,
-            'name' => $product->name,
-            'slug' => $product->slug,
-            'thumb_image' => $product->thumb_image,
-            'hover_image' => $hoverImage,
-            'unit_price' => $product->unit_price,
-            'discounted_price' => $discountedPrice, // Include discounted price
-            'discount' => $product->discount,
-            'discount_type' => $isDiscounted ? $product->discount_type : null,
-            'averageRating' => $averageRatingPercentage,
-            'ratingCount' => $product->ratings_count,
-            'stock_types' => $product->stock_types,
+            'type_name' => $specification->specificationKeyType->name,
+            'attr_name' => $specification->specificationKeyTypeAttribute->name,
         ];
     }
 

@@ -30,6 +30,7 @@ class SearchController extends Controller
     public function filterProducts(Request $request)
     {
         $query = Product::query();
+        // Product::when($request->has())
 
         // Stock Availability Filter
         if ($request->has('in_stock') && $request->in_stock == 1) {

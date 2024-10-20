@@ -130,7 +130,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12">
-                            {{ $products->links() }}
+                            {{-- {{ $products->links() }} --}}
                             {{-- <ul class="pagination mt-3 justify-content-center pagination_style1">
                                 <li class="page-item active"><a class="page-link" href="#">1</a></li>
                                 <li class="page-item"><a class="page-link" href="#">2</a></li>
@@ -287,6 +287,9 @@
     </div>
 
 @endsection
+@php
+    $currentUrl = url()->current();
+@endphp
 @push('scripts')
     <script>
         $(document).ready(function() {
@@ -331,7 +334,7 @@
                 // AJAX POST Request
                 $('.overlay').addClass('open');
                 $.ajax({
-                    url: '{{ route("filter.products") }}',
+                    url: '{{ $currentUrl }}',
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
