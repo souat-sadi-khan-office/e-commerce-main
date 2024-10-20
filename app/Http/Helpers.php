@@ -223,7 +223,11 @@ function store_exchange_rate($currency_code, $rate)
 
 function get_exchange_rate($currency_code)
 {
-    return Cache::remember("exchange_rate_{$currency_code}", get_settings('currency_api_fetch_time') ?? 3600, function () use ($currency_code) {
+    $fetch_time = 3600;
+    if(get_settings('currency_api_fetch_time') > 0) {
+        $fetch_time = get_settings('currency_api_fetch_time');
+    }
+    return Cache::remember("exchange_rate_{$currency_code}", $fetch_time, function () use ($currency_code) {
         // Check if the currency exists in the database
         $currency = Currency::where('code', $currency_code)->first();
 

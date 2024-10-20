@@ -53,7 +53,6 @@
     
 @endpush
 @section('content')
-    
     <div class="section bg_gray">
         <div class="custom-container">
             <div class="row">
@@ -63,6 +62,11 @@
                             <div class="product_header bg_white">
                                 <div class="product_header_left">
                                     <h4><b>{{ $model->name }}</b></h4>
+
+                                    <button class="tool-btn btn btn-line-fill btn-sm" id="lc-toggle">
+                                        <i class="fas fa-filter"></i>
+                                        Filter
+                                    </button>
                                 </div>
                                 <div class="product_header_right">
                                     <div class="products_view">
@@ -73,17 +77,16 @@
                                             <i class="fas fa-list"></i>
                                         </a>
                                     </div>
-                                    <div class="custom_select">
+                                    {{-- <div class="custom_select number-of-data-show">
                                         <select class="form-control form-control-sm">
                                             <option value="">Showing</option>
                                             <option value="9">9</option>
                                             <option value="12">12</option>
                                             <option value="18">18</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="custom_select">
-                                        <select class="form-control form-control-sm">
-                                            <option value="order">Default sorting</option>
+                                        <select id="sort-by" class="form-control form-control-sm">
                                             <option value="popularity">Sort by popularity</option>
                                             <option value="date">Sort by newness</option>
                                             <option value="price">Sort by price: low to high</option>
@@ -94,522 +97,35 @@
                             </div>
                         </div>
                     </div> 
-                    <div class="row shop_container grid">
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="javascript:;">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img1">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart">
-                                                <a href="javascript:;">
-                                                    <i class="icon-basket-loaded"></i> 
-                                                    Add To Cart
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;" class="popup-ajax">
-                                                    <i class="icon-shuffle"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;" class="popup-ajax">
-                                                    <i class="icon-magnifier-add"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="icon-heart"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title">
-                                        <a href="javascript:;">
-                                            LG 22MK600M-B 21.5 inch IPS Full HD LED Monitor
-                                        </a>
-                                    </h6>
-                                    <div class="product_price">
-                                        <span class="price">$ 135,00</span>
-                                        <del>$  135,00</del>
-                                        <div class="on_sale">
-                                            <span>$ 135,00 Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:80%"></div>
-                                        </div>
-                                        <span class="rating_num">(21)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <ul>
-                                            <li>Resolution: FHD (1920 x 1080)</li>
-                                            <li>Display: IPS, 100Hz, 1ms</li>
-                                            <li>Ports: 1x VGA, 1x HDMI 1.4</li>
-                                            <li>Features: AdaptiveSync, 3-Sided Frameless</li>
-                                        </ul>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart">
-                                                <a href="javascript:;">
-                                                    <i class="icon-basket-loaded"></i> 
-                                                    Add To Cart
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;" class="popup-ajax">
-                                                    <i class="icon-shuffle"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;" class="popup-ajax">
-                                                    <i class="icon-magnifier-add"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="icon-heart"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img2">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">Lether Gray Tuxedo</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$55.00</span>
-                                        <del>$95.00</del>
-                                        <div class="on_sale">
-                                            <span>25% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:68%"></div>
-                                        </div>
-                                        <span class="rating_num">(15)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#847764"></span>
-                                            <span data-color="#0393B5"></span>
-                                            <span data-color="#DA323F"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <span class="pr_flash">New</span>
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img3">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">woman full sliv dress</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$68.00</span>
-                                        <del>$99.00</del>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:87%"></div>
-                                        </div>
-                                        <span class="rating_num">(25)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#333333"></span>
-                                            <span data-color="#7C502F"></span>
-                                            <span data-color="#2F366C"></span>
-                                            <span data-color="#874A3D"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img4">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">light blue Shirt</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$69.00</span>
-                                        <del>$89.00</del>
-                                        <div class="on_sale">
-                                            <span>20% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:70%"></div>
-                                        </div>
-                                        <span class="rating_num">(22)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#333333"></span>
-                                            <span data-color="#A92534"></span>
-                                            <span data-color="#B9C2DF"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img5">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">blue dress for woman</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$45.00</span>
-                                        <del>$55.25</del>
-                                        <div class="on_sale">
-                                            <span>35% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:80%"></div>
-                                        </div>
-                                        <span class="rating_num">(21)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#87554B"></span>
-                                            <span data-color="#333333"></span>
-                                            <span data-color="#5FB7D4"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <span class="pr_flash bg-danger">Hot</span>
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img6">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">Blue casual check shirt</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$55.00</span>
-                                        <del>$95.00</del>
-                                        <div class="on_sale">
-                                            <span>25% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:68%"></div>
-                                        </div>
-                                        <span class="rating_num">(15)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#87554B"></span>
-                                            <span data-color="#333333"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <span class="pr_flash bg-success">Sale</span>
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img7">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">white black line dress</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$68.00</span>
-                                        <del>$99.00</del>
-                                        <div class="on_sale">
-                                            <span>20% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:87%"></div>
-                                        </div>
-                                        <span class="rating_num">(25)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#333333"></span>
-                                            <span data-color="#7C502F"></span>
-                                            <span data-color="#2F366C"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img8">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">Men blue jins Shirt</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$69.00</span>
-                                        <del>$89.00</del>
-                                        <div class="on_sale">
-                                            <span>20% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:70%"></div>
-                                        </div>
-                                        <span class="rating_num">(22)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#333333"></span>
-                                            <span data-color="#444653"></span>
-                                            <span data-color="#B9C2DF"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12">
-                            <div class="product">
-                                <div class="product_img">
-                                    <a href="shop-product-detail.html">
-                                        <img src="{{ asset('frontend/assets/images/product_img1.jpg') }}" alt="product_img9">
-                                    </a>
-                                    <div class="product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="product_info">
-                                    <h6 class="product_title"><a href="shop-product-detail.html">T-Shirt Form Girls</a></h6>
-                                    <div class="product_price">
-                                        <span class="price">$45.00</span>
-                                        <del>$55.25</del>
-                                        <div class="on_sale">
-                                            <span>35% Off</span>
-                                        </div>
-                                    </div>
-                                    <div class="rating_wrap">
-                                        <div class="rating">
-                                            <div class="product_rate" style="width:80%"></div>
-                                        </div>
-                                        <span class="rating_num">(21)</span>
-                                    </div>
-                                    <div class="pr_desc">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                    </div>
-                                    <div class="pr_switch_wrap">
-                                        <div class="product_color_switch">
-                                            <span class="active" data-color="#B5B6BB"></span>
-                                            <span data-color="#333333"></span>
-                                            <span data-color="#DA323F"></span>
-                                        </div>
-                                    </div>
-                                    <div class="list_product_action_box">
-                                        <ul class="list_none pr_action_btn">
-                                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a></li>
-                                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a></li>
-                                            <li><a href="#"><i class="icon-heart"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="shop_container grid" id="product-area">
+                        <div class="row">
+                            @include('frontend.components.product_list')
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12">
-                            <ul class="pagination mt-3 justify-content-center pagination_style1">
+                        <div class="col-md-12">
+                            {{-- {{ $products->links() }} --}}
+                            {{-- <ul class="pagination mt-3 justify-content-center pagination_style1">
                                 <li class="page-item active"><a class="page-link" href="#">1</a></li>
                                 <li class="page-item"><a class="page-link" href="#">2</a></li>
                                 <li class="page-item"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item"><a class="page-link" href="#"><i class="linearicons-arrow-right"></i></a></li>
-                            </ul>
+                            </ul> --}}
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="bg_white col-12">
+                    <div class="row mt-3 description">
+                        <div class="bg_white col-md-12">
                             {!! $model->description !!}
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
-                    <div class="sidebar">
+
+                <!-- Filtering Options -->
+                <div id="column-left" class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
+                    <span class="lc-close">
+                        <i class="fas fa-times"></i>
+                    </span>
+                    <div class="sidebar filters">
                         <div class="accordion" id="categoryFilterOptions">
                             <div class="widget">
                                 <div class="accordion-item">
@@ -621,7 +137,7 @@
                                     <div id="price-range-filter" class="accordion-collapse collapse show" aria-labelledby="flash-price-range">
                                         <div class="accordion-body">
                                             <div class="filter_price">
-                                                <div id="price_filter" data-min="0" data-max="500" data-min-value="50" data-max-value="300" data-price-sign="$"></div>
+                                                <div id="price_filter" data-min="0" data-max="50000" data-min-value="0" data-max-value="50000" data-price-sign="$"></div>
                                                 <div class="price_range">
                                                     <span>Price: <span id="flt_price"></span></span>
                                                     <input type="hidden" id="price_first">
@@ -646,25 +162,25 @@
                                             <ul class="list_brand">
                                                 <li>
                                                     <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="in_stock_availability" id="in_stock_availability" value="">
+                                                        <input class="form-check-input form-check" type="checkbox" name="in_stock_availability" id="in_stock_availability" value="">
                                                         <label class="form-check-label" for="in_stock_availability"><span>In Stock</span></label>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="out_of_stock_availability" id="out_of_stock_availability" value="">
+                                                        <input class="form-check-input form-check" type="checkbox" name="out_of_stock_availability" id="out_of_stock_availability" value="">
                                                         <label class="form-check-label" for="out_of_stock_availability"><span>Out of Stock</span></label>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="pre_order_availability" id="pre_order_availability" value="">
+                                                        <input class="form-check-input form-check" type="checkbox" name="pre_order_availability" id="pre_order_availability" value="">
                                                         <label class="form-check-label" for="pre_order_availability"><span>Pre Order</span></label>
                                                     </div>
                                                 </li>
                                                 <li>
                                                     <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" name="up_coming_availability" id="up_coming_availability" value="">
+                                                        <input class="form-check-input form-check-input" type="checkbox" name="up_coming_availability" id="up_coming_availability" value="">
                                                         <label class="form-check-label" for="up_coming_availability"><span>Up Comming</span></label>
                                                     </div>
                                                 </li>
@@ -674,7 +190,6 @@
                                 </div>
                             </div>
 
-                            <!-- Brand -->
                             @if ($types = $model->types->where('status', 1))
                                 <div class="widget">
                                     <div class="accordion-item">
@@ -689,7 +204,7 @@
                                                     @foreach ($types as $type)
                                                         <li>
                                                             <div class="custome-checkbox">
-                                                                <input class="form-check-input" type="checkbox" name="brand-{{ $type->id }}" id="brand-{{ $type->id }}" value="{{ $type->id }}">
+                                                                <input class="form-check-input" type="checkbox" name="brand-types" id="brand-{{ $type->id }}" value="{{ $type->id }}">
                                                                 <label class="form-check-label" for="brand-{{ $type->id }}"><span>{{ $type->name }}</span></label>
                                                             </div>
                                                         </li>
@@ -700,15 +215,76 @@
                                     </div>
                                 </div>
                             @endif
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+<input type="hidden" id="brand_id" value="{{ $model->id }}">
 @endsection
+@php
+    $currentUrl = url()->current();
+@endphp
 @push('scripts')
-    
-    <script></script>
+    <script>
+        $(document).ready(function() {
+            $('.form-check, .custom_select select').on('change', function() {
+                filterProducts();
+            });
+
+            // Brand filter
+            $('input[name^="brand-types"]').on('change', function () {
+                filterProducts();
+            });
+
+            function filterProducts() {
+                // get the checkbox value
+                var in_stock = $('#in_stock_availability').is(':checked');
+                var out_of_stock = $('#out_of_stock_availability').is(':checked');
+                var pre_order = $('#pre_order_availability').is(':checked');
+                var up_coming = $('#up_coming_availability').is(':checked');
+
+                // get the selectbox value
+                var sortBy = $('#sort-by').val();
+                var showData = $('.number-of-data-show select').val();
+
+                var brandTypes = [];
+
+                // Get selected brands
+                $('input[name^="brand-types"]:checked').each(function () {
+                    brandTypes.push($(this).val());
+                });
+
+                // AJAX POST Request
+                var brand_id = $('#brand_id').val();
+
+                $('.overlay').addClass('open');
+                $.ajax({
+                    url: '{{ route('filter.products')}}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        in_stock: in_stock == true ? in_stock : null,
+                        out_of_stock: out_of_stock == true ? out_of_stock : null,
+                        pre_order: pre_order,
+                        up_coming: up_coming,
+                        brand_id:brand_id,
+                        sortBy: sortBy,
+                        brandTypes: brandTypes,
+                        showData: showData
+                    },
+                    success: function(response) {
+                        $('.overlay').removeClass('open');
+                        $('#product-area').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        });
+
+    </script>
 @endpush

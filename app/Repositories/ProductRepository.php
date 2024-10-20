@@ -154,6 +154,63 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
+        } elseif (isset($request['brand_id']) && $request['brand_id'] != null) {
+            return Product::where('status', 1)
+                ->where('brand_id', $request['brand_id'])
+                ->withCount('ratings')
+                ->with('brand:id,name,slug')
+                ->with('brandType:id,name')
+                ->when(isset($request->in_stock) && $request->in_stock == true && !isset($request->out_of_stock), function ($q) {
+                    $q->where('in_stock', 1);
+                })
+                ->when(isset($request->out_of_stock) && $request->out_of_stock == true && !isset($request->in_stock), function ($q) {
+                    $q->where('in_stock', 0);
+                })
+                ->when(isset($request->brandTypes) && count($request->brandTypes) > 0, function ($q) use ($request) {
+                    $q->whereHas('brandType', function ($query) use ($request) {
+                        $query->whereIn('id', $request->brandTypes);
+                    });
+                })
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['specifications' => function ($query) {
+                    $query->where('key_feature', 1)
+                        ->with([
+                            'specificationKeyType:id,name,position',
+                            'specificationKeyTypeAttribute:id,name,extra'
+                        ])->join('specification_key_types', 'product_specifications.type_id', '=', 'specification_key_types.id')
+                        ->orderBy('specification_key_types.position', 'ASC');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->when(isset($request->sortBy) && $request->sortBy != null, function ($q) use ($request) {
+                    switch ($request->sortBy) {
+                        case 'latest':
+                            $q->orderBy('created_at', 'desc');
+                            break;
+                        case 'popularity':
+                            $q->orderBy('ratings_count', 'desc');
+                            break;
+                        case 'price':
+                            $q->orderBy('unit_price', 'asc');
+                            break;
+                        case 'price-desc':
+                            $q->orderBy('unit_price', 'desc');
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                ->when(!isset($request->sortBy), function ($q) {
+                    $q->orderBy('ratings_count', 'desc');
+                })
+                ->paginate(18)
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
         }
     }
 

@@ -104,7 +104,11 @@ class HelperController extends Controller
         } elseif ($model == 'Brand' && Brand::where('slug', $slug)->exists()) {
             $model = $this->brandRepository->getBrandBySlug($slug);
             if($model) {
-                return view('frontend.brand-listing', compact('model'));
+
+                $request['brand_id'] = $model->id;
+                $products = $this->productRepository->index($request);
+
+                return view('frontend.brand-listing', compact('model', 'products'));
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
