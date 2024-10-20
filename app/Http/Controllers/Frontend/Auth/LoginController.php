@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Middleware\IPSessionMiddlewire;
 use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 
-class LoginController extends Controller implements IPSessionMiddlewire
+class LoginController extends Controller
 {
 
     protected $authRepository;

@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\CartDetail;
+use App\Models\Subscriber;
 use App\Models\ProductStock;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
@@ -650,5 +651,28 @@ class HomePageController extends Controller
                     ->where('status', 1);
 
         return view('frontend.brands', compact('brands'));
+    }
+
+    public function postNewsletter(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $email = $request->email;
+
+        if(Subscriber::where('email', $email)->first()) {
+            return response()->json(['status' => false, 'message' => 'You are already subscribed']);
+        } 
+
+        Subscriber::create([
+            'email' => $email
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Thank you for subscribe']);
     }
 }

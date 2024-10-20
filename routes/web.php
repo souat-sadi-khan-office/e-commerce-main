@@ -58,6 +58,8 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
 
 Route::middleware(['web','ipSession'])->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
+
+    Route::post('newsletter-form-submit', [HomePageController::class, 'postNewsletter'])->name('post.newsletter');
     
     Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
     Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
