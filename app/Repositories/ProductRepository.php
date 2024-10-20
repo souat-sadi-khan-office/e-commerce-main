@@ -262,6 +262,41 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
+        } elseif (isset($request->search_module) && $request->search_module == 'ajax_search') {
+            return Product::where('status', 1)
+            ->withCount('ratings')
+            ->with('brand:id,name,slug')
+            ->with('brandType:id,name')
+            
+            ->when(isset($request->search), function ($q) use ($request) {
+                $q->where(function ($query) use ($request) {
+                    $searchTerm = '%' . $request->search . '%';
+                    
+                    $query->where('name', 'LIKE', $searchTerm)
+                        ->orWhere('sku', 'LIKE', $searchTerm);
+                    
+                    $query->orWhereHas('details', function ($q) use ($searchTerm) {
+                        $q->where('site_title', 'LIKE', $searchTerm)
+                          ->orWhere('meta_title', 'LIKE', $searchTerm);
+                    });
+                });
+            })
+            
+            ->with(['ratings' => function ($query) {
+                $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                    ->groupBy('product_id');
+            }])
+            
+            ->with(['image' => function ($query) {
+                $query->where('status', 1)->select('product_id', 'image');
+            }])
+        
+            ->paginate(3)
+            
+            ->map(function ($product) {
+                return $this->mapper($product);
+            });
+        
         }
     }
 

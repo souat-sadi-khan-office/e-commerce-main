@@ -59,6 +59,8 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
 Route::middleware(['web','ipSession'])->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
 
+    Route::post('ajax-search', [SearchController::class, 'ajaxSearch'])->name('ajax-search');
+
     Route::get('on-sale-products', [HomePageController::class, 'onSaleProduct'])->name('on-sale-product');
     Route::get('featured-products', [HomePageController::class, 'onSaleProduct'])->name('featured-product');
     Route::get('top-rated-products', [HomePageController::class, 'onSaleProduct'])->name('top-rated-product');
@@ -96,5 +98,6 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::get('cart', [HomePageController::class, 'cart'])->name('cart');
     Route::post('add-quantity-to-cart', [HomePageController::class, 'addQtyToCart'])->name('add.cart');
 
-    Route::any('{slug}', [HelperController::class, 'fetcher'])->middleware('web')->name('slug.handle');
+    Route::get('search', [HelperController::class, 'search'])->name('search');
+    Route::any('{slug}', [HelperController::class, 'fetcher'])->name('slug.handle');
 });

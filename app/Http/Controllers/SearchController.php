@@ -10,21 +10,25 @@ use App\Repositories\Interface\BannerRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
+use App\Repositories\Interface\ProductRepositoryInterface;
 
 class SearchController extends Controller
 {
     private $brandTypeRepository;
     private $brandRepository;
     private $bannerRepository;
+    private $productRepository;
 
     public function __construct(
         BrandTypeRepositoryInterface $brandTypeRepository,
         BrandRepositoryInterface $brandRepository,
-        BannerRepositoryInterface $bannerRepository
+        BannerRepositoryInterface $bannerRepository,
+        ProductRepositoryInterface $productRepository,
     ) {
         $this->brandTypeRepository = $brandTypeRepository;
         $this->brandRepository = $brandRepository;
         $this->bannerRepository = $bannerRepository;
+        $this->productRepository = $productRepository;
     }
 
     public function filterProducts(Request $request)
@@ -89,6 +93,22 @@ class SearchController extends Controller
         return response()->json($html);
     }
 
+    public function ajaxSearch(Request $request)
+    {
+        $products_query = Product::query();
+        $query = $request->search;
+        $request->search_module = 'ajax_search';
+
+        $products = $this->productRepository->index($request);
+
+        $categories = Category::where('name', 'like', '%' . $query . '%')->get()->take(3);
+        $brands = Brand::where('name', 'like', '%' . $query . '%')->get()->take(3);
+
+        if (sizeof($categories) > 0 || sizeof($products) > 0) {
+            return view('frontend.search_content', compact('products', 'brands', 'categories'));
+        }
+        return '0';
+    }
 
     // for searching by types using brand_id
     public function searchForBrandTypes(Request $request) 

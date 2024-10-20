@@ -85,9 +85,9 @@
                 </ul>
             </div>
             <div class="product_search_form order-md-3">
-                <form>
+                <form action="{{ route('search') }}" method="GET">
                     <div class="input-group">
-                        <input class="form-control" placeholder="Search" required id="search" name="search" type="text">
+                        <input class="form-control" autocomplete="off" placeholder="Search" required id="search" name="search" type="text">
                         <button type="submit" class="search_btn">
                             <i class="linearicons-magnifier"></i>
                         </button>
@@ -107,40 +107,6 @@
                         
                     </div>
                     <div id="search-content" class="text-left">
-                        <div class="">
-                            <div class="px-2 py-1 text-uppercase text-muted bg-soft-secondary">Popular Suggesstion</div>
-                            <ul class="list-group">
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Processor</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Motherboard</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Ram</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Ssd</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Psu</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="">
-                            <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">Category Suggestions</div>
-                            <ul class="list-group">
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Desktop</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Laptop</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Monitor</a>
-                                </li>
-                            </ul>
-                        </div>
                         <div class="">
                             <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">Products</div>
                             <ul class="list-group">
@@ -203,6 +169,21 @@
                                 </li>
                             </ul>
                         </div>
+                        <div class="">
+                            <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">Category Suggestions</div>
+                            <ul class="list-group">
+                                <li class="list-group-item py-1">
+                                    <a class="text-reset hov-text-primary" href="#">Desktop</a>
+                                </li>
+                                <li class="list-group-item py-1">
+                                    <a class="text-reset hov-text-primary" href="#">Laptop</a>
+                                </li>
+                                <li class="list-group-item py-1">
+                                    <a class="text-reset hov-text-primary" href="#">Monitor</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
