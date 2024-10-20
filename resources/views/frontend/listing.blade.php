@@ -285,7 +285,7 @@
             </div>
         </div>
     </div>
-
+<input type="hidden" id="routeCID" name="routeCID" value="{{$model->id}}">
 @endsection
 @php
     $currentUrl = url()->current();
@@ -332,9 +332,11 @@
                 });
 
                 // AJAX POST Request
+                var catId = $('#routeCID').val();
+
                 $('.overlay').addClass('open');
                 $.ajax({
-                    url: '{{ $currentUrl }}',
+                    url: '{{ route('filter.products')}}',
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -342,6 +344,7 @@
                         out_of_stock: out_of_stock == true ? out_of_stock : null,
                         pre_order: pre_order,
                         up_coming: up_coming,
+                        category_id:catId,
                         sortBy: sortBy,
                         brands: brands,
                         specifications: specifications,
