@@ -74,7 +74,6 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
-                
         } elseif (isset($request->top_rated_product)) {
             return Product::where('status', 1)
                 ->withCount('ratings')
@@ -90,7 +89,6 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
-
         } elseif (isset($request->is_featured_list)) {
             return Product::where('status', 1)
                 ->where('is_featured', 1)
@@ -107,7 +105,6 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
-
         } elseif (isset($request->featured)) {
 
             return Product::where('status', 1)
@@ -148,9 +145,9 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
-        } elseif (isset($category_id) && count($category_id)>0) {
+        } elseif (isset($category_id) && count($category_id) > 0) {
 
-            return Product::where('status', 1)
+            $products = Product::where('status', 1)
                 ->whereIn('category_id', $category_id)
                 ->withCount('ratings')
                 ->with('brand:id,name,slug')
@@ -202,11 +199,15 @@ class ProductRepository implements ProductRepositoryInterface
                     $q->orderBy('ratings_count', 'desc');
                 })
                 ->paginate(18)
-                ->map(function ($product) {
-                    return $this->mapper($product);
-                });
+                ->withQueryString();
+
+            $mappedProducts = $products->getCollection()->map(function ($product) {
+                return $this->mapper($product);
+            });
+
+            return $products->setCollection($mappedProducts);
         } elseif (isset($request['brand_id']) && $request['brand_id'] != null) {
-            return Product::where('status', 1)
+            $products = Product::where('status', 1)
                 ->where('brand_id', $request['brand_id'])
                 ->withCount('ratings')
                 ->with('brand:id,name,slug')
@@ -259,45 +260,116 @@ class ProductRepository implements ProductRepositoryInterface
                     $q->orderBy('ratings_count', 'desc');
                 })
                 ->paginate(18)
-                ->map(function ($product) {
-                    return $this->mapper($product);
-                });
+                ->withQueryString();
+
+            $mappedProducts = $products->getCollection()->map(function ($product) {
+                return $this->mapper($product);
+            });
+
+            return $products->setCollection($mappedProducts);
         } elseif (isset($request->search_module) && $request->search_module == 'ajax_search') {
-            return Product::where('status', 1)
+            $products = Product::where('status', 1)
+                ->withCount('ratings')
+                ->with('brand:id,name,slug')
+                ->with('brandType:id,name')
+
+                ->when(isset($request->search), function ($q) use ($request) {
+                    $q->where(function ($query) use ($request) {
+                        $searchTerm = '%' . $request->search . '%';
+
+                        $query->where('name', 'LIKE', $searchTerm)
+                            ->orWhere('sku', 'LIKE', $searchTerm);
+
+                        $query->orWhereHas('details', function ($q) use ($searchTerm) {
+                            $q->where('site_title', 'LIKE', $searchTerm)
+                                ->orWhere('meta_title', 'LIKE', $searchTerm);
+                        });
+                    });
+                })
+
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+
+                ->paginate(3)
+                ->withQueryString();
+
+            $mappedProducts = $products->getCollection()->map(function ($product) {
+                return $this->mapper($product);
+            });
+
+            return $products->setCollection($mappedProducts);
+        }
+    }
+
+
+    public function search($search, $categories, $brands, $sort)
+    {
+        $products = Product::where('status', 1)
+            ->where(function ($query) use ($categories, $brands, $search) {
+                if (isset($categories)) {
+                    $query->orWhereIn('category_id', $categories);
+                }
+
+                if (isset($brands)) {
+                    $query->orWhereIn('brand_id', $brands);
+                }
+
+                if (isset($search)) {
+                    $query->orWhere('name', 'like', '%' . $search . '%');
+                }
+            })
             ->withCount('ratings')
             ->with('brand:id,name,slug')
-            ->with('brandType:id,name')
-            
-            ->when(isset($request->search), function ($q) use ($request) {
-                $q->where(function ($query) use ($request) {
-                    $searchTerm = '%' . $request->search . '%';
-                    
-                    $query->where('name', 'LIKE', $searchTerm)
-                        ->orWhere('sku', 'LIKE', $searchTerm);
-                    
-                    $query->orWhereHas('details', function ($q) use ($searchTerm) {
-                        $q->where('site_title', 'LIKE', $searchTerm)
-                          ->orWhere('meta_title', 'LIKE', $searchTerm);
-                    });
-                });
-            })
-            
+
             ->with(['ratings' => function ($query) {
                 $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
                     ->groupBy('product_id');
             }])
-            
+            ->with(['specifications' => function ($query) {
+                $query->where('key_feature', 1)
+                    ->with([
+                        'specificationKeyType:id,name,position',
+                        'specificationKeyTypeAttribute:id,name,extra'
+                    ])->join('specification_key_types', 'product_specifications.type_id', '=', 'specification_key_types.id')
+                    ->orderBy('specification_key_types.position', 'ASC');
+            }])
             ->with(['image' => function ($query) {
                 $query->where('status', 1)->select('product_id', 'image');
             }])
-        
-            ->paginate(3)
-            
-            ->map(function ($product) {
-                return $this->mapper($product);
-            });
-        
-        }
+            ->when(isset($sort) && $sort != null, function ($q) use ($sort) {
+                switch ($sort) {
+                    case 'latest':
+                        $q->orderBy('created_at', 'desc');
+                        break;
+                    case 'popularity':
+                        $q->orderBy('ratings_count', 'desc');
+                        break;
+                    case 'price':
+                        $q->orderBy('unit_price', 'asc');
+                        break;
+                    case 'price-desc':
+                        $q->orderBy('unit_price', 'desc');
+                        break;
+                    default:
+                        break;
+                }
+            })
+            ->when(!isset($sort), function ($q) {
+                $q->orderBy('ratings_count', 'desc');
+            })
+            ->paginate(18)
+            ->withQueryString();
+        $mappedProducts = $products->getCollection()->map(function ($product) {
+            return $this->mapper($product);
+        });
+
+        return $products->setCollection($mappedProducts);
     }
 
     private function mapper($product)
@@ -916,7 +988,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             // update the tax details
-            if (isset($request->tax_id)&&count($request->tax_id) > 0) {
+            if (isset($request->tax_id) && count($request->tax_id) > 0) {
                 $taxIdArray = $request->tax_id;
                 $taxAmountArray = $request->taxes;
                 $taxTypeArray = $request->tax_types;

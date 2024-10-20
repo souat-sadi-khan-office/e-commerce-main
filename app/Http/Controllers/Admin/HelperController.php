@@ -87,7 +87,7 @@ class HelperController extends Controller
             $model = $this->categoryRepository->getCategoryBySlug($slug);
             if ($model) {
                 $childrenIds = $model->children()->pluck('id')->toArray();
-                $Ids = array_merge([$model->id],$childrenIds);
+                $Ids = array_merge([$model->id], $childrenIds);
 
                 $categoryIdArray = $model->getParentCategoryIds();
                 $categoryIdArray[] = $model->id;
@@ -128,7 +128,16 @@ class HelperController extends Controller
     public function search(Request $request)
     {
         $search = $request->search;
-        return view('frontend.search', compact('search'));
+
+
+        $categories = Category::where('name', 'like', '%' . $search . '%')->get(['id', 'name', 'slug']);
+        $categoryIds = $categories->pluck('id')->toArray(); 
+        
+        $brands = Brand::where('name', 'like', '%' . $search . '%')->get(['id', 'name', 'slug']);
+        $brandIds = $brands->pluck('id')->toArray(); 
+        
+        $products = $this->productRepository->search($search,$categoryIds,$brandIds,$request->sort);
+        return view('frontend.search', compact('search','products','brands','categories'));
     }
 
     public function filterProduct(Request $request)

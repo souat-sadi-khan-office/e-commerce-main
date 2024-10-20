@@ -5,6 +5,7 @@ namespace App\Repositories\Interface;
 interface ProductRepositoryInterface
 {
     public function index($request, $category_id);
+    public function search($search, $categories,$brands,$sort);
     public function storeProduct($request);
     public function updateProduct($request, $id);
     public function dataTable();

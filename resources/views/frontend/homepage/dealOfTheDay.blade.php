@@ -32,6 +32,32 @@
                                         <div class="pre-loader-stock"></div>
                                         <div class="pre-loader-progress-bar"></div>
                                     </div>
+                                    <div class="countdown_time countdown_style4 mb-4"">
+                                        <div class="countdown_box">
+                                            <div class="countdown-wrap">
+                                                <span class="countdown days">00</span>
+                                                <span class="cd_text">Days</span>
+                                            </div>
+                                        </div>
+                                        <div class="countdown_box">
+                                            <div class="countdown-wrap">
+                                                <span class="countdown hours">00</span>
+                                                <span class="cd_text">Hours</span>
+                                            </div>
+                                        </div>
+                                        <div class="countdown_box">
+                                            <div class="countdown-wrap">
+                                                <span class="countdown minutes">00</span>
+                                                <span class="cd_text">Minutes</span>
+                                            </div>
+                                        </div>
+                                        <div class="countdown_box">
+                                            <div class="countdown-wrap">
+                                                <span class="countdown seconds">00</span>
+                                                <span class="cd_text">Seconds</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +142,6 @@
                 dataType: 'HTML',
                 success: function(response) {
                     if (response) {
-                        console.log(response);
 
                         $('#Flash_Deals').html(response);
                         $('.flash_deal_slider').each(function() {
@@ -144,6 +169,43 @@
                                 responsive: $carousel.data("responsive")
                             });
                         })
+
+                        $('.countdown_time').each(function() {
+                            var endTime = new Date($(this).data('time')).getTime();
+
+                            var countdownInterval = setInterval(() => {
+                                var now = new Date().getTime();
+                                var distance = endTime - now;
+
+                                // Time calculations
+                                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                var hours = Math.floor((distance % (1000 * 60 * 60 *
+                                    24)) / (1000 * 60 * 60));
+                                var minutes = Math.floor((distance % (1000 * 60 * 60)) /
+                                    (1000 * 60));
+                                var seconds = Math.floor((distance % (1000 * 60)) /
+                                    1000);
+
+                                // Update the countdown elements
+                                $(this).find('.days').text(days < 10 ? '0' + days :
+                                    days);
+                                $(this).find('.hours').text(hours < 10 ? '0' + hours :
+                                    hours);
+                                $(this).find('.minutes').text(minutes < 10 ? '0' +
+                                    minutes : minutes);
+                                $(this).find('.seconds').text(seconds < 10 ? '0' +
+                                    seconds : seconds);
+
+                                // If the countdown is finished
+                                if (distance < 0) {
+                                    clearInterval(countdownInterval);
+                                    $(this).html(
+                                    "<span class='cd_text'>EXPIRED</span>");
+                                }
+                            }, 1000);
+                        });
+
+
                     } else {
                         console.error('No response received.');
                     }

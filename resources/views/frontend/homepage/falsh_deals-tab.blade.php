@@ -40,7 +40,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="countdown_time countdown_style4 mb-4" data-time="{{ $deal['end_time'] }}"></div>
+                        <div class="countdown_time countdown_style4 mb-4" data-time="{{ $deal['end_time'] }}">
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown days">00</span>
+                                    <span class="cd_text">Days</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown hours">00</span>
+                                    <span class="cd_text">Hours</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown minutes">00</span>
+                                    <span class="cd_text">Minutes</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown seconds">00</span>
+                                    <span class="cd_text">Seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
