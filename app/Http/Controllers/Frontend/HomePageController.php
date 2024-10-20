@@ -517,10 +517,7 @@ class HomePageController extends Controller
             if (isset($request->flash_deals)) {
                 $flashDeals = $this->flashDeals();
                 return view('frontend.homepage.falsh_deals-tab',compact('flashDeals'));
-                return response()->json([
-                    'success' => true,
-                    'data' => $flashDeals
-                ]);
+                
             }
         }
 
