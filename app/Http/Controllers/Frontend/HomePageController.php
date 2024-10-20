@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Cart;
 use App\Models\CartDetail;
+use App\Models\Subscriber;
 use App\Models\ProductStock;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
@@ -485,7 +486,27 @@ class HomePageController extends Controller
                 return view('frontend.homepage.featured-tab', compact('products'));
             } elseif (isset($request->offred)) {
                 return view('frontend.homepage.offred-tab', compact('products'));
-            } elseif (isset($request->brands)) {
+            } elseif (isset($request->on_sale_product)) {
+                
+                $products = Cache::remember('on_sale_products_', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.on-sale-tab-tab', compact('products'));
+
+            } elseif (isset($request->is_featured_list)) {
+                $products = Cache::remember('featured_products_', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.featured-list-tab', compact('products'));
+            } elseif (isset($request->top_rated_product)) {
+                $products = Cache::remember('top_rated_product', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.top_rated_product_tab', compact('products'));
+            }  elseif (isset($request->brands)) {
 
                 $brands = Cache::remember('brands_', (36000 * 10), function () use ($request) {
                     return $this->brands->getAllBrands()->select('slug', 'logo', 'name', 'status')->where('status', 1);
@@ -794,5 +815,28 @@ class HomePageController extends Controller
             ->where('status', 1);
 
         return view('frontend.brands', compact('brands'));
+    }
+
+    public function postNewsletter(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $email = $request->email;
+
+        if(Subscriber::where('email', $email)->first()) {
+            return response()->json(['status' => false, 'message' => 'You are already subscribed']);
+        } 
+
+        Subscriber::create([
+            'email' => $email
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Thank you for subscribe']);
     }
 }

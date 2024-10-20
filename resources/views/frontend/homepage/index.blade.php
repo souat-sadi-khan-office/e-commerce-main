@@ -112,3 +112,224 @@
     </div>
 @endsection
 
+@push('scripts')
+    <script>
+
+        $(document).ready(function() {
+            _newsletterFormValidation();
+            _loadTopRatedProduct();
+            _loadFeaturedProduct();
+            _loadOnSaleProduct();
+
+            $('#newsletter_submit').show();
+            $('#newsletter_submitting').hide();
+        })
+
+        var _loadOnSaleProduct = function() {
+            $.ajax({
+                url: '/?on_sale_product=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#on-sale-product-area').html(response);
+                        $('.on-sale-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        var _loadFeaturedProduct = function() {
+            $.ajax({
+                url: '/?is_featured_list=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#featured-product-area').html(response);
+                        $('.featured-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        var _loadTopRatedProduct = function() {
+            $.ajax({
+                url: '/?top_rated_product=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#top-rated-product-area').html(response);
+                        $('.top-rated-product-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        var _newsletterFormValidation = function () {
+            if ($('#newletter-form').length > 0) {
+                $('#newletter-form').parsley().on('field:validated', function () {
+                    var ok = $('.parsley-error').length === 0;
+                    $('.bs-callout-info').toggleClass('hidden', !ok);
+                    $('.bs-callout-warning').toggleClass('hidden', ok);
+                });
+            }
+
+            $('#newletter-form').on('submit', function (e) {
+                e.preventDefault();
+
+                $('#newsletter_submit').hide();
+                $('#newsletter_submitting').show();
+
+                $(".ajax_error").remove();
+
+                var submit_url = $('#newletter-form').attr('action');
+                var formData = new FormData($("#newletter-form")[0]);
+
+                $.ajax({
+                    url: submit_url,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        if (!data.status) {
+                            if (data.validator) {
+                                for (const [key, messages] of Object.entries(data.message)) {
+                                    messages.forEach(message => {
+                                        toastr.error(message);
+                                    });
+                                }
+                            } else {
+                                toastr.warning(data.message);
+                            }
+                        } else {
+                            toastr.success(data.message);
+                            
+                            $('#newletter-form')[0].reset();
+                            if (data.load) {
+                                setTimeout(function () {
+
+                                    window.location.href = "";
+                                }, 500);
+                            }
+                        }
+
+                        $('#newsletter_submit').show();
+                        $('#newsletter_submitting').hide();
+                    },
+                    error: function (data) {
+                        var jsonValue = $.parseJSON(data.responseText);
+                        const errors = jsonValue.errors;
+                        if (errors) {
+                            var i = 0;
+                            $.each(errors, function (key, value) {
+                                const first_item = Object.keys(errors)[i]
+                                const message = errors[first_item][0];
+                                if ($('#' + first_item).length > 0) {
+                                    $('#' + first_item).parsley().removeError('required', {
+                                        updateClass: true
+                                    });
+                                    $('#' + first_item).parsley().addError('required', {
+                                        message: value,
+                                        updateClass: true
+                                    });
+                                }
+                                toastr.error(value);
+                                i++;
+
+                            });
+                        } else {
+                            toastr.warning(jsonValue.message);
+                        }
+
+                        $('#newsletter_submit').show();
+                        $('#newsletter_submitting').hide();
+                    }
+                });
+            });
+        };
+
+    </script>
+@endpush

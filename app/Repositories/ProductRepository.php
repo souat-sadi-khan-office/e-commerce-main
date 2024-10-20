@@ -58,6 +58,56 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
+        } elseif (isset($request->on_sale_product)) {
+            return Product::where('status', 1)
+                ->where('is_discounted', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+                
+        } elseif (isset($request->top_rated_product)) {
+            return Product::where('status', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+
+        } elseif (isset($request->is_featured_list)) {
+            return Product::where('status', 1)
+                ->where('is_featured', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+
         } elseif (isset($request->featured)) {
 
             return Product::where('status', 1)
