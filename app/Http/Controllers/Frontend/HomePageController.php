@@ -230,7 +230,7 @@ class HomePageController extends Controller
         return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
     }
 
-    public function addQtyToCart(Request $request) 
+    public function addQtyToCart1(Request $request) 
     {
         $id = $request->id;
         
@@ -290,62 +290,6 @@ class HomePageController extends Controller
             'cart_sub_total_amount' => $cart_sub_total_amount, 
             'cart_total_amount' => $cart_total_amount
         ]);
-    }
-
-    public function productStock($productId, $numberOfQty)
-    {
-        $product = Product::find($productId);
-        if(!$product) {
-            return response()->json(['status' => false, 'message' => 'Product not found.']);
-        }
-
-        dd($product->in_stock);
-        if($product->in_stock == 0) {
-            return response()->json(['status' => false, 'message' => 'Product is out of stock.']);
-        }
-
-        if($product->details->current_stock < $numberOfQty) {
-
-        }
-
-        switch($product->stock_types) {
-            case 'globally':
-                $stock = ProductStock::where('product_id', $productId)->first();
-                if(!$stock) {
-                    return response()->json(['status' => false, 'message' => 'Product stock not found.']);
-                }
-            break;
-        }
-    }
-
-    public function getCartItems(Request $request)
-    {
-        $items = [];
-        $counter = 0;
-        $total_price = 0;
-
-        // Check if customer is logged in
-        if (Auth::guard('customer')->check()) {
-            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
-        } else {
-            // Otherwise, check for cart using IP address
-            $cart = Cart::where('ip', $request->ip())->first();
-        }
-
-        // If cart exists, get the cart details
-        if ($cart) {
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
-        }
-
-        // Return view with cart items
-        if ($request->has('show') && $request->show == 'main-cart-area') {
-            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
-        } else {
-            $html = view('frontend.components.cart_listing', compact('items'))->render();
-        }
-        return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
     }
 
     public function removeCartItems(Request $request)
