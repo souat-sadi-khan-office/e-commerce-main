@@ -29,17 +29,8 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 Route::get('login/facebook', [LoginController::class, 'redirectToFacebook'])->name('login.facebook');
 Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCallback']);
 
-Route::middleware(['web','ipSession'])->group(function () {
-    Route::any('/',[HomePageController::class,'index'])->name('home');
-    
-    Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
-    Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
-    Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
-    Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
-    Route::any('quick-view/{slug}',[HomePageController::class,'quickview'])->name('quick.view');
-});
 
-Route::middleware(['isCustomer', 'web'])->group(function () {
+Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
     Route::get('account', function() {
         return redirect()->route('dashboard');
     });
