@@ -86,8 +86,7 @@ class HelperController extends Controller
         } elseif ($model == 'Category' && Category::where('slug', $slug)->exists()) {
             $model = $this->categoryRepository->getCategoryBySlug($slug);
             if ($model) {
-                $childrenIds = $model->children()->pluck('id')->toArray();
-                $Ids = array_merge([$model->id], $childrenIds);
+                $Ids =$this->getAllDescendantIds($model);
 
                 $categoryIdArray = $model->getParentCategoryIds();
                 $categoryIdArray[] = $model->id;
@@ -152,11 +151,26 @@ class HelperController extends Controller
     {
         if ($request->ajax()) {
             $category = Category::find($request->category_id);
-            $allIds = $category ? array_merge([$category->id], $category->children()->pluck('id')->toArray()) : [];
+            $allIds = $this->getAllDescendantIds($category);
             $products = $this->productRepository->index($request, $allIds);
 
             return view('frontend.components.product_list', compact('products'));
         }
+    }
+
+    private function getAllDescendantIds($model) {
+        $ids = [$model->id];
+    
+        $children = $model->children;
+
+        if(isset($children)){
+
+            foreach ($children as $child) {
+                $ids = array_merge($ids, $this->getAllDescendantIds($child));
+            }
+        }
+    
+        return $ids;
     }
 
     public function productDetails($slug)

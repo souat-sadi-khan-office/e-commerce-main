@@ -28,10 +28,16 @@
                     <input  class="form-control mt-2" type="number" name="position" value="1" >
               
             </div>
-            <div class="col-md-2 mt-3 form-group">
+            <div class="col-md-1 mt-3 form-group">
                 <label for="status">Status <span class="text-danger">*</span></label>
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" name="is_active" checked >
+                </div>
+            </div>
+            <div class="col-md-1 mt-3 form-group">
+                <label for="is_public">Is Public <span class="text-danger">*</span></label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" name="is_public" checked >
                 </div>
             </div>
 

@@ -9,6 +9,7 @@ interface ProductSpecificationRepositoryInterface
  public function store($request);
  public function delete($id);
  public function updatestatus($id);
+ public function updateIsPublic($id);
  public function updateposition($request,$id);
  public function indexview($data);
 
