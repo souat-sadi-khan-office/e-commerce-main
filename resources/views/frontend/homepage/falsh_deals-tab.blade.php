@@ -7,7 +7,7 @@
         @foreach ($deal['product_details'] as $product)
             <div class="item">
                 <div class="deal_wrap">
-                    <div class="product_img">
+                    <div class="product_img" style="margin-right:10px">
                         <a href="{{ route('slug.handle', ['slug' => $product['slug']]) }}">
                             <img src="{{ asset($product['thumb_image'] ?? 'frontend/assets/images/default-image.png') }}"
                                  alt="{{ $product['name'] }}">
@@ -40,7 +40,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="countdown_time countdown_style4 mb-4" data-time="{{ $deal['end_time'] }}"></div>
+                        <div class="countdown_time countdown_style4 mb-4" data-time="{{ $deal['end_time'] }}">
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown days">00</span>
+                                    <span class="cd_text">Days</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown hours">00</span>
+                                    <span class="cd_text">Hours</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown minutes">00</span>
+                                    <span class="cd_text">Minutes</span>
+                                </div>
+                            </div>
+                            <div class="countdown_box">
+                                <div class="countdown-wrap">
+                                    <span class="countdown seconds">00</span>
+                                    <span class="cd_text">Seconds</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

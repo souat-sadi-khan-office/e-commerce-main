@@ -26,15 +26,30 @@
                     </ol>
                 </div>
 
-                <div class="sub-categories col-md-12">
-                    {{-- @if ($model->children)
-                        @foreach ($model->children as $sub_category)
-                            <a class="btn btn-line-fill btn-sm" href="{{ $sub_category->slug }}">
-                                {{ $sub_category->name }}
+               <div class="row">
+                <div class="brands col-md-6">
+
+                    @if (isset($brands))
+                    <h6>Related Brands:</h6>
+                        @foreach ($brands as $brand)
+                            <a class="btn btn-sm btn-fill-out rounded" href="{{ route('slug.handle',$brand->slug) }}">
+                                {{ $brand->name }}
                             </a>
                         @endforeach
-                    @endif --}}
+                    @endif
                 </div>
+                <div class="categories col-md-6">
+
+                    @if (isset($brands))
+                    <h6>Related categories:</h6>
+                        @foreach ($categories as $categories)
+                            <a class="btn btn-sm btn-fill-out rounded" href="{{ route('slug.handle',$categories->slug) }}">
+                                {{ $categories->name }}
+                            </a>
+                        @endforeach
+                    @endif
+                </div>
+               </div>
             </div>
         </div>
     </div>
@@ -67,14 +82,6 @@
                                             <i class="fas fa-list"></i>
                                         </a>
                                     </div>
-                                    <div class="custom_select number-of-data-show">
-                                        <select class="form-control form-control-sm">
-                                            <option value="">Showing</option>
-                                            <option value="9">9</option>
-                                            <option value="12">12</option>
-                                            <option value="18">18</option>
-                                        </select>
-                                    </div>
                                     <div class="custom_select">
                                         <select id="sort-by" class="form-control form-control-sm">
                                             <option value="popularity">Sort by popularity</option>
@@ -89,19 +96,13 @@
                     </div> 
                     <div class="shop_container grid" id="product-area">
                         <div class="row">
-                            {{-- @include('frontend.components.product_list') --}}
+                            @include('frontend.components.product_list',compact('products'))
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ul class="pagination mt-3 justify-content-center pagination_style1">
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#"><i class="linearicons-arrow-right"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
+                    
+                   @include('frontend.components.paginate',compact('products'))
+                    
+                    
                 </div>
             </div>
         </div>
