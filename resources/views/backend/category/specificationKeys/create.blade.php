@@ -37,7 +37,7 @@
             <div class="col-md-1 mt-3 form-group">
                 <label for="is_public">Is Public <span class="text-danger">*</span></label>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" name="is_public" checked >
+                    <input class="form-check-input" type="checkbox" role="switch" name="is_public_input">
                 </div>
             </div>
 

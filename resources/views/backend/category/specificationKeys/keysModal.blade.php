@@ -16,7 +16,7 @@
                     </thead>
                     <tbody>
                         @foreach ($models as $data)
-                            <tr>
+                            <tr data-row-id="{{ $data->id }}">
                                 <td>
                                     <form action="{{ route('admin.category.specification.key.position', $data->id) }}"
                                         method="POST" class="nested-form" data-id="{{ $data->id }}">
@@ -66,7 +66,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="javascript:;" id="delete_item" data-id="{{ $data->id }}"
+                                    <a href="javascript:;" id="delete_specification" data-id="{{ $data->id }}"
                                         data-url="{{ route('admin.category.specification.key.delete', $data->id) }}"
                                         class="btn btn-soft-danger" data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="Delete">

@@ -48,7 +48,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
                 'category_id' => $data->category_id,
                 'position' => $data->position,
                 'status' => isset($data->is_active),
-                'is_public' => isset($data->is_public),
+                'is_public' => isset($data->is_public_input),
             ]);
 
             return response()->json(['message' => 'Specification Key Created successfully!', 'status' => true, 'load' => true]);
@@ -58,7 +58,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     }
 
     public function indexview($models)
-    {
+    { 
         return Datatables::of($models)
             ->addIndexColumn()
             ->editColumn('photo', function ($model) {
@@ -147,7 +147,8 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
     public function delete($id)
     {
         $SpecificationKey = SpecificationKey::findOrFail($id);
-        return $SpecificationKey->delete();
+        $SpecificationKey->delete();
+        return response()->json(['status' => true, 'stay' => true, 'message' => 'Key Deleted successfully.']);
     }
 
 
