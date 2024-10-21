@@ -46,6 +46,7 @@
 <script>
     $(document).ready(function() {
       _initializeMultipleFormsValidation();
+      _componentRemoteModalLoadAfterAjax();
       _statusUpdate();
       _ispublicUpdate();
   });
