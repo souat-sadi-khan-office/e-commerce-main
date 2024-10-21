@@ -7,6 +7,7 @@ interface ProductSpecificationRepositoryInterface
  public function index();
  public function show($models);
  public function store($request);
+ public function getKeysByCategoryId($categoryId);
  public function delete($id);
  public function updatestatus($id);
  public function updateposition($request,$id);

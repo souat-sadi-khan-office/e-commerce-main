@@ -8,14 +8,31 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interface\CategoryRepositoryInterface;
+use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 
 class CategoryController extends Controller
 {
    protected $categoryRepository;
+   protected $key;
 
-   public function __construct(CategoryRepositoryInterface $categoryRepository)
-   {
+   public function __construct(
+      CategoryRepositoryInterface $categoryRepository,
+      ProductSpecificationRepositoryInterface $key    
+   ) {
+      $this->key = $key;
       $this->categoryRepository = $categoryRepository;
+   }
+
+   public function categoryKeys($categoryId)
+   {
+      $category = $this->categoryRepository->getCategoryById($categoryId);
+      if(!$category) {
+         return redirect()->back();
+      }
+
+      $keys = $this->key->getKeysByCategoryId($categoryId);
+      
+      return view('backend.category.keys', compact('category', 'keys'));
    }
 
    public function store(Request $request)
@@ -53,7 +70,6 @@ class CategoryController extends Controller
 
    public function edit(Request $request, $id)
    {
-
       $category = $this->categoryRepository->edit($id);
       if ($request->has('sub')) {
          $parents = $this->categoryRepository->categoriesDropDown(null);

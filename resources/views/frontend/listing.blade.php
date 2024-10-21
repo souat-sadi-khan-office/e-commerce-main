@@ -124,9 +124,7 @@
                         </div>
                     </div> 
                     <div class="shop_container grid" id="product-area">
-                        <div class="row">
-                            @include('frontend.components.product_list')
-                        </div>
+                        @include('frontend.components.product_list')
                     </div>
                     <div class="row">
                         <div class="col-md-12">

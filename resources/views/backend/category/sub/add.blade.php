@@ -59,7 +59,7 @@
                                         Icon 
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="icon" class="form-control iconpicker" required>
+                                    <input type="text" name="icon" value="fi-rr-list" class="form-control iconpicker" required>
                                 </div>
                                 <div class="mb-3 col-6">
                                     <label for="header" class="form-label">

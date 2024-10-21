@@ -19,7 +19,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return Category::with('parent:id,name')
             ->where('parent_id', null)
-            ->select('id', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
+            ->select('id', 'slug', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
             ->get();
     }
 
@@ -32,7 +32,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::with('parent:id,name')
             ->whereHas('parent')
-            ->select('id', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
+            ->select('id', 'slug', 'name', 'photo', 'icon', 'admin_id', 'status', 'is_featured', 'parent_id')
             ->get();
     }
 
@@ -195,6 +195,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         ]);
     }
 
+    public function getCategoryById($id)
+    {
+        return Category::find($id);
+    }
 
     public function view($models)
     {

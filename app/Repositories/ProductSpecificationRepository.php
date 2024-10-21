@@ -352,6 +352,11 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         }
     }
 
+    public function getKeysByCategoryId($categoryId)
+    {
+        return SpecificationKey::where('category_id', $categoryId)->orderBy('position', 'ASC')->get();
+    }
+
     public function attributeindexview($models)
     {
         return Datatables::of($models)

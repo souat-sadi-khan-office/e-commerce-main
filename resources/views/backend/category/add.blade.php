@@ -61,7 +61,7 @@
                                         Icon 
                                         <span class="text-danger">*</span>
                                     </label>
-                                    <input type="text" name="icon" autocomplete="off" class="form-control iconpicker" required>
+                                    <input type="text" name="icon" autocomplete="off" class="form-control iconpicker" required value="fi-rr-list">
                                 </div>
                                 <div class="mb-3 col-4">
                                     <label for="header" class="form-label">

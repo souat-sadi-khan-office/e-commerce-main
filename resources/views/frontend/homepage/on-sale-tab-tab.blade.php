@@ -5,7 +5,7 @@
                 <h4>On Sale Products</h4>
             </div>
             <div class="view_all">
-                <a href="{{ route('on-sale-product') }}" class="text_default">
+                <a href="{{ route('search') }}" class="text_default">
                     <span>View All {{ count($products) }}</span>
                 </a>
             </div>
@@ -18,7 +18,11 @@
             <div class="item">
                 @foreach($products as $index => $product)
                     <div class="product_wrap">
-                        <span class="pr_flash bg-danger">Hot</span>
+                        @if (isset($product['discount_type']))
+                            <span class="pr_flash bg-danger">
+                                {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }} Off
+                            </span>
+                        @endif
                         <div class="product_img">
                             <a href="shop-product-detail.html">
                                 <img src="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }}">
@@ -28,12 +32,15 @@
                         <div class="product_info">
                             <h6 class="product_title"><a href="shop-product-detail.html">{{ $product['name'] }}</a></h6>
                             <div class="product_price">
-                                <span class="price">{{ $product['unit_price'] }}</span>
-                                @if($product['discount'])
-                                    <del>{{ $product['unit_price'] }}</del>
+                                @if (isset($product['discount_type']))
+                                    <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
+                                    <del>{{ format_price(convert_price($product['unit_price'])) }}</del>
                                     <div class="on_sale">
-                                        <span>{{ $product['discounted_price'] }}% Off</span>
+                                        <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
+                                            Off</span>
                                     </div>
+                                @else
+                                    <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
                                 @endif
                             </div>
                             <div class="rating_wrap">
