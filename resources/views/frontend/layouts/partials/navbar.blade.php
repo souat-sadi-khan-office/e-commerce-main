@@ -91,7 +91,7 @@
                     <div class="collapse navbar-collapse mobile_side_menu" id="navbarSidetoggle">
                         <ul class="navbar-nav">
                             @php
-                                $pages = App\Models\Page::with('children')->whereNull('parent_id')->get();
+                                $pages = App\Models\Page::with('children')->where('status', 1)->where('show_on_navbar', 1)->whereNull('parent_id')->get();
                             @endphp
                             @foreach ($pages as $page)
                                 <li class="dropdown">
@@ -114,113 +114,6 @@
                                     @endif
                                 </li>
                             @endforeach
-                            <li class="dropdown">
-                                <a data-bs-toggle="dropdown" class="nav-link dropdown-toggle active" href="#">
-                                    Home
-                                </a>
-                                <div class="dropdown-menu">
-                                    <ul> 
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item" href="index.html">
-                                                Fashion 1
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item" href="index-2.html">
-                                                Fashion 2
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item" href="index-3.html">
-                                                Furniture 1
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item" href="index-4.html">
-                                                Furniture 2
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item" href="index-5.html">
-                                                Electronics 1
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item nav-link nav_item dropdown-toggler" href="index-6.html">
-                                                Electronics 2
-                                            </a>
-                                            <div class="dropdown-menu">
-                                                <ul> 
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item" href="blog-three-columns.html">
-                                                            3 columns
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item dropdown-toggler" href="blog-four-columns.html">
-                                                            4 columns
-                                                        </a>
-                                                        <div class="dropdown-menu">
-                                                            <ul> 
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-three-columns.html">
-                                                                        3 columns
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-four-columns.html">
-                                                                        4 columns
-                                                                    </a>
-                                                                </li> 
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-left-sidebar.html">
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li> 
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-right-sidebar.html">
-                                                                        right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-standard-left-sidebar.html">
-                                                                        Standard Left Sidebar
-                                                                    </a>
-                                                                </li> 
-                                                                <li>
-                                                                    <a class="dropdown-item nav-link nav_item" href="blog-standard-right-sidebar.html">
-                                                                        Standard right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li> 
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item" href="blog-left-sidebar.html">
-                                                            Left Sidebar
-                                                        </a>
-                                                    </li> 
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item" href="blog-right-sidebar.html">
-                                                            right Sidebar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item" href="blog-standard-left-sidebar.html">
-                                                            Standard Left Sidebar
-                                                        </a>
-                                                    </li> 
-                                                    <li>
-                                                        <a class="dropdown-item nav-link nav_item" href="blog-standard-right-sidebar.html">
-                                                            Standard right Sidebar
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>   
-                            </li>
                             <li>
                                 <a class="nav-link nav_item" href="contact.html">
                                     Contact Us

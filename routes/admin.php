@@ -47,12 +47,14 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
         Route::any('update/{id}', [CategoryController::class, 'update'])->name('update');
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::get('sub', [CategoryController::class, 'indexsub'])->name('index.sub');
+        Route::get('keys/{id}', [CategoryController::class, 'categoryKeys'])->name('keys');
 
         Route::group(['prefix' => 'specification', 'as' => 'specification.'], function () {
             Route::get('keys', [SpecificationsController::class, 'index'])->name('key.index');
             Route::get('keys/public', [SpecificationsController::class, 'publickeys'])->name('key.public');
             Route::get('key/create', [SpecificationsController::class, 'create'])->name('key.create');
             Route::post('key/store', [SpecificationsController::class, 'store'])->name('key.store');
+            Route::patch('key/update/{id}', [SpecificationsController::class, 'update'])->name('key.update');
             Route::get('key/show/{id}', [SpecificationsController::class, 'show'])->name('key.show');
             Route::post('status/{id}', [SpecificationsController::class, 'updatestatus'])->name('key.status');
             Route::post('public/{id}', [SpecificationsController::class, 'updateIsPublic'])->name('key.is_public');

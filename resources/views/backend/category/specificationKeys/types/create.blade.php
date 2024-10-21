@@ -18,20 +18,19 @@
                 </div>
             </div>
 
-            <div id="FILTER" class="col-md-5">
-              
-
-            </div>
+            <div id="FILTER" class="col-md-5"></div>
 
             <div class="col-md-5 form-group">
-                <label for="specification_key_id" class="form-label">Select Specification Key <span
-                    class="text-danger">*</span></label>
-            <select name="specification_key_id" id="specification_key_id" class="form-control select" required>
-                <option value="" disabled selected>-- Select Specification Key --</option>
-                @foreach ($keys as $category)
-                    <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
-                @endforeach
-            </select>
+                <label for="specification_key_id" class="form-label">
+                    Select Specification Key 
+                    <span class="text-danger">*</span>
+                </label>
+                <select name="specification_key_id" id="specification_key_id" class="form-control select" required>
+                    <option value="" disabled selected>-- Select Specification Key --</option>
+                    @foreach ($keys as $category)
+                        <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-5 form-group">
                 <label for="position"  class="form-label">Position <span class="text-danger">*</span></label>

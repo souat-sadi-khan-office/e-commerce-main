@@ -108,82 +108,11 @@
                     </div>
                     <div id="search-content" class="text-left">
                         <div class="">
-                            <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">Products</div>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <a class="text-reset" href="#">
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <img class="search-image" src="https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-5600g/ryzen-5-5600g-228x228.jpg">
-                                            </div>
-                                            <div class="col">
-                                                <div class="product-name text-truncate fs-14 mb-5px">
-                                                    AMD Ryzen 5 5600G Processor with Radeon Graphics
-                                                </div>
-                                                <div class="">
-                                                   
-                                                    <del class="opacity-60 fs-15">13,900</del>
-                                                    <span class="fw-600 fs-16 text-primary">13,700</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a class="text-reset" href="#">
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <img class="search-image" src="https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-5600g/ryzen-5-5600g-228x228.jpg">
-                                            </div>
-                                            <div class="col">
-                                                <div class="product-name text-truncate fs-14 mb-5px">
-                                                    AMD Ryzen 5 5600G Processor with Radeon Graphics
-                                                </div>
-                                                <div class="">
-                                                   
-                                                    <del class="opacity-60 fs-15">13,900</del>
-                                                    <span class="fw-600 fs-16 text-primary">13,700</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a class="text-reset" href="#">
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <img class="search-image" src="https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-5600g/ryzen-5-5600g-228x228.jpg">
-                                            </div>
-                                            <div class="col">
-                                                <div class="product-name text-truncate fs-14 mb-5px">
-                                                    AMD Ryzen 5 5600G Processor with Radeon Graphics
-                                                </div>
-                                                <div class="">
-                                                   
-                                                    <del class="opacity-60 fs-15">13,900</del>
-                                                    <span class="fw-600 fs-16 text-primary">13,700</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
+                            
                         </div>
                         <div class="">
-                            <div class="px-2 py-1 text-uppercase fs-10 text-right text-muted bg-soft-secondary">Category Suggestions</div>
-                            <ul class="list-group">
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Desktop</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Laptop</a>
-                                </li>
-                                <li class="list-group-item py-1">
-                                    <a class="text-reset hov-text-primary" href="#">Monitor</a>
-                                </li>
-                            </ul>
+                            
                         </div>
-                        
                     </div>
                 </div>
             </div>

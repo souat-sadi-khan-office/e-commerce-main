@@ -8,6 +8,7 @@ interface CategoryRepositoryInterface
     public function index();
     public function index2();
     public function getCategoryBySlug($slug);
+    public function getCategoryById($id);
     public function store($data);
     public function edit($id);
     public function delete($id);

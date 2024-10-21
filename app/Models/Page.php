@@ -32,6 +32,6 @@ class Page extends Model
     // Each page can have multiple children
     public function children()
     {
-        return $this->hasMany(Page::class, 'parent_id');
+        return $this->hasMany(Page::class, 'parent_id')->where('status', 1)->where('show_on_navbar', 1);
     }
 }

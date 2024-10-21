@@ -525,6 +525,10 @@
 	.btn + .btn {
 		margin-left: 0px;
 	}
+
+	.btn-fill-out {
+		margin-bottom: 10px;
+	}
 	
 .md-height-300 {
 	height: 300px !important;

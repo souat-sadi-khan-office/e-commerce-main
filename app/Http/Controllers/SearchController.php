@@ -272,7 +272,7 @@ class SearchController extends Controller
                 return [
                     'id' => $category->id, 
                     'text' => $category->name,
-                    'image_url' => asset($category->photo)
+                    'image_url' => $category->photo ? asset($category->photo) : asset('pictures/placeholder.jpg')
                 ];
             });
         } else {
@@ -284,8 +284,7 @@ class SearchController extends Controller
                 return [
                     'id' => $category->id, 
                     'text' => $category->name,
-                    'image_url' => asset($category->photo)
-
+                    'image_url' => $category->photo ? asset($category->photo) : asset('pictures/placeholder.jpg')
                 ];
             });        
     

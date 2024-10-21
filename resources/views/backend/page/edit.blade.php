@@ -73,10 +73,10 @@
                             </div>
 
                             <div class="col-md-6 mb-3 form-group">
-                                <label for="show_on_navbar">Status <span class="text-danger">*</span></label>
+                                <label for="show_on_navbar">Show on Navbar <span class="text-danger">*</span></label>
                                 <select name="show_on_navbar" id="show_on_navbar" class="form-control select" required>
-                                    <option {{ $model->sow_on_navbar == 0 ? 'selected' : '' }} value="0">No</option>
-                                    <option {{ $model->sow_on_navbar == 1 ? 'selected' : '' }} value="1">Yes</option>
+                                    <option {{ $model->show_on_navbar == 0 ? 'selected' : '' }} value="0">No</option>
+                                    <option {{ $model->show_on_navbar == 1 ? 'selected' : '' }} value="1">Yes</option>
                                 </select>
                             </div>
 

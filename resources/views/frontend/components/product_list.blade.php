@@ -3,6 +3,12 @@
         @foreach ($products as $product)
             <div class="col-md-4 col-sm-12 col-xl-3">
                 <div class="product">
+                    @if (isset($product['discount_type']))
+                        <span class="pr_flash bg-success">
+                            {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
+                            Off
+                        </span>
+                    @endif
                     <div class="product_img">
                         <a href="{{ route('slug.handle', $product['slug']) }}">
                             <img src="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }}">

@@ -26,11 +26,10 @@
                     </ol>
                 </div>
 
-               <div class="row">
                 <div class="brands col-md-6">
 
                     @if (isset($brands))
-                    <h6>Related Brands:</h6>
+                        <h6>Related Brands:</h6>
                         @foreach ($brands as $brand)
                             <a class="btn btn-sm btn-fill-out rounded" href="{{ route('slug.handle',$brand->slug) }}">
                                 {{ $brand->name }}
@@ -40,8 +39,8 @@
                 </div>
                 <div class="categories col-md-6">
 
-                    @if (isset($brands))
-                    <h6>Related categories:</h6>
+                    @if (isset($categories))
+                        <h6>Related categories:</h6>
                         @foreach ($categories as $categories)
                             <a class="btn btn-sm btn-fill-out rounded" href="{{ route('slug.handle',$categories->slug) }}">
                                 {{ $categories->name }}
@@ -49,7 +48,6 @@
                         @endforeach
                     @endif
                 </div>
-               </div>
             </div>
         </div>
     </div>
@@ -67,11 +65,6 @@
                             <div class="product_header bg_white">
                                 <div class="product_header_left">
                                     <h4><b>{{ $search }} </b></h4>
-
-                                    <button class="tool-btn btn btn-line-fill btn-sm" id="lc-toggle">
-                                        <i class="fas fa-filter"></i>
-                                        Filter
-                                    </button>
                                 </div>
                                 <div class="product_header_right">
                                     <div class="products_view">
@@ -100,7 +93,7 @@
                         </div>
                     </div>
                     
-                   @include('frontend.components.paginate',compact('products'))
+                    @include('frontend.components.paginate',compact('products'))
                     
                     
                 </div>

@@ -72,7 +72,7 @@
                             </div>
 
                             <div class="col-md-6 mb-3 form-group">
-                                <label for="show_on_navbar">Status <span class="text-danger">*</span></label>
+                                <label for="show_on_navbar">Show on Navbar <span class="text-danger">*</span></label>
                                 <select name="show_on_navbar" id="show_on_navbar" class="form-control select" required>
                                     <option selected value="0">No</option>
                                     <option value="1">Yes</option>
