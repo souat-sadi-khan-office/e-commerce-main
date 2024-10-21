@@ -81,7 +81,12 @@ class SpecificationsController extends Controller
         }
         return view('backend.category.specificationKeys.index');
     }
+    public function publickeys()
+    {
+        $models=SpecificationKey::where('is_public',1)->with('admin')->orderBy('position')->paginate(20);
 
+        return view('backend.category.specificationKeys.publicKeys',compact('models'));
+    }
     public function create()
     {
         $categories = $this->productSpecificationRepository->index();
@@ -102,6 +107,11 @@ class SpecificationsController extends Controller
 
       return $this->productSpecificationRepository->updatestatus($id);
    }
+   
+   public function updateIsPublic($id){
+    return $this->productSpecificationRepository->updateIsPublic($id);
+   }
+
    public function updateposition(Request $request,$id)
    {
 

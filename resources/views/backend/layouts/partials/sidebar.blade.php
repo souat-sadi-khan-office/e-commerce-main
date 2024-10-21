@@ -51,39 +51,47 @@
                                 <p>Add Sub Category</p>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
-                            <a href="#"
-                                class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
-                                <i class="nav-icon bi bi-gear-wide-connected"></i>
-                                <p>
-                                    Specification Keys
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
-                                        class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-plus-circle"></i>
-                                        <p>Add Keys</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
-                                        class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-plus-circle"></i>
-                                        <p>Add Key Types</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item"> <a
-                                        href="{{ route('admin.category.specification.type.attribute.index') }}"
-                                        class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
-                                        <i class="nav-icon bi bi-plus-circle"></i>
-                                        <p>Add Type attributes</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        
                     </ul>
 
+                </li>
+
+                <li class="nav-item {{ Request::segment(3) == 'specification' ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link {{ Request::segment(3) == 'specification' ? ' active' : '' }}">
+                        <i class="nav-icon bi bi-gear-wide-connected"></i>
+                        <p>
+                            Specification Keys
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.public') }}"
+                            class="nav-link {{ Request::is('admin/categories/specification/keys/public') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-command"></i>
+                            <p>Public Keys</p>
+                        </a>
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.key.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/keys') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Keys</p>
+                            </a>
+                        </li>
+                    </li>
+                        <li class="nav-item"> <a href="{{ route('admin.category.specification.type.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/types') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Key Types</p>
+                            </a>
+                        </li>
+                        <li class="nav-item"> <a
+                                href="{{ route('admin.category.specification.type.attribute.index') }}"
+                                class="nav-link {{ Request::is('admin/categories/specification/types/attributes') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-plus-circle"></i>
+                                <p>Type attributes</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <!-- Product -->

@@ -48,6 +48,7 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
                 'category_id' => $data->category_id,
                 'position' => $data->position,
                 'status' => isset($data->is_active),
+                'is_public' => isset($data->is_public),
             ]);
 
             return response()->json(['message' => 'Specification Key Created successfully!', 'status' => true, 'load' => true]);
@@ -107,6 +108,20 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         $key->save();
 
         return response()->json(['success' => true, 'message' => 'Key status updated successfully.']);
+    }
+    public function updateIsPublic($id)
+    {
+
+        $key = SpecificationKey::find($id);
+
+        if (!$key) {
+            return response()->json(['success' => false, 'message' => 'Key not found.'], 404);
+        }
+
+        $key->is_public = !$key->is_public;
+        $key->save();
+
+        return response()->json(['success' => true, 'message' => 'Key Public status updated successfully.']);
     }
 
     public function updateposition($request, $id)
@@ -432,21 +447,27 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
 
 
 
-    // Get Datas
     public function keys($id)
     {
-        $keys = SpecificationKey::where('category_id', $id)->select('id', 'name')->get();
+        $keys = SpecificationKey::where('category_id', $id)
+            ->select('id', 'name', 'is_public') 
+            ->get();
+    
         if ($keys->isEmpty()) {
             $category = Category::find($id);
-
-            // Check if a parent category exists
+            
             if ($category && $category->parent) {
                 return $this->keys($category->parent_id);
             }
         }
-
-        return $keys;
+    
+        $publicKeys = SpecificationKey::where('is_public', true)
+            ->select('id', 'name', 'is_public') 
+            ->get();
+    
+        return $keys->merge($publicKeys)->unique('id');
     }
+    
 
     public function types($id)
     {

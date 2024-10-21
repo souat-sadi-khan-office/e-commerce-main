@@ -14,6 +14,7 @@ class SpecificationKey extends Model
         'category_id',
         'name',
         'status',
+        'is_public',
         'position',
     ];
 

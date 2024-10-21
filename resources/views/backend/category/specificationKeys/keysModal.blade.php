@@ -9,7 +9,8 @@
                         <tr>
                             <th style="text-align:center;">Name & Position</th>
                             <th style="width: 21%;">Created By</th>
-                            <th style="width: 7%;">Status</th>
+                            <th style="width: 6%;">Status</th>
+                            <th style="width: 6%;">Is Public</th>
                             <th style="width: 7%;">Actions</th>
                         </tr>
                     </thead>
@@ -55,7 +56,15 @@
                                             data-id="{{ $data->id }}">
                                     </div>
                                 </td>
-
+                                <td>
+                                    <div class="form-check form-switch">
+                                        <input
+                                            data-url="{{ route('admin.category.specification.key.is_public', $data->id) }}"
+                                            class="form-check-input" type="checkbox" role="switch" name="is_public"
+                                            id="is_public{{ $data->id }}" {{ $data->is_public == 1 ? 'checked' : '' }}
+                                            data-id="{{ $data->id }}">
+                                    </div>
+                                </td>
                                 <td>
                                     <a href="javascript:;" id="delete_item" data-id="{{ $data->id }}"
                                         data-url="{{ route('admin.category.specification.key.delete', $data->id) }}"
@@ -77,5 +86,6 @@
     // Call the function to initialize the validation and submission
     $(document).ready(function() {
         _initializeMultipleFormsValidation();
+        _ispublicUpdate();
     });
 </script>
