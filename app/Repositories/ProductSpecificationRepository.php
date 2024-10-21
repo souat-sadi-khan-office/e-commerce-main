@@ -28,6 +28,16 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
             ->get();
     }
 
+    public function getTypeById($id)
+    {
+        return SpecificationKey::find($id);
+    }
+
+    public function getAttributesById($id)
+    {
+        return SpecificationKeyType::find($id);
+    }
+
     public function store($data)
     {
 
@@ -445,7 +455,12 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
         return $SpecificationKey->delete();
     }
 
-
+    public function getOnlyPublicKey()
+    {
+        return SpecificationKey::where('is_public', true)
+            ->select('id', 'name', 'is_public') 
+            ->get();
+    }
 
     public function keys($id)
     {
@@ -471,10 +486,10 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
 
     public function types($id)
     {
-        return SpecificationKeyType::where('specification_key_id', $id)->select('id', 'name')->get();
+        return SpecificationKeyType::where('specification_key_id', $id)->get();
     }
     public function attributes($id)
     {
-        return SpecificationKeyTypeAttribute::where('key_type_id', $id)->select('id', 'name', 'extra')->get();
+        return SpecificationKeyTypeAttribute::where('key_type_id', $id)->get();
     }
 }

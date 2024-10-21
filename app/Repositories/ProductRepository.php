@@ -310,7 +310,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function search($search, $categories, $brands, $sort)
     {
-        $products = Product::where('status', 1)
+        $products = Product::where('status', '!=', 'inactive')
             ->where(function ($query) use ($categories, $brands, $search) {
                 if (isset($categories)) {
                     $query->orWhereIn('category_id', $categories);

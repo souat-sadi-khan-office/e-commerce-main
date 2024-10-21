@@ -70,12 +70,23 @@ class SpecificationsController extends Controller
         return response()->json(['success' => true, 'status' => true, 'load' => true, 'message' => 'Keys updated successfully.']);
     }
 
+    public function keyTypes($id)
+    {
+        // Get the key
+        $key = $this->productSpecificationRepository->getTypeById($id);
+        if(!$key) {
+            return redirect()->back();
+        }
+
+        $types = $this->productSpecificationRepository->types($id);
+        
+        return view('backend.category.specificationKeys.types.custom', compact('key', 'types'));
+    }
+
     public function index(Request $request)
     {
         $categories = $this->productSpecificationRepository->index();
-        // dd($categories);
         $view = $this->productSpecificationRepository->indexview($categories);
-        // dd($view);
         if ($request->ajax()) {
             return $view;
         }

@@ -130,7 +130,7 @@
                                 <p>
                                     <a id="wish_list_counter" href="{{ route('account.wishlist') }}">
                                         @if (!Auth::guard('customer')->check())
-                                            0
+                                            {{ Session::get('user_country') }}
                                         @else
                                             {{ App\Models\WishList::where('user_id', Auth::guard('customer')->user()->id)->count() }}
                                         @endif
