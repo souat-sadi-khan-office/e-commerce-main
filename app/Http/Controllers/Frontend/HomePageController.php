@@ -369,9 +369,20 @@ class HomePageController extends Controller
 
         // If the product exists in the cart, update quantity
         if ($cartDetail) {
+
+            $stockResponse = getProductStock($product->id, ($cartDetail->quantity + 1));
+            if(!$stockResponse['status']) {
+                return response()->json($stockResponse);
+            }
+            
             $cartDetail->quantity += $request->quantity;
             $cartDetail->price += $product->unit_price * $request->quantity;
         } else {
+
+            $stockResponse = getProductStock($product->id, 1);
+            if(!$stockResponse['status']) {
+                return response()->json($stockResponse);
+            }
             // Otherwise, create a new cart detail
             $cartDetail = new CartDetail([
                 'cart_id' => $cart->id,

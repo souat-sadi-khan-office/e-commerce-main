@@ -6,6 +6,7 @@ use App\Models\Currency;
 use App\Models\HomepageSettings;
 use App\Models\ConfigurationSetting;
 use App\Models\Country;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
@@ -218,6 +219,78 @@ function store_exchange_rate($currency_code, $rate)
 
     // Store in cache as well
     Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time') ?? 3600);
+}
+
+function getProductStock($productId, $qty)
+{
+    // getting the product
+    $product = Product::find($productId);
+    if(!$product) {
+        return ['status' => false, 'message' => 'Product Not Found'];
+        // return response()->json(['status' => false, 'message' => 'Product Not Found']);
+    }
+
+    // checking product status
+    if($product->status == 0) {
+        return ['status' => false, 'message' => 'Product is currently not in sale'];
+    }
+
+    // checking product in_stock status
+    if($product->in_stock == 0) {
+        return ['status' => false, 'message' => 'Product is currently out of stock'];
+    }
+
+    // getting product stock type
+    $stockType = $product->stock_types;
+
+    // checking current stock
+    if(!$product->details) {
+        return ['status' => false, 'message' => 'Product Information Not Found'];
+    }
+
+    if($product->details->current_stock < $qty) {
+        return ['status' => false, 'message' => 'This product is not available in the desired quantity or not in stock'];
+    }
+
+    // checking product stock
+    if(!$product->stock) {
+        return ['status' => false, 'message' => 'Product Stock Not Found'];
+    }
+
+    switch($stockType) {
+        case 'globally':
+
+            $stock = $product->stock->where('in_stock', 1)->first();
+            if(!$stock) {
+                return ['status' => false, 'message' => 'Product is out of stock'];
+            }
+            
+            return ['status' => true, 'stock' => $stock->stock];
+        break;
+        case 'country_wise':
+            if(!Session::has('user_country')) {
+                return ['status' => false, 'message' => 'Please select your country to buy this product'];
+            }
+
+            if(Session::get('user_country') != '') {
+                $userCountry = Session::get('user_country');
+                
+                $country = Country::where('name', $userCountry)->first();
+                if(!$country) {
+                    return ['status' => false, 'message' => 'This product has no stock in your country. Please change your country.'];
+                }
+
+                $countryId = $country->id;
+                $stock = $product->stock->where('in_stock', 1)->where('country_id', $countryId)->first();
+                if(!$stock) {
+                    return ['status' => false, 'message' => 'This product has no stock in your country. Please change your country.'];
+                }
+
+                return ['status' => true, 'stock' => $stock->stock];
+            }
+        break;
+    }
+
 }
 
 function get_exchange_rate($currency_code)
