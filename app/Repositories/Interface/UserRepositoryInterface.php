@@ -11,4 +11,5 @@ interface UserRepositoryInterface
     public function getUserPhoneList();
     public function getUserWishList();
     public function removeWishList($id);
+    public function informations($country_id);
 }

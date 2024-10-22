@@ -38,6 +38,5 @@
         @endif
     </script>
 
+<script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>
     @stack('scripts')
-
-    <script src="{{ asset('frontend/assets/js/scripts.js') }}"></script>

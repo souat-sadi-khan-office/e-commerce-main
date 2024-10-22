@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\UserController;
 use App\Http\Controllers\Frontend\PhoneBookController;
 use App\Http\Controllers\Frontend\AddressController;
 use App\Http\Controllers\Frontend\HomePageController;
+use App\Http\Controllers\Frontend\OrderController;
 
 // Route::get('/', function () {
 //     return view('frontend.homepage.index');
@@ -53,6 +54,11 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
         Route::get('saved-pc', [UserController::class, 'saved_pc'])->name('saved_pc');
         Route::get('star-points', [UserController::class, 'star_points'])->name('star_points');
         Route::get('transaction', [UserController::class, 'transactions'])->name('transaction');
+    });
+    Route::prefix('order')->name('order.')->group(function () {
+        Route::get('checkout',[OrderController::class,'checkout'])->name('checkout');
+        Route::post('place',[OrderController::class,'store'])->name('store');
+        Route::post('get_address/{id}',[OrderController::class,'address'])->name('address');
     });
 });
 

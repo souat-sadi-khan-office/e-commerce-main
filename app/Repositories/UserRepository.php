@@ -35,8 +35,8 @@ class UserRepository implements UserRepositoryInterface
     public function removeWishList($id)
     {
         $wishlist = WishList::find($id);
-        
-        if(!$wishlist) {
+
+        if (!$wishlist) {
             return response()->json(['status' => false, 'message' => 'Product not found']);
         }
 
@@ -109,5 +109,57 @@ class UserRepository implements UserRepositoryInterface
 
         return UserPhone::where('user_id', $userId)->orderBy('id', 'DESC')->get();
     }
+    public function informations($country_id)
+    {
+        $user = Auth::guard('customer')->user();
+
+        $addresses = $user->address()
+            ->with(['country:id,name', 'city:id,name']) 
+            ->where('country_id', $country_id)
+            ->get();
     
+            $mappedAddresses = $addresses->map(function ($address) {
+                $fullAddressParts = [];
+            
+                if ($address->address) {
+                    $fullAddressParts[] = $address->address;
+                }
+            
+                if (isset($address->address_line_2) && $address->address_line_2) {
+                    $fullAddressParts[] = $address->address_line_2;
+                }
+            
+                if ($address->area) {
+                    $fullAddressParts[] = $address->area . '-' . $address->postcode;
+                }
+            
+                if ($address->city && $address->city->name) {
+                    $fullAddressParts[] = $address->city->name;
+                }
+                
+                if ($address->country && $address->country->name) {
+                    $fullAddressParts[] = $address->country->name;
+                }
+            
+                $fullAddress = implode(',', $fullAddressParts);
+            
+                return [
+                    'id' => $address->id,
+                    'address' => $fullAddress,
+                    'is_default' => $address->is_default,
+                    'name' => trim($address->first_name . ' ' . $address->last_name), // Trim any excess whitespace
+                    'company_name' => $address->company_name,
+                ];
+            });
+            
+        $phones = $user->phone()->where('is_default',1)->select('phone_number', 'is_default')->first();
+
+        return [
+            'name' => $user->name,
+            'email' => $user->email,
+            'addresses' => $mappedAddresses,
+            'phones' => $phones,
+        ];
+
+    }
 }
