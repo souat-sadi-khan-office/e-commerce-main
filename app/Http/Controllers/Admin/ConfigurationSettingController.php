@@ -74,7 +74,10 @@ class ConfigurationSettingController extends Controller
             $data = array();
             if($key == 'header_menu_labels' || $key == 'header_menu_links' || $key == 'footer_menu_one_labels' || $key == 'footer_menu_one_links' || $key == 'footer_menu_two_labels' || $key == 'footer_menu_two_links' ) {
                 $data['value'] = json_encode($value);
-            } else {
+            }elseif($key == 'system_default_delivery_charge') {
+                $data['value'] = covert_to_usd($value);
+            }
+            else {
                 $data['value'] = $value;
             }
 

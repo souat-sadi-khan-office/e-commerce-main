@@ -14,6 +14,8 @@ class OrderDetail extends Model
         'shipping_method',
         'shipping_address',
         'billing_address',
+        'phone',
+        'email'
     ];
 
     // Define the relationships

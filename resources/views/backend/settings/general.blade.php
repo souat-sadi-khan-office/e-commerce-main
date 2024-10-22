@@ -149,6 +149,37 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header">
+                            <h2 class="h5 mb-0">System Default Delivery Charge</h2>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="ajax_form_DeliveryCharge">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-md-12 form-group mb-3">
+                                        <label for="system_default_delivery_charge">System Default Delivery Charge  <span class="text-danger">*</span></label>
+                                        <input type="number" name="system_default_delivery_charge" value="{{round(covert_to_defalut_currency(get_settings('system_default_delivery_charge')))}}" class="form-control">
+                                    </div>
+            
+                                    <div class="col-md-12 form-group text-end">
+                                        <button type="submit" id="DeliveryCharge" class="btn btn-soft-success">
+                                            <i class="bi bi-send"></i>
+                                            Update
+                                        </button>
+                                        <button class="btn btn-soft-warning" style="display: none;" id="submitting_DeliveryCharge" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Loading...
+                                        </button>
+                                    </div>
+            
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
                             <h2 class="h5 mb-0">Set Currency Formats</h2>
                         </div>
                         <div class="card-body">
@@ -332,7 +363,98 @@
                 });
             });
         };
+        $('.ajax_form_DeliveryCharge').on('submit', function (e) {
+                e.preventDefault();
 
+                $('#DeliveryCharge').hide();
+                $('#submitting_DeliveryCharge').show();
+
+                $(".ajax_error").remove();
+
+                var submit_url = $('.ajax_form_DeliveryCharge').attr('action');
+                var formData = new FormData($(".ajax_form_DeliveryCharge")[0]);
+
+                //Start Ajax
+                $.ajax({
+                    url: submit_url,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false, // The content type used when sending data to the server.
+                    cache: false, // To unable request pages to be cached
+                    processData: false,
+                    dataType: 'JSON',
+                    success: function (data) {
+                        console.log(data)
+                        if (!data.status) {
+                            if (data.validator) {
+                                for (const [key, messages] of Object.entries(data.message)) {
+                                    messages.forEach(message => {
+                                        toastr.error(message);
+                                    });
+                                }
+                            } else {
+                                toastr.error(data.message);
+                            }
+                        } else {
+                            toastr.success(data.message);
+                            
+                            $('.ajax_form_DeliveryCharge')[0].reset();
+                            if (data.goto) {
+                                setTimeout(function () {
+
+                                    window.location.href = data.goto;
+                                }, 500);
+                            }
+
+                            if (data.load) {
+                                setTimeout(function () {
+
+                                    window.location.href = "";
+                                }, 500);
+                            }
+
+                            if (data.load) {
+                                setTimeout(function () {
+
+                                    window.location.href = "";
+                                }, 1000);
+                            }
+                        }
+
+                        $('#DeliveryCharge').show();
+                        $('#submitting_DeliveryCharge').hide();
+                    },
+                    error: function (data) {
+                        var jsonValue = $.parseJSON(data.responseText);
+                        const errors = jsonValue.errors;
+                        if (errors) {
+                            var i = 0;
+                            $.each(errors, function (key, value) {
+                                const first_item = Object.keys(errors)[i]
+                                const message = errors[first_item][0];
+                                if ($('#' + first_item).length > 0) {
+                                    $('#' + first_item).parsley().removeError('required', {
+                                        updateClass: true
+                                    });
+                                    $('#' + first_item).parsley().addError('required', {
+                                        message: value,
+                                        updateClass: true
+                                    });
+                                }
+                                // $('#' + first_item).after('<div class="ajax_error" style="color:red">' + value + '</div');
+                                toastr.error(value);
+                                i++;
+
+                            });
+                        } else {
+                            toastr.warning(jsonValue.message);
+                        }
+
+                        $('#DeliveryCharge').show();
+                        $('#submitting_DeliveryCharge').hide();
+                    }
+                });
+            });
         _formValidation1();
         
         var _formValidation2 = function () {
