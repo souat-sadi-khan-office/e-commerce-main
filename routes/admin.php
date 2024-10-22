@@ -60,22 +60,25 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::post('public/{id}', [SpecificationsController::class, 'updateIsPublic'])->name('key.is_public');
             Route::post('updateposition/{id}', [SpecificationsController::class, 'updateposition'])->name('key.position');
             Route::any('delete/{id}', [SpecificationsController::class, 'delete'])->name('key.delete');
+            Route::get('types/{id}', [SpecificationsController::class, 'keyTypes'])->name('types');
 
             Route::group(['prefix' => 'types', 'as' => 'type.'], function () {
                 Route::get('/', [SpecificationsTypes::class, 'index'])->name('index');
                 Route::get('create', [SpecificationsTypes::class, 'create'])->name('create');
                 Route::post('store', [SpecificationsTypes::class, 'store'])->name('store');
+                Route::patch('update/{id}', [SpecificationsTypes::class, 'update'])->name('update');
                 Route::get('show/{id}', [SpecificationsTypes::class, 'show'])->name('show');
                 Route::post('status/{id}', [SpecificationsTypes::class, 'updatestatus'])->name('status');
                 Route::post('show_on_filter/{id}', [SpecificationsTypes::class, 'filterstatus'])->name('filter');
                 Route::post('updateposition/{id}', [SpecificationsTypes::class, 'updateposition'])->name('position&filter');
                 Route::any('delete/{id}', [SpecificationsTypes::class, 'delete'])->name('delete');
-
+                Route::get('attributes/{id}', [SpecificationsTypes::class, 'typeAttributes'])->name('attributes');
 
                 Route::group(['prefix' => 'attributes', 'as' => 'attribute.'], function () {
                     Route::get('/', [SpecificationAttributes::class, 'index'])->name('index');
                     Route::get('create', [SpecificationAttributes::class, 'create'])->name('create');
                     Route::post('store', [SpecificationAttributes::class, 'store'])->name('store');
+                    Route::patch('update/{id}', [SpecificationAttributes::class, 'updateAttributes'])->name('update');
                     Route::get('show/{id}', [SpecificationAttributes::class, 'show'])->name('show');
                     Route::post('update/{id}', [SpecificationAttributes::class, 'update'])->name('update');
                     Route::post('status/{id}', [SpecificationAttributes::class, 'updatestatus'])->name('status');
@@ -109,6 +112,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::post('add/{productId}', [ProductController::class, 'specificationsAdd'])->name('add');
             Route::get('edit', [ProductController::class, 'specificationproducts'])->name('edit');
             Route::get('edit/{id}', [ProductController::class, 'specificationproductModal'])->name('edit.modal');
+            Route::get('edit/page/{id}', [ProductController::class, 'specificationProductPage'])->name('edit.page');
             Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
             Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
         });

@@ -22,7 +22,11 @@ interface ProductRepositoryInterface
     public function specificationproducts();
     public function specificationproductsDatatable();
     public function specificationproductModal($id);
+    public function specificationProductPage($id);
     public function keyfeature($id);
     public function specificationsAdd($request, $id);
     public function delete($id);
+
+    public function isDiscountedProduct($product);
+    public function discountPrice($product);
 }

@@ -1,5 +1,5 @@
 @extends('backend.layouts.app')
-@section('title', 'Category Specification Management')
+@section('title', 'Category Specification Type Management')
 @push('style')
 @endpush
 @section('page_name')
@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">Category Specification Management</h1>
+                    <h1 class="h3 mb-0">Category Specification Type Management</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
@@ -16,10 +16,10 @@
                         </li>
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.category.index') }}">
-                                {{ $category->name }}
+                                {{ $key->category->name }}
                             </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Specification Keys</li>
+                        <li class="breadcrumb-item active" aria-current="page">Specification Types</li>
                     </ol>
                 </div>
 
@@ -34,17 +34,47 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="POST" class="content_form" action="{{ route('admin.category.specification.key.update', $category->id) }}">
+            <form method="POST" class="content_form" action="{{ route('admin.category.specification.type.update', $key->id) }}">
                 @csrf
                 @method('PATCH')
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <h5>Manage Specification Keys for <b>{{ $category->name }}</b> category</h5>
+                        <h5>Manage Specification Types for <b>{{ $key->category->name }}</b> category</h5>
                     </div>
                     <div class="col-md-12 form-group mb-3">
                         <div class="alert alert-warning">
-                            <b>Warning</b>: If you delete any Specification from here, It will delete all the Specification Types and attributes accordition to the Specification key. Be careful about this.
+                            <b>Warning</b>: If you delete any Specification from here, It will delete all the Specification attributes accordition to the Specification Type. Be careful about this.
                         </div>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-house-add-fill"></i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">
+                                    Parent Categories
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index.sub') }}">
+                                    Sub Categories
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">
+                                    {{ $key->category->name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.keys', $key->category->id) }}">
+                                    {{ $key->name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Specification Types</li>
+                        </ol>
                     </div>
                     <div class="col-md-12 mb-3 table-responsive">
                         <table class="table table-bordered table-striped table-hover" id="data-table">
@@ -53,24 +83,13 @@
                                     <th>Name</th>
                                     <th>Status</th>
                                     <th width="7%">Position</th>
+                                    <th>Show on Filter</th>
                                     <th width="10%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="key-table">
-                                @if (count($publicKeys) > 0) 
-                                    @foreach ($publicKeys as $public_key)
-                                        <tr>
-                                            <td class="bg-info text-white" colspan="3">{{ $public_key->name }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.category.specification.types', $public_key->id) }}" class="btn btn-sm btn-icon btn-outline-info">
-                                                    Add Types
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                                @if (count($keys))
-                                    @foreach ($keys as $key => $model)
+                                @if (count($types) > 0)
+                                    @foreach ($types as $key => $model)
                                         <tr id="data_{{ $model->id }}">
                                             <td>
                                                 <input type="hidden" name="id[]" class="form-control" value="{{ $model->id }}">
@@ -83,24 +102,33 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="position[]" id="position_{{ $key }}" class="form-control" value="{{ $model->position }}">
+                                                <input type="text" name="position[]" id="position_{{ $key }}" class="form-control number" value="{{ $model->position }}">
+                                            </td>
+                                            <td>
+                                                <select name="show_on_filter[]" data-id="{{ $model->id }}" class="form-control show_on_filter select" required>
+                                                    <option {{ $model->show_on_filter == 1 ? 'selected' : '' }} value="1">Yes</option>
+                                                    <option {{ $model->show_on_filter == 0 ? 'selected' : '' }} value="0">No</option>
+                                                </select>
+                                                <div class="filter_name_area" id="filter_area_{{ $model->id }}" style="display:{{ $model->show_on_filter == 0 ? 'none' : 'block' }};">
+                                                    <input type="text" name="filter_name[]" class="form-control" value="{{ $model->filter_name }}">
+                                                </div>
                                             </td>
                                             <td>
                                                 <a href="javascript:;" class="btn remove-id btn-sm btn-danger remove-item" data-id="{{ $model->id }}">
                                                     <i class="bi bi-trash3"></i>
                                                 </a>
-                                                <a href="{{ route('admin.category.specification.types', $model->id) }}" class="btn btn-sm btn-icon btn-outline-info">
-                                                    Add Types
+                                                <a href="{{ route('admin.category.specification.type.attributes', $model->id) }}" class="btn btn-sm btn-icon btn-outline-info">
+                                                    Add Attributes
                                                 </a>
                                             </td>
                                         </tr>
                                     @endforeach
-                                @endif
+                                @endif 
                             </tbody>
                         </table>
                     </div>
                     <div class="col-md-6">
-                        <input type="hidden" id="counter" value="{{ count($keys) }}">
+                        <input type="hidden" id="counter" value="{{ count($types) }}">
                         <a href="javascript:;" class="add-new btn btn-sm btn-primary">
                             <i class="bi bi-plus"></i>
                             Add New
@@ -164,17 +192,26 @@
             let content = `
                 <tr id="data_`+ position +`">
                     <td>
-                        <input type="hidden" name="id[]" class="form-control" value="">
+                        <input type="hidden" name="id[]" class="form-control">
                         <input required type="text" name="name[]" class="form-control" value="">
                     </td>
                     <td>
-                        <select name="status[]" class="form-control select">
-                            <option selected value="1">Active</option>
+                        <select name="status[]" class="form-control select" required>
+                            <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="position[]" class="form-control" value="`+ position +`">
+                        <input type="text" name="position[]" value="`+ position +`" class="form-control" required>
+                    </td>
+                    <td>
+                        <select name="show_on_filter[]" data-id="`+ position +`" class="form-control show_on_filter select" required>
+                            <option value="1">Yes</option>
+                            <option selected value="0">No</option>
+                        </select>
+                        <div class="filter_name_area" id="filter_area_`+ position +`" style="display:none;">
+                            <input type="text" name="filter_name[]" class="form-control">
+                        </div>
                     </td>
                     <td>
                         <a href="javascript:;" class="btn btn-sm btn-danger remove-item" data-id="`+ position +`">
@@ -187,6 +224,16 @@
             $('#key-table').append(content);
             _componentSelect();
             _checkForData();
+        })
+
+        $(document).on('change', '.show_on_filter', function() {
+            let val = $(this).val();
+            let id = $(this).data('id');
+            if(val == 0) {
+                $('#filter_area_'+id).hide();
+            } else {
+                $('#filter_area_'+id).show();
+            }
         })
 
         $(document).on('click', '.remove-item', function() {

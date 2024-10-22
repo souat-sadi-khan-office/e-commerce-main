@@ -7,6 +7,8 @@ use App\Models\SpecificationKey;
 use App\Http\Controllers\Controller;
 use App\Models\SpecificationKeyType;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class SpecificationsTypes extends SpecificationsController
 {
@@ -17,6 +19,77 @@ class SpecificationsTypes extends SpecificationsController
     {
         $this->productSpecificationRepository = $productSpecificationRepository;
     }
+
+    public function update(Request $request, $keyId) 
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|array',
+            'position' => 'required|array',
+            'status' => 'required|array',
+            'show_on_filter' => 'required|array',
+            'filter_name' => 'nullable|array'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'status' => false, 'validator' => true, 'message' => $validator->errors()]);
+        }
+
+        if(count($request->id) > 0) {
+            foreach ($request->id as $i => $id) {
+                if ($id) {
+                    SpecificationKeyType::updateOrCreate(
+                        ['id' => $id],
+                        [
+                            'name' => $request->name[$i], 
+                            'status' => $request->status[$i],
+                            'position' => $request->position[$i],
+                            'show_on_filter' => $request->show_on_filter[$i],
+                            'filter_name' => $request->filter_name[$i]
+                        ]
+                    );
+                } else {
+                    SpecificationKeyType::create([
+                        'name' => $request->name[$i],
+                        'status' => $request->status[$i],
+                        'position' => $request->position[$i],
+                        'admin_id' => Auth::guard('admin')->user()->id,
+                        'specification_key_id' => $keyId,
+                        'show_on_filter' => $request->show_on_filter[$i],
+                        'filter_name' => $request->filter_name[$i]
+                    ]);
+                }
+            }
+        }
+
+        $remove_ids = $request->remove_ids;
+        if($remove_ids != '') {
+            $idArray = explode(',', $remove_ids);
+            if(count($idArray) > 0) {
+                foreach($idArray as $idItem) {
+                    $spec = SpecificationKeyType::find($idItem);
+                    if($spec) {
+                        $spec->delete();
+                    }
+                }
+            }
+        }
+
+        return response()->json(['success' => true, 'status' => true, 'load' => true, 'message' => 'Types updated successfully.']);
+    }
+
+    public function typeAttributes($id)
+    {
+        // Get the key
+        $type = $this->productSpecificationRepository->getAttributesById($id);
+        if(!$type) {
+            return redirect()->back();
+        }
+
+        $attributes = $this->productSpecificationRepository->attributes($id);
+        
+        return view('backend.category.specificationKeys.types.attributes.custom', compact('attributes', 'type'));
+    }
+
     public function index(Request $request)
     {
         $keys = $this->productSpecificationRepository->typesindex();

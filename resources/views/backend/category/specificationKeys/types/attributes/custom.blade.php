@@ -1,5 +1,5 @@
 @extends('backend.layouts.app')
-@section('title', 'Category Specification Management')
+@section('title', 'Category Specification Attributes Management')
 @push('style')
 @endpush
 @section('page_name')
@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="h3 mb-0">Category Specification Management</h1>
+                    <h1 class="h3 mb-0">Category Specification Attributes Management</h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('admin.dashboard') }}">
@@ -15,11 +15,11 @@
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.category.index') }}">
-                                {{ $category->name }}
+                            <a href="{{ route('admin.category.index.sub') }}">
+                                {{ $type->specificationKey->category->name }}
                             </a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Specification Keys</li>
+                        <li class="breadcrumb-item active" aria-current="page">Specification Attributes</li>
                     </ol>
                 </div>
 
@@ -34,17 +34,47 @@
 
     <div class="card">
         <div class="card-body">
-            <form method="POST" class="content_form" action="{{ route('admin.category.specification.key.update', $category->id) }}">
+            <form method="POST" class="content_form" action="{{ route('admin.category.specification.type.attribute.update', $type->id) }}">
                 @csrf
                 @method('PATCH')
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <h5>Manage Specification Keys for <b>{{ $category->name }}</b> category</h5>
+                        <h5>Manage Specification Attributes for <b>{{ $type->specificationKey->category->name }}</b> category</h5>
                     </div>
                     <div class="col-md-12 form-group mb-3">
                         <div class="alert alert-warning">
-                            <b>Warning</b>: If you delete any Specification from here, It will delete all the Specification Types and attributes accordition to the Specification key. Be careful about this.
+                            <b>Warning</b>: If you delete any Specification from here, It will delete all the Specification attributes accordition to the Specification Type. Be careful about this.
                         </div>
+                    </div>
+                    <div class="col-md-12 form-group mb-3">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-house-add-fill"></i>
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index') }}">
+                                    Parent Categories
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index.sub') }}">
+                                    Sub Categories
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.index.sub') }}">
+                                    {{ $type->specificationKey->category->name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.category.specification.types', $type->specificationKey->id) }}">
+                                    {{ $type->name }}
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Specification Types</li>
+                        </ol>
                     </div>
                     <div class="col-md-12 mb-3 table-responsive">
                         <table class="table table-bordered table-striped table-hover" id="data-table">
@@ -52,29 +82,17 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Status</th>
-                                    <th width="7%">Position</th>
                                     <th width="10%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="key-table">
-                                @if (count($publicKeys) > 0) 
-                                    @foreach ($publicKeys as $public_key)
-                                        <tr>
-                                            <td class="bg-info text-white" colspan="3">{{ $public_key->name }}</td>
-                                            <td>
-                                                <a href="{{ route('admin.category.specification.types', $public_key->id) }}" class="btn btn-sm btn-icon btn-outline-info">
-                                                    Add Types
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                                @if (count($keys))
-                                    @foreach ($keys as $key => $model)
+                                @if (count($attributes) > 0)
+                                    @foreach ($attributes as $key => $model)
                                         <tr id="data_{{ $model->id }}">
                                             <td>
                                                 <input type="hidden" name="id[]" class="form-control" value="{{ $model->id }}">
                                                 <input type="text" name="name[]" class="form-control" value="{{ $model->name }}">
+                                                <textarea name="extra[]" class="form-control" cols="30" rows="3">{{ $model->extra }}</textarea>
                                             </td>
                                             <td>
                                                 <select name="status[]" id="status_{{ $key }}" class="form-control select">
@@ -83,24 +101,18 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="position[]" id="position_{{ $key }}" class="form-control" value="{{ $model->position }}">
-                                            </td>
-                                            <td>
                                                 <a href="javascript:;" class="btn remove-id btn-sm btn-danger remove-item" data-id="{{ $model->id }}">
                                                     <i class="bi bi-trash3"></i>
-                                                </a>
-                                                <a href="{{ route('admin.category.specification.types', $model->id) }}" class="btn btn-sm btn-icon btn-outline-info">
-                                                    Add Types
                                                 </a>
                                             </td>
                                         </tr>
                                     @endforeach
-                                @endif
+                                @endif 
                             </tbody>
                         </table>
                     </div>
                     <div class="col-md-6">
-                        <input type="hidden" id="counter" value="{{ count($keys) }}">
+                        <input type="hidden" id="counter" value="{{ count($attributes) }}">
                         <a href="javascript:;" class="add-new btn btn-sm btn-primary">
                             <i class="bi bi-plus"></i>
                             Add New
@@ -164,17 +176,15 @@
             let content = `
                 <tr id="data_`+ position +`">
                     <td>
-                        <input type="hidden" name="id[]" class="form-control" value="">
+                        <input type="hidden" name="id[]" class="form-control">
                         <input required type="text" name="name[]" class="form-control" value="">
+                        <textarea name="extra[]" class="form-control" cols="30" rows="3"></textarea>
                     </td>
                     <td>
-                        <select name="status[]" class="form-control select">
-                            <option selected value="1">Active</option>
+                        <select name="status[]" class="form-control select" required>
+                            <option value="1">Active</option>
                             <option value="0">Inactive</option>
                         </select>
-                    </td>
-                    <td>
-                        <input type="text" name="position[]" class="form-control" value="`+ position +`">
                     </td>
                     <td>
                         <a href="javascript:;" class="btn btn-sm btn-danger remove-item" data-id="`+ position +`">

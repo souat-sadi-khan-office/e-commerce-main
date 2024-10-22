@@ -4,5 +4,8 @@
         data-bs-toggle="tooltip" data-bs-placement="top" title="Keys">
         <i class="bi bi-info-circle"></i>
     </a>
-    <span class="ms-2">Specifications</span> <!-- Optional text next to the button -->
+    <a href="{{ route('admin.product.specification.edit.page', $model['id']) }}" class="btn btn-primary"
+        data-bs-toggle="tooltip" data-bs-placement="top" title="Update Specifications">
+        <i class="bi bi-send"></i>
+    </a>
 </div>

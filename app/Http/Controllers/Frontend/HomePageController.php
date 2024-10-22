@@ -86,118 +86,189 @@ class HomePageController extends Controller
         }
     }
 
-    public function cart(Request $request) 
+    public function addToCart(Request $request)
     {
-        $items = [];
-        $counter = 0;
-        $total_price = 0;
+        $slug = $request->slug;
+        $quantity = $request->quantity ? $request->quantity : 1;
+        $item_sub_total_price = 0;
 
-        // Check if customer is logged in
-        if(Auth::guard('customer')->check()) {
-            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
-        } else {
-            // Otherwise, check for cart using IP address
-            $cart = Cart::where('ip', $request->ip())->first();
+        if($quantity > 100) {
+            return response()->json(['status' => false, 'message' => 'This product is not available in the desired quantity or not in stock']);
         }
 
-        // If cart exists, get the cart details
-        if($cart) {
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
+        $product = Product::where('slug', $slug)->first();
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => "Product not Found"
+            ]);
         }
 
-        return view('frontend.cart', compact('items', 'cart'));
-    }
+        // Find or create a cart for the user or by IP address
+        $cart = Cart::firstOrCreate(
+            ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
+            ['total_quantity' => 0, 'currency_id' => 1]
+        );
 
-    public function addQtyToCart(Request $request) 
-    {
-        $id = $request->id;
-        $cart_total_amount = 0;
-        $cart_sub_total_amount = 0;
-        $item_sub_total = 0;
-        
-        if(!$id) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
+        // Check if the product already exists in the cart
+        $cartDetail = CartDetail::where('cart_id', $cart->id)
+            ->where('product_id', $product->id)
+            ->first();
 
-        $item = CartDetail::find($id);
-        if(!$item) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
-        $cartId = $item->cart_id;
+        // If the product exists in the cart, update quantity
+        if ($cartDetail) {
 
-        $cart = Cart::find($cartId);
-        if(!$cart) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
-
-        // getting this product stock
-        $this->productStock($item->product_id, ($item->quantity + 1));
-
-        $item->quantity = $item->quantity + 1;
-        $item->save();
-
-        $item_sub_total = format_price(convert_price($item->quantity * $item->price));
-
-        $items = CartDetail::where('cart_id', $cartId)->get();
-        $total_quantity = 0;
-        $total_price = 0;
-        if($items) {
-            foreach($items as $item) {
-                $total_quantity += $item->quantity;
-                $total_price += ($item->quantity * $item->price);
+            if(($cartDetail->quantity + $quantity) > 100) {
+                return response()->json(['status' => false, 'message' => 'This product is not available in the desired quantity or not in stock ']);
             }
+
+            $stockResponse = getProductStock($product->id, ($cartDetail->quantity + $quantity));
+            if(!$stockResponse['status']) {
+                return response()->json($stockResponse);
+            }
+
+            $quantity += $cartDetail->quantity;
+            if(($stockResponse['stock']) < $quantity) {
+                return response()->json(['status' => true, 'message' => 'This product is not available in the desired quantity or not in stock ']);
+            }
+
+            $cartDetail->quantity = $quantity;
+            $cartDetail->save();
+
+            $price = $this->product->discountPrice($cartDetail->product);
+            $item_sub_total_price = $cartDetail->quantity * $price;
+
+        } else {
+
+            if($quantity > 100) {
+                return response()->json(['status' => false, 'message' => 'This product is not available in the desired quantity or not in stock ']);
+            }
+
+            $stockResponse = getProductStock($product->id, $quantity);
+            if(!$stockResponse['status']) {
+                return response()->json($stockResponse);
+            }
+
+            if(($stockResponse['stock']) < $quantity) {
+                return response()->json(['status' => true, 'message' => 'This product is not available in the desired quantity or not in stock ']);
+            }
+
+            // Otherwise, create a new cart detail
+            $cartDetail = new CartDetail([
+                'cart_id' => $cart->id,
+                'product_id' => $product->id,
+                'quantity' => $quantity
+            ]);
+            $cartDetail->save();
+
+            $price = $this->product->discountPrice($cartDetail->product);
+            $item_sub_total_price = $cartDetail->quantity * $price;
         }
 
-        $cart = Cart::find($cartId);
-        if($cart) {
-            $cart->total_price = $total_price;
-            $cart->total_quantity = $total_quantity;
-            $cart->save();
 
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
-            $cart_total_amount = format_price(convert_price($total_price));
-            $cart_sub_total_amount = format_price(convert_price($total_price));
+        // Update cart total price and quantity
+        $cart->total_quantity = $quantity;
+        $cart->save();
+
+        $total_price = 0;
+        $items = CartDetail::where('cart_id', $cart->id)->get();
+        foreach($items as $item) {
+            $price = $this->product->discountPrice($item->product);
+            $total_price += ($price * $item->quantity);
         }
 
-        // Return view with cart items
+        $total_price = format_price(convert_price($total_price));
+        $item_sub_total_price = format_price(convert_price($item_sub_total_price));
         return response()->json([
-            'status' => true, 
-            'message' => 'Cart is updated', 
-            'id' => $id,
-            'item_sub_total' => $item_sub_total,
-            'cart_sub_total_amount' => $cart_sub_total_amount, 
-            'cart_total_amount' => $cart_total_amount
+            'status' => true,
+            'message' => 'Product added to cart successfully',
+            'thumb_image' => asset($product->thumb_image),
+            'name' => $product->name,
+            'total_price' => $total_price,
+            'cart_sub_total_amount' => $total_price,
+            'cart_total_amount' => $total_price,
+            'total_quantity' => $cart->total_quantity,
+            'item_sub_total' => $item_sub_total_price,
+            'id' => $cartDetail->id
         ]);
     }
 
-    public function productStock($productId, $numberOfQty)
+    public function subToCart(Request $request)
     {
-        $product = Product::find($productId);
-        if(!$product) {
-            return response()->json(['status' => false, 'message' => 'Product not found.']);
+        $slug = $request->slug;
+        $quantity = $request->quantity ? $request->quantity : 1;
+        $item_sub_total_price = 0;
+        $load = false;
+
+        if($quantity < 1) {
+            return response()->json(['status' => false, 'message' => 'You crossed minimum purchase quantity']);
         }
 
-        dd($product->in_stock);
-        if($product->in_stock == 0) {
-            return response()->json(['status' => false, 'message' => 'Product is out of stock.']);
+        $product = Product::where('slug', $slug)->first();
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => "Product not Found"
+            ]);
         }
 
-        if($product->details->current_stock < $numberOfQty) {
+        // Find or create a cart for the user or by IP address
+        $cart = Cart::firstOrCreate(
+            ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
+            ['total_quantity' => 0, 'currency_id' => 1]
+        );
 
+        // Check if the product already exists in the cart
+        $cartDetail = CartDetail::where('cart_id', $cart->id)
+            ->where('product_id', $product->id)
+            ->first();
+
+        // If the product exists in the cart, update quantity
+        if ($cartDetail) {
+
+            if(($cartDetail->quantity - $quantity) < 1) {
+                return response()->json(['status' => false, 'message' => 'You crossed minimum purchase quantity']);
+            }
+
+            $cartDetail->quantity -= $quantity;
+            $cartDetail->save();
+
+            $price = $this->product->discountPrice($cartDetail->product);
+            $item_sub_total_price = $cartDetail->quantity * $price;
+
+            if($cartDetail->quantity == 0) {
+                $cartDetail->delete();
+                $load = true;
+            }
         }
 
-        switch($product->stock_types) {
-            case 'globally':
-                $stock = ProductStock::where('product_id', $productId)->first();
-                if(!$stock) {
-                    return response()->json(['status' => false, 'message' => 'Product stock not found.']);
-                }
-            break;
+
+        // Update cart total price and quantity
+        $cart->total_quantity = $quantity;
+        $cart->save();
+
+        $total_price = 0;
+        $items = CartDetail::where('cart_id', $cart->id)->get();
+        foreach($items as $item) {
+            $price = $this->product->discountPrice($item->product);
+            $total_price += ($price * $item->quantity);
         }
+
+        $total_price = format_price(convert_price($total_price));
+        $item_sub_total_price = format_price(convert_price($item_sub_total_price));
+        return response()->json([
+            'status' => true,
+            'message' => 'Product added to cart successfully',
+            'thumb_image' => asset($product->thumb_image),
+            'name' => $product->name,
+            'total_price' => $total_price,
+            'cart_sub_total_amount' => $total_price,
+            'cart_total_amount' => $total_price,
+            'total_quantity' => $cart->total_quantity,
+            'item_sub_total' => $item_sub_total_price,
+            'id' => $cartDetail->id,
+            'load' => $load
+        ]);
     }
 
     public function getCartItems(Request $request) 
@@ -215,81 +286,36 @@ class HomePageController extends Controller
         }
 
         // If cart exists, get the cart details
-        if($cart) {
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
+        if(!$cart) {
+            return response()->json(['status' => false, 'message' => 'Cart not found']);
+        }
+
+        $items = CartDetail::where('cart_id', $cart->id)->get();
+
+        $models = [];
+        foreach($items as $item) {
+            $price = $this->product->discountPrice($item->product);
+            $total_price += ($price * $item->quantity);
+
+            $models[] = [
+                'id' => $item->id,
+                'slug' => $item->product->slug,
+                'thumb_image' => asset($item->product->thumb_image),
+                'name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $price
+            ];
         }
 
         // Return view with cart items
+        $counter = count($models);
+        $total_price = format_price(convert_price($total_price));
         if($request->has('show') && $request->show == 'main-cart-area') {
-            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
+            $html = view('frontend.components.main_cart_listing', compact('models'))->render();
         } else {
-            $html = view('frontend.components.cart_listing', compact('items'))->render();
+            $html = view('frontend.components.cart_listing', compact('models'))->render();
         }
         return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
-    }
-
-    public function addQtyToCart1(Request $request) 
-    {
-        $id = $request->id;
-        
-        if(!$id) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
-
-        $item = CartDetail::find($id);
-        if(!$item) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
-        $cartId = $item->cart_id;
-
-        $cart = Cart::find($cartId);
-        if(!$cart) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
-        }
-
-        // getting this product stock
-        $this->productStock($item->product_id, ($item->quantity + 1));
-
-        $item->quantity = $item->quantity + 1;
-        $item->save();
-
-        $item_sub_total = format_price(convert_price($item->quantity * $item->price));
-
-        $items = CartDetail::where('cart_id', $cartId)->get();
-        $total_quantity = 0;
-        $total_price = 0;
-
-        if($items) {
-            foreach($items as $item) {
-                $total_quantity += $item->quantity;
-                $total_price += ($item->quantity * $item->price);
-            }
-        }
-
-        $cart = Cart::find($cartId);
-        if($cart) {
-            $cart->total_price = $total_price;
-            $cart->total_quantity = $total_quantity;
-            $cart->save();
-
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
-            $cart_total_amount = format_price(convert_price($total_price));
-            $cart_sub_total_amount = format_price(convert_price($total_price));
-        }
-
-        // Return view with cart items
-        return response()->json([
-            'status' => true, 
-            'message' => 'Cart is updated', 
-            'id' => $id,
-            'item_sub_total' => $item_sub_total,
-            'cart_sub_total_amount' => $cart_sub_total_amount, 
-            'cart_total_amount' => $cart_total_amount
-        ]);
     }
 
     public function removeCartItems(Request $request)
@@ -297,12 +323,12 @@ class HomePageController extends Controller
         $id = $request->id;
 
         if (!$id) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+            return response()->json(['status' => false, 'message' => 'Cart not found. ']);
         }
 
         $item = CartDetail::find($id);
         if (!$item) {
-            return response()->json(['status' => false, 'message' => 'Cart item not found. ']);
+            return response()->json(['status' => false, 'message' => 'Cart sad item not found. ']);
         }
         $cartId = $item->cart_id;
 
@@ -315,99 +341,81 @@ class HomePageController extends Controller
 
         $items = CartDetail::where('cart_id', $cartId)->get();
         $total_quantity = 0;
-        $total_price = 0;
 
         if ($items) {
             foreach ($items as $item) {
                 $total_quantity += $item->quantity;
-                $total_price += $item->price;
             }
         }
 
-        $cart = Cart::find($cartId);
-        if ($cart) {
-            $cart->total_price = $total_price;
-            $cart->total_quantity = $total_quantity;
-            $cart->save();
+        $items = CartDetail::where('cart_id', $cart->id)->get();
 
-            $items = CartDetail::where('cart_id', $cart->id)->get();
-            $counter = count($items);
-            $total_price = $cart->total_price;
+        $models = [];
+        $total_price = 0;
+        foreach($items as $item) {
+            $price = $this->product->discountPrice($item->product);
+            $total_price += ($price * $item->quantity);
+
+            $models[] = [
+                'id' => $item->id,
+                'slug' => $item->product->slug,
+                'thumb_image' => asset($item->product->thumb_image),
+                'name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $price
+            ];
         }
 
         // Return view with cart items
+        $counter = count($models);
+        $total_price = format_price(convert_price($total_price));
         if ($request->has('show') && $request->show == 'main-cart-area') {
-            $html = view('frontend.components.main_cart_listing', compact('items'))->render();
+            $html = view('frontend.components.main_cart_listing', compact('models'))->render();
         } else {
-            $html = view('frontend.components.cart_listing', compact('items'))->render();
+            $html = view('frontend.components.cart_listing', compact('models'))->render();
         }
         return response()->json(['status' => true, 'message' => 'Item is removed', 'content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
     }
 
-    public function addToCart(Request $request)
+    public function cart(Request $request)
     {
-        $sku = $request->slug;
+        $items = [];
+        $counter = 0;
+        $total_price = 0;
 
-        $product = Product::where('sku', $sku)->first();
-        if (!$product) {
-            return response()->json([
-                'status' => false,
-                'message' => "Product not Found"
-            ]);
-        }
-
-        // Find or create a cart for the user or by IP address
-        $cart = Cart::firstOrCreate(
-            ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
-            ['total_price' => 0, 'total_quantity' => 0, 'currency_id' => 1]
-        );
-
-        // Check if the product already exists in the cart
-        $cartDetail = CartDetail::where('cart_id', $cart->id)
-            ->where('product_id', $product->id)
-            ->first();
-
-        // If the product exists in the cart, update quantity
-        if ($cartDetail) {
-
-            $stockResponse = getProductStock($product->id, ($cartDetail->quantity + 1));
-            if(!$stockResponse['status']) {
-                return response()->json($stockResponse);
-            }
-            
-            $cartDetail->quantity += $request->quantity;
-            $cartDetail->price += $product->unit_price * $request->quantity;
+        // Check if customer is logged in
+        if(Auth::guard('customer')->check()) {
+            $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
         } else {
-
-            $stockResponse = getProductStock($product->id, 1);
-            if(!$stockResponse['status']) {
-                return response()->json($stockResponse);
-            }
-            // Otherwise, create a new cart detail
-            $cartDetail = new CartDetail([
-                'cart_id' => $cart->id,
-                'product_id' => $product->id,
-                'price' => $product->unit_price,
-                'quantity' => $request->quantity,
-                'promo_applied' => 0,
-                'discount' => 0
-            ]);
+            $cart = Cart::where('ip', $request->ip())->first();
         }
-        $cartDetail->save();
 
-        // Update cart total price and quantity
-        $cart->total_price += $product->unit_price * $request->quantity;
-        $cart->total_quantity += $request->quantity;
-        $cart->save();
+        // If cart exists, get the cart details
+        if(!$cart) {
+            return response()->json(['status' => false, 'message' => 'Cart not found']);
+        }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Product added to cart successfully',
-            'thumb_image' => asset($product->thumb_image),
-            'name' => $product->name,
-            'total_price' => $cart->total_price,
-            'total_quantity' => $cart->total_quantity
-        ]);
+        $items = CartDetail::where('cart_id', $cart->id)->get();
+
+        $models = [];
+        foreach($items as $item) {
+            $price = $this->product->discountPrice($item->product);
+            $total_price += ($price * $item->quantity);
+
+            $models[] = [
+                'id' => $item->id,
+                'slug' => $item->product->slug,
+                'thumb_image' => asset($item->product->thumb_image),
+                'name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'price' => $price
+            ];
+        }
+
+        // Return view with cart items
+        $counter = count($models);
+
+        return view('frontend.cart', compact('models', 'counter', 'total_price'));
     }
 
     public function index(Request $request)

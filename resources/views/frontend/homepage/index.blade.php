@@ -87,8 +87,6 @@
             @include('frontend.homepage.midBanner')
         @endif
 
-        
-
         @if (View::exists('frontend.homepage.dealOfTheDay') && homepage_setting('dealOfTheDay'))
             @include('frontend.homepage.dealOfTheDay')
         @endif

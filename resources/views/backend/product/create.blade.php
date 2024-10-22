@@ -10,7 +10,9 @@
         }
     </style>
 @endpush
-
+@push('style')
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/tempus-dominus.min.css') }}">
+@endpush
 @section('page_name')
     <div class="app-content-header">
         <div class="container-fluid">
@@ -416,11 +418,11 @@
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_start_date">Discount start date</label>
-                                        <input type="date" name="discount_start_date" id="discount_start_date" class="form-control date" disabled>
+                                        <input type="text" name="discount_start_date" id="discount_start_date" class="form-control date" disabled>
                                     </div>
                                     <div class="col-md-12 form-group mb-3">
                                         <label for="discount_end_date">Discount end date</label>
-                                        <input type="date" name="discount_end_date" id="discount_end_date" class="form-control date" disabled>
+                                        <input type="text" name="discount_end_date" id="discount_end_date" class="form-control date" disabled>
                                     </div>
                                     <div id="date_error" style="color: red; display: none;"></div>
                                 </div>
@@ -437,9 +439,17 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
-                                        <select name="status" id="status" class="form-control">
-                                            <option value="1">Active</option>
+                                        <select name="status" id="status" class="form-control select">
+                                            <option selected value="1">Active</option>
                                             <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 form-group mb-3">
+                                        <label for="stage">Stage </label>
+                                        <select name="stage" id="stage" class="form-control select">
+                                            <option selected value="normal">Normal</option>
+                                            <option value="pre-order">Pre Order</option>
+                                            <option value="upcoming">Upcoming</option>
                                         </select>
                                     </div>
                                 </div>
@@ -597,6 +607,7 @@
 @endsection
 
 @push('script')
+    <script src="{{ asset('backend/assets/js/tempus-dominus.min.js') }}"></script>
     <script src="{{ asset('backend/assets/js/dropify.min.js') }}"></script>
     <script>
         _componentSelect();
@@ -605,6 +616,50 @@
 
         $('.dropify').dropify({
             imgFileExtensions: ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp']
+        });
+
+        const element = document.getElementById('discount_start_date');
+        const input = document.getElementById('discount_start_date');
+        const picker = new tempusDominus.TempusDominus(element, {
+            defaultDate: new Date(), // Set today's date as default
+            display: {
+                components: {
+                    calendar: true,
+                    date: true,
+                    month: true,
+                    year: true,
+                    decades: true,
+                    clock: false // Disable the time selection
+                }
+            }
+        });
+
+        // Event listener to update the input value when the date changes
+        element.addEventListener('change.td', (e) => {
+            const selectedDate = picker.dates.formatInput(e.detail.date);
+            input.value = selectedDate;
+        });
+        
+        const element2 = document.getElementById('discount_end_date');
+        const input2 = document.getElementById('discount_end_date');
+        const picker2 = new tempusDominus.TempusDominus(element2, {
+            defaultDate: new Date(), 
+            display: {
+                components: {
+                    calendar: true,
+                    date: true,
+                    month: true,
+                    year: true,
+                    decades: true,
+                    clock: false
+                }
+            }
+        });
+        
+        element2.addEventListener('change.td', (e) => {
+            const selectedDate2 = picker2.dates.formatInput(e.detail.date);
+            console.log(selectedDate2);
+            input2.value = selectedDate2;
         });
 
         // For image preview

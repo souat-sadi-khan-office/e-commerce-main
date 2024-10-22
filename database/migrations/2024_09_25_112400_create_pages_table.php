@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->longText('content');
             $table->string('meta_title')->nullable();
-            $table->text('meta_keyword')->nullable(); 
+            $table->text('meta_keyword')->nullable();
             $table->text('meta_description')->nullable();
             $table->text('meta_article_tag')->nullable();
             $table->string('meta_script_tag')->nullable();

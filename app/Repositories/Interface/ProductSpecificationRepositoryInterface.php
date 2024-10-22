@@ -9,10 +9,12 @@ interface ProductSpecificationRepositoryInterface
  public function store($request);
  public function getKeysByCategoryId($categoryId);
  public function delete($id);
+ public function getOnlyPublicKey();
  public function updatestatus($id);
  public function updateIsPublic($id);
  public function updateposition($request,$id);
  public function indexview($data);
+ public function getTypeById($id);
 
 // Types
  public function typesindex();
@@ -33,7 +35,7 @@ public function attributedelete($id);
 public function attributeupdatestatus($id);
 public function attributeupdate($request,$id);
 public function attributeindexview($data);
-
+public function getAttributesById($id);
 
 //Get Datas
 public function keys($id);

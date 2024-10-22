@@ -18,7 +18,7 @@ if (!function_exists('get_setting')) {
         //     return Session::get('settings.' . $key, $default);
         // }
 
-        $value = '';
+        $value = false;
         $setting = ConfigurationSetting::where('type', $key)->first();
         if ($setting) {
             $value = $setting->value;
@@ -80,7 +80,7 @@ if (!function_exists('get_system_date')) {
     {
 
         $dateObj = Carbon\Carbon::parse($date);
-        $dateObj->setTimezone(get_settings('system_timezone'));
+        $dateObj->setTimezone(get_settings('system_timezone') ? get_settings('system_timezone') : 'Asia/Dhaka');
 
         $dateFormat = get_settings('system_date_format') ?? 'Y-m-d';
 
@@ -101,7 +101,7 @@ if (!function_exists('get_system_time')) {
         if ($timezone) {
             $dateObj->setTimezone($timezone);
         } else {
-            $dateObj->setTimezone(get_settings('system_timezone') ?? config('app.system_default_timezone'));
+            $dateObj->setTimezone(get_settings('system_timezone') ? get_settings('system_timezone') : 'Asia/Dhaka');
         }
 
         $timeFormat = get_settings('system_time_format') ?? 'H:i:s A';

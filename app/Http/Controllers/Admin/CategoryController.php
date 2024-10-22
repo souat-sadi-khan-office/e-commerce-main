@@ -30,9 +30,10 @@ class CategoryController extends Controller
          return redirect()->back();
       }
 
+      $publicKeys = $this->key->getOnlyPublicKey();
       $keys = $this->key->getKeysByCategoryId($categoryId);
       
-      return view('backend.category.keys', compact('category', 'keys'));
+      return view('backend.category.keys', compact('category', 'publicKeys', 'keys'));
    }
 
    public function store(Request $request)

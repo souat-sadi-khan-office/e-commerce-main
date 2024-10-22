@@ -108,7 +108,6 @@ class ProductController extends Controller
     public function specification(Request $request)
     {
         if (isset($request->category_id)) {
-
             return response()->json(['keys' => $this->specificationRepository->keys($request->category_id)]);
         } elseif ($request->key_id) {
             return response()->json(['types' => $this->specificationRepository->types($request->key_id)]);
@@ -163,6 +162,11 @@ class ProductController extends Controller
     public function specificationproductModal($id)
     {
         return $this->productRepository->specificationproductModal($id);
+    }
+    
+    public function specificationProductPage($id)
+    {
+        return $this->productRepository->specificationProductPage($id);
     }
 
     public function keyfeature($id)
