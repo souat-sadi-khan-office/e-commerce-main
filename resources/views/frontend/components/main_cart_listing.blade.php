@@ -1,21 +1,21 @@
-@if(count($items) > 0)
-    @foreach($items as $item)
+@if(count($models) > 0)
+    @foreach($models as $model)
         <div class="item">
             <div class="image">
-                <img src="{{ asset($item->product->thumb_image) }}" alt="{{ $item->product->name }}" width="47" height="47">
+                <img src="{{ $model['thumb_image'] }}" alt="{{ $model['name'] }}" width="47" height="47">
             </div>
             <div class="info">
                 <div class="name">
-                    {{ $item->product->name }}
+                    {{ $model['name'] }}
                 </div>
-                <span class="amount">{{ $item->price }}</span>
+                <span> {{ format_price(convert_price($model['price'])) }}</span>
                 <i class="fas fa-times"></i>
-                <span>{{ $item->quantity }} </span>
+                <span>{{ $model['quantity'] }} </span>
                 <span class="eq">=</span>
-                <span class="total">{{ $item->quantity * $item->price }}</span>
+                <span class="total">{{ format_price(convert_price($model['quantity'] * $model['price'])) }}</span>
             </div>
 
-            <div class="remove-item-from-cart" data-id="{{ $item->id }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Remove">
+            <div style="cursor: pointer;" class="remove-item-from-cart text-danger" data-id="{{ $model['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Remove">
                 <i class="fas fa-trash"></i>
             </div>
         </div>

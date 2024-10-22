@@ -101,15 +101,15 @@
                             </h1>
                             <div class="product_price">
                                 @if (isset($product['discount_type']))
-                                <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
-                                <del>{{ format_price(convert_price($product['price'])) }}</del>
-                                <div class="on_sale">
-                                    <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
-                                        Off</span>
-                                </div>
-                            @else
-                                <span class="price">{{ format_price(convert_price($product['price'])) }}</span>
-                            @endif
+                                    <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
+                                    <del>{{ format_price(convert_price($product['price'])) }}</del>
+                                    <div class="on_sale">
+                                        <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
+                                            Off</span>
+                                    </div>
+                                @else
+                                    <span class="price">{{ format_price(convert_price($product['price'])) }}</span>
+                                @endif
                             </div>
                             <div class="rating_wrap">
                                 <div class="rating">
@@ -155,14 +155,17 @@
                             <div class="cart-product-quantity">
                                 <div class="quantity">
                                     <input type="button" value="-" class="minus">
-                                    <input type="text" name="quantity" value="1" title="Qty" class="qty" size="4">
+                                    <input type="text" readonly name="quantity" id="product-{{ $product['slug'] }}" value="1" title="Qty" class="qty" size="4">
                                     <input type="button" value="+" class="plus">
                                 </div>
                             </div>
                             <div class="cart_btn">
-                                <button class="btn btn-fill-out btn-sm btn-addtocart" type="button"><i class="icon-basket-loaded"></i> Add to cart</button>
-                                <a href="#" class="btn btn-fill-out btn-sm">Buy Now</a>
-
+                                <button class="btn btn-fill-out btn-sm add-to-cart" data-id="{{ $product['slug'] }}" type="button">
+                                    <i class="icon-basket-loaded"></i> Add to cart
+                                </button>
+                                <a href="#" class="btn btn-fill-out btn-sm">
+                                    Buy Now
+                                </a>
                                 <a class="add_compare" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                                     <i class="fas fa-random"></i>
                                 </a>

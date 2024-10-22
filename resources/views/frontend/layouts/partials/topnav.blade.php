@@ -43,7 +43,7 @@
                                                     $countries = App\Models\Country::where('status', 1)->orderBy('name', 'ASC')->get();
                                                 @endphp
                                                 @foreach ($countries as $country)
-                                                    <option {{ session()->get('country_id') ? (session()->get('country_id') == $country->id ? 'selected' : '') : '' }} data-image="{{ asset($country->image) }}" value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    <option {{ session()->get('user_country') ? (session()->get('user_country') == $country->name ? 'selected' : '') : '' }} data-image="{{ asset($country->image) }}" value="{{ $country->id }}">{{ $country->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -130,7 +130,8 @@
                                 <p>
                                     <a id="wish_list_counter" href="{{ route('account.wishlist') }}">
                                         @if (!Auth::guard('customer')->check())
-                                            {{ Session::get('user_country') }}
+                                            <b>USCountry</b>: {{ Session::get('user_country') }} <br>
+                                            <b>USCurrency</b>: {{ Session::get('currency_symbol')}}
                                         @else
                                             {{ App\Models\WishList::where('user_id', Auth::guard('customer')->user()->id)->count() }}
                                         @endif

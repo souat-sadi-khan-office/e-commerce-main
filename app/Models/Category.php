@@ -70,16 +70,39 @@ class Category extends Model
         return $this->hasMany(SpecificationKey::class, 'category_id');
     }
 
-    public function getParentCategoryIds()
+    public function getAllCategoryIds()
     {
         $categoryIds = [];
         $category = $this;
-
+    
+        // Add the current category ID
+        $categoryIds[] = $category->id;
+    
+        // Get all parent category IDs
         while ($category->parent) {
             $categoryIds[] = $category->parent->id;
             $category = $category->parent;
         }
-
+    
+        // Get all child category IDs
+        $childCategories = $this->getChildCategories($this);
+        foreach ($childCategories as $child) {
+            $categoryIds[] = $child->id;
+        }
+    
         return $categoryIds;
     }
+    
+    public function getChildCategories($category)
+    {
+        $childCategories = [];
+    
+        foreach ($category->children as $child) {
+            $childCategories[] = $child;
+            $childCategories = array_merge($childCategories, $this->getChildCategories($child));
+        }
+    
+        return $childCategories;
+    }
+    
 }

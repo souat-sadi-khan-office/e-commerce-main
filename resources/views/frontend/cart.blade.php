@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="table-responsive shop_cart_table">
-                    @if (count($items) > 0)
+                    @if (count($models) > 0)
                         <table class="table">
                             <thead>
                                 <tr>
@@ -51,36 +51,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($items as $item)
+                                @foreach ($models as $item)
                                     <tr>
                                         <td class="product-thumbnail">
-                                            <a href="{{ $item->product->slug }}">
-                                                <img src="{{ $item->product->thumb_image }}" alt="{{ $item->product->name }}">
+                                            <a href="{{ $item['slug'] }}">
+                                                <img src="{{ $item['thumb_image'] }}" alt="{{ $item['name'] }}">
                                             </a>
                                         </td>
                                         <td class="product-name" data-title="Product">
-                                            <a href="{{ $item->product->slug }}">
-                                                {{ $item->product->name }}
+                                            <a href="{{ $item['slug'] }}">
+                                                {{ $item['name'] }}
                                             </a>
                                         </td>
-                                        <td class="product-price {{ $item->id }}-unit-price" data-title="Price">
-                                            {{ format_price(convert_price($item->price)) }}
+                                        <td class="product-price {{ $item['id'] }}-unit-price" data-title="Price">
+                                            {{ format_price(convert_price($item['price'])) }}
                                         </td>
                                         <td class="product-quantity" data-title="Quantity">
-                                            <div class="quantity quantity-{{ $item->id }}">
-                                                <input type="button" value="-" class="minus" data-id="{{ $item->id }}">
-                                                <input disabled type="text" name="quantity" value="{{ $item->quantity }}" title="Qty" class="qty" size="4">
-                                                <input type="button" value="+" class="plus" data-id="{{ $item->id }}">
+                                            <div class="quantity quantity-{{ $item['id'] }}">
+                                                <input type="button" value="-" class="minus minus-{{ $item['id'] }}" data-slug="{{ $item['slug'] }}" data-id="{{ $item['id'] }}" style="{{ $item['quantity'] > 1 ? '' : 'display:none;' }}">
+                                                <input disabled type="text" name="quantity" value="{{ $item['quantity'] }}" title="Qty" class="qty" size="4" id="qty_{{ $item['id'] }}">
+                                                <input type="button" value="+" class="plus" data-slug="{{ $item['slug'] }}" data-id="{{ $item['id'] }}">
                                             </div>
-                                            <div style="display: none;" class="quantity-loader quantity-loader-{{ $item->id }}">
+                                            <div style="display: none;" class="quantity-loader quantity-loader-{{ $item['id'] }}">
                                                 <i class="fas fa-spinner fa-spin"></i>
                                             </div>
                                         </td>
-                                        <td class="product-subtotal sub-total-{{ $item->id }}" data-title="Total">
-                                            {{ format_price(convert_price($item->quantity * $item->price)) }}
+                                        <td class="product-subtotal sub-total-{{ $item['id'] }}" data-title="Total">
+                                            {{ format_price(convert_price($item['quantity'] * $item['price'])) }}
                                         </td>
                                         <td class="product-remove" data-title="Remove">
-                                            <a href="#">
+                                            <a href="javascript:;" class="remove-item-from-cart text-danger" data-load="1" data-id="{{ $item['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Remove">
                                                 <i class="fas fa-times"></i>
                                             </a>
                                         </td>
@@ -115,7 +115,7 @@
                 </div>
             </div>
         </div>
-        @if (count($items) > 0)
+        @if (count($models) > 0)
             <div class="row">
                 <div class="col-12">
                     <div class="medium_divider"></div>
@@ -163,7 +163,7 @@
                                 <tbody>
                                     <tr>
                                         <td class="cart_sub_total_label">Cart Subtotal</td>
-                                        <td class="cart_sub_total_amount">{{ format_price(convert_price($cart->total_price)) }}</td>
+                                        <td class="cart_sub_total_amount">{{ format_price(convert_price($total_price)) }}</td>
                                     </tr>
                                     <tr>
                                         <td class="cart_shipping_label">Shipping</td>
@@ -171,7 +171,7 @@
                                     </tr>
                                     <tr>
                                         <td class="cart_total_label">Total</td>
-                                        <td class="cart_total_amount"><strong>{{ format_price(convert_price($cart->total_price)) }}</strong></td>
+                                        <td class="cart_total_amount"><strong>{{ format_price(convert_price($total_price)) }}</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -188,14 +188,16 @@
     <script>
         $(document).on('click', '.plus', function() {
             let id = $(this).data('id');
+            let slug = $(this).data('slug');
 
             $('.quantity-'+id).hide();
             $('.quantity-loader-'+id).show();
             $.ajax({
-                url: '/add-quantity-to-cart',
+                url: '/cart/add',
                 method: 'POST',
                 data: {
-                    id: id 
+                    slug: slug,
+                    quantity: 1
                 },
                 dataType: 'JSON',
                 success: function (response) {
@@ -204,7 +206,61 @@
 
                         $('.sub-total-'+response.id).html(response.item_sub_total);
                         $('.cart_sub_total_amount').html(response.cart_sub_total_amount);
-                        $('.cart_total_amount').html(response.cart_total_amount);
+                        $('.cart_total_amount').html('<b>'+response.cart_total_amount+'</b>');
+                    } else {
+                        toastr.warning(response.message);
+                    }
+
+                    _hideMinusButton(response.id);
+
+                    $('.quantity-loader-'+response.id).hide();
+                    $('.quantity-'+response.id).show();
+                },
+                error: function (error) {
+                    toastr.error("Something went wrong! Please try again");
+
+                    $('.quantity-loader').hide();
+                    $('.quantity').show();
+                }
+            });
+        });
+
+        _hideMinusButton = function(id) {
+            let qty = $('#qty_'+id).val();
+            if(parseInt(qty) <= 1) {
+                $('.minus-'+id).hide();
+            } else {
+                $('.minus-'+id).show();
+            }
+        }
+
+        $(document).on('click', '.minus', function() {
+            let id = $(this).data('id');
+            let slug = $(this).data('slug');
+
+            $('.quantity-'+id).hide();
+            $('.quantity-loader-'+id).show();
+            $.ajax({
+                url: '/cart/sub',
+                method: 'POST',
+                data: {
+                    slug: slug,
+                    quantity: 1
+                },
+                dataType: 'JSON',
+                success: function (response) {
+                    if(response.status) {
+                        toastr.success(response.message);
+
+                        $('.sub-total-'+response.id).html(response.item_sub_total);
+                        $('.cart_sub_total_amount').html(response.cart_sub_total_amount);
+                        $('.cart_total_amount').html('<b>'+response.cart_total_amount+'</b>');
+
+                        _hideMinusButton(response.id);
+                        if(response.load) {
+                            window.location.href="";
+                        }
+
                     } else {
                         toastr.warning(response.message);
                     }
@@ -219,6 +275,6 @@
                     $('.quantity').show();
                 }
             });
-        })
+        });
     </script>
 @endpush

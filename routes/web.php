@@ -92,6 +92,7 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::post('/get-cart-items', [HomePageController::class, 'getCartItems'])->name('get-cart-items');
     Route::delete('/remove-cart-items', [HomePageController::class, 'removeCartItems'])->name('remove-cart-items');
     Route::post('/cart/add', [HomePageController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/sub', [HomePageController::class, 'subToCart'])->name('cart.sub');
     
     Route::post('filter/products', [HelperController::class, 'filterProduct'])->name('filter.products');
 

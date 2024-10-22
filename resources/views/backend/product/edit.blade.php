@@ -309,10 +309,16 @@
                                 <div class="row">
                                     <div class="col-md-12 form-group mb-3">
                                         <select name="status" id="status" class="form-control">
-                                            <option {{ $model->status == 1 ? 'selected' : '' }} value="1">Active
-                                            </option>
-                                            <option {{ $model->status == 0 ? 'selected' : '' }} value="0">Inactive
-                                            </option>
+                                            <option {{ $model->status == '1' ? 'selected' : '' }} value="1">Active</option>
+                                            <option {{ $model->status == '0' ? 'selected' : '' }} value="0">Inactive
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 form-group mb-3">
+                                        <label for="stage">Stage </label>
+                                        <select name="stage" id="stage" class="form-control select">
+                                            <option {{ $model->stage == 'normal' ? 'selected' : '' }} value="normal">Normal</option>
+                                            <option {{ $model->stage == 'pre-order' ? 'selected' : '' }} value="pre-order">Pre Order</option>
+                                            <option {{ $model->stage == 'upcoming' ? 'selected' : '' }} value="upcoming">Upcoming</option>
                                         </select>
                                     </div>
                                 </div>

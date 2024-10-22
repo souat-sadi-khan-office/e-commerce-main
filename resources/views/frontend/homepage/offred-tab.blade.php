@@ -11,12 +11,26 @@
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
-                            <li class="add-to-cart"><a href="#"><i class="icon-basket-loaded"></i> Add To Cart</a>
+                            <li>
+                                <a class="add-to-cart" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Cart">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </a>
                             </li>
-                            <li><a href="shop-compare.html" class="popup-ajax"><i class="icon-shuffle"></i></a></li>
-                            <li><a href="shop-quick-view.html" class="popup-ajax"><i class="icon-magnifier-add"></i></a>
+                            <li>
+                                <a href="javascript:;" class="add_compare" data-id="{{ $product['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                    <i class="fas fa-random"></i>
+                                </a>
                             </li>
-                            <li><a href="#"><i class="icon-heart"></i></a></li>
+                            <li>
+                                <a href="{{ route('quick.view', $product['slug']) }}" class="popup-ajax">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List" class="add_wishlist" >
+                                    <i class="far fa-heart"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

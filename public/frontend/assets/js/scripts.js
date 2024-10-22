@@ -19,6 +19,11 @@
 		templateSelection: formatState
 	});
 
+	toastr.options = {
+		"preventDuplicates": true,
+		"preventOpenDuplicates": true
+	};
+
 	$(document).on('click', '#change-global-method', function() {
 		let global_country_id = $('#global_country_id').val();
 		let global_currency_id = $('#global_currency_id').val();
@@ -1041,13 +1046,12 @@
 					toastr.warning(response.message);
 				}
 				
-
-				$('.add-to-cart').html('<i class="icon-basket-loaded"></i>Add To Cart');
+				$('.add-to-cart').html('<i class="fas fa-shopping-bag"></i> Add to Cart');
 			},
 			error: function (error) {
 				toastr.error("Something went wrong! Please try again");
 				
-				$('.add-to-cart').html('<i class="icon-basket-loaded"></i>Add To Cart');
+				$('.add-to-cart').html('<i class="fas fa-shopping-bag"></i> Add to Cart');
 			}
 		});
 	});
@@ -1107,7 +1111,7 @@
 
 	getCartItems();
 
-	function removeCartItems(id, showArea = null) {
+	function removeCartItems(id, showArea = null, load = false) {
 		$.ajax({
 			url: '/remove-cart-items',
 			method: 'DELETE',
@@ -1139,14 +1143,21 @@
 					toastr.error(data.message);
 				}
 				
+				if(data.load) {
+					window.location.href="";
+				}
 			}
 		})
 	}
 
 	$(document).on('click', '.remove-item-from-cart', function() {
 		let id = $(this).data('id');
+		let load = false;
+		if($(this).data('load')) {
+			load = true;
+		}
 		$(this).html('<i class="fas fa-spin fa-spinner"></i>')
-		removeCartItems(id, 'main-cart-area');
+		removeCartItems(id, 'main-cart-area', load);
 	});
 
 	document.addEventListener('DOMContentLoaded', function () {

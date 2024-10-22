@@ -88,8 +88,7 @@ class HelperController extends Controller
             if ($model) {
                 $Ids =$this->getAllDescendantIds($model);
 
-                $categoryIdArray = $model->getParentCategoryIds();
-                $categoryIdArray[] = $model->id;
+                $categoryIdArray = $model->getAllCategoryIds();
 
                 $products = $this->productRepository->index($slug, $Ids);
                 $breadcrumb = $this->getCategoryBreadcrumb($model);

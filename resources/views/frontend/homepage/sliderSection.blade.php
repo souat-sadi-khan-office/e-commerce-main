@@ -22,21 +22,23 @@
                                 </button>
                                 <ul class="nav nav-tabs justify-content-center justify-content-md-end" id="tabmenubar" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="arrival-tab" data-bs-toggle="tab" href="#arrival"
-                                            role="tab" aria-controls="arrival" aria-selected="true">New Arrival</a>
+                                        <a class="nav-link active" id="arrival-tab" data-bs-toggle="tab" href="#arrival" role="tab" aria-controls="arrival" aria-selected="true">
+                                            New Arrival
+                                        </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="sellers-tab" data-bs-toggle="tab" href="#sellers"
-                                            role="tab" aria-controls="sellers" aria-selected="false">Best
-                                            Sellers</a>
+                                        <a class="nav-link" id="sellers-tab" data-bs-toggle="tab" href="#sellers" role="tab" aria-controls="sellers" aria-selected="false">
+                                            Best Sellers
+                                        </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="featured-tab" data-bs-toggle="tab" href="#featured"
-                                            role="tab" aria-controls="featured" aria-selected="false">Featured</a>
+                                        <a class="nav-link" id="featured-tab" data-bs-toggle="tab" href="#featured" role="tab" aria-controls="featured" aria-selected="false">
+                                            Featured
+                                        </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="special-tab" data-bs-toggle="tab" href="#special"
-                                            role="tab" aria-controls="special" aria-selected="false">Special Offer
+                                        <a class="nav-link" id="special-tab" data-bs-toggle="tab" href="#special" role="tab" aria-controls="special" aria-selected="false">
+                                            Special Offer
                                         </a>
                                     </li>
                                 </ul>
@@ -70,24 +72,24 @@
                                                     </a>
                                                     <div class="product_action_box">
                                                         <ul class="list_none pr_action_btn">
-                                                            <li class="add-to-cart">
-                                                                <a href="javascript:;">
-                                                                    <i class="icon-basket-loaded"></i> Add To Cart
+                                                            <li>
+                                                                <a class="add-to-cart" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Cart">
+                                                                    <i class="fas fa-shopping-bag"></i>
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a href="javascript:;" class="add_compare" data-id="{{ $product['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
-                                                                    <i class="icon-shuffle"></i>
+                                                                    <i class="fas fa-random"></i>
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a href="{{ route('quick.view', $product['slug']) }}" class="popup-ajax">
-                                                                    <i class="icon-magnifier-add"></i>
+                                                                    <i class="fas fa-search"></i>
                                                                 </a>
                                                             </li>
                                                             <li>
                                                                 <a data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List" class="add_wishlist" >
-                                                                    <i class="icon-heart"></i>
+                                                                    <i class="far fa-heart"></i>
                                                                 </a>
                                                             </li>
                                                         </ul>
@@ -99,30 +101,33 @@
                                                     </h6>
                                                     <div class="product_price">
                                                         @if (isset($product['discount_type']))
-                                                        <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
-                                                        <del>{{ format_price(convert_price($product['unit_price'])) }}</del>
-                                                        <div class="on_sale">
-                                                            <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['unit_price'])) : $product['discount'] . '%' }}
-                                                                Off</span>
-                                                        </div>
-                                                    @else
-                                                        <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
-                                                    @endif
+                                                            <span class="price">
+                                                                {{ format_price(convert_price($product['discounted_price'])) }}
+                                                            </span>
+                                                            <del>
+                                                                {{ format_price(convert_price($product['unit_price'])) }}
+                                                            </del>
+                                                            <div class="on_sale">
+                                                                <span>
+                                                                    {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['unit_price'])) : $product['discount'] . '%' }}
+                                                                    Off
+                                                                </span>
+                                                            </div>
+                                                        @else
+                                                            <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
+                                                        @endif
                                                     </div>
                                                     <div class="rating_wrap">
                                                         <div class="rating">
-                                                            <div class="product_rate"
-                                                                style="width:{{ $product['averageRating'] }}%"></div>
+                                                            <div class="product_rate" style="width:{{ $product['averageRating'] }}%"></div>
                                                         </div>
-                                                        <span
-                                                            class="rating_num">({{ $product['ratingCount'] }})</span>
+                                                        <span class="rating_num">({{ $product['ratingCount'] }})</span>
                                                     </div>
 
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
-
                                 </div>
                             </div>
                           

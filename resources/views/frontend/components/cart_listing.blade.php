@@ -1,16 +1,16 @@
-@if(count($items) > 0)
-    @foreach($items as $item)
+@if(count($models) > 0)
+    @foreach($models as $product)
         <li>
             <a href="javascript:;" class="item_remove">
                 <i class="ion-close"></i>
             </a>
-            <a href="{{ $item->product->slug }}">
-                <img src="{{ asset($item->product->thumb_image) }}" alt="{{ $item->product->name }}">
-                {{ $item->product->name }}
+            <a href="{{ $product['slug'] }}">
+                <img src="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }}">
+                {{ $product['name'] }}
             </a>
             <span class="cart_quantity"> 
-                {{ $item->quantity }} x <span class="cart_amount"> 
-                    <span class="price_symbole">$</span></span>{{ $item->price }}
+                {{ $product['quantity'] }} x <span class="cart_amount"> 
+                    <span class="price_symbole">$</span></span>{{ $product['price'] }}
             </span>
         </li>
     @endforeach

@@ -10,6 +10,7 @@ use App\Models\ProductTax;
 use App\Models\ProductImage;
 use App\Models\ProductStock;
 use App\Models\ProductDetail;
+use App\Models\SpecificationKey;
 use App\Models\StockPurchase;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -307,10 +308,9 @@ class ProductRepository implements ProductRepositoryInterface
         }
     }
 
-
     public function search($search, $categories, $brands, $sort)
     {
-        $products = Product::where('status', '!=', 'inactive')
+        $products = Product::where('status', 1)
             ->where(function ($query) use ($categories, $brands, $search) {
                 if (isset($categories)) {
                     $query->orWhereIn('category_id', $categories);
@@ -370,6 +370,28 @@ class ProductRepository implements ProductRepositoryInterface
         });
 
         return $products->setCollection($mappedProducts);
+    }
+
+    public function isDiscountedProduct($product) 
+    {
+        return $product->discount_type && $product->discount > 0;
+    }
+
+    public function discountPrice($product)
+    {
+        $price = $product->unit_price;
+        $isDiscounted = $product->discount_type && $product->discount > 0;
+        $discountedPrice = $product->unit_price; // Default to unit price
+
+        if ($isDiscounted) {
+            $discountAmount = $product->discount_type == 'amount'
+                ? $product->discount
+                : ($product->unit_price * ($product->discount / 100));
+
+            $price = $product->unit_price - $discountAmount;
+        }
+
+        return $price;
     }
 
     private function mapper($product)
@@ -438,7 +460,6 @@ class ProductRepository implements ProductRepositoryInterface
         ];
     }
 
-
     public function getAllProducts()
     {
         return Product::orderBy('id', 'DESC')->get();
@@ -475,7 +496,7 @@ class ProductRepository implements ProductRepositoryInterface
                 return $model->admin->name;
             })
             ->editColumn('status', function ($model) {
-                $checked = $model->status == 1 ? 'checked' : '';
+                $checked = $model->status == 'active' ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
             ->editColumn('stock', function ($model) {
@@ -533,7 +554,7 @@ class ProductRepository implements ProductRepositoryInterface
                 return $model->admin->name;
             })
             ->editColumn('status', function ($model) {
-                $checked = $model->status == 1 ? 'checked' : '';
+                $checked = $model->status == 'active' ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
             ->editColumn('stock', function ($model) {
@@ -572,7 +593,7 @@ class ProductRepository implements ProductRepositoryInterface
             return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
         }
 
-        $product->status = $request->input('status');
+        $product->status = $request->input('status') == 1 ? 'active' : 'inactive';
         $product->save();
         Cache::forget('newProducts');
         Cache::forget('homeProducts_best_seller');
@@ -601,7 +622,6 @@ class ProductRepository implements ProductRepositoryInterface
         return response()->json(['success' => true, 'message' => 'Product featured status updated successfully.']);
     }
 
-
     public function storeProduct($request)
     {
         $validator = Validator::make($request->all(), [
@@ -625,6 +645,7 @@ class ProductRepository implements ProductRepositoryInterface
             'specification_key.*.type_id' => 'required_with:specification_key|array',
             'is_discounted' => 'required|boolean',
             'status' => 'required|boolean',
+            'stage' => 'required|string',
             'is_featured' => 'required|boolean',
             'is_returnable' => 'required|boolean',
             'low_stock_quantity' => 'required|integer|min:0',
@@ -653,6 +674,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->unit_price = isset($request->unit_price) ? covert_to_usd($request->unit_price) : 0;
         $product->sku = $this->generateSku($request->category_id[count($request->category_id) - 1]);
         $product->status = $request->status;
+        $product->stage = $request->stage;
         $product->in_stock = isset($request->in_stock) ? $request->in_stock : 0;
         $product->is_featured = $request->is_featured;
         $product->low_stock = isset($request->low_stock) ? $request->low_stock : 0;
@@ -931,6 +953,7 @@ class ProductRepository implements ProductRepositoryInterface
             'meta_script_tags' => 'nullable|string|max:255',
             'is_discounted' => 'required|boolean',
             'status' => 'required|boolean',
+            'stage' => 'required|string',
             'is_featured' => 'required|boolean',
             'is_returnable' => 'required|boolean',
             'low_stock_quantity' => 'required|integer|min:0',
@@ -956,6 +979,7 @@ class ProductRepository implements ProductRepositoryInterface
         $product->discount_start_date = $request->discount_start_date == null ? null : date('Y-m-d', strtotime($request->discount_start_date));
         $product->discount_end_date = $request->discount_end_date == null ? null : date('Y-m-d', strtotime($request->discount_end_date));
         $product->status = $request->status;
+        $product->stage = $request->stage;
         $product->is_featured = $request->is_featured;
         $product->is_returnable = $request->is_returnable;
         $product->return_deadline = $request->return_deadline;
@@ -1282,8 +1306,6 @@ class ProductRepository implements ProductRepositoryInterface
         return $productDetails;
     }
 
-
-
     public function specificationproducts()
     {
         $data = Product::withCount('specifications')
@@ -1316,7 +1338,7 @@ class ProductRepository implements ProductRepositoryInterface
                 return $model['created_by'];
             })
             ->editColumn('status', function ($model) {
-                $checked = $model['status'] == 1 ? 'checked' : '';
+                $checked = $model['status'] == 'active' ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model['id']) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model['id'] . '" ' . $checked . ' data-id="' . $model['id'] . '"></div>';
             })
             ->editColumn('is_featured', function ($model) {
@@ -1367,6 +1389,35 @@ class ProductRepository implements ProductRepositoryInterface
         $models = $mapped->groupBy('key_id');
 
         return view('backend.product.specification.modal', compact('models', 'product_name', 'category_id', 'product_id'));
+    }
+
+    public function specificationProductPage($id)
+    {
+        $data = ProductSpecification::where('product_id', $id)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
+
+        $product = Product::find($id);
+
+        $keys = SpecificationKey::where('status', 1)->where('category_id', $product->category_id)->orWhere('is_public', 1)->orderBy('position', 'ASC')->get();
+
+        $mapped = $data->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'key_id' => $item->key_id ?? null,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product->name,
+                'specificationKey' => $item->specificationKey ? $item->specificationKey->name : null,
+                'specificationKeyType' => $item->specificationKeyType ? $item->specificationKeyType->name : null,
+                'specificationKeyTypeAttribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
+                'key_feature' => $item->key_feature,
+            ];
+        });
+        
+        $models = $mapped->groupBy('key_id');
+        $product_name = $product->name;
+        $category_id = $product->category_id;
+        $product_id = $product->id;
+
+        return view('backend.product.specification.page', compact('models', 'keys', 'product_name', 'category_id', 'product_id'));
     }
 
     public function specificationProduct($id)

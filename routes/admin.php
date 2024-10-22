@@ -112,6 +112,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::post('add/{productId}', [ProductController::class, 'specificationsAdd'])->name('add');
             Route::get('edit', [ProductController::class, 'specificationproducts'])->name('edit');
             Route::get('edit/{id}', [ProductController::class, 'specificationproductModal'])->name('edit.modal');
+            Route::get('edit/page/{id}', [ProductController::class, 'specificationProductPage'])->name('edit.page');
             Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
             Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
         });
