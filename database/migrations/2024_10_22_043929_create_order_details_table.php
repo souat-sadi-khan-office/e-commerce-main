@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('shipping_method')->nullable(); 
             $table->string('shipping_address')->nullable(); 
             $table->string('billing_address')->nullable(); 
+            $table->string('phone')->nullable(); 
+            $table->string('email')->nullable(); 
             $table->timestamps(); 
         
             // Foreign key constraint
