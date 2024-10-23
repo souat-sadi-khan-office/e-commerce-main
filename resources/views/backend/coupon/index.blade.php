@@ -40,11 +40,10 @@
                     <table class="table table-bordered table-striped table-hover" id="data-table">
                         <thead>
                             <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Banner Type</th>
+                                <th>Code</th>
+                                <th>Discount Amount</th>
+                                <th>Discount Type</th>
                                 <th>Status</th>
-                                <th>Created By</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -67,13 +66,12 @@
             var table = $('#data-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('admin.banner.index') }}",
+                ajax: "{{ route('admin.coupon.index') }}",
                 columns: [
-                    {data: 'image', name: 'image'},
-                    {data: 'name', name: 'name'},
-                    {data: 'banner_type', name: 'banner_type'},
+                    {data: 'coupon_code', name: 'coupon_code'},
+                    {data: 'discount_amount', name: 'discount_amount'},
+                    {data: 'discount_type', name: 'discount_type'},
                     {data: 'status', name: 'status'},
-                    {data: 'created_by', name: 'created_by'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

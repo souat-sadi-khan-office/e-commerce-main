@@ -46,12 +46,12 @@
 
             <div class="col-md-6 mt-3 form-group">
                 <label for="start_date">Start date <span class="text-danger">*</span></label>
-                <input type="text" name="start_date" id="start_date" value="" class="form-control">
+                <input type="text" name="start_date" id="start_date" class="form-control">
             </div>
             
             <div class="col-md-6 mt-3 form-group">
                 <label for="end_date">End date</label>
-                <input type="text" name="end_date" id="end_date" value="0" class="form-control" required>
+                <input type="text" name="end_date" id="end_date" class="form-control">
             </div>
 
             <div class="col-md-12 mt-3 text-end">
