@@ -2,18 +2,20 @@
 
 namespace App\CPU;
 
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
 
 class paypal
 {
-    public static function processPayment($currencyCode, $amount)
+    public static function processPayment($currencyCode, $amount,$uID)
     {
         try {
-            // Return appropriate PayPal environment
             //  sandbox
             $paypalEnvironment = new SandboxEnvironment(env('PAYPAL_CLIENT_ID_SANDBOX'), env('PAYPAL_SECRET_SANDBOX'));
             //    Live
@@ -35,44 +37,76 @@ class paypal
                     ]
                 ]],
 
-                // "application_context" => $this->buildApplicationContext($uniqueId, $userID, $subscription->id)
+                "application_context" => self::buildApplicationContext(0)
             ];
 
             // Execute the create payment request
             $createResponse = $client->execute($createRequest);
-
             // Check if order approval is required
             if ($createResponse->statusCode === 201 && $createResponse->result->status === 'CREATED') {
-
-
-                // Return the approval URL and unique ID in the response
-                return response()->json([
-                    'approval_url' => $createResponse->result->links[1]->href,
+                Payment::create([
+                    'user_id' => Auth::guard('customer')->id(),
+                    'amount' => $amount,
+                    'currency' => $currencyCode,
+                    'gateway_name' => 'Paypal',
+                    'status' => $createResponse->result->status,
+                    'trx_id' => $createResponse->result->id,
+                    'payment_order_id' => $createResponse->result->id,
+                    'payment_unique_id' => $uID,
+                    
                 ]);
+                // Return the approval URL and unique ID in the response
+                return [
+                    'approval_url' => $createResponse->result->links[1]->href,
+                    'order_id' => $createResponse->result->id,
+                ];
             } else {
                 // Return error response if payment creation failed
                 return response()->json(['error' => 'Failed to create payment order'], 400);
             }
         } catch (\Exception $ex) {
             // Handle exceptions
+            dd($ex->getMessage());
             return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
 
-    private function buildApplicationContext($uniqueId, $userID, $subscription)
+    public static function capturePayment($orderId)
     {
-        // return [
-        //     "cancel_url" => route('paypal.cancel'),
-        //     "return_url" => route('paypal.return')
-        // ];
+        try {
+            //  sandbox
+            $paypalEnvironment = new SandboxEnvironment(env('PAYPAL_CLIENT_ID_SANDBOX'), env('PAYPAL_SECRET_SANDBOX'));
+            //    Live
+            // $paypalEnvironment= new ProductionEnvironment(env('PAYPAL_CLIENT_ID_LIVE'), env('PAYPAL_SECRET_LIVE'));
+            $client = new PayPalHttpClient($paypalEnvironment);
+
+            // Capture Payment
+            $captureRequest = new OrdersCaptureRequest($orderId);
+            $captureRequest->prefer('return=representation');
+
+            // Execute the capture request
+            $captureResponse = $client->execute($captureRequest);
+
+            if ($captureResponse->statusCode === 201) {
+                return response()->json(['status' => 'Payment captured successfully', 'details' => $captureResponse->result]);
+            } else {
+                return response()->json(['error' => 'Failed to capture payment'], 400);
+            }
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
+    }
+    private static function buildApplicationContext($orderID)
+    {
+        return [
+            "cancel_url" => route('order.checkout'),
+            "return_url" => route('order.store')
+        ];
     }
 
     // public function returnPayment(Request $request)
     // {
-    //     $subscription = Subscription::find($request->input('subscription_id'));
-    //     if (!$subscription) {
-    //         return response()->json(['error' => 'Wrong Subscription Payment capture failed'], 400);
-    //     }
+
     //     try {
 
     //         // Retrieve the unique ID from the request
@@ -155,5 +189,4 @@ class paypal
             return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
-   
 }

@@ -105,9 +105,9 @@
                             </div>
                             <div class="form-group mb-3">
 
-                                <input type="text" name="billing_country" class="form-control" value="Bangladesh"
+                                <input type="text" name="billing_country" class="form-control" value="{{$countryName}}"
                                     disabled>
-
+                                    
                             </div>
 
                             <div class="form-group mb-3">
@@ -149,8 +149,10 @@
                                 <div class="different_address">
                                     <div class="form-group mb-3">
 
-                                        <input type="text" name="country" class="form-control" value="Bangladesh"
+                                        <input type="text" name="country" class="form-control" value="{{$countryName}}"
                                             disabled>
+                                            <input type="hidden" name="country_name" class="form-control" value="{{$countryName}}">
+                                            <input type="hidden" name="country_id" class="form-control" value="{{$countryID}}">
 
                                     </div>
 
@@ -207,7 +209,7 @@
                                                 <td>Blue Dress For Woman <span class="product-qty">x 2</span></td>
                                                 <td>$90.00</td>
                                                 <input type="hidden" name="product[{{ 0 }}][slug]"
-                                                    value="{{ 'slug' }}">
+                                                    value="{{ 'led-monitor' }}">
                                                 <input type="hidden" name="product[{{ 0 }}][qty]"
                                                     value="1">
                                             </tr>
@@ -215,7 +217,7 @@
                                                 <td>Lether Gray Tuxedo <span class="product-qty">x 1</span></td>
                                                 <td>$55.00</td>
                                                 <input type="hidden" name="product[{{ 1 }}][slug]"
-                                                    value="{{ 'slug' }}">
+                                                    value="{{ 'oneplus-nord-ce4-lite-5g-16256gb' }}">
                                                 <input type="hidden" name="product[{{ 1 }}][qty]"
                                                     value="1">
                                             </tr>
@@ -223,7 +225,7 @@
                                                 <td>woman full sliv dress <span class="product-qty">x 3</span></td>
                                                 <td>$204.00</td>
                                                 <input type="hidden" name="product[{{ 2 }}][slug]"
-                                                    value="{{ 'slug' }}">
+                                                    value="{{ 'foneng-bl138-true-wireless-earbuds' }}">
                                                 <input type="hidden" name="product[{{ 2 }}][qty]"
                                                     value="1">
                                             </tr>
@@ -252,7 +254,7 @@
                                             <tr>
                                                 <th>Total</th>
                                                 <td class="product-subtotal">$500.00</td>
-                                                <input type="hidden" name="subtotal" value="500">
+                                                <input type="hidden" name="subtotal" value="5">
 
                                             </tr>
                                         </tfoot>
@@ -265,18 +267,18 @@
                                     <div class="payment_option">
                                         <div class="custome-radio">
                                             <input class="form-check-input" type="radio" name="payment_option"
+                                                id="exampleRadios5" value="paypal" checked>
+                                            <label class="form-check-label" for="exampleRadios5">Paypal</label>
+                                            <p data-method="paypal" class="payment-text">Pay via PayPal; you can pay with
+                                                your credit card if you don't have a PayPal account.</p>
+                                        </div>
+                                        <div class="custome-radio">
+                                            <input class="form-check-input" type="radio" name="payment_option"
                                                 id="exampleRadios4" value="cash_on_delivery">
                                             <label class="form-check-label" for="exampleRadios4">Cash on Delivery</label>
                                             <p data-method="cash_on_delivery" class="payment-text"> You Have to Pay
                                                 Delivery Charge
                                                 First. </p>
-                                        </div>
-                                        <div class="custome-radio">
-                                            <input class="form-check-input" type="radio" name="payment_option"
-                                                id="exampleRadios5" value="paypal">
-                                            <label class="form-check-label" for="exampleRadios5">Paypal</label>
-                                            <p data-method="paypal" class="payment-text">Pay via PayPal; you can pay with
-                                                your credit card if you don't have a PayPal account.</p>
                                         </div>
                                     </div>
                                 </div>

@@ -57,7 +57,7 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
     });
     Route::prefix('order')->name('order.')->group(function () {
         Route::get('checkout',[OrderController::class,'checkout'])->name('checkout');
-        Route::post('place',[OrderController::class,'store'])->name('store');
+        Route::any('place',[OrderController::class,'store'])->name('store');
         Route::post('get_address/{id}',[OrderController::class,'address'])->name('address');
     });
 });
