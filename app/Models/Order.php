@@ -39,8 +39,8 @@ class Order extends Model
         return $this->belongsTo(Currency::class, 'currency_id');
     }
 
-    public function orderDetails()
+    public function details()
     {
-        return $this->hasMany(OrderDetail::class, 'order_id');
+        return $this->hasOne(OrderDetail::class, 'order_id');
     }
 }
