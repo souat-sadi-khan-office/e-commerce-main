@@ -225,31 +225,7 @@
                                                 @endforeach
                                             @endif
                                             
-                                            <tr>
-
-                                                <td>Blue Dress For Woman <span class="product-qty">x 2</span></td>
-                                                <td>$90.00</td>
-                                                <input type="hidden" name="product[{{ 0 }}][slug]"
-                                                    value="{{ 'led-monitor' }}">
-                                                <input type="hidden" name="product[{{ 0 }}][qty]"
-                                                    value="1">
-                                            </tr>
-                                            <tr>
-                                                <td>Lether Gray Tuxedo <span class="product-qty">x 1</span></td>
-                                                <td>$55.00</td>
-                                                <input type="hidden" name="product[{{ 1 }}][slug]"
-                                                    value="{{ 'oneplus-nord-ce4-lite-5g-16256gb' }}">
-                                                <input type="hidden" name="product[{{ 1 }}][qty]"
-                                                    value="1">
-                                            </tr>
-                                            <tr>
-                                                <td>woman full sliv dress <span class="product-qty">x 3</span></td>
-                                                <td>$204.00</td>
-                                                <input type="hidden" name="product[{{ 2 }}][slug]"
-                                                    value="{{ 'foneng-bl138-true-wireless-earbuds' }}">
-                                                <input type="hidden" name="product[{{ 2 }}][qty]"
-                                                    value="1">
-                                            </tr>
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -260,13 +236,13 @@
                                             <tr>
                                                 <th>Shipping</th>
                                                 <td class="text-danger left">+ {{ format_price(convert_price($shipping_charge)) }}</td>
-                                                <input type="hidden" name="shipping_charge" value="{{ $shipping_charge }}">
+                                                <input type="hidden" name="shipping_charge" value="{{ convert_price($shipping_charge) }}">
                                             </tr>
 
                                             <tr>
                                                 <th>Tax Total</th>
                                                 <td class="text-danger left">+ {{ format_price(convert_price($tax_amount)) }}</td>
-                                                <input type="hidden" name="total_tax" value="{{ $tax_amount }}">
+                                                <input type="hidden" name="total_tax" value="{{ convert_price($tax_amount) }}">
                                             </tr>
                                             <tr>
                                                 <th>Discount</th>
@@ -276,10 +252,7 @@
                                             <tr>
                                                 <th>Total</th>
                                                 <td class="product-subtotal">{{ format_price(convert_price($total_price)) }} </td>
-                                                <input type="hidden" name="subtotal" value="{{ $total_price }}">
-                                                <td class="product-subtotal">$500.00</td>
-                                                <input type="hidden" name="subtotal" value="5">
-
+                                                <input type="hidden" name="subtotal" value="{{ convert_price($total_price) }}">
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -306,7 +279,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <input type="hidden" name="currency_code" value="USD">
+                                <input type="hidden" name="currency_code" value="{{$currencyCode}}">
                                 <button type="submit" class="btn btn-fill-out btn-block">Place Order</button>
                             </div>
                         </div>

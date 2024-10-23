@@ -33,7 +33,7 @@ class paypal
                 "purchase_units" => [[
                     "amount" => [
                         "currency_code" => $currencyCode,
-                        "value" => $amount
+                        "value" => round($amount, 2)
                     ]
                 ]],
 
@@ -46,7 +46,7 @@ class paypal
             if ($createResponse->statusCode === 201 && $createResponse->result->status === 'CREATED') {
                 Payment::create([
                     'user_id' => Auth::guard('customer')->id(),
-                    'amount' => $amount,
+                    'amount' =>round($amount, 2),
                     'currency' => $currencyCode,
                     'gateway_name' => 'Paypal',
                     'status' => $createResponse->result->status,
@@ -62,11 +62,10 @@ class paypal
                 ];
             } else {
                 // Return error response if payment creation failed
-                return response()->json(['error' => 'Failed to create payment order'], 400);
+                return ['error' => json_decode(json_decode($createResponse->getContent())->error)->details[0]->issue];
             }
         } catch (\Exception $ex) {
             // Handle exceptions
-            dd($ex->getMessage());
             return response()->json(['error' => $ex->getMessage()], 500);
         }
     }

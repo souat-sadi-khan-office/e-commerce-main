@@ -10,14 +10,12 @@ use App\Models\Payment;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\UserAddress;
-use App\Repositories\Interface\OrderRepositoryInterface;
-use App\Repositories\Interface\UserRepositoryInterface;
-use App\Repositories\Interface\ProductRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ProductStock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
 
@@ -46,41 +44,35 @@ class OrderController extends Controller
         }])->first();
         $countryID = $country->id;
         $cities = $country->city;
+        $currencyCode = Session::get('currency_code');
         $userInfo = $this->userRepository->informations($countryID);
-
-        $request->country_id = 6;
-        $userInfo = $this->userRepository->informations($request->country_id);
-        $cities=City::where('country_id',$request->country_id)->where('status',1)->select('id','name')->get();
-
         // dd($userInfo);
 
-        return view('frontend.order.checkout', compact('userInfo', 'countryID', 'countryName', 'cities'));
         // cart
         $items = [];
         $counter = 0;
         $total_price = 0;
         $tax_amount = 0;
         $models = [];
-        
-        if(Auth::guard('customer')->check()) {
+        if (Auth::guard('customer')->check()) {
             $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
         } else {
             $cart = Cart::where('ip', $request->ip())->first();
         }
-
-        if(!$cart) {
+        
+        if (!$cart) {
             $cart = Cart::firstOrCreate(
                 ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
                 ['total_quantity' => 0, 'currency_id' => 1]
             );
         }
-
+        
         $items = CartDetail::where('cart_id', $cart->id)->get();
 
         $cart_updated = false;
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $stockResponse = getProductStock($item->product_id);
-            if(!$stockResponse['status']) {
+            if (!$stockResponse['status']) {
                 $cart_updated = true;
                 $itemQuantity = $item->quantity;
                 $item->delete();
@@ -115,10 +107,12 @@ class OrderController extends Controller
         }
 
         $total_price += $tax_amount;
-        $shipping_charge = 10;
+        $shipping_charge = get_settings('system_default_delivery_charge')??10;
         $total_price += $shipping_charge;
-
-        return view('frontend.order.checkout', compact('userInfo', 'shipping_charge', 'tax_amount', 'total_price', 'models', 'cities'));
+        if(count($models)==0){
+            return redirect()->route('home')->withErrors('Your Cart is Empty!');
+        }
+        return view('frontend.order.checkout', compact('userInfo', 'shipping_charge', 'tax_amount', 'total_price', 'countryName', 'countryID', 'models', 'cities', 'currencyCode'));
     }
 
     public function store(Request $request)
@@ -133,8 +127,11 @@ class OrderController extends Controller
         if ($request->payment_option == 'paypal' && $order['order']->id) {
             $payment = paypal::processPayment($request->currency_code, $request->subtotal, $order['order']->unique_id);
         }
-
-        if (isset($payment['approval_url'])) {
+       
+         if(json_decode($payment->getContent())){
+            return redirect()->back()->withErrors(json_decode(json_decode($payment->getContent())->error));
+         }
+        elseif (isset($payment['approval_url'])) {
             return redirect($payment['approval_url']);
         }
 
