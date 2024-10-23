@@ -443,6 +443,19 @@ class HomePageController extends Controller
         return view('frontend.cart', compact('models', 'cart_updated', 'counter', 'total_price'));
     }
 
+    public function compare()
+    {
+        $list = [];
+        if(session()->has('compare_list') && is_array(session()->get('compare_list'))) {
+            $list = session()->get('compare_list');
+        }
+
+        if(count($list) > 0) {
+            $product = $this->product->getProductById($list);
+            dd($product);
+        }
+    }
+
     public function index(Request $request)
     {
 
