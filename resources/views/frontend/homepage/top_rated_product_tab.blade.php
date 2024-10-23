@@ -17,9 +17,12 @@
         <div class="top-rated-product-carousel product_list owl-carousel owl-theme nav_style5" data-nav="true" data-dots="false" data-loop="true" data-margin="20" data-responsive='{"0":{"items": "1"}, "380":{"items": "1"}, "640":{"items": "2"}, "991":{"items": "1"}}'>
             <div class="item">
                 @foreach($products as $index => $product)
-                    <div class="product_wrap">
+                
+                    @include('frontend.components.product_main', ['tag' => 'discount_price', 'listing' => 'short'])
+
+                    {{-- <div class="product_wrap">
                         @if (isset($product['discount_type']))
-                            <span class="pr_flash bg-danger">
+                            <span class="pr_flash bg-success">
                                 {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }} Off
                             </span>
                         @endif
@@ -50,7 +53,7 @@
                                 <span class="rating_num">({{ $product['ratingCount'] }})</span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
             
                     @if(($index + 1) % 3 == 0)
                         </div><div class="item">

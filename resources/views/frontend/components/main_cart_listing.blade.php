@@ -1,3 +1,13 @@
+@if (isset($cart_updated) && $cart_updated == 1)
+    <div class="alert alert-warning" role="alert">
+        <h4>
+            <i style="color:#ffaf38;" class="fas fa-exclamation-triangle"></i>
+            <b>Important messages about items in your Cart:</b>
+        </h4>
+        <p class="mb-0 pb-0">Some items in your cart cannot be shipped to your selected delivery location. So for this reason those products are removed from your cart.</p>
+    </div>
+@endif
+
 @if(count($models) > 0)
     @foreach($models as $model)
         <div class="item">

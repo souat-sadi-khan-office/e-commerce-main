@@ -30,6 +30,7 @@ use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
+use App\Repositories\Interface\UserRepositoryInterface;
 
 class HomePageController extends Controller
 {
@@ -37,16 +38,20 @@ class HomePageController extends Controller
     private $brands;
     private $product;
     private $flashDeals;
+    private $userRepository;
+
     public function __construct(
         BannerRepositoryInterface $banner,
         ProductRepositoryInterface $product,
         BrandRepositoryInterface $brands,
         FlashDealRepositoryInterface $flashDeals,
+        UserRepositoryInterface $userRepository,
     ) {
         $this->brands = $brands;
         $this->banner = $banner;
         $this->product = $product;
         $this->flashDeals = $flashDeals;
+        $this->userRepository = $userRepository;
     }
     public function visibility(Request $request, $section)
     {
@@ -276,44 +281,54 @@ class HomePageController extends Controller
         $items = [];
         $counter = 0;
         $total_price = 0;
-
-        // Check if customer is logged in
+        $models = [];
+        
         if(Auth::guard('customer')->check()) {
             $cart = Cart::where('user_id', Auth::guard('customer')->user()->id)->first();
         } else {
-            // Otherwise, check for cart using IP address
             $cart = Cart::where('ip', $request->ip())->first();
         }
 
-        // If cart exists, get the cart details
         if(!$cart) {
-            return response()->json(['status' => false, 'message' => 'Cart not found']);
+            $cart = Cart::firstOrCreate(
+                ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
+                ['total_quantity' => 0, 'currency_id' => 1]
+            );
         }
 
         $items = CartDetail::where('cart_id', $cart->id)->get();
 
-        $models = [];
+        $cart_updated = false;
         foreach($items as $item) {
-            $price = $this->product->discountPrice($item->product);
-            $total_price += ($price * $item->quantity);
+            $stockResponse = getProductStock($item->product_id);
+            if(!$stockResponse['status']) {
+                $cart_updated = true;
+                $itemQuantity = $item->quantity;
+                $item->delete();
+                $cart->total_quantity -= $itemQuantity;
+                $cart->save();
+            } else {
+                $price = $this->product->discountPrice($item->product);
+                $total_price += ($price * $item->quantity);
 
-            $models[] = [
-                'id' => $item->id,
-                'slug' => $item->product->slug,
-                'thumb_image' => asset($item->product->thumb_image),
-                'name' => $item->product->name,
-                'quantity' => $item->quantity,
-                'price' => $price
-            ];
+                $models[] = [
+                    'id' => $item->id,
+                    'slug' => $item->product->slug,
+                    'thumb_image' => asset($item->product->thumb_image),
+                    'name' => $item->product->name,
+                    'quantity' => $item->quantity,
+                    'price' => $price
+                ];
+            }
         }
 
         // Return view with cart items
         $counter = count($models);
         $total_price = format_price(convert_price($total_price));
         if($request->has('show') && $request->show == 'main-cart-area') {
-            $html = view('frontend.components.main_cart_listing', compact('models'))->render();
+            $html = view('frontend.components.main_cart_listing', compact('models', 'cart_updated'))->render();
         } else {
-            $html = view('frontend.components.cart_listing', compact('models'))->render();
+            $html = view('frontend.components.cart_listing', compact('models', 'cart_updated'))->render();
         }
         return response()->json(['content' => $html, 'total_price' => $total_price, 'counter' => $counter]);
     }
@@ -397,25 +412,35 @@ class HomePageController extends Controller
 
         $items = CartDetail::where('cart_id', $cart->id)->get();
 
+        $cart_updated = false;
         $models = [];
         foreach($items as $item) {
-            $price = $this->product->discountPrice($item->product);
-            $total_price += ($price * $item->quantity);
+            $stockResponse = getProductStock($item->product_id);
+            if(!$stockResponse['status']) {
+                $cart_updated = true;
+                $itemQuantity = $item->quantity;
+                $item->delete();
+                $cart->total_quantity -= $itemQuantity;
+                $cart->save();
+            } else {
+                $price = $this->product->discountPrice($item->product);
+                $total_price += ($price * $item->quantity);
 
-            $models[] = [
-                'id' => $item->id,
-                'slug' => $item->product->slug,
-                'thumb_image' => asset($item->product->thumb_image),
-                'name' => $item->product->name,
-                'quantity' => $item->quantity,
-                'price' => $price
-            ];
+                $models[] = [
+                    'id' => $item->id,
+                    'slug' => $item->product->slug,
+                    'thumb_image' => asset($item->product->thumb_image),
+                    'name' => $item->product->name,
+                    'quantity' => $item->quantity,
+                    'price' => $price
+                ];
+            }
         }
 
         // Return view with cart items
         $counter = count($models);
 
-        return view('frontend.cart', compact('models', 'counter', 'total_price'));
+        return view('frontend.cart', compact('models', 'cart_updated', 'counter', 'total_price'));
     }
 
     public function index(Request $request)
@@ -501,7 +526,6 @@ class HomePageController extends Controller
             if (isset($request->flash_deals)) {
                 $flashDeals = $this->flashDeals();
                 return view('frontend.homepage.falsh_deals-tab',compact('flashDeals'));
-                
             }
         }
 

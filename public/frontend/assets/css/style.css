@@ -7466,7 +7466,8 @@ blockquote p:last-child {
 .cart-modal .footer {
     flex: 0 0 auto;
     padding: 5px 0 43px;
-    position: relative
+    position: relative;
+	border-bottom: 1px solid #eee;
 }
 
 .cart-modal .footer .total {
@@ -8460,6 +8461,39 @@ body.no-scroll {
 .placeholder {
 	display: block;
 }
+
+.min-height {
+	min-height: 515px;
+}
+
+span.stock-status {
+    cursor: default;
+    background: rgba(55, 75, 185, .1) !important;
+    color: #3749bb !important;
+	text-align: center;
+}
+
+a.stock-status-warning {
+    background: rgba(55, 75, 185, .1) !important;
+    color: #ef4a23 !important;
+	text-align: center;
+}
+
+.product-status {
+	margin-bottom: 10px;
+	color: #ef4a23;
+}
+
+.product_info .stock-status, .stock-status-warning {
+    flex: 0 0 97px;
+    display: inline-block;
+    width: 100%;
+    padding: 5px 0 10px;
+	border-radius: 5px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
 /* Skeleton loading effect */
 .placeholder .loading {
     background: linear-gradient(90deg, #F6F7F8 25%, #E0E0E0 50%, #F6F7F8 75%);

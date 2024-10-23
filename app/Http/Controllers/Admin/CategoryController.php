@@ -31,7 +31,8 @@ class CategoryController extends Controller
       }
 
       $publicKeys = $this->key->getOnlyPublicKey();
-      $keys = $this->key->getKeysByCategoryId($categoryId);
+      $ids = $this->categoryRepository->getParentCategoryIds($categoryId);
+      $keys = $this->key->allKeysIncludingParent($ids);
       
       return view('backend.category.keys', compact('category', 'publicKeys', 'keys'));
    }

@@ -50,12 +50,14 @@ class SpecificationAttributes extends SpecificationsTypes
                         [
                             'name' => $request->name[$i], 
                             'status' => $request->status[$i],
+                            'extra' => $request->extra[$i],
                         ]
                     );
                 } else {
                     SpecificationKeyTypeAttribute::create([
                         'name' => $request->name[$i],
                         'status' => $request->status[$i],
+                        'extra' => $request->extra[$i],
                         'admin_id' => Auth::guard('admin')->user()->id,
                         'key_type_id' => $keyId,
                     ]);

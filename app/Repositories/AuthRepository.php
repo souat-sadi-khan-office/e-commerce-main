@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Cart;
 use App\Models\User;
 use App\Models\UserPhone;
 use App\Models\UserWallet;
@@ -18,6 +19,12 @@ class AuthRepository implements AuthRepositoryInterface
         $credentials = $request->only('email','password');
         
         if (Auth::guard($guard)->attempt($credentials)) {
+            $cartItems = Cart::where('ip', $request->ip())->get();
+            foreach ($cartItems as $item) {
+                $item->user_id = Auth::guard('customer')->user()->id;
+                $item->save();
+            }
+
             return $guard;
         }
 
@@ -36,7 +43,7 @@ class AuthRepository implements AuthRepositoryInterface
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return ['status' => false, 'message' => $validator->errors()];
         }
 
         // User Creation

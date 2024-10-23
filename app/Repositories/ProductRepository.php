@@ -414,12 +414,20 @@ class ProductRepository implements ProductRepositoryInterface
         $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : null;
         $hoverImage = $product->image->isNotEmpty() ? $product->image->first()->image : null;
 
+        $stockStatus = 'out_of_stock';
+        $stockResponse = getProductStock($product->id, 1);
+        if($stockResponse['status']) {
+            $stockStatus = 'in_stock';
+        }
+
         if ($product->specifications) {
             return [
                 'id' => $product->id,
                 'name' => $product->name,
                 'slug' => $product->slug,
                 'sku' => $product->sku,
+                'stage' => $product->stage,
+                'stock_status' => $stockStatus,
                 'thumb_image' => $product->thumb_image,
                 'hover_image' => $hoverImage,
                 'unit_price' => $product->unit_price,

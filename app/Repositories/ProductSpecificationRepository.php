@@ -463,6 +463,17 @@ class ProductSpecificationRepository implements ProductSpecificationRepositoryIn
             ->get();
     }
 
+    public function allKeysIncludingParent($ids)
+    {
+        $keys = SpecificationKey::whereIn('category_id', $ids)->get();
+
+        $publicKeys = SpecificationKey::where('is_public', true)
+            ->select('id', 'name', 'is_public') 
+            ->get();
+    
+        return $keys->merge($publicKeys)->unique('id');
+    }
+
     public function keys($id)
     {
         $keys = SpecificationKey::where('category_id', $id)

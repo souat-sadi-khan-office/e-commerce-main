@@ -214,7 +214,6 @@ class HelperController extends Controller
                 'discount_type'
             ]);
 
-
         $discountedPrice = $product->unit_price;
         if ($product->is_discounted && $product->discount > 0) {
             $discountAmount = $product->discount_type == 'amount'
@@ -256,9 +255,30 @@ class HelperController extends Controller
             'total_sold' => $product->details->number_of_sale ?? 0,
             'question' => $product->question,
             'ratings' => $product->ratings,
-            'images' => $product->image,
+            'stage' => $product->stage,
+            'images' => $product->image, 
             'key_features' => []
         ];
+
+        $stockStatus = 'out_of_stock';
+        $stockResponse = getProductStock($product->id, 1);
+        if($stockResponse['status']) {
+            $stockStatus = 'in_stock';
+        }
+        $productDetails['stock_status'] = $stockStatus; 
+
+        $tax_amount = 0;
+        if ($product->taxes->isNotEmpty()) {
+            foreach ($product->taxes as $tax) {
+                if ($tax->tax_type == 'percent') {
+                    $tax_amount += ($product->unit_price * $tax->tax) / 100;
+                } else {
+                    $tax_amount += $tax->tax;
+                }
+            }
+        }
+        
+        $productDetails['tax'] = $tax_amount;
 
         if ($product->specifications->isNotEmpty()) {
             foreach ($product->specifications as $specification) {
@@ -270,6 +290,7 @@ class HelperController extends Controller
                 ];
             }
         }
+
         return $productDetails;
     }
 

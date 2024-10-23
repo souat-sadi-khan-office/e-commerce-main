@@ -8,7 +8,7 @@
                     @if (Auth::guard('customer')->user()->provider_name == 'google' || Auth::guard('customer')->user()->provider_name == 'facebook')
                         <img src="{{ Auth::guard('customer')->user()->avatar }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
                     @else
-                        <img src="{{ asset(Auth::guard('customer')->user()->avatar) }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
+                        <img src="{{ asset('pictures/'.Auth::guard('customer')->user()->avatar) }}" width="80" height="80" alt="{{ Auth::guard('customer')->user()->name }} Photo">
                     @endif
                 @endif
             </span>

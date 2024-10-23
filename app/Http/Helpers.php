@@ -221,7 +221,7 @@ function store_exchange_rate($currency_code, $rate)
     Cache::put("exchange_rate_{$currency_code}", $rate, get_settings('currency_api_fetch_time') ?? 3600);
 }
 
-function getProductStock($productId, $qty)
+function getProductStock($productId, $qty = 1)
 {
     // getting the product
     $product = Product::find($productId);
@@ -289,8 +289,31 @@ function getProductStock($productId, $qty)
                 return ['status' => true, 'stock' => $stock->stock];
             }
         break;
-    }
+        case 'city_wise':
+            if(!Session::has('user_country')) {
+                return ['status' => false, 'message' => 'Please select your country to buy this product'];
+            }
 
+            // if(Session::get('user_country') != '') {
+            //     $userCountry = Session::get('user_country');
+                
+            //     $country = Country::where('name', $userCountry)->first();
+            //     if(!$country) {
+            //         return ['status' => false, 'message' => 'This product has no stock in your country. Please change your country.'];
+            //     }
+
+            //     $countryId = $country->id;
+            //     $stock = $product->stock->where('in_stock', 1)->where('country_id', $countryId)->first();
+            //     if(!$stock) {
+            //         return ['status' => false, 'message' => 'This product has no stock in your country. Please change your country.'];
+            //     }
+
+            //     return ['status' => true, 'stock' => $stock->stock];
+            // }
+
+            return ['status' => true, 'stock' => 0];
+        break;
+    }
 }
 
 function get_exchange_rate($currency_code)

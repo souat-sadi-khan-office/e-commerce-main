@@ -46,6 +46,15 @@
                             <b>Warning</b>: If you delete any Specification from here, It will delete all the Specification Types and attributes accordition to the Specification key. Be careful about this.
                         </div>
                     </div>
+                    <div class="col-md-12 form-group mb-3">
+                        @if ($category->children)
+                        @foreach ($category->children as $sub_category)
+                            <a class="btn btn-outline-primary btn-sm" href="{{ route('admin.category.keys', $sub_category->id) }}">
+                                {{ $sub_category->name }}
+                            </a>
+                        @endforeach
+                    @endif
+                    </div>
                     <div class="col-md-12 mb-3 table-responsive">
                         <table class="table table-bordered table-striped table-hover" id="data-table">
                             <thead>

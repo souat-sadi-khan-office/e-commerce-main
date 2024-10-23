@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
         if (!file_exists(public_path('storage'))) {
             try {
                 // Call artisan command to create symbolic link

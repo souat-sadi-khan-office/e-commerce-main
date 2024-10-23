@@ -163,16 +163,7 @@
         </div>
     </div>
     <div class="footer">
-        <div class="promotion-code">
-            <div class="input-group">
-                <input type="text" placeholder="Promo Code" id="input-cart-coupon">
-                <span class="input-group-btn">
-                    <button class="btn btn-sm btn-fill-out rounded-0" type="submit">
-                        Apply
-                    </button>
-                </span>
-            </div>
-        </div>
+        <div class="promotion-code"></div>
                 
         <div class="total">
             <div class="title">Sub-Total</div>

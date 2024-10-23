@@ -85,7 +85,7 @@ class SpecificationsController extends Controller
 
     public function index(Request $request)
     {
-        // $categories = $this->productSpecificationRepository->index();
+        $categories = $this->productSpecificationRepository->index();
         $categories = $categories->filter(function ($category) {
             return $category->specification_keys_count > 0; // Check the count
         });

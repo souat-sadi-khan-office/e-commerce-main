@@ -18,4 +18,5 @@ interface CategoryRepositoryInterface
     public function updateisFeatured($request, $id);
     public function updatestatus($request, $id);
     public function view($request);
+    public function getParentCategoryIds($categoryId);
 }

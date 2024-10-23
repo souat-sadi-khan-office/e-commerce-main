@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\StuffController;
 use App\Http\Controllers\Admin\HelperController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -140,6 +141,10 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     // Banner
     Route::post('banner/status/{id}', [BannerController::class, 'updateStatus'])->name('banner.status');
     Route::resource('banner', BannerController::class);
+
+    // Coupon
+    Route::post('coupon/status/{id}', [CouponController::class, 'updateStatus'])->name('coupon.status');
+    Route::resource('coupon', CouponController::class);
 
     // City
     Route::post('get-city-information-by-id', [CityController::class, 'getCityInformationById'])->name('get-city-information-by-id');

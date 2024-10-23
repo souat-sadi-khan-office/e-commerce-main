@@ -17,40 +17,7 @@
         <div class="featured-carousel product_list owl-carousel owl-theme nav_style5" data-nav="true" data-dots="false" data-loop="true" data-margin="20" data-responsive='{"0":{"items": "1"}, "380":{"items": "1"}, "640":{"items": "2"}, "991":{"items": "1"}}'>
             <div class="item">
                 @foreach($products as $index => $product)
-                    <div class="product_wrap">
-                        @if (isset($product['discount_type']))
-                            <span class="pr_flash bg-danger">
-                                {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }} Off
-                            </span>
-                        @endif
-                        <div class="product_img">
-                            <a href="{{ route('search', ['sort' => 'featured']) }}">
-                                <img src="{{ asset($product['thumb_image']) }}" alt="{{ $product['name'] }}">
-                                <img class="product_hover_img" src="{{ asset($product['hover_image']) }}" alt="{{ $product['name'] }}">
-                            </a>
-                        </div>
-                        <div class="product_info">
-                            <h6 class="product_title"><a href="shop-product-detail.html">{{ $product['name'] }}</a></h6>
-                            <div class="product_price">
-                                @if (isset($product['discount_type']))
-                                    <span class="price">{{ format_price(convert_price($product['discounted_price'])) }}</span>
-                                    <del>{{ format_price(convert_price($product['unit_price'])) }}</del>
-                                    <div class="on_sale">
-                                        <span>{{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
-                                            Off</span>
-                                    </div>
-                                @else
-                                    <span class="price">{{ format_price(convert_price($product['unit_price'])) }}</span>
-                                @endif
-                            </div>
-                            <div class="rating_wrap">
-                                <div class="rating">
-                                    <div class="product_rate" style="width:{{ $product['averageRating'] }}%"></div>
-                                </div>
-                                <span class="rating_num">({{ $product['ratingCount'] }})</span>
-                            </div>
-                        </div>
-                    </div>
+                    @include('frontend.components.product_main', ['tag' => 'discount_price', 'listing' => 'short'])
             
                     @if(($index + 1) % 3 == 0)
                         </div><div class="item">

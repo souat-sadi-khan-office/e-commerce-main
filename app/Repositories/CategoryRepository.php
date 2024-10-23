@@ -232,6 +232,10 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->make(true);
     }
 
+    public function getParentCategoryIds($categoryId)
+    {
+        return Category::findOrFail($categoryId)->allParentCategories();
+    }
 
     public function delete($id)
     {

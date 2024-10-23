@@ -108,7 +108,8 @@ class ProductController extends Controller
     public function specification(Request $request)
     {
         if (isset($request->category_id)) {
-            return response()->json(['keys' => $this->specificationRepository->keys($request->category_id)]);
+            $ids = $this->categoryRepository->getParentCategoryIds($request->category_id);
+            return response()->json(['keys' => $this->specificationRepository->allKeysIncludingParent($ids)]);
         } elseif ($request->key_id) {
             return response()->json(['types' => $this->specificationRepository->types($request->key_id)]);
         } elseif ($request->type_id) {

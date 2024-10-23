@@ -110,6 +110,10 @@
                                 @else
                                     <span class="price">{{ format_price(convert_price($product['price'])) }}</span>
                                 @endif
+                                @if ($product['tax'] > 0)
+                                    <br>
+                                    <span>Tax included: <b>{{ format_price(convert_price($product['tax'])) }}</b></span>
+                                @endif
                             </div>
                             <div class="rating_wrap">
                                 <div class="rating">
@@ -149,7 +153,7 @@
                                 Limited Stock
                             </button>
                         @endif
-                        @if ($product['current_stock']>0)
+                        @if ($product['stock_status'] == 'in_stock' && $product['current_stock']>0)
                         <hr />
                         <div class="cart_extra">
                             <div class="cart-product-quantity">
@@ -175,10 +179,20 @@
                             </div>
                         </div>
                         @else
-                        <hr />
-                            <button class="btn btn-fill-secondary" type="button">
-                                Out of Stock
-                            </button>
+                            <hr />
+                            <div class="product-status">
+                                This item cannot be shipped to your selected delivery location. Please choose a different delivery location
+                            </div>
+                            <div class="cart_extra">
+                                <div class="ml-0 cart_btn">
+                                    <a style="margin-left: 0px;" class="add_compare" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                        <i class="fas fa-random"></i>
+                                    </a>
+                                    <a class="add_wishlist" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
+                                        <i class="far fa-heart"></i>
+                                    </a>
+                                </div>
+                            </div>
                         @endif
                         
                         <hr />

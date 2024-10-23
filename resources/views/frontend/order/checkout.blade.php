@@ -35,15 +35,17 @@
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <div class="toggle_info">
-                            <span><i class="fas fa-tag"></i>Have a coupon? <a href="#coupon" data-bs-toggle="collapse"
-                                    class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
+                            <span>
+                                <i class="fas fa-tag"></i>
+                                Have a coupon? 
+                                <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a>
+                            </span>
                         </div>
                         <div class="panel-collapse collapse coupon_form" id="coupon">
                             <div class="panel-body">
                                 <p>If you have a coupon code, please apply it below.</p>
                                 <div class="coupon field_form input-group">
-                                    <input type="text" value="" class="form-control"
-                                        placeholder="Enter Coupon Code..">
+                                    <input type="text" value="" class="form-control" placeholder="Enter Coupon Code..">
                                     <div class="input-group-append">
                                         <button class="btn btn-fill-out btn-sm" type="submit">Apply Coupon</button>
                                     </div>
@@ -55,7 +57,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="medium_divider"></div>
-                        <div class="divider center_icon"><i class="linearicons-credit-card"></i></div>
+                        <div class="divider center_icon">
+                            <i class="linearicons-credit-card"></i>
+                        </div>
                         <div class="medium_divider"></div>
                     </div>
                 </div>
@@ -91,7 +95,7 @@
                             </div>
                             <div class="form-group mb-3">
                                 <input type="text" required class="form-control"
-                                    value="{{ $userInfo['phones']->phone_number }}" name="customer_phone"
+                                    value="{{ @$userInfo['phones']->phone_number }}" name="customer_phone"
                                     placeholder="Phone *">
                             </div>
                             <div class="form-group mb-3">
@@ -202,57 +206,50 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-
-                                                <td>Blue Dress For Woman <span class="product-qty">x 2</span></td>
-                                                <td>$90.00</td>
-                                                <input type="hidden" name="product[{{ 0 }}][slug]"
-                                                    value="{{ 'slug' }}">
-                                                <input type="hidden" name="product[{{ 0 }}][qty]"
-                                                    value="1">
-                                            </tr>
-                                            <tr>
-                                                <td>Lether Gray Tuxedo <span class="product-qty">x 1</span></td>
-                                                <td>$55.00</td>
-                                                <input type="hidden" name="product[{{ 1 }}][slug]"
-                                                    value="{{ 'slug' }}">
-                                                <input type="hidden" name="product[{{ 1 }}][qty]"
-                                                    value="1">
-                                            </tr>
-                                            <tr>
-                                                <td>woman full sliv dress <span class="product-qty">x 3</span></td>
-                                                <td>$204.00</td>
-                                                <input type="hidden" name="product[{{ 2 }}][slug]"
-                                                    value="{{ 'slug' }}">
-                                                <input type="hidden" name="product[{{ 2 }}][qty]"
-                                                    value="1">
-                                            </tr>
+                                            @php
+                                                $sub_total = 0;
+                                            @endphp
+                                            @if (count($models) > 0)
+                                                @foreach ($models as $key => $model)
+                                                    @php
+                                                        $sub_total += ($model['price'] * $model['quantity']);
+                                                    @endphp
+                                                    <tr>
+                                                        <td>{{ $model['name'] }} <span class="product-qty">x {{ $model['quantity'] }}</span></td>
+                                                        <td>{{ format_price(convert_price($model['price'] * $model['quantity'])) }}</td>
+                                                        <input type="hidden" name="product[{{ $key }}][slug]" value="{{ $model['slug'] }}">
+                                                        <input type="hidden" name="product[{{ $key }}][qty]" value="{{ $model['quantity'] }}">
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                            
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th>SubTotal</th>
-                                                <td class="product-subtotal">$349.00</td>
+                                                <td class="product-subtotal">{{ format_price(convert_price($sub_total)) }}</td>
                                             </tr>
 
                                             <tr>
                                                 <th>Shipping</th>
-                                                <td class="text-danger left">+ $60.00</td>
-                                                <input type="hidden" name="shipping_charge" value="70">
+                                                <td class="text-danger left">+ {{ format_price(convert_price($shipping_charge)) }}</td>
+                                                <input type="hidden" name="shipping_charge" value="{{ $shipping_charge }}">
                                             </tr>
+
                                             <tr>
                                                 <th>Tax Total</th>
-                                                <td class="text-danger left">+ $20.00</td>
-                                                <input type="hidden" name="total_tax" value="20">
+                                                <td class="text-danger left">+ {{ format_price(convert_price($tax_amount)) }}</td>
+                                                <input type="hidden" name="total_tax" value="{{ $tax_amount }}">
                                             </tr>
                                             <tr>
                                                 <th>Discount</th>
-                                                <td class="text-success left">- $60.00</td>
-                                                <input type="hidden" name="discount" value="70">
+                                                <td class="text-success left">- $0.00</td>
+                                                <input type="hidden" name="discount" value="0">
                                             </tr>
                                             <tr>
                                                 <th>Total</th>
-                                                <td class="product-subtotal">$500.00</td>
-                                                <input type="hidden" name="subtotal" value="500">
+                                                <td class="product-subtotal">{{ format_price(convert_price($total_price)) }} </td>
+                                                <input type="hidden" name="subtotal" value="{{ $total_price }}">
 
                                             </tr>
                                         </tfoot>

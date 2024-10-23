@@ -37,6 +37,17 @@
 	<div class="custom-container">
         <div class="row">
             <div class="col-12">
+
+                @if (isset($cart_updated) && $cart_updated == 1)
+                    <div class="alert alert-warning" role="alert">
+                        <h4>
+                            <i style="color:#ffaf38;" class="fas fa-exclamation-triangle"></i>
+                            <b>Important messages about items in your Cart:</b>
+                        </h4>
+                        <p class="mb-0 pb-0">Some items in your cart cannot be shipped to your selected delivery location. So for this reason those products are removed from your cart.</p>
+                    </div>
+                @endif
+
                 <div class="table-responsive shop_cart_table">
                     @if (count($models) > 0)
                         <table class="table">
@@ -90,14 +101,12 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="6" class="px-0">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-lg-4 col-md-6 mb-3 mb-md-0 mx-auto">
-                                                <div class="coupon field_form input-group">
-                                                    <input type="text" value="" class="form-control form-control-sm" placeholder="Enter Coupon Code..">
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-fill-out btn-sm" type="submit">Apply Coupon</button>
-                                                    </div>
-                                                </div>
+                                        <div class="row g-0">
+                                            <div class="col-md-6 mb-3 text-start">
+                                                <a href="{{ route('home') }}" class="btn btn-sm btn-fill-out">Continue Shipping</a>
+                                            </div>
+                                            <div class="col-md-6 mb-3 mb-md-0 text-end">
+                                                <a href="{{ route('order.checkout') }}" class="btn btn-sm btn-fill-out">Checkout</a>
                                             </div>
                                         </div>
                                     </td>
@@ -115,72 +124,6 @@
                 </div>
             </div>
         </div>
-        @if (count($models) > 0)
-            <div class="row">
-                <div class="col-12">
-                    <div class="medium_divider"></div>
-                    <div class="divider center_icon"><i class="ti-shopping-cart-full"></i></div>
-                    <div class="medium_divider"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="heading_s1 mb-3">
-                        <h6>Calculate Shipping</h6>
-                    </div>
-                    <form class="field_form shipping_calculator">
-                        <div class="form-row">
-                            <div class="form-group col-lg-12 mb-3">
-                                <div class="custom_select">
-                                    <select class="form-control">
-                                        
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-lg-6 mb-3">
-                                <input required="required" placeholder="State / Country" class="form-control" name="name" type="text">
-                            </div>
-                            <div class="form-group col-lg-6 mb-3">
-                                <input required="required" placeholder="PostCode / ZIP" class="form-control" name="name" type="text">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-lg-12 mb-3">
-                                <button class="btn btn-fill-line" type="submit">Update Totals</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-6">
-                    <div class="border p-3 p-md-4">
-                        <div class="heading_s1 mb-3">
-                            <h6>Cart Totals</h6>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <td class="cart_sub_total_label">Cart Subtotal</td>
-                                        <td class="cart_sub_total_amount">{{ format_price(convert_price($total_price)) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cart_shipping_label">Shipping</td>
-                                        <td class="cart_shipping_amount">Free Shipping</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="cart_total_label">Total</td>
-                                        <td class="cart_total_amount"><strong>{{ format_price(convert_price($total_price)) }}</strong></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <a href="#" class="btn btn-fill-out">Proceed To CheckOut</a>
-                    </div>
-                </div>
-            </div>
-        @endif
     </div>
 </div>
 @endsection

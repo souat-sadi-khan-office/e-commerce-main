@@ -1026,6 +1026,10 @@
 		let productSlug = $(this).data('id');
 		let quantity =  $('#product-'+productSlug).val();
 
+		if(quantity === undefined) {
+			quantity = 1;
+		}
+
         $(this).html('<i class="fas fa-spin fa-spinner"></i>');
 
 		$.ajax({
@@ -1075,7 +1079,6 @@
 		$('#m-cart').addClass('open');
 		$('#m-cart').fadeIn();
 		$('.overlay-loader').addClass('open');
-		$("body").addClass('no-scroll');
 
 		getCartItems('main-cart-area');
 	});

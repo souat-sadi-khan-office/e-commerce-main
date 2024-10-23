@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use Illuminate\Http\Request;
+use App\Models\Cart;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\AuthRepositoryInterface;
@@ -28,8 +29,15 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $this->authRepository->registerUser($request);
+        $registerResponse = $this->authRepository->registerUser($request);
+        if(!$registerResponse['status']) {
+            return response()->json([
+                'status' => false, 
+                'validator' => $registerResponse['message']
+            ]);
+        }
 
+        
         $guard = $this->authRepository->login($request, 'customer');
         if ($guard) {
             $request->session()->regenerate();

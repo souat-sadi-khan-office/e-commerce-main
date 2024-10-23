@@ -96,7 +96,7 @@
 
                 <!-- Product -->
                 <li
-                    class="nav-item {{ Request::is('admin/product*') || Request::is('admin/banner*') || Request::is('admin/flash-deal*') || Request::is('admin/stock*') ? 'menu-open' : '' }}">
+                    class="nav-item {{ Request::is('admin/product*') || Request::is('admin/banner*') || Request::is('admin/flash-deal*') || Request::is('admin/stock*') || Request::is('admin/coupon*') ? 'menu-open' : '' }}">
                     <a href="javascript:;"
                         class="nav-link">
                         <i class="nav-icon bi bi-cart2"></i>
@@ -150,6 +150,14 @@
                                 class="nav-link {{ Request::is('admin/banner') || Request::is('admin/banner/*') ? ' active' : '' }}">
                                 <i class="nav-icon bi bi-images"></i>
                                 <p>Banner</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.coupon.index') }}"
+                                class="nav-link {{ Request::is('admin/coupon') ? ' active' : '' }}">
+                                <i class="nav-icon bi bi-images"></i>
+                                <p>Coupon</p>
                             </a>
                         </li>
                     </ul>

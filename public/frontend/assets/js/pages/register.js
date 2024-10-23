@@ -84,7 +84,7 @@ var _formValidation = function () {
                 console.log(data)
                 if (!data.status) {
                     if (data.validator) {
-                        for (const [key, messages] of Object.entries(data.message)) {
+                        for (const [key, messages] of Object.entries(data.validator)) {
                             messages.forEach(message => {
                                 toastr.error(message);
                             });

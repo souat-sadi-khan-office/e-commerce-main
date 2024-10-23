@@ -41,5 +41,6 @@ public function getAttributesById($id);
 public function keys($id);
 public function types($id);
 public function attributes($id);
+public function allKeysIncludingParent($ids);
 
 }

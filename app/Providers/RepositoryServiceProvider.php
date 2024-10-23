@@ -61,6 +61,8 @@ use App\Repositories\Interface\GatewayConfigurationRepositoryInterface;
 use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\CustomerQuestionRepositoryInterface;
+use App\Repositories\Interface\CouponRepositoryInterface;
+use App\Repositories\CouponRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -98,6 +100,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AddressControllerInterface::class, AddressRepository::class);
         $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
         $this->app->bind(CustomerQuestionRepositoryInterface::class, CustomerQuestionRepository::class);
+        $this->app->bind(CouponRepositoryInterface::class, CouponRepository::class);
     }
 
     /**

@@ -29,6 +29,22 @@ class Category extends Model
         'is_featured',
     ];
 
+    public function allParentCategories()
+    {
+        $parents = [];
+
+        $currentCategory = $this;
+        while ($currentCategory->parent_id != null) {
+            $currentCategory = $currentCategory->parent;
+            $parents[] = $currentCategory->id;
+        }
+
+        $parents[] = $this->id;
+
+        return $parents;
+    }
+
+
     // Self-relation for parent category
     public function parent()
     {
