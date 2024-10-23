@@ -132,11 +132,7 @@
     <i class="lab la-whatsapp my-sudipmart"></i>
 </a> --}}
 
-@php
-    
-@endphp
-
-<a href="javascript:;" class="cart-button compare-btn">
+<a href="{{ route('compare') }}" class="cart-button compare-btn">
     <i class="fas fa-random"></i>
     <div class="label">Compare</div>
     <span class="counter compare_counter">{{ session()->get('compare_list') ? count(session()->get('compare_list')) : 0 }}</span>

@@ -477,6 +477,11 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::findOrFail($id);
     }
+    
+    public function getProductByIds($ids)
+    {
+        return Product::whereIn('id', $ids)->get();
+    }
 
     public function getProductStockPurchaseDetails($productId)
     {

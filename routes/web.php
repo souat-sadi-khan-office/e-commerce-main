@@ -38,6 +38,7 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
         return redirect()->route('dashboard');
     });
     
+    Route::get('compare', [HomePageController::class, 'compare'])->name('compare');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
