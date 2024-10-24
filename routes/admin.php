@@ -124,7 +124,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
     // Order
     Route::group(['prefix' => 'orders', 'as' => 'order.'], function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('details/{id}', [OrderController::class, 'invoice'])->name('details');
+        Route::get('details/{id}', [OrderController::class, 'details'])->name('details');
         Route::get('invoice/{id}', [OrderController::class, 'invoice'])->name('invoice');
        
     });

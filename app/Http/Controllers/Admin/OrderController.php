@@ -39,7 +39,8 @@ class OrderController extends Controller
     }
 
     public function details($id){
-        dd($id);
+        $data=encode($id);
+        dd($data,decode($data));
     }
     public function invoice($id){
         dd($id);

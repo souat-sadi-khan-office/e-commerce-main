@@ -372,6 +372,13 @@ if (!function_exists('home_price')) {
     }
 }
 
+function encode($value){
+    return base64_encode(urlencode(base64_encode($value))); // Encode
+}
+function decode($encoded){
+    return base64_decode(urldecode(base64_decode($encoded)));
+}
+
 // Shows Price on page based on low to high with discount
 if (!function_exists('home_discounted_price')) {
     function home_discounted_price($product, $formatted = true)
