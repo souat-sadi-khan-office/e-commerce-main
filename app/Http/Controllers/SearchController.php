@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
@@ -108,6 +109,20 @@ class SearchController extends Controller
             return view('frontend.search_content', compact('products', 'brands', 'categories'));
         }
         return '0';
+    }
+    
+    public function ajaxSearchProduct(Request $request)
+    {
+        $query = $request->input('search');
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+        ->take(5)
+        ->get(['slug', 'name'])
+        ->map(function ($product) {
+            $product->name = Str::limit($product->name, 50);
+            return $product;
+        });
+
+        return response()->json($products);
     }
 
     // for searching by types using brand_id

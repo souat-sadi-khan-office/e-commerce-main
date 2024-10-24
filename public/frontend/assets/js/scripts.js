@@ -994,7 +994,7 @@
                 }
                 $('.add_compare').html('<i class="fas fa-random"></i>');
             }
-        })
+        });
     });
 
 	// Product Add to Wish List

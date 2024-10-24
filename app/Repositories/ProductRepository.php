@@ -460,6 +460,91 @@ class ProductRepository implements ProductRepositoryInterface
         }
     }
 
+    public function compare()
+    {
+        $productIdArray = [];
+        $models = [];
+        $specKeyIds = [];
+        $allProductsSpecifications = [];
+
+        if(session()->has('compare_list') && is_array(session()->get('compare_list'))) {
+            $productIdArray = session()->get('compare_list');
+        }
+
+        if(count($productIdArray) > 0) {
+            $specification = ProductSpecification::whereIn('product_id', $productIdArray)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
+
+            $products = $this->getProductByIds($productIdArray)->map(function ($product) use($specification, &$models, &$allProductsSpecifications) {
+                $summery = [];
+
+                $averageRating = $product->ratings->isNotEmpty() ? $product->ratings->first()->averageRating : 0;
+                $averageRatingCount = $product->ratings->isNotEmpty() ? count($product->ratings) : 0;
+                $averageRatingPercentage = $averageRating !== null ? ($averageRating / 5) * 100 : 0;
+
+                $specification = $specification->where('product_id', $product->id);
+
+                $mapped = $specification->map(function ($item) {
+                    return [
+                        'key_id' => $item->key_id ?? null,
+                        'specificationKey' => $item->specificationKey ? $item->specificationKey->name : null,
+                        'specificationKeyType' => $item->specificationKeyType ? $item->specificationKeyType->name : null,
+                        'specificationKeyTypeAttribute' => $item->specificationKeyTypeAttribute ? $item->specificationKeyTypeAttribute->name . ' ' . $item->specificationKeyTypeAttribute->extra : null,
+                    ];
+                });
+
+                if ($product->specifications->isNotEmpty()) {
+                    $summery = $product->specifications->where('key_feature', 1)->map(function ($specification) {
+                        return [
+                            'type_name' => $specification->specificationKeyType->name,
+                            'attr_name' => $specification->specificationKeyTypeAttribute->name,
+                        ];
+                    });
+                }
+
+                $models[] = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'brand' => $product->brand ? $product->brand->name : null, 
+                    'brand_slug' => $product->brand ? $product->brand->slug : null, 
+                    'slug' => $product->slug,
+                    'image' => asset($product->thumb_image),
+                    'discount_type' => $product->is_discounted,
+                    'unit_price'   => $product->unit_price,
+                    'discounted_price' => $this->discountPrice($product),
+                    'discount' => $product->discount,
+                    'stage' => $product->stage,
+                    'stock' => getProductStock($product->id)['status'] == true ? 'In Stock' : 'Out of Stock',
+                    'average_rating' => $averageRating,
+                    'average_rating_percent' => $averageRatingPercentage,
+                    'average_rating_count' => $averageRatingCount,
+                    'summery' => $summery,
+                ];
+
+                $specKeyIds = $product->specifications->unique('key_id')->pluck('key_id')->toArray();
+
+                $sadik = ProductSpecification::with([
+                    'specificationKey:id,name',
+                    'specificationKeyType:id,name',
+                    'specificationKeyTypeAttribute:id,name'
+                ])
+                ->whereIn('key_id', $specKeyIds)
+                ->where('product_id', $product->id)
+                ->get()
+                ->groupBy('specificationKey.name')
+                ->map(function ($specifications) use ($product, &$allProductsSpecifications) {
+                    return $specifications->groupBy('specificationKeyType.name')
+                        ->map(function ($types, $typeName) use ($product, &$allProductsSpecifications, $specifications) {
+                            $keyName = $specifications->first()->specificationKey->name;
+                            $attributeNames = $types->pluck('specificationKeyTypeAttribute.name');
+                            return $allProductsSpecifications[$keyName][$typeName][$product->id] = $attributeNames[0];
+                        });
+                });
+            });
+        }
+
+        return  [$allProductsSpecifications, $models, $productIdArray];
+    }
+
     private function specificationMapper($specification)
     {
         return [
@@ -480,7 +565,7 @@ class ProductRepository implements ProductRepositoryInterface
     
     public function getProductByIds($ids)
     {
-        return Product::whereIn('id', $ids)->get();
+        return Product::with('specifications')->whereIn('id', $ids)->get();
     }
 
     public function getProductStockPurchaseDetails($productId)

@@ -35,7 +35,7 @@
                     @endif
                     
                     <li>
-                        <a href="javascript:;" class="add_compare" data-id="{{ $product['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                        <a href="javascript:;" class="add_compare" data-id="{{ $product['slug'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                             <i class="fas fa-random"></i>
                         </a>
                     </li>
@@ -102,64 +102,3 @@
         @endif
     </div>
 </div>
-{{-- <div class="product">
-    
-    <div class="product_info">
-        <h6 class="product_title">
-            <a href="{{ route('slug.handle', $product['slug']) }}">
-                {{ $product['name'] }}
-            </a>
-        </h6>
-        <div class="product_price">
-            @if (isset($product['discount_type']))
-                <span class="price">
-                    {{ format_price(convert_price($product['discounted_price'])) }}
-                </span>
-                <del>
-                    {{ format_price(convert_price($product['unit_price'])) }}
-                </del>
-                <div class="on_sale">
-                    <span>
-                        {{ $product['discount_type'] == 'amount' ? format_price(convert_price($product['discount'])) : $product['discount'] . '%' }}
-                        Off
-                    </span>
-                </div>
-            @else
-                <span class="price">
-                    {{ format_price(convert_price($product['unit_price'])) }}</span>
-            @endif
-        </div>
-        <div class="rating_wrap">
-            <div class="rating">
-                <div class="product_rate" style="width:{{ $product['averageRating'] }}%"></div>
-            </div>
-            <span class="rating_num">({{ $product['ratingCount'] }})</span>
-        </div>
-        
-        <div class="list_product_action_box">
-            <ul class="list_none pr_action_btn">
-                <li class="add-to-cart">
-                    <a href="javascript:;">
-                        <i class="icon-basket-loaded"></i> 
-                        Add To Cart
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;" class="add_compare" data-id="{{ $product['id'] }}" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
-                        <i class="icon-shuffle"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('quick.view', $product['slug']) }}" class="popup-ajax">
-                        <i class="icon-magnifier-add"></i>
-                    </a>
-                </li>
-                <li>
-                    <a class="add_wishlist" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
-                        <i class="icon-heart"></i>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div> --}}

@@ -131,7 +131,7 @@ class OrderController extends Controller
          if(json_decode($payment->getContent())){
             return redirect()->back()->withErrors(json_decode(json_decode($payment->getContent())->error));
          }
-        elseif (isset($payment['approval_url'])) {
+        elseif (is_array($payment) && isset($payment['approval_url'])) {
             return redirect($payment['approval_url']);
         }
 
