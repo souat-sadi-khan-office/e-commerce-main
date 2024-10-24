@@ -50,7 +50,6 @@ class paypal
                     'currency' => $currencyCode,
                     'gateway_name' => 'Paypal',
                     'status' => $createResponse->result->status,
-                    'trx_id' => $createResponse->result->id,
                     'payment_order_id' => $createResponse->result->id,
                     'payment_unique_id' => $uID,
                     

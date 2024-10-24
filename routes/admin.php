@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\ProductStockController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Frontend\HomePageController;
 use App\Http\Controllers\SearchController;
@@ -117,6 +118,15 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::post('keyfeature/{id}', [ProductController::class, 'keyfeature'])->name('keyfeature');
             Route::any('delete/{id}', [ProductController::class, 'delete'])->name('delete');
         });
+    });
+
+
+    // Order
+    Route::group(['prefix' => 'orders', 'as' => 'order.'], function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::get('details/{id}', [OrderController::class, 'invoice'])->name('details');
+        Route::get('invoice/{id}', [OrderController::class, 'invoice'])->name('invoice');
+       
     });
 
     // Question

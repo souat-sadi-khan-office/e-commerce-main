@@ -59,14 +59,14 @@ class OrderController extends Controller
         } else {
             $cart = Cart::where('ip', $request->ip())->first();
         }
-        
+
         if (!$cart) {
             $cart = Cart::firstOrCreate(
                 ['user_id' => Auth::guard('customer')->user()->id ?? null, 'ip' => $request->ip()],
                 ['total_quantity' => 0, 'currency_id' => 1]
             );
         }
-        
+
         $items = CartDetail::where('cart_id', $cart->id)->get();
 
         $cart_updated = false;
@@ -107,9 +107,9 @@ class OrderController extends Controller
         }
 
         $total_price += $tax_amount;
-        $shipping_charge = get_settings('system_default_delivery_charge')??10;
+        $shipping_charge = get_settings('system_default_delivery_charge') ?? 10;
         $total_price += $shipping_charge;
-        if(count($models)==0){
+        if (count($models) == 0) {
             return redirect()->route('home')->withErrors('Your Cart is Empty!');
         }
         return view('frontend.order.checkout', compact('userInfo', 'shipping_charge', 'tax_amount', 'total_price', 'countryName', 'countryID', 'models', 'cities', 'currencyCode'));
@@ -127,12 +127,15 @@ class OrderController extends Controller
         if ($request->payment_option == 'paypal' && $order['order']->id) {
             $payment = paypal::processPayment($request->currency_code, $request->subtotal, $order['order']->unique_id);
         }
-       
-         if(json_decode($payment->getContent())){
-            return redirect()->back()->withErrors(json_decode(json_decode($payment->getContent())->error));
-         }
-        elseif (isset($payment['approval_url'])) {
-            return redirect($payment['approval_url']);
+
+
+        if (!isset($request->token) && !isset($request->PayerID)) {
+            if (!is_array($payment) && json_decode($payment->getContent()) != null) {
+                $error=json_decode(json_decode($payment->getContent())->error)->details[0]->issue;
+                return redirect()->back()->with(['error'=>$error]);
+            } elseif (is_array($payment) && isset($payment['approval_url'])) {
+                return redirect($payment['approval_url']);
+            }
         }
 
         if (isset($request->token) && isset($request->PayerID)) {
@@ -159,7 +162,7 @@ class OrderController extends Controller
                     $details = json_decode($order->details->details);
                     $this->adjustStock($details->products);
 
-                    return redirect()->route('home');
+                    return redirect()->route('home')->with(['success'=>"Order Completed!"]);
                 }
             } else {
                 return redirect()->back()->with(['error' => json_decode($capture_contents->error)->details[0]->issue]);

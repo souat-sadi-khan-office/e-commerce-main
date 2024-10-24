@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\CPU\paypal;
+use DataTables;
 use App\Models\City;
 use App\Models\Order;
 use App\Models\Country;
@@ -17,8 +17,107 @@ class OrderRepository implements OrderRepositoryInterface
 {
     public function index($request)
     {
-        return 1;
+        return Order::when(isset($request->status) && $request->status == 'pending', function ($q) {
+            $q->where('status', 'pending');
+        })
+            ->when(isset($request->status) && $request->status == 'packaging', function ($q) {
+                $q->where('status', 'packaging');
+            })
+            ->when(isset($request->status) && $request->status == 'shipping', function ($q) {
+                $q->where('status', 'shipping');
+            })
+            ->when(isset($request->status) && $request->status == 'out_of_delivery', function ($q) {
+                $q->where('status', 'out_of_delivery');
+            })
+            ->when(isset($request->status) && $request->status == 'delivered', function ($q) {
+                $q->where('status', 'delivered')->where('is_delivered', 1);
+            })
+            ->when(isset($request->status) && $request->status == 'returned', function ($q) {
+                $q->where('status', 'returned');
+            })
+            ->when(isset($request->status) && $request->status == 'failed', function ($q) {
+                $q->where('status', 'failed');
+            })
+            ->when(isset($request->payment_status) && $request->payment_status == 'Paid', function ($q) {
+                $q->where('payment_status', 'Paid');
+            })
+            ->when(isset($request->payment_status) && $request->payment_status == 'Paid', function ($q) {
+                $q->where('payment_status', 'Paid');
+            })
+            ->when(isset($request->refund_requested) && $request->is_refund_requested, function ($q) {
+                $q->where('is_refund_requested', 1);
+            })->with('details:id,order_id,phone,email', 'user:id,name', 'payment:id,currency,gateway_name', 'currency:id,code,symbol')->get()->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'unique_id' => $order->unique_id,
+                    'user_name' => $order->user->name,
+                    'phone' => $order->details->phone,
+                    'email' => $order->details->email,
+                    'currency' => $order->payment->currency ?? $order->currency->code,
+                    'currency_symbol' => $order->currency->symbol ?? null,
+                    'gateway_name' => $order->is_cod ? 'Cash on Delivery' : $order->payment->gateway_name ?? null,
+                    'payment_status' => $order->payment_status,
+                    'status' => $order->is_refund_requested ? "Refund Requested" : $order->status,
+                    'amount' => $order->final_amount,
+                    'created_at'=>$order->created_at
+                ];
+            });
     }
+
+    public function indexDatatable($models)
+    {
+        return Datatables::of($models)
+            ->addIndexColumn()
+
+            ->editColumn('status', function ($model) {
+                if ($model['status'] == 'pending') {
+                    $badge = 'warning text-dark';
+                } elseif ($model['status'] == 'delivered') {
+                    $badge = 'success';
+                } elseif ($model['status'] == 'packaging') {
+                    $badge = 'info text-dark';
+                } elseif ($model['status'] == 'shipping' || $model['status'] == 'out_of_delivery') {
+                    $badge = 'info text-dark';
+                } else {
+                    $badge = 'danger';
+                }
+                return '<div class="text-center"><span class="badge bg-' . $badge . '">' . ucfirst($model['status']) . '</div>';
+            })->editColumn('payment_status', function ($model) {
+                $paymentBadge = $model['payment_status'] == 'Paid' ? 'success' : 'danger';
+                return '<div class="text-center"><span class="badge bg-' . $paymentBadge . ' text-white">' . str_replace('_', ' ', ucfirst($model['payment_status'])) . '</div>';
+            })
+            ->editColumn('gateway_name', function ($model) {
+                $gatewayBadge = $model['gateway_name'] == 'Cash on Delivery' ? 'dark' : 'success';
+                return '<div class="text-center"><span class="badge bg-' . $gatewayBadge . ' text-white">' . ucfirst($model['gateway_name']) . '</div>';
+            })->editColumn('unique_id', function ($model) {
+
+                return '<a class="dropdown-item" href="'.route('admin.order.invoice',$model['id']).'">
+                <i class="bi bi-receipt"></i>
+               ' . strtoupper(str_replace('#','',$model['unique_id'])) . '
+                </a>';
+            })
+
+            ->editColumn('amount', function ($model) {
+
+                return $model['currency_symbol'] . round($model['amount'], 2);
+            })
+            ->editColumn('created_at', function ($model) {
+
+                return $model['created_at']->format('d F h:i A');
+            })
+            ->addColumn('customer', function ($model) {
+                return ' <div class="row">
+                            <div class="col-md-12">' . $model['user_name'] . '</div>
+                            <div class="col-md-12">' . $model['email'] . '</div>
+                        </div>';
+            })
+            ->addColumn('action', function ($model) {
+                return view('backend.order.action', compact('model'));
+            })
+            ->rawColumns(['action', 'unique_id', 'status', 'customer', 'payment_status', 'gateway_name', 'amount','created_at'])
+            ->make(true);
+    }
+
     public function store($request)
     {
         // Step 1: Validate and Modify Data 
