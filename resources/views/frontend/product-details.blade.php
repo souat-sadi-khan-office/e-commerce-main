@@ -170,7 +170,7 @@
                                 <a href="#" class="btn btn-fill-out btn-sm">
                                     Buy Now
                                 </a>
-                                <a class="add_compare" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                <a class="add_compare" data-id="{{ $product['slug'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                                     <i class="fas fa-random"></i>
                                 </a>
                                 <a class="add_wishlist" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">
@@ -185,7 +185,7 @@
                             </div>
                             <div class="cart_extra">
                                 <div class="ml-0 cart_btn">
-                                    <a style="margin-left: 0px;" class="add_compare" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
+                                    <a style="margin-left: 0px;" class="add_compare" data-id="{{ $product['slug'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Add to Compare">
                                         <i class="fas fa-random"></i>
                                     </a>
                                     <a class="add_wishlist" data-id="{{ $product['id'] }}" href="javascript:;" data-bs-toggle="tooltip" data-bs-placement="Top" title="Save to Wish List">

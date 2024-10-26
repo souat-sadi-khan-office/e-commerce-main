@@ -27,6 +27,8 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\ImportController;
+use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Frontend\HomePageController;
 use App\Http\Controllers\SearchController;
 
@@ -120,6 +122,17 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
         });
     });
 
+    // Import
+    Route::get('import/category', [ImportController::class, 'category'])->name('import.category');
+    Route::post('import/category/post', [ImportController::class, 'importCategories'])->name('upload.category');
+    Route::get('import/brand', [ImportController::class, 'brand'])->name('import.brand');
+    Route::post('import/brand/post', [ImportController::class, 'importBrands'])->name('upload.brand');
+    Route::get('import/product', [ImportController::class, 'product'])->name('import.product');
+    Route::post('import/product/post', [ImportController::class, 'importProducts'])->name('upload.product');
+
+    Route::get('/image-upload', [ImageController::class, 'index'])->name('image.index');
+    Route::post('/image-upload', [ImageController::class, 'upload'])->name('image.upload');
+    Route::delete('/image-delete/{filename}', [ImageController::class, 'delete'])->name('image.delete');
 
     // Order
     Route::group(['prefix' => 'orders', 'as' => 'order.'], function () {
