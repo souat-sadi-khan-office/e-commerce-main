@@ -38,7 +38,7 @@
                                 <th>Payment</th>
                                 <th>Method</th>
                                 <th>Status</th>
-                                <th>Created</th>
+                                <th style="width:16%!important;text-align:center;">Created</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

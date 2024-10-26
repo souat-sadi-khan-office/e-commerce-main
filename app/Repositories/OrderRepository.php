@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Country;
 use App\Models\Product;
 use App\Models\OrderDetail;
+use App\Models\ProductStock;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -59,7 +60,7 @@ class OrderRepository implements OrderRepositoryInterface
                     'payment_status' => $order->payment_status,
                     'status' => $order->is_refund_requested ? "Refund Requested" : $order->status,
                     'amount' => $order->final_amount,
-                    'created_at'=>$order->created_at
+                    'created_at' => $order->created_at
                 ];
             });
     }
@@ -91,9 +92,9 @@ class OrderRepository implements OrderRepositoryInterface
                 return '<div class="text-center"><span class="badge bg-' . $gatewayBadge . ' text-white">' . ucfirst($model['gateway_name']) . '</div>';
             })->editColumn('unique_id', function ($model) {
 
-                return '<a class="dropdown-item" href="'.route('admin.order.invoice',$model['id']).'">
+                return '<a class="dropdown-item" href="' . route('admin.order.invoice', $model['id']) . '">
                 <i class="bi bi-receipt"></i>
-               ' . strtoupper(str_replace('#','',$model['unique_id'])) . '
+               ' . strtoupper(str_replace('#', '', $model['unique_id'])) . '
                 </a>';
             })
 
@@ -103,7 +104,7 @@ class OrderRepository implements OrderRepositoryInterface
             })
             ->editColumn('created_at', function ($model) {
 
-                return $model['created_at']->format('d F h:i A');
+                return $model['created_at']->format('d M Y, h:i:s A');;
             })
             ->addColumn('customer', function ($model) {
                 return ' <div class="row">
@@ -114,7 +115,7 @@ class OrderRepository implements OrderRepositoryInterface
             ->addColumn('action', function ($model) {
                 return view('backend.order.action', compact('model'));
             })
-            ->rawColumns(['action', 'unique_id', 'status', 'customer', 'payment_status', 'gateway_name', 'amount','created_at'])
+            ->rawColumns(['action', 'unique_id', 'status', 'customer', 'payment_status', 'gateway_name', 'amount', 'created_at'])
             ->make(true);
     }
 
@@ -155,10 +156,10 @@ class OrderRepository implements OrderRepositoryInterface
                 'unique_id' => uniqid('#'),
                 'payment_id' => null,
                 'user_id' => Auth::guard('customer')->user()->id,
-                'order_amount' => $request['subtotal'] + $request['discount'],
-                'tax_amount' => $request['total_tax'],
-                'discount_amount' => $request['discount'],
-                'final_amount' => $request['subtotal'],
+                'order_amount' => round($request['subtotal'] + $request['discount'], 2),
+                'tax_amount' => round($request['total_tax'], 2),
+                'discount_amount' => round($request['discount'], 2),
+                'final_amount' => round($request['subtotal'], 2),
                 'currency_id' => Session::get('currency_id') ?? Auth::guard('customer')->user()->currency_id,
                 'payment_status' => 'Not_Paid',
                 'status' => 'pending',
@@ -201,6 +202,165 @@ class OrderRepository implements OrderRepositoryInterface
             ];
         }
     }
+
+
+    public function details($id)
+    {
+        $order = Order::where('id', $id)
+            ->with('details', 'payment:id,currency,gateway_name', 'currency:id,code,symbol', 'user:id,name')
+            ->first();
+
+        if ($order) {
+            return [
+                'id' => $order->id,
+                'unique_id' => $order->unique_id,
+                'user_name' => ucfirst($order->user->name),
+                'phone' => $order->details->phone,
+                'email' => $order->details->email,
+                'product_ids' => json_decode($order->details->product_ids),
+                'user_company' => json_decode($order->details->details)->company_name,
+                'details' => json_decode($order->details->details)->products,
+                'stock_ids_and_qtys' => array_map(function ($product) {
+                    return [
+                        'stock_id' => $product->stock_id,
+                        'qty' => $product->qty,
+                    ];
+                }, json_decode($order->details->details)->products),
+                'currency' => $order->payment->currency ?? $order->currency->code,
+                'gateway_name' => $order->is_cod ? 'Cash on Delivery' : $order->payment->gateway_name ?? null,
+                'is_delivered' => $order->is_delivered,
+                'is_cod' => $order->is_cod,
+                'payment_status' => str_replace('_', ' ', $order->payment_status),
+                'status' => $order->status,
+                'is_refund_requested' => $order->is_refund_requested,
+                'order_amount' => ($order->currency->symbol ?? '') . $order->order_amount,
+                'discount_amount' => ($order->currency->symbol ?? '') . $order->discount_amount,
+                'tax_amount' => ($order->currency->symbol ?? '') . $order->tax_amount,
+                'final_amount' => ($order->currency->symbol ?? '') . $order->final_amount,
+                'note' => $order->details->notes,
+                'shipping_method' => $order->details->shipping_method,
+                'shipping_address' => $order->details->shipping_address,
+                'billing_address' => $order->details->billing_address,
+                'created_at' => $order->created_at->format('d M Y, h:i:s A')
+            ];
+        }
+
+        return null;
+    }
+    public function updateStatus($request, $orderId)
+    {
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order not found.'
+            ]);
+        }
+
+        $type = $request->input('type');
+        $newStatus = $request->input('value');
+        $currentStatus = $order->status;
+
+        // Define restricted transitions
+        $restrictedTransitions = [
+            'packaging' => ['pending'],
+            'shipping' => ['pending', 'packaging'],
+            'out_of_delivery' => ['pending', 'packaging', 'shipping'],
+            'delivered' => ['pending', 'packaging', 'shipping', 'out_of_delivery'],
+            'returned' => ['pending', 'packaging', 'shipping', 'out_of_delivery', 'delivered'],
+        ];
+
+        // Check if transition is allowed
+        if ($type === 'order_status' && isset($restrictedTransitions[$currentStatus]) && in_array($newStatus, $restrictedTransitions[$currentStatus])) {
+            return response()->json([
+                'status' => false,
+                'message' => "Cannot change status from $currentStatus to $newStatus."
+            ]);
+        }
+        // Check if payment_status changes from Unpaid to Paid
+        if ($type === 'payment_status' && $order->payment_status === 'Not_Paid' && $newStatus === 'Paid' && $order->is_cod) {
+            // Get stock_ids and quantities from the order
+            $stockIdsAndQtys = $request->input('stock_ids_and_qtys');
+
+            // Update stock quantities
+            $stock=$this->updateStockQuantities($stockIdsAndQtys);
+            if(!$stock['status']){
+                return response()->json($stock);
+            }
+        }
+
+        if(!$order->is_cod && $type=='payment_status'&& $order->payment_status === 'Paid' && $newStatus === 'Not_Paid' ){
+
+            return response()->json([
+                'status' => false,
+                'message' => "Cannot change Paid Payments to Unpaid."
+            ]);
+        }
+
+        // No restrictions for 'failed'
+        if ($type === 'order_status' && $newStatus === 'failed') {
+            $order->status = $newStatus;
+        } elseif ($type === 'order_status') {
+            if ($newStatus === 'delivered') {
+                $order->is_delivered = !$order->is_delivered;
+            }
+            $order->status = $newStatus;
+        } elseif ($type === 'payment_status') {
+            $order->payment_status = $newStatus;
+        }
+
+        $order->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => ucfirst(str_replace('_', ' ', $type)) . ' updated successfully.'
+        ]);
+    }
+
+    private function updateStockQuantities(array $stockIdsAndQtys)
+    {
+        $stockIds = array_column($stockIdsAndQtys, 'stock_id');
+        $quantities = array_column($stockIdsAndQtys, 'qty', 'stock_id');
+    
+        $stocks = ProductStock::whereIn('id', $stockIds)->with('product:id,name')->get();
+    
+        $insufficientStocks = $stocks->filter(function ($stock) use ($quantities) {
+            return isset($quantities[$stock->id]) && $stock->stock < $quantities[$stock->id];
+        })->map(function ($stock) use ($quantities) {
+            return [
+                'stock_id' => $stock->id,
+                'product' => $stock->product->name,
+                'available' => $stock->stock,
+                'requested' => $quantities[$stock->id],
+            ];
+        });
+    
+        if ($insufficientStocks->isNotEmpty()) {
+            return [
+                'status' => false,
+                'message' => 'Insufficient stock available for "'.$insufficientStocks[0]['product']. '" Requested: '.$insufficientStocks[0]['requested'].', Available: '.$insufficientStocks[0]['available'],
+            ];
+        }
+    
+        $stocks->map(function ($stock) use ($quantities) {
+            $newStockQuantity = $stock->stock - $quantities[$stock->id];
+    
+            $stock->stock = max(0, $newStockQuantity); 
+            $stock->in_stock = $stock->stock > 0; 
+    
+            $stock->save();
+        });
+    
+        return [
+            'status' => true,
+            'message' => 'Stock quantities updated successfully.',
+        ];
+    }
+    
+
+
+
 
     private function adjustStock($productsData)
     {

@@ -10,6 +10,7 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "mpdf/mpdf": "^8.2",
         "paypal/paypal-checkout-sdk": "^1.0",
         "spatie/laravel-permission": "^6.9",
         "stevebauman/location": "^7.3",
@@ -62,6 +63,7 @@
     },
     "config": {
         "optimize-autoloader": true,
+        "platform-check": false,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {

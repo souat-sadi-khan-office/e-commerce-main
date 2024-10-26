@@ -91,6 +91,18 @@ if (!function_exists('get_system_date')) {
         }
     }
 }
+if (!function_exists('add_line_breaks')) {
+    function add_line_breaks($text, $wordsPerLine = 30) {
+        $words = explode(' ', $text);
+        $chunks = array_chunk($words, $wordsPerLine);
+
+        $lines = array_map(function($chunk) {
+            return implode(' ', $chunk);
+        }, $chunks);
+
+        return implode('<br>', $lines);
+    }
+}
 
 // format time
 if (!function_exists('get_system_time')) {
