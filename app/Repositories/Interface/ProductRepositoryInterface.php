@@ -12,6 +12,7 @@ interface ProductRepositoryInterface
     public function dataTableWithAjaxSearch($category_id, $brand_id);
     public function updateStatus($request, $id);
     public function getProductById($id);
+    public function getProductByIds($id);
     public function updateFeatured($request, $id);
     public function deleteProduct($id);
     public function quickview($slug);
