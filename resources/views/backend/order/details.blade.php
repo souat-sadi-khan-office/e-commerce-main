@@ -160,7 +160,7 @@
             <!-- this row will not appear when printing -->
             <div class="row no-print">
                 <div class="col-12">
-                    <a href="{{route('admin.order.invoice',$order['id'])}}" rel="noopener" target="_blank" class="btn btn-success"><i
+                    <a href="{{route('admin.order.invoice',$order['id'])}}" rel="noopener" class="btn btn-success"><i
                             class="bi bi-receipt"></i> Print</a>
                    
                     <a href="{{route('admin.order.invoice',['id' => $order['id'], 'download' => true])}}" class="btn btn-primary float-right" style="margin-right: 5px;">

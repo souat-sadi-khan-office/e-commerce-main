@@ -17,7 +17,7 @@
             </a>
         </li>
         <li>
-            <a class="dropdown-item" href="{{route('admin.order.invoice',$model['id'])}}" target="_blank"><i
+            <a class="dropdown-item" href="{{route('admin.order.invoice',$model['id'])}}" ><i
                 class="bi bi-receipt"></i> Print</a>
         </li>
         {{-- <li><a class="dropdown-item" href="#">Something else here</a></li> --}}

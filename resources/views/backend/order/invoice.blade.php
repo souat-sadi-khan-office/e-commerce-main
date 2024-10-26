@@ -1,32 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Invoice {{strtoupper($order['unique_id'])}} | {{ get_settings('system_name') ? get_settings('system_name') : 'Project Alpha' }}</title>
+    <title>Invoice {{ strtoupper($order['unique_id']) }} | {{ get_settings('system_name') ? get_settings('system_name') : 'Project Alpha' }}</title>
     <link rel="stylesheet" href="{{ asset('backend/assets/css/font_source_sans3.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href={{ asset('backend/assets/css/adminlte.css') }}>
-    <link rel="stylesheet" href={{ asset('backend/assets/css/fontawesome.min.css') }}>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+    <link rel="stylesheet" href="{{ asset('backend/assets/css/adminlte.css') }}">
+
     @stack('style')
+
+    <style>
+        @media print {
+            /* Hide any unwanted elements during printing */
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
 <body>
     <div class="invoice p-3 mb-3">
         <!-- title row -->
-        <div class="row">
+        <div class="row pb-2">
             <div class="col-12">
-                <h4>
+                <h4 class="text-center">
                     <a href="{{ route('admin.dashboard') }}" class="brand-link" style="text-decoration: none">
                         <img style="height: 40px"
-                            src="{{ get_settings('system_logo_white') ? asset(get_settings('system_logo_white')) : asset('pictures/default-logo-white.png') }}"
+                            src="{{ get_settings('system_logo_dark') ? asset(get_settings('system_logo_dark')) : asset('pictures/default-logo-dark.png') }}"
                             alt="App Logo" class="brand-image">
                     </a>
-                    <small class="float-right">- {{ get_system_time(now()) }},{{ now()->format('M Y') }}</small>
+                    <br>
+                    <p class="float-right">{{ get_system_time(now()) }}, {{ now()->format('M Y') }}</p>
                 </h4>
             </div>
-            <!-- /.col -->
+            <hr>
         </div>
         <!-- info row -->
         <div class="row invoice-info">
@@ -40,7 +49,6 @@
                     Email: info@almasaeedstudio.com
                 </address>
             </div>
-            <!-- /.col -->
             <div class="col-sm-4 invoice-col">
                 To
                 <address>
@@ -53,18 +61,13 @@
                     Email: {{ $order['email'] }}
                 </address>
             </div>
-            <!-- /.col -->
             <div class="col-sm-4 invoice-col">
-                <b>Invoice {{ strtoupper($order['unique_id']) }}</b><br>
-                <br>
+                <b>Invoice {{ strtoupper($order['unique_id']) }}</b><br><br>
                 <b>Shipping Address:</b> {!! add_line_breaks($order['shipping_address']) !!}<br>
-                <b>Payment Status:</b> <span
-                    class="py-1 badge text-bg-{{ $order['payment_status'] == 'Paid' ? 'success' : 'danger' }}">{{ str_replace('-', ' ', $order['payment_status']) }}</span><br>
+                <b>Payment Status:</b> <span class="py-1 badge text-bg-{{ $order['payment_status'] == 'Paid' ? 'success' : 'danger' }}">{{ str_replace('-', ' ', $order['payment_status']) }}</span><br>
                 <b>Shipping Method:</b> <span class="badge text-bg-info"> {{ $order['shipping_method'] }}</span>
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
         <!-- Table row -->
         <div class="row">
             <div class="col-12 table-responsive">
@@ -81,36 +84,27 @@
                         @foreach ($order['details'] as $details)
                             <tr>
                                 <td>{{ $details->qty }}</td>
-                                <td><a style="text-decoration:none;color: var(--bs-table-color-type);"
-                                        href="{{ route('slug.handle', $details->slug) }}">{{ $details->name }}</a></td>
+                                <td><a style="text-decoration:none;color: var(--bs-table-color-type);" href="{{ route('slug.handle', $details->slug) }}">{{ $details->name }}</a></td>
                                 <td>{{ $details->unit_price }}</td>
                                 <td>{{ $details->total_price }}</td>
                             </tr>
                         @endforeach
-
                     </tbody>
                 </table>
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
 
         <div class="row">
-            <!-- accepted payments column -->
             <div class="col-6">
                 @if ($order['note'])
                     <p> <span class="lead">Order Note:</span>{!! add_line_breaks($order['note'], 35) !!}</p>
                 @endif
-                <p class="lead">Order Date: {{ $order['created_at'] }}</p>
-                <p class="lead">Payment Currency: {{ $order['currency'] }}</p>
+                <p>Order Date: {{ $order['created_at'] }}</p>
+                <p>Payment Currency: {{ $order['currency'] }}</p>
                 <p class="lead">Payment Method: {{ $order['gateway_name'] }}</p>
-
-
             </div>
-            <!-- /.col -->
             <div class="col-6">
                 <p class="lead">Payment : {{ $order['payment_status'] }}</p>
-
                 <div class="table-responsive">
                     <table class="table">
                         <tbody>
@@ -138,14 +132,24 @@
                     </table>
                 </div>
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
-
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" ></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" ></script>
-    <script src={{ asset('backend/assets/js/adminlte.js') }}></script>
-    <script src={{ asset('backend/assets/js/main.js') }}></script>
+
+    <script>
+        // Check if the request has 'download' parameter set to true
+        @if ($request->has('download') && $request->input('download') === 'true')
+            window.location.href = "{{ route('admin.order.invoice', ['id' => $order['id'], 'download' => true]) }}";
+        @else
+            window.print();
+        @endif
+
+        // Navigate back after printing
+        window.onafterprint = function() {
+            window.history.back();
+        };
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

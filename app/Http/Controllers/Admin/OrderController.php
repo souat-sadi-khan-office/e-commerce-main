@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Mpdf\Mpdf;
-use App\Models\Order;
+use TCPDF;
 use Illuminate\Http\Request;
+use Spipu\Html2Pdf\Html2Pdf;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interface\UserRepositoryInterface;
 use App\Repositories\Interface\OrderRepositoryInterface;
@@ -45,31 +45,18 @@ class OrderController extends Controller
 
         $order = $this->orderRepository->details($id);
         return view('backend.order.details', compact('order'));
-        $data = encode($id);
-        dd($data, decode($data));
     }
     public function invoice($id, Request $request)
     {
         $order = $this->orderRepository->details($id);
-
-        $html = view('backend.order.invoice', compact('order'))->render();
-
-        $mpdf = new Mpdf();
-
-        $mpdf->WriteHTML($html);
-
-        if ($request->has('download')) {
-            return response()->streamDownload(function() use ($mpdf) {
-                echo $mpdf->Output('', 'S');
-            }, 'invoice_'.$order['unique_id'].'.pdf');
-        } else {
-            $mpdf->Output(); 
-        }
+        return view('backend.order.invoice', compact('order','request'));
+    
     }
+    
+
 
     public function updateStatus(Request $request, $orderId)
     {
-        return $this->orderRepository->updateStatus($request,$orderId);
-      
+        return $this->orderRepository->updateStatus($request, $orderId);
     }
 }
