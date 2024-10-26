@@ -13,20 +13,46 @@
     <div class="breadcrumb_section page-title-mini">
         <div class="custom-container">
             <div class="row align-items-center">
-                <div class="col-md-12 mb-3">
+                <div class="col-md-12">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a href="{{ route('home') }}">
                                 <i class="linearicons-home"></i>
                             </a>
                         </li>
-                        <li class="breadcrumb-item active">
-                            {{ $search }}
-                        </li>
+                        @if ($search)
+                            <li class="breadcrumb-item active">
+                                {{ $search }}
+                            </li>
+                        @endif
+                        @if ($sort)
+                            <li class="breadcrumb-item active">
+                                @switch($sort)
+                                    @case('popularity')
+                                        Sorting by Top Rated Products
+                                    @break
+                                    @case('featured')
+                                        Sorting by Featured Products
+                                    @break
+                                    @case('latest')
+                                        Sorting by Latest Products
+                                    @break
+                                    @case('on-sale')
+                                        Sorting by On Sale Products
+                                    @break
+                                    @case('price')
+                                        Sorting by Price: Low to High                                    
+                                    @break
+                                    @default
+                                        Sorting by Price: High to Low
+                                @endswitch
+                            </li>
+                        @endif
+                        
                     </ol>
                 </div>
 
-                <div class="brands col-md-6">
+                {{-- <div class="brands col-md-6">
 
                     @if (isset($brands))
                         <h6>Related Brands:</h6>
@@ -47,7 +73,7 @@
                             </a>
                         @endforeach
                     @endif
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -77,10 +103,12 @@
                                     </div>
                                     <div class="custom_select">
                                         <select id="sort-by" class="form-control form-control-sm">
-                                            <option value="popularity">Sort by popularity</option>
-                                            <option value="date">Sort by newness</option>
-                                            <option value="price">Sort by price: low to high</option>
-                                            <option value="price-desc">Sort by price: high to low</option>
+                                            <option {{ $sort == 'popularity' ? 'selected' : '' }} value="popularity">Sort by Top Rated</option>
+                                            <option {{ $sort == 'featured' ? 'selected' : '' }} value="featured">Sort by Featured</option>
+                                            <option {{ $sort == 'latest' ? 'selected' : '' }} value="latest">Sort by Latest</option>
+                                            <option {{ $sort == 'on-sale' ? 'selected' : '' }} value="on-sale">Sort by On Sale</option>
+                                            <option {{ $sort == 'price' ? 'selected' : '' }} value="price">Sort by price: low to high</option>
+                                            <option {{ $sort == 'price-desc' ? 'selected' : '' }} value="price-desc">Sort by price: high to low</option>
                                         </select>
                                     </div>
                                 </div>

@@ -38,7 +38,6 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
         return redirect()->route('dashboard');
     });
     
-    Route::get('compare', [HomePageController::class, 'compare'])->name('compare');
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('account/dashboard', [UserController::class, 'index'])->name('dashboard');
     Route::prefix('account')->name('account.')->group(function () {
@@ -66,7 +65,11 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
 Route::middleware(['web','ipSession'])->group(function () {
     Route::any('/',[HomePageController::class,'index'])->name('home');
 
+    Route::get('compare', [HomePageController::class, 'compare'])->name('compare');
+    Route::get('compare/remove/{slug}', [HomePageController::class, 'removeCompare'])->name('compare.remove');
+
     Route::post('ajax-search', [SearchController::class, 'ajaxSearch'])->name('ajax-search');
+    Route::get('ajax-product-search', [SearchController::class, 'ajaxSearchProduct'])->name('ajax.product.search');
 
     Route::get('on-sale-products', [HomePageController::class, 'onSaleProduct'])->name('on-sale-product');
     Route::get('featured-products', [HomePageController::class, 'onSaleProduct'])->name('featured-product');
@@ -75,6 +78,7 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::post('newsletter-form-submit', [HomePageController::class, 'postNewsletter'])->name('post.newsletter');
     
     Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
+    Route::post('coupon/check', [HomePageController::class, 'couponCheck'])->name('coupon.check');
     Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
     Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
     Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');

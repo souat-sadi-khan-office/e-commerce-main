@@ -30,4 +30,5 @@ interface ProductRepositoryInterface
 
     public function isDiscountedProduct($product);
     public function discountPrice($product);
+    public function compare();
 }

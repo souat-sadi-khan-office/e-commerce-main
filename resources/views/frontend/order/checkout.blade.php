@@ -33,26 +33,41 @@
         <div class="section">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                        <div class="toggle_info">
-                            <span>
-                                <i class="fas fa-tag"></i>
-                                Have a coupon? 
-                                <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a>
-                            </span>
-                        </div>
-                        <div class="panel-collapse collapse coupon_form" id="coupon">
-                            <div class="panel-body">
-                                <p>If you have a coupon code, please apply it below.</p>
-                                <div class="coupon field_form input-group">
-                                    <input type="text" value="" class="form-control" placeholder="Enter Coupon Code..">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-fill-out btn-sm" type="submit">Apply Coupon</button>
+                    @if (Auth::guard('customer')->check())
+                        <div class="col-lg-8 mx-auto">
+                            <div class="toggle_info">
+                                <span id="copoun-show-area">
+                                    <i class="fas fa-tag"></i>
+                                    Have a coupon? 
+                                    <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a>
+                                </span>
+                            </div>
+                            <div class="panel-collapse collapse coupon_form" id="coupon">
+                                <div class="panel-body">
+                                    <p>If you have a coupon code, please apply it below.</p>
+                                    <div class="coupon field_form input-group">
+                                        <input type="text" value="" id="coupon_code" class="form-control" placeholder="Enter Coupon Code..">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-fill-out btn-sm" id="coupon_submit" style="display:none;" type="button">Apply Coupon</button>
+                                            <button class="btn btn-dark btn-block" id="coupon_submitting" type="button">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                Loading...
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @else 
+                        <div class="col-lg-8 mx-auto">
+                            <span>
+                                <i class="fas fa-tag"></i>
+                                Want to apply a coupon? 
+                                <a href="{{ route('login') }}">Login to apply your coupon</a>
+                            </span>
+                        </div>
+                    @endif
+                    
                 </div>
                 <div class="row">
                     <div class="col-12">
@@ -64,6 +79,7 @@
                     </div>
                 </div>
                 <form action="{{ route('order.store') }}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="coupon_code" id="ori_coupon_code" value="">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -224,8 +240,6 @@
                                                     </tr>
                                                 @endforeach
                                             @endif
-                                            
-                                            
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -246,13 +260,15 @@
                                             </tr>
                                             <tr>
                                                 <th>Discount</th>
-                                                <td class="text-success left">- $0.00</td>
-                                                <input type="hidden" name="discount" value="0">
+                                                <td class="text-success left">- 
+                                                    <span id="discount_amount_show">$0.00</span>
+                                                </td>
+                                                <input type="hidden" name="discount" id="discount_amount_main" value="0">
                                             </tr>
                                             <tr>
                                                 <th>Total</th>
-                                                <td class="product-subtotal">{{ format_price(convert_price($total_price)) }} </td>
-                                                <input type="hidden" name="subtotal" value="{{ convert_price($total_price) }}">
+                                                <td class="product-subtotal" id="product-total">{{ format_price(convert_price($total_price)) }} </td>
+                                                <input type="hidden" name="totalAmount" id="totalAmount" value="{{ convert_price($total_price) }}">
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -304,8 +320,93 @@
     <script>
         $(document).ready(function() {
             _newsletterFormValidation();
-            $('#newsletter_submit').show();
-            $('#newsletter_submitting').hide();
+
+            $('#coupon_submitting').hide();
+            $('#coupon_submit').show();
+
+            $(document).on('click', '#coupon_submit', function() {
+                let couponField = $('#coupon_code');
+                if (!couponField.length) {
+                    toastr.error('Error: Coupon code input field not found.');
+                    return false;
+                }
+
+                let coupon_code = $('#coupon_code').val().trim();
+                if (coupon_code === undefined || coupon_code === '') {
+                    toastr.warning('Warning: Please enter a coupon code.');
+                    return false;
+                }
+
+                $('#coupon_submitting').show();
+                $('#coupon_submit').hide();
+
+                $.ajax({
+                    url: '/coupon/check',
+                    type: 'POST',
+                    data: {
+                        coupon: coupon_code
+                    },
+                    dataType: 'JSON',
+                    success: function(data) {
+                        if (!data.status) {
+                            if(data.validator) {
+                                for (const [key, messages] of Object.entries(data.message)) {
+                                    messages.forEach(message => {
+                                        toastr.warning(message);
+                                    });
+                                }
+                            } else {
+                                toastr.warning(data.message);
+                            }
+                        } else {
+                            toastr.success(data.message);
+
+                            $('.coupon_form').hide();
+                            $('#copoun-show-area').addClass('text-success');
+                            $('#copoun-show-area').html('<i class="fas fa-tag"></i> <b>'+ coupon_code +'</b> coupon is added.');
+                            $('#product-total').html(data.total_amount);
+                            $('#discount_amount_show').html(data.formatted_amount);
+                            $('#discount_amount_main').val(data.amount);
+                            $('#ori_coupon_code').val(coupon_code);
+                        }
+
+                        $('#coupon_submitting').hide();
+                        $('#coupon_submit').show();
+                    },
+                    error: function(data) {
+                        var jsonValue = $.parseJSON(data.responseText);
+                        const errors = jsonValue.errors;
+                        if (errors) {
+                            var i = 0;
+                            $.each(errors, function(key, value) {
+                                const first_item = Object.keys(errors)[i]
+                                const message = errors[first_item][0];
+                                if ($('#' + first_item).length > 0) {
+                                    $('#' + first_item).parsley().removeError(
+                                        'required', {
+                                            updateClass: true
+                                        });
+                                    $('#' + first_item).parsley().addError(
+                                        'required', {
+                                            message: value,
+                                            updateClass: true
+                                        });
+                                }
+                                toastr.error(value);
+                                i++;
+
+                            });
+                        } else {
+                            toastr.warning(jsonValue.message);
+                        }
+
+                        $('#coupon_submitting').hide();
+                        $('#coupon_submit').show();
+                    }
+                });
+
+            })
+
             $('#addressSelect select').on('change', function() {
                 const addressId = $(this).val();
 
@@ -338,93 +439,6 @@
                 });
             });
         });
-        var _newsletterFormValidation = function() {
-            if ($('#newletter-form').length > 0) {
-                $('#newletter-form').parsley().on('field:validated', function() {
-                    var ok = $('.parsley-error').length === 0;
-                    $('.bs-callout-info').toggleClass('hidden', !ok);
-                    $('.bs-callout-warning').toggleClass('hidden', ok);
-                });
-            }
-
-            $('#newletter-form').on('submit', function(e) {
-                e.preventDefault();
-
-                $('#newsletter_submit').hide();
-                $('#newsletter_submitting').show();
-
-                $(".ajax_error").remove();
-
-                var submit_url = $('#newletter-form').attr('action');
-                var formData = new FormData($("#newletter-form")[0]);
-
-                $.ajax({
-                    url: submit_url,
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        if (!data.status) {
-                            if (data.validator) {
-                                for (const [key, messages] of Object.entries(data
-                                        .message)) {
-                                    messages.forEach(message => {
-                                        toastr.error(message);
-                                    });
-                                }
-                            } else {
-                                toastr.warning(data.message);
-                            }
-                        } else {
-                            toastr.success(data.message);
-
-                            $('#newletter-form')[0].reset();
-                            if (data.load) {
-                                setTimeout(function() {
-
-                                    window.location.href = "";
-                                }, 500);
-                            }
-                        }
-
-                        $('#newsletter_submit').show();
-                        $('#newsletter_submitting').hide();
-                    },
-                    error: function(data) {
-                        var jsonValue = $.parseJSON(data.responseText);
-                        const errors = jsonValue.errors;
-                        if (errors) {
-                            var i = 0;
-                            $.each(errors, function(key, value) {
-                                const first_item = Object.keys(errors)[i]
-                                const message = errors[first_item][0];
-                                if ($('#' + first_item).length > 0) {
-                                    $('#' + first_item).parsley().removeError(
-                                        'required', {
-                                            updateClass: true
-                                        });
-                                    $('#' + first_item).parsley().addError(
-                                        'required', {
-                                            message: value,
-                                            updateClass: true
-                                        });
-                                }
-                                toastr.error(value);
-                                i++;
-
-                            });
-                        } else {
-                            toastr.warning(jsonValue.message);
-                        }
-
-                        $('#newsletter_submit').show();
-                        $('#newsletter_submitting').hide();
-                    }
-                });
-            });
-        };
+        
     </script>
 @endpush

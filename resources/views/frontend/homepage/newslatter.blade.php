@@ -10,7 +10,7 @@
             </div>
             <div class="col-md-6">
                 <div class="newsletter_form2 rounded_input">
-                    <form id="newletter-form" method="POST" action="{{ route('post.newsletter') }}">
+                    <form id="newsletter-form" method="POST" action="{{ route('post.newsletter') }}">
                         <input type="email" required="" name="email" class="form-control" placeholder="Enter Email Address">
                         <button type="submit" id="newsletter_submit" style="display: none;" class="btn btn-dark btn-radius">Subscribe</button>
                         <button type="button" class="btn btn-dark btn-radius" disabled id="newsletter_submitting">
