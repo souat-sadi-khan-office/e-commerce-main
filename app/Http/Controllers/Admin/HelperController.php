@@ -38,7 +38,6 @@ class HelperController extends Controller
         $id = $request->get('id');
 
         if (isset($id)) {
-            // Using a single query with unions
             $exists = Category::where('slug', $slug)->where('id', '!=', $id)
                 ->union(Product::where('slug', $slug)->where('id', '!=', $id))
                 ->union(Offer::where('slug', $slug)->where('id', '!=', $id))
@@ -55,8 +54,6 @@ class HelperController extends Controller
                 ->union(Page::where('slug', $slug))
                 ->exists();
         }
-
-
 
         return response()->json(['exists' => $exists]);
     }

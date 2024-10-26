@@ -160,6 +160,40 @@
                 </ul>
             </li>
 
+            <!-- Bulk Import -->
+            <li class="nav-item {{ Request::is('admin/import*') ? 'menu-open' : '' }}">
+                <a href="javascript:;" class="nav-link">
+                    <i class="nav-icon bi bi-cloud-upload"></i>
+                    <p>
+                        Bulk Import
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.import.category') }}"
+                            class="nav-link {{ Request::is('admin/import/category') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-basket2-fill"></i>
+                            <p>Categories</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.import.brand') }}"
+                            class="nav-link {{ Request::is('admin/import/brand') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-arrow-clockwise"></i>
+                            <p>Brands</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('admin.import.product') }}"
+                            class="nav-link {{ Request::is('admin/import/product') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-box2"></i>
+                            <p>Products</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <!-- Order -->
             <li class="nav-item {{ Request::is('admin/orders*') ? 'menu-open' : '' }}">
                 <a href="javascript:;" class="nav-link">
@@ -493,6 +527,17 @@
                 </a>
             </li>
             {{-- @endif --}}
+
+
+            <li class="nav-item">
+                <a href="{{ route('admin.image.index') }}"
+                    class="nav-link {{ Request::is('admin/image-upload') ? ' active' : '' }}">
+                    <i class="nav-icon bi bi-cloud-upload"></i>
+                    <p>
+                        Image Upload
+                    </p>
+                </a>
+            </li>
 
             </ul>
         </nav>

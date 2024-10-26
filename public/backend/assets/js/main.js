@@ -374,6 +374,10 @@ var _formValidation = function () {
                                 toastr.error(message);
                             });
                         }
+                    } else if (data.errors) {
+                        for (const [key, message] of Object.entries(data.errors)) {
+                            toastr.error(message);
+                        }
                     } else {
                         toastr.error(data.message);
                     }
