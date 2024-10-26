@@ -531,6 +531,9 @@ button:focus:not(:focus-visible) {
 	background: #fff;
     border-radius: 5px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+.bg_white.padding {
 	padding: 10px 10px 10px 20px;
 }
 
@@ -5833,12 +5836,12 @@ footer .widget_title {
 .releted_product_slider .product {
 	margin-bottom: 15px;
 }
-.mfp-ajax-holder .compare_box {
-	width: 90%;
+.compare_box {
 	margin: 6px auto;
 	background-color: #fff;
 	position: relative;
 	padding: 30px;
+	box-shadow: 0 1px 1px rgba(0,0,0,.1);
 }
 .compare_box .table {
 	margin: 0;
@@ -5852,7 +5855,7 @@ footer .widget_title {
 	text-transform: capitalize;
 }
 .compare_box table tr td.row_title {
-	width: 270px;
+	width: 15%;
 	text-transform: uppercase;
 	font-weight: 600;
 }
@@ -8474,7 +8477,7 @@ span.stock-status {
 }
 
 a.stock-status-warning {
-    background: rgba(55, 75, 185, .1) !important;
+    background: rgb(239 138 83 / 10%) !important;
     color: #ef4a23 !important;
 	text-align: center;
 }
@@ -8551,4 +8554,24 @@ a.stock-status-warning {
     height: 40px;
     background-color: #f0f0f0;
     margin-top: 15px;
+}
+
+.table-hover>tbody>tr:hover>* {
+	background: #FAFBFC;
+}
+
+.pr_spec_key  td{
+	background: #F5F6FC;
+	color: #FF324D;
+	font-weight: bold !important;
+}
+
+.product-listing .pr_desc {
+	margin-bottom: 10px;
+    min-height: 150px;
+}
+
+span.stock-status.in-stock-status {
+	background: rgb(90 229 147 / 10%) !important;
+	color: green !important;
 }

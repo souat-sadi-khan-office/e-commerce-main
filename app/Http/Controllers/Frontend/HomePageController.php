@@ -26,11 +26,14 @@ use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Subscriber;
 use App\Models\ProductStock;
+use App\Models\SpecificationKey;
+use App\Models\ProductSpecification;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
+use App\Repositories\Interface\CouponRepositoryInterface;
 
 class HomePageController extends Controller
 {
@@ -39,6 +42,7 @@ class HomePageController extends Controller
     private $product;
     private $flashDeals;
     private $userRepository;
+    private $couponRepository;
 
     public function __construct(
         BannerRepositoryInterface $banner,
@@ -46,13 +50,16 @@ class HomePageController extends Controller
         BrandRepositoryInterface $brands,
         FlashDealRepositoryInterface $flashDeals,
         UserRepositoryInterface $userRepository,
+        CouponRepositoryInterface $couponRepository,
     ) {
         $this->brands = $brands;
         $this->banner = $banner;
         $this->product = $product;
         $this->flashDeals = $flashDeals;
         $this->userRepository = $userRepository;
+        $this->couponRepository = $couponRepository;
     }
+
     public function visibility(Request $request, $section)
     {
         try {
@@ -445,15 +452,26 @@ class HomePageController extends Controller
 
     public function compare()
     {
-        $list = [];
-        if(session()->has('compare_list') && is_array(session()->get('compare_list'))) {
-            $list = session()->get('compare_list');
+        list($specifications, $models, $product_id_array) = $this->product->compare();
+
+        $product_id_array = array_reverse($product_id_array);
+        // dd($product_id_array, $specifications, $models);
+        return view('frontend.compare', compact('models', 'product_id_array', 'specifications'));
+    }
+
+    public function removeCompare($slug)
+    {
+        $product = Product::where('slug', $slug)->first();
+        if($product) {
+            if(session()->has('compare_list') && is_array(session()->get('compare_list'))) {
+                if(in_array($product->id, session()->get('compare_list'))) {
+                    $newCompareList = array_diff( session()->get('compare_list'), [$product->id] );
+                    session()->put('compare_list', $newCompareList);
+                }
+            }
         }
 
-        if(count($list) > 0) {
-            $product = $this->product->getProductById($list);
-            dd($product);
-        }
+        return redirect()->route('compare');
     }
 
     public function index(Request $request)
@@ -736,7 +754,17 @@ class HomePageController extends Controller
         $compareList = session()->get('compare_list', []);
 
         if (!in_array($productId, $compareList)) {
-            $compareList[] = $productId;
+
+            $product = Product::where('slug', $productId)->first();
+            if($product) {
+                $compareList[] = $product->id;
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product not found.',
+                ]);
+            }
+
         } else {
             return response()->json([
                 'status' => false,
@@ -838,5 +866,13 @@ class HomePageController extends Controller
         ]);
 
         return response()->json(['status' => true, 'message' => 'Thank you for subscribe']);
+    }
+
+    public function couponCheck(Request $request)
+    {
+
+        $data['coupon_code'] = $request->coupon;
+        return $this->couponRepository->checkCoupon($data);
+
     }
 }

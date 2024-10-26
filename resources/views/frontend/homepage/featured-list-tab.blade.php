@@ -5,7 +5,7 @@
                 <h4>Featured Products</h4>
             </div>
             <div class="view_all">
-                <a href="{{ route('search') }}" class="text_default">
+                <a href="{{ route('search', ['sort' => 'featured']) }}" class="text_default">
                     <span>View All</span>
                 </a>
             </div>

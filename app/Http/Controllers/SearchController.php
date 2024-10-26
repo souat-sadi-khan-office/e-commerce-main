@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use App\Repositories\Interface\BannerRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Repositories\Interface\BrandTypeRepositoryInterface;
@@ -34,7 +35,6 @@ class SearchController extends Controller
     public function filterProducts(Request $request)
     {
         $query = Product::query();
-        // Product::when($request->has())
 
         // Stock Availability Filter
         if ($request->has('in_stock') && $request->in_stock == 1) {
@@ -45,16 +45,17 @@ class SearchController extends Controller
             $query->where('in_stock', 0);
         }
 
-        // if ($request->pre_order) {
-        //     $query->where('pre_order', 1);
-        // }
-        // if ($request->up_coming) {
-        //     $query->where('up_coming', 1);
-        // }
+        if ($request->pre_order) {
+            $query->where('stage', 'pre_order');
+        }
+
+        if ($request->up_coming) {
+            $query->where('stage', 'up_coming');
+        }
 
         // Sorting Filter
         if ($request->sortBy == 'popularity') {
-            // $query->orderBy('popularity', 'desc');
+            $query->orderBy('average_rating', 'asc');
         } elseif ($request->sortBy == 'date') {
             $query->orderBy('created_at', 'desc');
         } elseif ($request->sortBy == 'price') {
@@ -108,6 +109,20 @@ class SearchController extends Controller
             return view('frontend.search_content', compact('products', 'brands', 'categories'));
         }
         return '0';
+    }
+    
+    public function ajaxSearchProduct(Request $request)
+    {
+        $query = $request->input('search');
+        $products = Product::where('status', 1)->where('name', 'LIKE', "%{$query}%")
+        ->take(5)
+        ->get(['slug', 'name'])
+        ->map(function ($product) {
+            $product->name = Str::limit($product->name, 50);
+            return $product;
+        });
+
+        return response()->json($products);
     }
 
     // for searching by types using brand_id

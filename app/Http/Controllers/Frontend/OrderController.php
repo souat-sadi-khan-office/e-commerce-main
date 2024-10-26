@@ -127,15 +127,12 @@ class OrderController extends Controller
         if ($request->payment_option == 'paypal' && $order['order']->id) {
             $payment = paypal::processPayment($request->currency_code, $request->subtotal, $order['order']->unique_id);
         }
-
-
-        if (!isset($request->token) && !isset($request->PayerID)) {
-            if (!is_array($payment) && json_decode($payment->getContent()) != null) {
-                $error=json_decode(json_decode($payment->getContent())->error)->details[0]->issue;
-                return redirect()->back()->with(['error'=>$error]);
-            } elseif (is_array($payment) && isset($payment['approval_url'])) {
-                return redirect($payment['approval_url']);
-            }
+       
+        if(json_decode($payment->getContent())){
+            return redirect()->back()->withErrors(json_decode(json_decode($payment->getContent())->error));
+         }
+        elseif (is_array($payment) && isset($payment['approval_url'])) {
+            return redirect($payment['approval_url']);
         }
 
         if (isset($request->token) && isset($request->PayerID)) {
