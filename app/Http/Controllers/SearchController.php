@@ -35,7 +35,6 @@ class SearchController extends Controller
     public function filterProducts(Request $request)
     {
         $query = Product::query();
-        // Product::when($request->has())
 
         // Stock Availability Filter
         if ($request->has('in_stock') && $request->in_stock == 1) {
@@ -46,16 +45,17 @@ class SearchController extends Controller
             $query->where('in_stock', 0);
         }
 
-        // if ($request->pre_order) {
-        //     $query->where('pre_order', 1);
-        // }
-        // if ($request->up_coming) {
-        //     $query->where('up_coming', 1);
-        // }
+        if ($request->pre_order) {
+            $query->where('stage', 'pre_order');
+        }
+
+        if ($request->up_coming) {
+            $query->where('stage', 'up_coming');
+        }
 
         // Sorting Filter
         if ($request->sortBy == 'popularity') {
-            // $query->orderBy('popularity', 'desc');
+            $query->orderBy('average_rating', 'asc');
         } elseif ($request->sortBy == 'date') {
             $query->orderBy('created_at', 'desc');
         } elseif ($request->sortBy == 'price') {
@@ -114,7 +114,7 @@ class SearchController extends Controller
     public function ajaxSearchProduct(Request $request)
     {
         $query = $request->input('search');
-        $products = Product::where('name', 'LIKE', "%{$query}%")
+        $products = Product::where('status', 1)->where('name', 'LIKE', "%{$query}%")
         ->take(5)
         ->get(['slug', 'name'])
         ->map(function ($product) {

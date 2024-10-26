@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function index($request, $category_id = null)
+    public function index($request, $category_id = null, $source = null)
     {
         if ($request == null) {
             return Product::where('status', 1)
@@ -126,7 +126,7 @@ class ProductRepository implements ProductRepositoryInterface
         } elseif (isset($request->offred)) {
 
             return Product::where('status', 1)
-                ->where('is_discounted', 1)
+                ->where('category_id', $category_id)
                 ->withCount('ratings')
                 ->with(['ratings' => function ($query) {
                     $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
@@ -141,7 +141,98 @@ class ProductRepository implements ProductRepositoryInterface
                                 ELSE 3
                               END')
                 ->orderBY('discount', 'DESC')
-                ->take(6)
+                ->take(5)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request) && $request == 'related_products') {
+            return Product::where('status', 1)
+                ->where('category_id', $source['category_id'])
+                ->orWhere('brand_id', $source['brand_id'])
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderByRaw('CASE 
+                                WHEN discount_type = "percentage" AND discount > 15 THEN 1
+                                WHEN discount_type = "flat" THEN 2
+                                ELSE 3
+                              END')
+                ->orderBY('discount', 'DESC')
+                ->take(5)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request) && $request == 'same_category_products') {
+            return Product::where('status', 1)
+                ->where('category_id', $source['category_id'])
+                ->whereNot('id', $source['product_id'])
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderByRaw('CASE 
+                                WHEN discount_type = "percentage" AND discount > 15 THEN 1
+                                WHEN discount_type = "flat" THEN 2
+                                ELSE 3
+                              END')
+                ->orderBY('discount', 'DESC')
+                ->take(5)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request) && $request == 'same_brand_products') {
+            return Product::where('status', 1)
+                ->where('brand_id', $source['brand_id'])
+                ->whereNot('id', $source['product_id'])
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderByRaw('CASE 
+                                WHEN discount_type = "percentage" AND discount > 15 THEN 1
+                                WHEN discount_type = "flat" THEN 2
+                                ELSE 3
+                              END')
+                ->orderBY('discount', 'DESC')
+                ->take(5)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
+        } elseif (isset($request) && $request == 'visited_product_list') {
+            return Product::where('status', 1)
+                ->whereIn('id', $source)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->orderByRaw('CASE 
+                                WHEN discount_type = "percentage" AND discount > 15 THEN 1
+                                WHEN discount_type = "flat" THEN 2
+                                ELSE 3
+                              END')
+                ->orderBY('discount', 'DESC')
+                ->take(5)
                 ->get()
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -350,6 +441,12 @@ class ProductRepository implements ProductRepositoryInterface
                     case 'popularity':
                         $q->orderBy('ratings_count', 'desc');
                         break;
+                    case 'featured':
+                        $q->orderBy('is_featured', 'ASC');
+                        break;
+                    case 'on-sale':
+                        $q->orderBy('is_discounted', 'DESC');
+                        break;
                     case 'price':
                         $q->orderBy('unit_price', 'asc');
                         break;
@@ -365,6 +462,7 @@ class ProductRepository implements ProductRepositoryInterface
             })
             ->paginate(18)
             ->withQueryString();
+
         $mappedProducts = $products->getCollection()->map(function ($product) {
             return $this->mapper($product);
         });

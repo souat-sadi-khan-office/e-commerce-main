@@ -531,6 +531,9 @@ button:focus:not(:focus-visible) {
 	background: #fff;
     border-radius: 5px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+.bg_white.padding {
 	padding: 10px 10px 10px 20px;
 }
 
@@ -8474,7 +8477,7 @@ span.stock-status {
 }
 
 a.stock-status-warning {
-    background: rgba(55, 75, 185, .1) !important;
+    background: rgb(239 138 83 / 10%) !important;
     color: #ef4a23 !important;
 	text-align: center;
 }
@@ -8561,4 +8564,14 @@ a.stock-status-warning {
 	background: #F5F6FC;
 	color: #FF324D;
 	font-weight: bold !important;
+}
+
+.product-listing .pr_desc {
+	margin-bottom: 10px;
+    min-height: 150px;
+}
+
+span.stock-status.in-stock-status {
+	background: rgb(90 229 147 / 10%) !important;
+	color: green !important;
 }

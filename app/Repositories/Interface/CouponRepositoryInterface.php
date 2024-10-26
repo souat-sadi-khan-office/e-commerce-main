@@ -11,4 +11,8 @@ interface CouponRepositoryInterface
     public function update($id, $data);
     public function delete($id);
     public function updateStatus($request, $id);
+
+    public function checkCoupon($data);
+    public function findByCoupon($couponCode);
+    public function userCoupon($couponId);
 }

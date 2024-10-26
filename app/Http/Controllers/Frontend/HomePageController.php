@@ -33,6 +33,7 @@ use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\FlashDealRepositoryInterface;
 use App\Repositories\Interface\BrandRepositoryInterface;
 use App\Repositories\Interface\UserRepositoryInterface;
+use App\Repositories\Interface\CouponRepositoryInterface;
 
 class HomePageController extends Controller
 {
@@ -41,6 +42,7 @@ class HomePageController extends Controller
     private $product;
     private $flashDeals;
     private $userRepository;
+    private $couponRepository;
 
     public function __construct(
         BannerRepositoryInterface $banner,
@@ -48,13 +50,16 @@ class HomePageController extends Controller
         BrandRepositoryInterface $brands,
         FlashDealRepositoryInterface $flashDeals,
         UserRepositoryInterface $userRepository,
+        CouponRepositoryInterface $couponRepository,
     ) {
         $this->brands = $brands;
         $this->banner = $banner;
         $this->product = $product;
         $this->flashDeals = $flashDeals;
         $this->userRepository = $userRepository;
+        $this->couponRepository = $couponRepository;
     }
+
     public function visibility(Request $request, $section)
     {
         try {
@@ -861,5 +866,13 @@ class HomePageController extends Controller
         ]);
 
         return response()->json(['status' => true, 'message' => 'Thank you for subscribe']);
+    }
+
+    public function couponCheck(Request $request)
+    {
+
+        $data['coupon_code'] = $request->coupon;
+        return $this->couponRepository->checkCoupon($data);
+
     }
 }

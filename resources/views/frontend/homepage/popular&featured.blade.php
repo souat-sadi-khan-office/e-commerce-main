@@ -11,7 +11,7 @@
                                     <h4>Featured Products</h4>
                                 </div>
                                 <div class="view_all">
-                                    <a href="{{ route('featured-product') }}" class="text_default"><span>View All</span></a>
+                                    <a href="{{ route('search', ['sort' => 'featured']) }}" class="text_default"><span>View All</span></a>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                                     <h4>Top Rated Products</h4>
                                 </div>
                                 <div class="view_all">
-                                    <a href="{{ route('top-rated-product') }}" class="text_default"><span>View All</span></a>
+                                    <a href="{{ route('search', ['sort' => 'popularity']) }}" class="text_default"><span>View All</span></a>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                                     <h4>On Sale Products</h4>
                                 </div>
                                 <div class="view_all">
-                                    <a href="{{ route('on-sale-product') }}" class="text_default"><span>View All</span></a>
+                                    <a href="{{ route('search', ['sort' => 'on-sale']) }}" class="text_default"><span>View All</span></a>
                                 </div>
                             </div>
                         </div>

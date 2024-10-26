@@ -34,7 +34,6 @@ var _formValidation = function () {
             processData: false,
             dataType: 'JSON',
             success: function (data) {
-                console.log(data)
                 if (!data.status) {
                     if (data.validator) {
                         for (const [key, messages] of Object.entries(data.message)) {

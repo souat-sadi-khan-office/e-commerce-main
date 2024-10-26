@@ -74,12 +74,31 @@ class HelperController extends Controller
         if ($model == 'Product' && Product::where('slug', $slug)->exists()) {
             $product = $this->productDetails($slug);
             if ($product) {
+
+                $this->sentToVisitedList($product);
+
                 $breadcrumb = $this->getCategoryBreadcrumb($product['category']);
+
+                $brand_id = null;
+                if($product['brand_id']) {
+                    $brand_id = $product['brand_id'];
+                }
+
+                $source = [
+                    'category_id' => $product['category']->id,
+                    'product_id' => $product['id'], 
+                    'brand_id' => $brand_id 
+                ];
+
+                $related_products = $this->productRepository->index('related_products', [], $source);
+                $same_category_products = $this->productRepository->index('same_category_products', [], $source);
+                $same_brand_products = $this->productRepository->index('same_brand_products', [], $source);
+                $visited_product_list = $this->productRepository->index('visited_product_list', [], session()->get('visited_product_list'));
 
                 $spec = $this->productRepository->specificationProduct($product['id']);
                 $keySpec = $this->productRepository->specificationKeyFeaturedProduct($product['id']);
 
-                return view('frontend.product-details', compact('product', 'breadcrumb', 'keySpec', 'spec'));
+                return view('frontend.product-details', compact('product', 'visited_product_list', 'same_brand_products', 'same_category_products', 'related_products', 'breadcrumb', 'keySpec', 'spec'));
             } else {
                 return $this->fetcher($slug, $index + 1);
             }
@@ -131,10 +150,22 @@ class HelperController extends Controller
 
     }
 
+    public function sentToVisitedList($product)
+    {
+        $productId = $product['id'];
+        $visited_product_list = session()->get('visited_product_list', []);
+
+        if (!in_array($productId, $visited_product_list)) {
+            $visited_product_list[] = $product['id'];
+        }
+
+        session()->put('visited_product_list', $visited_product_list);
+    }
+
     public function search(Request $request)
     {
         $search = $request->search;
-
+        $sort = $request->sort;
 
         $categories = Category::where('name', 'like', '%' . $search . '%')->get(['id', 'name', 'slug']);
         $categoryIds = $categories->pluck('id')->toArray(); 
@@ -143,7 +174,7 @@ class HelperController extends Controller
         $brandIds = $brands->pluck('id')->toArray(); 
         
         $products = $this->productRepository->search($search,$categoryIds,$brandIds,$request->sort);
-        return view('frontend.search', compact('search','products','brands','categories'));
+        return view('frontend.search', compact('search', 'sort','products','brands','categories'));
     }
 
     public function filterProduct(Request $request)
@@ -172,7 +203,7 @@ class HelperController extends Controller
         return $ids;
     }
 
-    public function productDetails($slug)
+    public function productDetails($slug, $id = null, $source = null)
     {
         $product = Product::where('slug', $slug)->with([
             'details',

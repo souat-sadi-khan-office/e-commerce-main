@@ -78,6 +78,7 @@ Route::middleware(['web','ipSession'])->group(function () {
     Route::post('newsletter-form-submit', [HomePageController::class, 'postNewsletter'])->name('post.newsletter');
     
     Route::post('add-to-compare-list', [HomePageController::class, 'addToCompareList'])->name('add-to-compare-list');
+    Route::post('coupon/check', [HomePageController::class, 'couponCheck'])->name('coupon.check');
     Route::post('add-to-wish-list', [HomePageController::class, 'addToWishList'])->name('add-to-wish-list');
     Route::post('submit-question-form', [HomePageController::class,'submitQuestionForm'])->name('question-form.submit');
     Route::post('submit-review-form', [HomePageController::class,'submitReviewForm'])->name('review.submit');
