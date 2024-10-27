@@ -89,7 +89,7 @@
                     <div class="row align-items-center mb-4 pb-1">
                         <div class="col-12">
                             <div class="product_header bg_white">
-                                <div class="product_header_left">
+                                <div class="product_header_left px-2">
                                     <h4><b>{{ $search }} </b></h4>
                                 </div>
                                 <div class="product_header_right">
