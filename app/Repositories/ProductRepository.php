@@ -123,6 +123,23 @@ class ProductRepository implements ProductRepositoryInterface
                 ->map(function ($product) {
                     return $this->mapper($product);
                 });
+        } elseif (isset($request->trending)) {
+
+            return Product::where('status', 1)
+                ->where('is_featured', 1)
+                ->withCount('ratings')
+                ->with(['ratings' => function ($query) {
+                    $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
+                        ->groupBy('product_id');
+                }])
+                ->with(['image' => function ($query) {
+                    $query->where('status', 1)->select('product_id', 'image');
+                }])
+                ->take(6)
+                ->get()
+                ->map(function ($product) {
+                    return $this->mapper($product);
+                });
         } elseif (isset($request->offred)) {
 
             return Product::where('status', 1)
