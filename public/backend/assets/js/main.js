@@ -114,7 +114,6 @@ var _componentRemoteModalLoadAfterAjax = function () {
         e.preventDefault();
         $('#modal_remote').modal('toggle');
         var url = $(this).data('url');
-        alert(url);
         $('.modal-content').html('');
         $('#modal-loader').show();
         $.ajax({

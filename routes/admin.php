@@ -42,6 +42,8 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['isAdmin', 'web'])->group(function () {
     Route::get('dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+
     Route::group(['prefix' => 'categories', 'as' => 'category.'], function () {
         Route::get('add', [CategoryController::class, 'addform'])->name('add');
         Route::get('sub/add', [CategoryController::class, 'addformsub'])->name('sub.add');
@@ -65,10 +67,14 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
             Route::post('updateposition/{id}', [SpecificationsController::class, 'updateposition'])->name('key.position');
             Route::any('delete/{id}', [SpecificationsController::class, 'delete'])->name('key.delete');
             Route::get('types/{id}', [SpecificationsController::class, 'keyTypes'])->name('types');
+            
+            // don't remove from here, otherwise it will create 302 redirection somehow
+            Route::get('type-create', [SpecificationsTypes::class, 'create'])->name('type.create');
 
             Route::group(['prefix' => 'types', 'as' => 'type.'], function () {
                 Route::get('/', [SpecificationsTypes::class, 'index'])->name('index');
-                Route::get('create-specification-type', [SpecificationsTypes::class, 'create'])->name('create');
+            
+            
                 Route::post('store', [SpecificationsTypes::class, 'store'])->name('store');
                 Route::patch('update/{id}', [SpecificationsTypes::class, 'update'])->name('update');
                 Route::get('show/{id}', [SpecificationsTypes::class, 'show'])->name('show');
