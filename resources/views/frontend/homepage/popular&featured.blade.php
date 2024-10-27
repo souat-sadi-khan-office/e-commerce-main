@@ -108,7 +108,7 @@
                         <div class="col-12">
                             <div class="product_wrap placeholder">
                                 <div class="product_img">
-                                    <a href="#">
+                                    <a href="javascript:;">
                                         <div class="img_placeholder loading"></div>
                                     </a>
                                 </div>

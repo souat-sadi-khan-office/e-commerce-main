@@ -19,10 +19,14 @@ class AuthRepository implements AuthRepositoryInterface
         $credentials = $request->only('email','password');
         
         if (Auth::guard($guard)->attempt($credentials)) {
-            $cartItems = Cart::where('ip', $request->ip())->get();
-            foreach ($cartItems as $item) {
-                $item->user_id = Auth::guard('customer')->user()->id;
-                $item->save();
+            if(Auth::guard('customer')->check()) {
+                $cartItems = Cart::where('ip', $request->ip())->get();
+                if($cartItems) {
+                    foreach ($cartItems as $item) {
+                        $item->user_id = Auth::guard('customer')->user()->id;
+                        $item->save();
+                    }
+                }
             }
 
             return $guard;

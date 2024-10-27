@@ -114,6 +114,7 @@
     <script>
 
         $(document).ready(function() {
+            _loadTrendingProduct();
             _loadTopRatedProduct();
             _loadFeaturedProduct();
             _loadOnSaleProduct();
@@ -129,6 +130,46 @@
                     if (response) {
                         $('#on-sale-product-area').html(response);
                         $('.on-sale-carousel').each( function() {
+                            var $carousel = $(this);
+                            $carousel.owlCarousel({
+                                dots : $carousel.data("dots"),
+                                loop : $carousel.data("loop"),
+                                items: $carousel.data("items"),
+                                margin: $carousel.data("margin"),
+                                mouseDrag: $carousel.data("mouse-drag"),
+                                touchDrag: $carousel.data("touch-drag"),
+                                autoHeight: $carousel.data("autoheight"),
+                                center: $carousel.data("center"),
+                                nav: $carousel.data("nav"),
+                                rewind: $carousel.data("rewind"),
+                                navText: ['<i class="fas fa-angle-left"></i>', '<i class="fas fa-angle-right"></i>'],
+                                autoplay : $carousel.data("autoplay"),
+                                animateIn : $carousel.data("animate-in"),
+                                animateOut: $carousel.data("animate-out"),
+                                autoplayTimeout : $carousel.data("autoplay-timeout"),
+                                smartSpeed: $carousel.data("smart-speed"),
+                                responsive: $carousel.data("responsive")
+                            });	
+                        });
+                    } else {
+                        console.error('Request failed for on sale product: ', response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        
+        var _loadTrendingProduct = function() {
+            $.ajax({
+                url: '/?trending=1',
+                method: 'POST',
+                dataType: 'HTML',
+                success: function(response) {
+                    if (response) {
+                        $('#trending-product-area').html(response);
+                        $('.trending-carousel').each( function() {
                             var $carousel = $(this);
                             $carousel.owlCarousel({
                                 dots : $carousel.data("dots"),

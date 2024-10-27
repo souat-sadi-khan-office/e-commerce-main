@@ -513,6 +513,14 @@ class HomePageController extends Controller
 
                 return view('frontend.homepage.on-sale-tab-tab', compact('products'));
 
+            } elseif (isset($request->trending)) {
+                
+                $products = Cache::remember('trending_', (36000 * 10), function () use ($request) {
+                    return $this->product->index($request);
+                });
+
+                return view('frontend.homepage.trending-tab', compact('products'));
+
             } elseif (isset($request->is_featured_list)) {
                 $products = Cache::remember('featured_products_', (36000 * 10), function () use ($request) {
                     return $this->product->index($request);
