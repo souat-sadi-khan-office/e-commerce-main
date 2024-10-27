@@ -104,6 +104,7 @@ class SpecificationsTypes extends SpecificationsController
 
     public function create()
     {
+        dd($keys);
         $keys = $this->productSpecificationRepository->typesindex();
         return view('backend.category.specificationKeys.types.create',compact('keys'));
     }

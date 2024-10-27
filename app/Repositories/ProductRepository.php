@@ -894,8 +894,8 @@ class ProductRepository implements ProductRepositoryInterface
         $product->is_discounted = $request->is_discounted;
         $product->discount_type = $request->discount_type;
         $product->discount = isset($request->discount_type) && $request->discount_type != 'amount' ? $request->discount : covert_to_usd($request->discount);
-        $product->discount_start_date = $request->discount_start_date;
-        $product->discount_end_date = $request->discount_end_date;
+        $product->discount_start_date = $request->discount_start_date ? date('Y-m-d', strtotime($request->discount_start_date)) : null;
+        $product->discount_end_date = $request->discount_end_date ? date('Y-m-d', strtotime($request->discount_end_date)) : null;
         $product->is_returnable = $request->is_returnable;
         $product->return_deadline = $request->return_deadline;
         $product->stock_types = $request->stock_types;

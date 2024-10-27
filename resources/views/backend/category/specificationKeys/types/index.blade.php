@@ -21,8 +21,7 @@
 
                 {{-- @if (Auth::guard('admin')->user()->hasPermissionTo('category.create')) --}}
                 <div class="col-sm-6 text-end">
-                    <a href="javascript:;" data-url="{{ route('admin.category.specification.type.create') }}"
-                        id="content_management" class="btn btn-soft-success">
+                    <a href="javascript:;" data-url="{{ route('admin.category.specification.type.create') }}" id="content_management" class="btn btn-soft-success">
                         <i class="bi bi-plus"></i>
                         Create New
                     </a>

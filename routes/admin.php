@@ -68,7 +68,7 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
 
             Route::group(['prefix' => 'types', 'as' => 'type.'], function () {
                 Route::get('/', [SpecificationsTypes::class, 'index'])->name('index');
-                Route::get('create', [SpecificationsTypes::class, 'create'])->name('create');
+                Route::get('create-specification-type', [SpecificationsTypes::class, 'create'])->name('create');
                 Route::post('store', [SpecificationsTypes::class, 'store'])->name('store');
                 Route::patch('update/{id}', [SpecificationsTypes::class, 'update'])->name('update');
                 Route::get('show/{id}', [SpecificationsTypes::class, 'show'])->name('show');
