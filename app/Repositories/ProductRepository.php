@@ -37,7 +37,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
                 ->latest()
-                ->take(6)
+                ->take(10)
                 ->get()
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -54,7 +54,7 @@ class ProductRepository implements ProductRepositoryInterface
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
                 ->orderBY('ratings_count', 'DESC')
-                ->take(6)
+                ->take(8)
                 ->get()
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -70,7 +70,8 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
-                ->take(6)
+                ->inRandomOrder()
+                ->take(8)
                 ->get()
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -85,6 +86,7 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
+                ->inRandomOrder()
                 ->take(6)
                 ->get()
                 ->map(function ($product) {
@@ -101,7 +103,8 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
-                ->take(6)
+                ->inRandomOrder()
+                ->take(8)
                 ->get()
                 ->map(function ($product) {
                     return $this->mapper($product);
@@ -118,6 +121,7 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
+                ->inRandomOrder()
                 ->take(6)
                 ->get()
                 ->map(function ($product) {
@@ -135,6 +139,7 @@ class ProductRepository implements ProductRepositoryInterface
                 ->with(['image' => function ($query) {
                     $query->where('status', 1)->select('product_id', 'image');
                 }])
+                ->inRandomOrder()
                 ->take(6)
                 ->get()
                 ->map(function ($product) {
@@ -143,7 +148,10 @@ class ProductRepository implements ProductRepositoryInterface
         } elseif (isset($request->offred)) {
 
             return Product::where('status', 1)
-                ->where('category_id', $category_id)
+                ->when(isset($category_id), function ($q) use ($category_id) {
+
+                    $q->where('category_id', $category_id);
+                })
                 ->withCount('ratings')
                 ->with(['ratings' => function ($query) {
                     $query->select('product_id', \DB::raw('AVG(rating) as averageRating'))
@@ -487,7 +495,7 @@ class ProductRepository implements ProductRepositoryInterface
         return $products->setCollection($mappedProducts);
     }
 
-    public function isDiscountedProduct($product) 
+    public function isDiscountedProduct($product)
     {
         return $product->discount_type && $product->discount > 0;
     }
@@ -531,7 +539,7 @@ class ProductRepository implements ProductRepositoryInterface
 
         $stockStatus = 'out_of_stock';
         $stockResponse = getProductStock($product->id, 1);
-        if($stockResponse['status']) {
+        if ($stockResponse['status']) {
             $stockStatus = 'in_stock';
         }
 
@@ -582,14 +590,14 @@ class ProductRepository implements ProductRepositoryInterface
         $specKeyIds = [];
         $allProductsSpecifications = [];
 
-        if(session()->has('compare_list') && is_array(session()->get('compare_list'))) {
+        if (session()->has('compare_list') && is_array(session()->get('compare_list'))) {
             $productIdArray = session()->get('compare_list');
         }
 
-        if(count($productIdArray) > 0) {
+        if (count($productIdArray) > 0) {
             $specification = ProductSpecification::whereIn('product_id', $productIdArray)->with('product:id,category_id,name', 'specificationKey', 'specificationKeyType', 'specificationKeyTypeAttribute')->get();
 
-            $products = $this->getProductByIds($productIdArray)->map(function ($product) use($specification, &$models, &$allProductsSpecifications) {
+            $products = $this->getProductByIds($productIdArray)->map(function ($product) use ($specification, &$models, &$allProductsSpecifications) {
                 $summery = [];
 
                 $averageRating = $product->ratings->isNotEmpty() ? $product->ratings->first()->averageRating : 0;
@@ -619,8 +627,8 @@ class ProductRepository implements ProductRepositoryInterface
                 $models[] = [
                     'id' => $product->id,
                     'name' => $product->name,
-                    'brand' => $product->brand ? $product->brand->name : null, 
-                    'brand_slug' => $product->brand ? $product->brand->slug : null, 
+                    'brand' => $product->brand ? $product->brand->name : null,
+                    'brand_slug' => $product->brand ? $product->brand->slug : null,
                     'slug' => $product->slug,
                     'image' => asset($product->thumb_image),
                     'discount_type' => $product->is_discounted,
@@ -642,18 +650,18 @@ class ProductRepository implements ProductRepositoryInterface
                     'specificationKeyType:id,name',
                     'specificationKeyTypeAttribute:id,name'
                 ])
-                ->whereIn('key_id', $specKeyIds)
-                ->where('product_id', $product->id)
-                ->get()
-                ->groupBy('specificationKey.name')
-                ->map(function ($specifications) use ($product, &$allProductsSpecifications) {
-                    return $specifications->groupBy('specificationKeyType.name')
-                        ->map(function ($types, $typeName) use ($product, &$allProductsSpecifications, $specifications) {
-                            $keyName = $specifications->first()->specificationKey->name;
-                            $attributeNames = $types->pluck('specificationKeyTypeAttribute.name');
-                            return $allProductsSpecifications[$keyName][$typeName][$product->id] = $attributeNames[0];
-                        });
-                });
+                    ->whereIn('key_id', $specKeyIds)
+                    ->where('product_id', $product->id)
+                    ->get()
+                    ->groupBy('specificationKey.name')
+                    ->map(function ($specifications) use ($product, &$allProductsSpecifications) {
+                        return $specifications->groupBy('specificationKeyType.name')
+                            ->map(function ($types, $typeName) use ($product, &$allProductsSpecifications, $specifications) {
+                                $keyName = $specifications->first()->specificationKey->name;
+                                $attributeNames = $types->pluck('specificationKeyTypeAttribute.name');
+                                return $allProductsSpecifications[$keyName][$typeName][$product->id] = $attributeNames[0];
+                            });
+                    });
             });
         }
 
@@ -677,7 +685,7 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::findOrFail($id);
     }
-    
+
     public function getProductByIds($ids)
     {
         return Product::with('specifications')->whereIn('id', $ids)->get();
@@ -1139,7 +1147,7 @@ class ProductRepository implements ProductRepositoryInterface
             DB::rollBack();
         }
 
-        return response()->json(['status' => true, 'message' => 'Product created successfully.', 'load' => true]);
+        return response()->json(['status' => true, 'message' => 'Product created successfully.', 'load' => false]);
     }
 
     public function updateProduct($request, $id)
@@ -1624,7 +1632,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'key_feature' => $item->key_feature,
             ];
         });
-        
+
         $models = $mapped->groupBy('key_id');
         $product_name = $product->name;
         $category_id = $product->category_id;
