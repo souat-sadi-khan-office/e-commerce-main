@@ -10,6 +10,7 @@ use App\Models\ProductTax;
 use App\Models\ProductImage;
 use App\Models\ProductStock;
 use App\Models\ProductDetail;
+use App\Models\ProductQuestion;
 use App\Models\SpecificationKey;
 use App\Models\StockPurchase;
 use Illuminate\Validation\Rule;
@@ -1525,6 +1526,10 @@ class ProductRepository implements ProductRepositoryInterface
         }
 
         return $productDetails;
+    }
+
+    public function userQuotes(){
+        return ProductQuestion::where('user_id',Auth::guard('customer')->id())->with('product','answer')->latest()->paginate(5);
     }
 
     public function specificationproducts()

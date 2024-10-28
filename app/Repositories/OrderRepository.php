@@ -45,7 +45,7 @@ class OrderRepository implements OrderRepositoryInterface
             ->when(isset($request->payment_status) && $request->payment_status == 'Paid', function ($q) {
                 $q->where('payment_status', 'Paid');
             })
-            ->when(isset($request->refund_requested) && $request->is_refund_requested, function ($q) {
+            ->when(isset($request->status) && $request->status == 'refund_requested', function ($q) {
                 $q->where('is_refund_requested', 1);
             })->with('details:id,order_id,phone,email', 'user:id,name', 'payment:id,currency,gateway_name', 'currency:id,code,symbol')->get()->map(function ($order) {
                 return [
@@ -64,6 +64,42 @@ class OrderRepository implements OrderRepositoryInterface
                 ];
             });
     }
+
+    public function userOrders(){
+        return Order::where('user_id',Auth::guard('customer')->id())->select('id','unique_id','final_amount','payment_status','status','created_at','payment_id','currency_id','is_cod','is_refund_requested')->with('payment:id,currency,gateway_name', 'currency:id,code,symbol')->get()->map(function ($order) {
+            return [
+                'id' => $order->id,
+                'unique_id' => $order->unique_id,
+                'currency' => $order->payment->currency ?? @$order->currency->code,
+                'currency_symbol' => $order->currency->symbol ?? null,
+                'gateway_name' => $order->is_cod ? 'Cash on Delivery' : $order->payment->gateway_name ?? null,
+                'payment_status' => $order->payment_status,
+                'status' => $order->is_refund_requested ? "Refund Requested" : $order->status,
+                'amount' => $order->final_amount,
+                'created_at' => $order->created_at->format('d M Y, h:i:s A')
+            ];
+        });
+    }
+    public function userData()
+    {
+        $userId = Auth::guard('customer')->id();
+    
+        // Use a single query with selective columns and proper aggregations
+        $data = Order::where('user_id', $userId)
+            ->selectRaw('
+                COUNT(*) as total_orders,
+                COUNT(CASE WHEN status = "pending" THEN 1 END) as pending_orders,
+                SUM(CASE WHEN status NOT IN ("returned", "failed") THEN final_amount ELSE 0 END) as total_amount
+            ')
+            ->first();
+    
+        return [
+            'total_orders' => $data->total_orders ?? 0,
+            'pending_orders' => $data->pending_orders ?? 0,
+            'total_amount' => round($data->total_amount,3) ?? 0,
+        ];
+    }
+    
 
     public function indexDatatable($models)
     {
@@ -104,7 +140,7 @@ class OrderRepository implements OrderRepositoryInterface
             })
             ->editColumn('created_at', function ($model) {
 
-                return $model['created_at']->format('d M Y, h:i:s A');;
+                return $model['created_at']->format('d M Y, h:i:s A');
             })
             ->addColumn('customer', function ($model) {
                 return ' <div class="row">

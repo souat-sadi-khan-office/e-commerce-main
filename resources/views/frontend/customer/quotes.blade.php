@@ -45,28 +45,64 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group custom-list">
+                                    @if (isset($quotes))
+
+                                    @foreach ( $quotes as $quote)
+                                        
                                     <li class="list-group-item">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-9">
                                                 <div class="row">
                                                     <div class="col-auto">
-                                                        <img src="https://www.startech.com.bd/image/cache/catalog/processor/amd/ryzen-5-5600g/ryzen-5-5600g-228x228.jpg" alt="One">
+                                                        <img src="{{asset($quote->product->thumb_image)}}" alt="One">
                                                     </div>
                                                     <div class="col">
-                                                        <p>This is the product name</p>
+                                                        <p><a style="text-decoration:none;color: var(--bs-table-color-type);"
+                                                            href="{{ route('slug.handle', $quote->product->slug) }}">{{ $quote->product->name }}</a></p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <p>$78.00 for 1 item</p>
+                   
+                                                <p>{{get_system_date($quote->created_at->format('d M Y, h:i:s A'))}}  {{ get_system_time($quote->created_at->format('d M Y, h:i:s A')) }}</p>
                                             </div>
-                                            <div class="col-md-3">
-                                                <a href="#" class="btn btn-fill-line btn-sm">Dark</a>
-                                                <a href="#" class="btn btn-fill-out btn-sm">View</a>
+                                            <div class="row p-3">
+                                                <div class="col-auto" >
+                                                   <span class="btn btn-fill-out btn-sm">Quote:</span>
+                                                </div>
+                                                <div class="col">
+                                                    <p>{{$quote->message}}</p>
+                                                </div>
                                             </div>
+                                            @if ($quote->answer)
+                                                
+                                            <div class="row">
+                                                <div class="col-auto" >
+                                                    <span class="btn btn-fill-line btn-sm">Response:</span>
+                                                </div>
+                                                <div class="col">
+                                                    <p>{{$quote->answer->message}}</p>
+                                                </div>
+                                                <div class="col-md-3">
+                   
+                                                    <p>{{get_system_date($quote->answer->created_at->format('d M Y, h:i:s A'))}}  {{ get_system_time($quote->answer->created_at->format('d M Y, h:i:s A')) }}</p>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
+                                        <hr>
                                     </li>
+                                    @endforeach
+                                   
+                                        
+                                    @else
+                                        
+                                    <p>No Quotes Found</p>
+                                    @endif
+                                    
                                 </ul>
+                    @include('frontend.components.paginate',['products'=>$quotes])
+
                             </div>
                         </div>
                     </div>

@@ -9,4 +9,6 @@ interface OrderRepositoryInterface
  public function indexDatatable($request);
  public function details($id);
  public function updateStatus($request, $orderId);
+ public function userOrders();
+ public function userData();
 }

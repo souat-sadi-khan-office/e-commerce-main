@@ -44,6 +44,8 @@ Route::middleware(['isCustomer', 'web','ipSession'])->group(function () {
         Route::resource('phone-book', PhoneBookController::class);
         Route::resource('address-book', AddressController::class);
         Route::get('my-orders', [UserController::class, 'myOrders'])->name('my_orders');
+        Route::get('my-order/{id}', [UserController::class, 'orderDetails'])->name('my_order_details');
+        Route::get('order-invoice/{id}', [UserController::class, 'orderInvoice'])->name('order.invoice');
         Route::get('quotes', [UserController::class, 'quotes'])->name('quote');
         Route::get('edit-profile', [UserController::class, 'profile'])->name('edit_profile');
         Route::post('update-profile', [UserController::class, 'updateProfile'])->name('update.profile');

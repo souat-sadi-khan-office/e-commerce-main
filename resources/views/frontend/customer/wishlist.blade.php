@@ -54,8 +54,9 @@
                                                             <th class="product-thumbnail">&nbsp;</th>
                                                             <th class="product-name">Product</th>
                                                             <th class="product-price">Price</th>
-                                                            <th class="product-stock-status">Stock Status</th>
-                                                            <th class="product-add-to-cart"></th>
+                                                            <th class="product-stock-status">Stock Status
+                                                            </th>
+                                                            <th class="product-add-to-cart">Order</th>
                                                             <th class="product-remove">Remove</th>
                                                         </tr>
                                                     </thead>
@@ -65,13 +66,15 @@
                                                             @endphp
                                                             <tr>
                                                                 <td class="product-thumbnail">
-                                                                    <a href="{{ $model->product->slug }}">
-                                                                        <img style="max-width:80px;" src="{{ asset($model->product->thumb_image) }}" alt="{{ $model->product->name }}">
+                                                                    <a href="{{ route('slug.handle',$model->product->slug) }}">
+                                                                        <img style="max-width:80px;"
+                                                                            src="{{ asset($model->product->thumb_image) }}"
+                                                                            alt="{{ $model->product->name }}">
                                                                     </a>
                                                                 </td>
                                                                 <td class="product-name">
-                                                                    <a href="{{ $model->product->slug }}">
-                                                                        {{ $model->product->name }}
+                                                                    <a href="{{ route('slug.handle',$model->product->slug) }}">
+                                                                        {!! add_line_breaks($model->product->name, 3) !!}
                                                                     </a>
                                                                 </td>
                                                                 <td class="product-price">
@@ -79,19 +82,27 @@
                                                                 </td>
                                                                 <td class="product-stock-status">
                                                                     @if ($model->product->in_stock)
-                                                                        <span class="badge rounded-pill text-bg-success">In Stock</span>
-                                                                    @else   
-                                                                        <span class="badge rounded-pill text-bg-danger">Out of Stock</span>
+                                                                        <span
+                                                                            class="badge rounded-pill text-bg-success">In
+                                                                            Stock</span>
+                                                                    @else
+                                                                        <span
+                                                                            class="badge rounded-pill text-bg-danger">Out
+                                                                            of Stock</span>
                                                                     @endif
                                                                 </td>
                                                                 <td class="product-add-to-cart">
-                                                                    <a href="javascript:;" class="btn btn-sm btn-fill-out">
-                                                                        <i class="fas fa-shopping-basket"></i>
-                                                                        Add to Cart
-                                                                    </a>
+                                                                    <button class="btn btn-fill-out btn-sm add-to-cart" data-id="{{$model->product->slug}}" type="button">
+                                                                        <i class="icon-basket-loaded"></i> Add to cart
+                                                                    </button>
                                                                 </td>
-                                                                <td class="product-remove" data-title="Remove">
-                                                                    <a id="delete_item" data-id="{{ $model->id }}" data-url="{{ route('account.wishlist.destroy', $model->id) }}" class="remove-column-{{ $model->id }}" href="javascript:;">
+                                                                <td class="product-remove"
+                                                                    data-title="Remove">
+                                                                    <a id="delete_item"
+                                                                        data-id="{{ $model->id }}"
+                                                                        data-url="{{ route('account.wishlist.destroy', $model->id) }}"
+                                                                        class="remove-column-{{ $model->id }}"
+                                                                        href="javascript:;">
                                                                         <i class="fas fa-times"></i>
                                                                     </a>
                                                                 </td>
@@ -99,10 +110,10 @@
                                                         @endforeach
                                                     </tbody>
                                                 </table>
-                                            @else   
+                                            @else
                                                 <p>There is nothing to show</p>
                                             @endif
-                                            
+
                                         </div>
                                     </div>
                                 </div>

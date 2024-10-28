@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Request::is('account/my-orders') ? 'active' : '' }}" href="{{ route('account.my_orders') }}">
+                <a class="nav-link {{ Request::is('account/my-orders') ||Request::is('account/my-order/*') ? 'active' : '' }}" href="{{ route('account.my_orders') }}">
                     <i class="fas fa-shopping-cart"></i>
                     Orders
                 </a>

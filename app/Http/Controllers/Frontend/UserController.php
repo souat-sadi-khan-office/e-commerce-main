@@ -4,35 +4,64 @@ namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\UserRepositoryInterface;
+use App\Repositories\Interface\OrderRepositoryInterface;
+use App\Repositories\Interface\ProductRepositoryInterface;
 use App\Repositories\Interface\CurrencyRepositoryInterface;
 
 class UserController extends Controller
 {
     private $user;
     private $currency;
+    private $orderRepository;
+    protected $productRepository;
+
+
 
     public function __construct(
         UserRepositoryInterface $user,
-        CurrencyRepositoryInterface $currency
+        CurrencyRepositoryInterface $currency,
+        OrderRepositoryInterface $orderRepository,
+        ProductRepositoryInterface $productRepository,
+
     ) {
         $this->user = $user;
         $this->currency = $currency;
+        $this->orderRepository = $orderRepository;
+        $this->productRepository = $productRepository;
+    
     }
 
     public function index(Request $request)
     {
-        return view('frontend.customer.dashboard');
+        $data=$this->orderRepository->userData();
+        $models = $this->user->getUserWishList();
+        return view('frontend.customer.dashboard',compact('data','models'));
     }
     
     public function myOrders()
+    { 
+        $models=$this->orderRepository->userOrders();
+        return view('frontend.customer.my-orders',compact('models'));
+    }
+    public function orderDetails($id)
     {
-        return view('frontend.customer.my-orders');
+
+        $order = $this->orderRepository->details(decode($id));
+        return view('frontend.customer.my-order_details', compact('order'));
+    }
+    public function orderInvoice($id, Request $request)
+    {
+        $order = $this->orderRepository->details(decode($id));
+        return view('backend.order.invoice', compact('order','request'));
+    
     }
     
     public function quotes()
-    {
-        return view('frontend.customer.quotes');
+    { 
+        $quotes=$this->productRepository->userQuotes();
+        return view('frontend.customer.quotes',compact('quotes'));
     }
     
     public function profile()
