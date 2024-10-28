@@ -51,7 +51,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th>Order</th>
+                                                        <th>Invoice ID</th>
                                                         <th>Date</th>
                                                         <th>Payment</th>
                                                         <th>Status</th>
@@ -63,7 +63,10 @@
                                                     @foreach ($models as $model)
                                                         <tr>
                                                             <td>{{ strtoupper($model['unique_id']) }}</td>
-                                                            <td>{{ $model['created_at'] }}</td>
+                                                            <td>
+                                                                {{ get_system_date($model['created_at']) }}
+                                                                {{ get_system_time($model['created_at']) }}
+                                                            </td>
                                                             <td>{{ str_replace('_', ' ', ucfirst($model['payment_status'])) }}-{{ ucfirst($model['gateway_name']) }}
                                                             </td>
                                                             <td>{{ ucfirst($model['status']) }}</td>
