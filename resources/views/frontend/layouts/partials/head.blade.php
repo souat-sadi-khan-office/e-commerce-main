@@ -3,6 +3,7 @@
     @include('frontend.layouts.partials.seo')
 
     @stack('meta')
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <!-- Required CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/assets/bootstrap/css/bootstrap.min.css') }}">

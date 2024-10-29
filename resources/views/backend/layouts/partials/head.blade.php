@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>@yield('title') | {{ get_settings('system_name') ? get_settings('system_name') : 'Project Alpha' }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <link rel="stylesheet" href="{{ asset('backend/assets/css/font_source_sans3.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/overlayscrollbars.min.css') }}">
