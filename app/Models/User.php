@@ -12,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $guard = 'customer';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -80,7 +80,7 @@ class User extends Authenticatable
     // Relation with question
     public function question()
     {
-        return $this->hasMany(ProductQuestion::class);  
+        return $this->hasMany(ProductQuestion::class);
     }
 
     // Relation with cart
@@ -90,8 +90,13 @@ class User extends Authenticatable
     }
 
     // Relation with review
-    public function review() 
+    public function review()
     {
         return $this->hasMany(Reviews::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

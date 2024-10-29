@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use App\Repositories\Interface\CategoryRepositoryInterface;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -27,7 +28,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return Category::all();
     }
-    
+
     public function index2()
     {
         return Category::with('parent:id,name')
@@ -70,6 +71,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'is_featured' => isset($data->is_featured),
                 'photo' => $data->photo ? Images::upload('categories', $data->photo) : null,
             ]);
+            Cache::forget('categories_count_dashboard');
 
             return response()->json(['message' => 'Created successfully!', 'status' => true, 'load' => true]);
         } catch (Exception $e) {
@@ -115,6 +117,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 'is_featured' => $data->has('is_featured') ? 1 : 0,
                 'photo' => $photoPath,
             ]);
+            Cache::forget('categories_count_dashboard');
 
             return response()->json(['message' => 'Updated successfully!', 'status' => true, 'goto' => isset($data->sub) ? route('admin.category.index.sub') : route('admin.category.index')]);
         } catch (Exception $e) {
@@ -133,7 +136,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
     public function categoriesDropDown($request)
     {
-        return isset($request->parent_id)?Category::where('parent_id',$request->parent_id)->select('id', 'name','photo')->get() :Category::select('id', 'name','photo')->get();
+        return isset($request->parent_id) ? Category::where('parent_id', $request->parent_id)->select('id', 'name', 'photo')->get() : Category::select('id', 'name', 'photo')->get();
     }
 
     public function updateisFeatured($request, $id)
@@ -165,8 +168,9 @@ class CategoryRepository implements CategoryRepositoryInterface
             return response()->json(['success' => false, 'message' => 'Category not found.'], 404);
         }
 
-        $category->is_featured = $request->input('status');
+        $category->status = $request->input('status');
         $category->save();
+        Cache::forget('categories_count_dashboard');
 
         return response()->json(['success' => true, 'message' => 'Category status updated successfully.']);
     }
@@ -239,6 +243,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function delete($id)
     {
+        Cache::forget('categories_count_dashboard');
+
         $Category = Category::findOrFail($id);
         return $Category->delete();
     }

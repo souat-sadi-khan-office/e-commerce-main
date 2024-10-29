@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/font_source_sans3.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/overlayscrollbars.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href={{ asset('backend/assets/css/customGredient.css') }}>
     <link rel="stylesheet" href={{ asset('backend/assets/css/adminlte.css') }}>
     @stack('styleforIconPicker')
     <link rel="stylesheet" href={{ asset('backend/assets/css/fontawesome.min.css') }}>

@@ -5,7 +5,7 @@ namespace App\Repositories;
 use DataTables;
 use App\Models\Currency;
 use App\Repositories\Interface\CurrencyRepositoryInterface;
-
+use Illuminate\Support\Facades\Cache;
 
 class CurrencyRepository implements CurrencyRepositoryInterface
 {
@@ -24,8 +24,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $models = $this->getAllCurrencies();
         return Datatables::of($models)
             ->addIndexColumn()
-            ->editColumn('country', function($model) {
-                return $model->country->name;   
+            ->editColumn('country', function ($model) {
+                return $model->country->name;
             })
             ->editColumn('status', function ($model) {
                 $checked = $model->status == 1 ? 'checked' : '';
@@ -46,7 +46,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function createCurrency(array $data)
     {
         $zone = Currency::create($data);
-
+        Cache::forget('currency_count_dashboard');
         return $zone;
     }
 
@@ -54,13 +54,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     {
         $zone = Currency::findOrFail($id);
         $zone->update($data);
-
+        Cache::forget('currency_count_dashboard');
         return $zone;
     }
 
     public function deleteCurrency($id)
     {
         $role = Currency::findOrFail($id);
+        Cache::forget('currency_count_dashboard');
+
         return $role->delete();
     }
 
@@ -78,6 +80,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
         $currency->status = $request->input('status');
         $currency->save();
+        Cache::forget('currency_count_dashboard');
 
         return response()->json(['success' => true, 'message' => 'Currency status updated successfully.']);
     }

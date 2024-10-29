@@ -718,7 +718,7 @@ class ProductRepository implements ProductRepositoryInterface
                 return $model->admin->name;
             })
             ->editColumn('status', function ($model) {
-                $checked = $model->status == 'active' ? 'checked' : '';
+                $checked = $model->status == 1 ? 'checked' : '';
                 return '<div class="form-check form-switch"><input data-url="' . route('admin.product.status', $model->id) . '" class="form-check-input" type="checkbox" role="switch" name="status" id="status' . $model->id . '" ' . $checked . ' data-id="' . $model->id . '"></div>';
             })
             ->editColumn('stock', function ($model) {
@@ -796,10 +796,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function deleteProduct($id)
     {
         $product = Product::findOrFail($id);
-        Cache::forget('newProducts');
-        Cache::forget('homeProducts_best_seller');
-        Cache::forget('homeProducts_featured');
-        Cache::forget('homeProducts_offred');
+        $this->product_cache_forget();
         return $product->delete();
     }
 
@@ -815,12 +812,10 @@ class ProductRepository implements ProductRepositoryInterface
             return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
         }
 
-        $product->status = $request->input('status') == 1 ? 'active' : 'inactive';
+        $product->status = !$product->status;
         $product->save();
-        Cache::forget('newProducts');
-        Cache::forget('homeProducts_best_seller');
-        Cache::forget('homeProducts_featured');
-        Cache::forget('homeProducts_offred');
+
+        $this->product_cache_forget();
         return response()->json(['success' => true, 'message' => 'Product status updated successfully.']);
     }
 
@@ -836,7 +831,7 @@ class ProductRepository implements ProductRepositoryInterface
             return response()->json(['success' => false, 'message' => 'Product not found.'], 404);
         }
 
-        $product->is_featured = $request->input('status');
+        $product->is_featured = !$product->is_featured;
         $product->save();
 
         Cache::forget('homeProducts_featured');
@@ -1140,10 +1135,7 @@ class ProductRepository implements ProductRepositoryInterface
             }
 
             DB::commit();
-            Cache::forget('newProducts');
-            Cache::forget('homeProducts_best_seller');
-            Cache::forget('homeProducts_featured');
-            Cache::forget('homeProducts_offred');
+            $this->product_cache_forget();
         } else {
             DB::rollBack();
         }
@@ -1409,10 +1401,7 @@ class ProductRepository implements ProductRepositoryInterface
             // }
 
             DB::commit();
-            Cache::forget('newProducts');
-            Cache::forget('homeProducts_best_seller');
-            Cache::forget('homeProducts_featured');
-            Cache::forget('homeProducts_offred');
+            $this->product_cache_forget();
         } else {
             DB::rollback();
         }
@@ -1528,8 +1517,26 @@ class ProductRepository implements ProductRepositoryInterface
         return $productDetails;
     }
 
-    public function userQuotes(){
-        return ProductQuestion::where('user_id',Auth::guard('customer')->id())->with('product','answer')->latest()->paginate(5);
+
+
+    public function userQuotes()
+    {
+        return ProductQuestion::where('user_id', Auth::guard('customer')->id())->with('product', 'answer')->latest()->paginate(5);
+    }
+
+    private function product_cache_forget()
+    {
+        Cache::forget('homeProducts_');
+        Cache::forget('on_sale_products_');
+        Cache::forget('on_sale_products_');
+        Cache::forget('trending_');
+        Cache::forget('featured_products_');
+        Cache::forget('top_rated_product');
+        Cache::forget('trending_');
+        Cache::forget('newProducts');
+        Cache::forget('homeProducts_best_seller');
+        Cache::forget('homeProducts_featured');
+        Cache::forget('homeProducts_offred');
     }
 
     public function specificationproducts()

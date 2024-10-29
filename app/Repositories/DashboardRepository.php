@@ -10,12 +10,13 @@ use App\Models\Rating;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\BrandType;
 use App\Models\FlashDeal;
 use App\Models\OrderDetail;
 use App\Models\ProductStock;
 use App\Models\StockPurchase;
 use App\Models\ProductQuestion;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use App\Repositories\Interface\DashboardRepositoryInterface;
 
 
@@ -23,6 +24,12 @@ class DashboardRepository implements DashboardRepositoryInterface
 {
     public function index($request)
     {
+        // Start timing -Istiyak
+        $startTime = microtime(true);
+
+        // Recording the CPU usage before executing the logic -Istiyak
+        $startUsage = getrusage();
+
         $orderStats = Order::selectRaw('
             COUNT(*) as total_orders,
             SUM(CASE WHEN status = "delivered" THEN final_amount ELSE 0 END) as total_order_amount,
@@ -33,9 +40,24 @@ class DashboardRepository implements DashboardRepositoryInterface
             COUNT(CASE WHEN status = "packaging" THEN 1 END) as total_packaging_orders,
             COUNT(CASE WHEN status = "delivered" THEN 1 END) as total_delivered_orders,
             COUNT(CASE WHEN status = "returned" THEN 1 END) as total_returned_orders,
+            COUNT(CASE WHEN status IN ("shipping", "out_of_delivery") THEN 1 END) as total_shipping_orders,
             COUNT(CASE WHEN status = "failed" THEN 1 END) as total_failed_orders
         ')
             ->first();
+
+        $topUsers = Cache::remember('top_users', 90, function () {
+            return User::select('id', 'name', 'email', 'avatar')
+                ->withCount([
+                    'orders' => function ($query) {
+                        $query->whereNotIn('status', ['returned', 'failed']);
+                    }
+                ])
+                ->withSum('orders as total_final_amount', 'final_amount')
+                ->having('orders_count', '>', 0)
+                ->orderBy('orders_count', 'desc')
+                ->take(5)
+                ->get();
+        });
 
         $productStats = Product::selectRaw('
             COUNT(*) as total_products,
@@ -49,19 +71,22 @@ class DashboardRepository implements DashboardRepositoryInterface
         ')
             ->first();
 
-        $categoryStats = Category::selectRaw('
+        $categoryStats = Cache::remember('categories_count_dashboard', 3600 * 24, function () {
+            return Category::selectRaw('
             COUNT(*) as total_categories,
             COUNT(CASE WHEN parent_id IS NULL THEN 1 END) as total_primary_categories,
             COUNT(CASE WHEN status = true THEN 1 END) as active_categories,
             COUNT(CASE WHEN parent_id IS NOT NULL THEN 1 END) as total_sub_categories
         ')
-            ->first();
+                ->first();
+        });
 
-        $currencyStats = Currency::selectRaw('
+        $currencyStats = Cache::remember('currency_count_dashboard', 3600 * 24, function () {
+            return Currency::selectRaw('
             COUNT(*) as total_currency,
             COUNT(CASE WHEN status = true THEN 1 END) as total_active_currency
-        ')
-            ->first();
+        ')->first();
+        });
 
         $stockStats = ProductStock::selectRaw('
             SUM(stock) as total_stock
@@ -94,11 +119,24 @@ class DashboardRepository implements DashboardRepositoryInterface
             $details = json_decode($orderDetail->details, true);
             return collect($details['products'])->sum('qty');
         })->sum();
+
         $totalFlashDeals = FlashDeal::where('status', true)->count();
 
         $symbol = get_system_default_currency()->symbol;
+        $cacheSize = env('CACHE_STORE') === 'database' ? $this->getDatabaseCacheSize() : $this->getLaravelCacheSize();
 
+        // Stop timing -Istiyak
+        $endTime = microtime(true);
+
+        // Recording the CPU usage after executing the logic -Istiyak
+        $endUsage = getrusage();
+
+        $executionTime = round(($endTime - $startTime) * 1000, 2) . " ms";
+        $cpu = $this->getCpuUsageOverInterval($startUsage, $endUsage, $startTime, $endTime);
         return [
+            'executionTime' => $executionTime,
+            'cpu' => $cpu,
+            'cacheSize' => $cacheSize,
             'total_users' => $totalUsers,
             'total_products' => $productStats->total_products,
             'total_active_products' => $productStats->total_active_products,
@@ -120,6 +158,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             'total_packaging_orders' => $orderStats->total_packaging_orders,
             'total_delivered_orders' => $orderStats->total_delivered_orders,
             'total_returned_orders' => $orderStats->total_returned_orders,
+            'total_shipping_orders' => $orderStats->total_shipping_orders,
             'total_failed_orders' => $orderStats->total_failed_orders,
             'total_currency' => $currencyStats->total_currency,
             'total_active_currency' => $currencyStats->total_active_currency,
@@ -132,6 +171,92 @@ class DashboardRepository implements DashboardRepositoryInterface
             'total_ratings' => $totalRatings,
             'total_coupons' => $totalCoupons,
             'total_flash_deals' => $totalFlashDeals,
+            'top_customers' => $topUsers,
+        ];
+    }
+
+
+    private function getCpuUsageOverInterval($startUsage, $endUsage, $startTime, $endTime)
+    {
+        //  elapsed real (wall-clock) time in seconds -Istiyak
+        $elapsedTime = $endTime - $startTime;
+
+        //  User CPU time used (in seconds) -Istiyak
+        $userCpuTime = ($endUsage["ru_utime.tv_sec"] - $startUsage["ru_utime.tv_sec"]) +
+            ($endUsage["ru_utime.tv_usec"] - $startUsage["ru_utime.tv_usec"]) / 1e6;
+
+        //  System CPU time used (in seconds) -Istiyak
+        $systemCpuTime = ($endUsage["ru_stime.tv_sec"] - $startUsage["ru_stime.tv_sec"]) +
+            ($endUsage["ru_stime.tv_usec"] - $startUsage["ru_stime.tv_usec"]) / 1e6;
+
+        $idleTime = max(0, $elapsedTime - ($userCpuTime + $systemCpuTime));
+
+        $activeTime = $userCpuTime + $systemCpuTime;
+        $cpuUsagePercentage = ($activeTime / $elapsedTime) * 100;
+
+        return [
+            'user_cpu_time' => round($userCpuTime * 1000, 2) . " ms",  // in milliseconds
+            'system_cpu_time' => round($systemCpuTime * 1000, 2) . " ms", // in milliseconds
+            'idle_time' => round($idleTime * 1000, 2) . " ms",  // in milliseconds
+            'cpu_usage_percentage' => round($cpuUsagePercentage, 2) . " %"
+        ];
+    }
+    private function getDatabaseCacheSize()
+    {
+        $cacheTable = 'cache';
+        $cachedItems = DB::table($cacheTable)->get();
+
+        $totalSize = $cachedItems->sum(function ($item) {
+            return strlen($item->key) + strlen($item->value);
+        });
+
+        return [
+            'size' => $totalSize < 1024 ? $totalSize . " B" : ($totalSize < 1024 * 1024 ? round($totalSize / 1024, 2) . " KB" :
+                round($totalSize / 1024 / 1024, 2) . " MB"),
+            'count' => $cachedItems->count(),
+        ];
+    }
+
+
+
+    private function getLaravelCacheSize($cacheDir = null)
+    {
+        $cacheDir = $cacheDir ?: __DIR__ . '/../../storage/framework/cache/data';
+        $size = 0;
+        $fileCount = 0;
+
+        if (!is_dir($cacheDir)) {
+            echo "Cache directory not found: " . $cacheDir;
+            return ['size' => $size, 'count' => $fileCount];
+        }
+
+        $files = scandir($cacheDir);
+        if (!$files) {
+            return ['size' => $size, 'count' => $fileCount];
+        }
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $filePath = $cacheDir . DIRECTORY_SEPARATOR . $file;
+
+            if (is_file($filePath)) {
+                $size += filesize($filePath);
+                $fileCount++;
+            } elseif (is_dir($filePath)) {
+                $result = $this->getLaravelCacheSize($filePath);
+                $size += $result['size'];
+                $fileCount += $result['count'];
+            }
+        }
+
+        return [
+            'size' => round($size / 1024 / 1024, 4) >= 0 ?
+                round($size / 1024, 2) . " KB" :
+                round($size / 1024 / 1024, 2) . " MB",
+            'count' => $fileCount
         ];
     }
 }
