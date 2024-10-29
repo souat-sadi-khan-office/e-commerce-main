@@ -30,6 +30,11 @@ use App\Repositories\PcBuilderRepository;
 use App\Repositories\PhoneBookRepository;
 use App\Repositories\CustomerRepository;
 use App\Repositories\ProductStockRepository;
+use App\Repositories\LaptopBudgetRepository;
+use App\Repositories\LaptopFinderFeaturesRepository;
+use App\Repositories\LaptopFinderPortabilityRepository;
+use App\Repositories\LaptopFinderScreenRepository;
+use App\Repositories\LaptopFinderPurposeRepository;
 use App\Repositories\GatewayConfigurationRepository;
 use App\Repositories\ProductSpecificationRepository;
 use App\Repositories\Interface\TaxRepositoryInterface;
@@ -62,6 +67,11 @@ use App\Repositories\Interface\ProductSpecificationRepositoryInterface;
 use App\Repositories\Interface\CustomerRepositoryInterface;
 use App\Repositories\Interface\CustomerQuestionRepositoryInterface;
 use App\Repositories\Interface\CouponRepositoryInterface;
+use App\Repositories\Interface\LaptopBudgetRepositoryInterface;
+use App\Repositories\Interface\LaptopFinderFeaturesRepositoryInterface;
+use App\Repositories\Interface\LaptopFinderPortabilityRepositoryInterface;
+use App\Repositories\Interface\LaptopFinderScreenRepositoryInterface;
+use App\Repositories\Interface\LaptopFinderPurposeRepositoryInterface;
 use App\Repositories\CouponRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -101,6 +111,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
         $this->app->bind(CustomerQuestionRepositoryInterface::class, CustomerQuestionRepository::class);
         $this->app->bind(CouponRepositoryInterface::class, CouponRepository::class);
+        $this->app->bind(LaptopBudgetRepositoryInterface::class, LaptopBudgetRepository::class);
+        $this->app->bind(LaptopFinderFeaturesRepositoryInterface::class, LaptopFinderFeaturesRepository::class);
+        $this->app->bind(LaptopFinderPortabilityRepositoryInterface::class, LaptopFinderPortabilityRepository::class);
+        $this->app->bind(LaptopFinderScreenRepositoryInterface::class, LaptopFinderScreenRepository::class);
+        $this->app->bind(LaptopFinderPurposeRepositoryInterface::class, LaptopFinderPurposeRepository::class);
     }
 
     /**

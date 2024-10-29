@@ -435,6 +435,68 @@
 
             <!-- Shipping Configuration -->
             <li
+                class="nav-item {{ Request::is('admin/laptop*') ? 'menu-open' : '' }}">
+                <a href="javascript:;" class="nav-link ">
+                    <i class="nav-icon bi bi-laptop"></i>
+                    <p>
+                        Laptop Finder
+                        <i class="nav-arrow bi bi-chevron-right"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.offer-page-seo') }}" class="nav-link {{ Request::is('admin/laptop/offer-page-seo') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-globe"></i>
+                            <p>Offer Page SEO</p>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.finder-page-seo') }}" class="nav-link {{ Request::is('admin/laptop/finder-page-seo') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-globe"></i>
+                            <p>Finder Page SEO</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.budget.index') }}" class="nav-link {{ Request::is('admin/laptop/budget') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-coin"></i>
+                            <p>Budget</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.purpose.index') }}" class="nav-link {{ Request::is('admin/laptop/purpose') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-question-circle"></i>
+                            <p>Purpose</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.screen.index') }}" class="nav-link {{ Request::is('admin/laptop/screen') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-fullscreen"></i>
+                            <p>Screen Size</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.portability.index') }}" class="nav-link {{ Request::is('admin/laptop/portability') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-person-wheelchair"></i>
+                            <p>Portability</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.laptop.features.index') }}" class="nav-link {{ Request::is('admin/laptop/features') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-lightbulb-fill"></i>
+                            <p>Features</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Shipping Configuration -->
+            <li
                 class="nav-item {{ Request::is('admin/zone') || Request::is('admin/city') || Request::is('admin/country') ? 'menu-open' : '' }}">
                 <a href="javascript:;" class="nav-link ">
                     <i class="nav-icon bi bi-truck"></i>
