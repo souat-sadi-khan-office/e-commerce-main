@@ -8380,7 +8380,8 @@ select option:hover {
 }
 
 .description {
-	margin: 20px 0 30px
+	margin: 20px 0 30px;
+	padding: 30px;
 }
 
 .description .bg_white {
@@ -8574,4 +8575,11 @@ a.stock-status-warning {
 span.stock-status.in-stock-status {
 	background: rgb(90 229 147 / 10%) !important;
 	color: green !important;
+}
+
+.brand-name {
+    font-size: 40px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 40px;
 }

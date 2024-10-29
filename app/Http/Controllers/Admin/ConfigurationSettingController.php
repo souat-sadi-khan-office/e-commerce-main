@@ -19,6 +19,16 @@ class ConfigurationSettingController extends Controller
         return view ('backend.settings.general', compact('currencies'));
     }
     
+    public function laptopOfferPage()
+    {
+        return view ('backend.settings.laptop-offer');
+    }
+    
+    public function laptopFinderPage()
+    {
+        return view ('backend.settings.laptop-finder');
+    }
+    
     public function websiteHeader()
     {
         return view ('backend.settings.website.header');

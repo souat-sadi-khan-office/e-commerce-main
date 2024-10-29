@@ -25,6 +25,11 @@ use App\Http\Controllers\Admin\ConfigurationSettingController;
 use App\Http\Controllers\Admin\ProductStockController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\LaptopBudgetController;
+use App\Http\Controllers\Admin\LaptopFinderFeaturesController;
+use App\Http\Controllers\Admin\LaptopFinderPortabilityController;
+use App\Http\Controllers\Admin\LaptopFinderScreenController;
+use App\Http\Controllers\Admin\LaptopFinderPurposeController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\ImportController;
@@ -149,6 +154,34 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
        
     });
 
+    // Laptop
+    Route::group(['prefix' => 'laptop', 'as' => 'laptop.'], function () {
+        Route::get('/', [LaptopController::class, 'index'])->name('index');
+        Route::get('details/{id}', [OrderController::class, 'details'])->name('details');
+        Route::post('/{orderId}/update-status', [OrderController::class, 'updateStatus'])->name('update.status');
+        Route::get('invoice/{id}', [OrderController::class, 'invoice'])->name('invoice');
+       
+        // budget
+        Route::post('budget/status/{id}', [LaptopBudgetController::class, 'updateStatus'])->name('budget.status');
+        Route::resource('budget', LaptopBudgetController::class);
+
+        // purpose
+        Route::post('purpose/status/{id}', [LaptopFinderPurposeController::class, 'updateStatus'])->name('purpose.status');
+        Route::resource('purpose', LaptopFinderPurposeController::class);
+
+        // screen
+        Route::post('screen/status/{id}', [LaptopFinderScreenController::class, 'updateStatus'])->name('screen.status');
+        Route::resource('screen', LaptopFinderScreenController::class);
+
+        // portability
+        Route::post('portability/status/{id}', [LaptopFinderPortabilityController::class, 'updateStatus'])->name('portability.status');
+        Route::resource('portability', LaptopFinderPortabilityController::class);
+
+        // features
+        Route::post('features/status/{id}', [LaptopFinderFeaturesController::class, 'updateStatus'])->name('features.status');
+        Route::resource('features', LaptopFinderFeaturesController::class);
+    });
+
     // Question
     Route::get('customer/question', [QuestionController::class, 'index'])->name('customer.question.index');
     Route::get('customer/question/answer/{id}', [QuestionController::class, 'answer'])->name('customer.question.answer');
@@ -216,6 +249,10 @@ Route::middleware(['isAdmin', 'web'])->group(function () {
         Route::get('settings/general', 'general')->name('settings.general');
         Route::get('settings/otp', 'otp')->name('settings.otp');
         Route::get('settings/vat', 'vat')->name('settings.vat');
+
+        // laptop
+        Route::get('laptop/offer-page-seo', 'laptopOfferPage')->name('laptop.offer-page-seo');
+        Route::get('laptop/finder-page-seo', 'laptopFinderPage')->name('laptop.finder-page-seo');
 
         Route::get('website/header', 'websiteHeader')->name('website.header');
         Route::get('website/footer', 'websiteFooter')->name('website.footer');
